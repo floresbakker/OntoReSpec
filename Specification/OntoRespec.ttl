@@ -1,0 +1,621 @@
+@prefix dct: <http://purl.org/dc/terms/>.
+@prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>.
+@prefix doc: <http://www.example.org/document/> .
+@prefix function: <https://data.rijksfinancien.nl/html/model/function/>.
+@prefix html: <https://data.rijksfinancien.nl/html/model/def/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix respec: <http://www.example.org/respec/> .
+@prefix rule: <https://data.rijksfinancien.nl/html/model/rule/>.
+@prefix shp: <https://data.rijksfinancien.nl/html/model/shp/>.
+@prefix target: <https://data.rijksfinancien.nl/html/model/target/>.
+@prefix sh: <http://www.w3.org/ns/shacl#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix skos: <http://www.w3.org/2004/02/skos/core#>.
+
+shp:Document
+  a sh:NodeShape;
+  sh:rule rule:Document;
+  sh:targetClass respec:TemplateDocument.
+
+rule:Document
+  a sh:SPARQLRule;
+  skos:prefLabel 'Document rule'@en;
+  rdfs:comment 'The Document rule creates a document and attaches its structure.'@en ;
+  sh:construct """
+prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+prefix respec: <http://www.example.org/respec/> 
+
+construct {
+  ?documentID
+    a html:Document, respec:Document ;
+    ?element ?childID .
+    
+} where {
+  
+  $this ?element ?child.
+  ?child  a/ rdfs:subClassOf* dom:Element.
+  
+  # Create identifiers
+  bind(iri(concat(str($this),'-instance')) as ?documentID)
+  bind(iri(concat(str(?child),'-instance')) as ?childID)
+  
+}""".
+
+shp:StaticElement
+  a sh:NodeShape;
+  sh:rule rule:StaticElement;
+  sh:targetClass respec:StaticElement.
+  
+rule:StaticElement
+  a sh:SPARQLRule;
+  skos:prefLabel 'Static Element rule'@en;
+  rdfs:comment 'The Static Element rule creates a unique element and attaches its structure.'@en ;
+  sh:construct """
+prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+prefix respec: <http://www.example.org/respec/> 
+
+construct {
+  ?elementID
+    a ?class ;
+    rdfs:label ?label;
+    html:fragment ?fragment;
+    ?element ?childID ;
+	?attribute ?attributeValue.
+    
+} where {
+  $this a ?class.
+  OPTIONAL {
+        $this ?element ?child.
+  ?child  a/ rdfs:subClassOf* dom:Element.}
+  OPTIONAL {
+  $this html:fragment ?fragment}
+  OPTIONAL {
+  $this rdfs:label ?label}
+  OPTIONAL {
+  $this ?attribute ?attributeValue.
+  ?attribute rdfs:subPropertyOf html:attribute.
+  }
+  ?class rdfs:subClassOf* dom:Element.
+  # Create identifiers
+  bind(iri(concat(str($this),'-instance')) as ?elementID)
+  bind(iri(concat(str(?child),'-instance')) as ?childID)
+  
+}""".
+
+shp:OntologyMetadata
+  a sh:NodeShape;
+  sh:rule rule:Title, rule:Description, rule:Abstract, rule:Version, rule:Classes, rule:ObjectProperties, rule:DatatypeProperties, rule:NodeShapes;
+  sh:targetClass owl:Ontology.
+
+
+rule:Title
+  a sh:SPARQLRule;
+  skos:prefLabel 'Title rule'@en;
+  rdfs:comment 'The Title rule creates a title for the ontology in the document.'@en ;
+  sh:construct """
+prefix dct: <http://purl.org/dc/terms/>
+prefix dc:  <http://purl.org/dc/elements/1.1/>
+prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+prefix respec: <http://www.example.org/respec/> 
+prefix schema: <http://schema.org/>
+
+construct {
+  ?titleTextElementID rdf:type html:TextElement;
+  html:fragment ?ontologyTitle.
+    
+} where {
+   {?titleTextElement a respec:TitleTextElement}
+  optional
+  {$this dc:title ?ontologyTitle1}
+  optional
+  {$this dct:title ?ontologyTitle2}
+  optional
+  {$this schema:name ?ontologyTitle3}
+   
+  BIND(COALESCE(?ontologyTitle1, ?ontologyTitle2, ?ontologyTitle3, "Unknown title") as ?ontologyTitle)
+  # Create identifiers
+  bind(iri(concat(str(?titleTextElement),'-instance')) as ?titleTextElementID)
+    
+}""".
+
+
+
+rule:Description
+  a sh:SPARQLRule;
+  skos:prefLabel 'Description rule'@en;
+  rdfs:comment 'The Description rule creates a description for the ontology in the document.'@en ;
+  sh:construct """
+prefix dct: <http://purl.org/dc/terms/>
+prefix dc:  <http://purl.org/dc/elements/1.1/>
+prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+prefix respec: <http://www.example.org/respec/> 
+prefix schema: <http://schema.org/>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+
+construct {
+  ?descriptionTextElementID rdf:type html:TextElement;
+  html:fragment ?ontologyDescription.
+    
+} where {
+   {?textElement a respec:Description}
+  optional
+  {$this dc:description ?ontologyDescription1}
+  optional
+  {$this dct:description ?ontologyDescription2}
+  optional
+  {$this rdfs:comment ?ontologyDescription3}
+  optional
+  {$this schema:description ?ontologyDescription4}
+  optional
+  {$this skos:note ?ontologyDescription5}
+
+  BIND(COALESCE(?ontologyDescription1, ?ontologyDescription2, ?ontologyDescription3, ?ontologyDescription4, ?ontologyDescription5,"Description not available") as ?ontologyDescription)
+  # Create identifiers
+  bind(iri(concat(str(?textElement),'-instance')) as ?descriptionTextElementID)
+    
+}""".
+
+
+
+rule:Abstract
+  a sh:SPARQLRule;
+  skos:prefLabel 'Abstract rule'@en;
+  rdfs:comment 'The Abstract rule creates an abstract for the ontology in the document.'@en ;
+  sh:construct """
+prefix dct: <http://purl.org/dc/terms/>
+prefix dc:  <http://purl.org/dc/elements/1.1/>
+prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+prefix respec: <http://www.example.org/respec/> 
+
+construct {
+  ?abstractTextElementID rdf:type html:TextElement;
+  html:fragment ?ontologyAbstract.
+    
+} where {
+   {?textElement a respec:Abstract}
+  optional
+  {$this dc:abstract ?ontologyAbstract1}
+  optional
+  {$this dct:abstract ?ontologyAbstract2}
+  BIND(COALESCE(?ontologyAbstract1, ?ontologyAbstract2, "Abstract not available") as ?ontologyAbstract)
+  # Create identifiers
+  bind(iri(concat(str(?textElement),'-instance')) as ?abstractTextElementID)
+    
+}""".       
+    
+
+rule:Version
+  a sh:SPARQLRule;
+  skos:prefLabel 'Version rule'@en;
+  rdfs:comment 'The Version rule creates the version information for the ontology in the document.'@en ;
+  sh:construct """
+prefix dct: <http://purl.org/dc/terms/>
+prefix dc:  <http://purl.org/dc/elements/1.1/>
+prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+prefix respec: <http://www.example.org/respec/> 
+prefix schema: <http://schema.org/>
+
+construct {
+  
+  ?configurationElementID rdf:type html:TextElement;
+  html:fragment ?fragment4.
+    
+} where {
+  
+  ?textElement a respec:Configuration;
+               html:fragment ?fragment.
+  optional
+  {$this owl:versionIRI ?ontologyVersion1}
+  optional
+  {$this schema:schemaVersion ?ontologyVersion2}
+  optional
+  {$this owl:versionInfo ?ontologyVersionText1}
+  optional
+  {$this dct:publisher ?workinggroup}
+  optional
+  {$this dct:source ?github}
+  { select (group_concat(?ontologyAuthorString;separator='') as ?ontologyAuthors) 
+    {
+  optional
+  {$this dct:creator ?ontologyAuthor1}
+  optional
+  {$this dc:creator ?ontologyAuthor2}
+  optional
+  {$this schema:creator ?ontologyAuthor3}
+  optional
+  {$this prov:wasAttributedTo ?ontologyAuthor4}
+
+  BIND(COALESCE(?ontologyAuthor1, ?ontologyAuthor2, ?ontologyAuthor3, ?ontologyAuthor4, "Author unknown") as ?ontologyAuthor)
+  BIND(CONCAT('{name: "', STR(?ontologyAuthor), '"},') as ?ontologyAuthorString)
+    }
+  }
+  
+  BIND(COALESCE(?ontologyVersion1, ?ontologyVersion2, "Version IRI not available") as ?ontologyVersionIRI)
+  BIND(REPLACE(?fragment, 'VersionURL', str(?ontologyVersionIRI)) as ?fragment1)
+  BIND(REPLACE(?fragment1, 'working-group', str(?workinggroup)) as ?fragment2)
+  BIND(REPLACE(?fragment2, 'some-org/mySpec', str(?github)) as ?fragment3)
+  BIND(REPLACE(?fragment3, 'name: "Your Name"', str(?ontologyAuthors)) as ?fragment4)
+  
+  # Create identifiers
+  bind(iri(concat(str(?textElement),'-instance')) as ?configurationElementID)
+  
+}""".  
+
+
+
+rule:Classes
+  a sh:SPARQLRule;
+  skos:prefLabel 'Classes rule'@en;
+  rdfs:comment 'The Classes rule creates a section of classes for the ontology in the document.'@en ;
+  sh:construct """
+prefix dct: <http://purl.org/dc/terms/>
+prefix dc:  <http://purl.org/dc/elements/1.1/>
+prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix function: <https://data.rijksfinancien.nl/html/model/function/>
+prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+prefix respec: <http://www.example.org/respec/> 
+prefix schema: <http://schema.org/>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+
+construct {
+
+	  ?divDefinitionClass1Instance rdf:type html:Div;
+	                               ?memberClassString ?divDefinitionClass2Instance.
+	  ?divDefinitionClass2Instance rdf:type html:Section;
+                                   rdf:_1 ?class_title_instance_h2;
+                                   rdf:_2 ?class_definition_instance.
+      ?class_title_instance_h2     rdf:type html:H2;
+                                   ?memberTitle ?class_dfn_instance.
+      ?class_dfn_instance          rdf:type html:Dfn;
+	                               ?memberDfn ?class_title_text_instance.
+      ?class_title_text_instance   rdf:type html:TextElement;
+                                   html:fragment ?classLabel2.
+      ?class_definition_instance   rdf:type html:TextElement;
+                                   html:fragment ?classDefinition.
+    
+}
+where  {
+   {?sectionDefinition rdf:type html:Section;
+                       ?member ?divDefinitionClass1.
+	?divDefinitionClass1 rdf:type respec:ClassDefinitionDiv;
+                       ?memberDiv ?divDefinitionClass2.				   				  
+    ?divDefinitionClass2 rdf:type respec:ClassDefinitionInstance;       
+                        rdf:_1 ?H2_class_title;
+						rdf:_2 ?P_class_definition.
+	?H2_class_title a respec:Class;
+                        ?memberTitle ?class_dfn.
+	?class_dfn rdf:type respec:ClassDfn;
+	                    ?memberDfn ?class_title.
+    ?class_title        rdf:type respec:ClassTitle.
+	?P_class_definition rdf:type respec:Class;
+                        ?memberText ?class_definition_text.
+     ?class_definition_text a respec:ClassDefinitionText.
+  }
+   
+   {SELECT ?class ?classLabel ?classDefinition (COUNT(?prevClass) + 1 AS ?memberClass)
+WHERE {
+  ?class a owl:Class .
+  ?class skos:prefLabel ?classLabel .
+  ?class skos:definition ?classDefinition_original.
+  BIND(function:escapeHTML(?classDefinition_original) as ?classDefinition)
+  OPTIONAL {
+    ?prevClass a owl:Class .
+    ?prevClass skos:prefLabel ?prevLabel .
+    FILTER(?prevLabel < ?classLabel)
+  }
+}
+  GROUP BY ?classLabel ?class ?classDefinition
+  ORDER BY ?classLabel
+}
+  BIND (IRI(CONCAT(str(rdf:),"_", str(?memberClass))) as ?memberClassString)
+
+  # Create identifiers
+  bind(COALESCE(?classLabel, "Unknown class label") as ?classLabel2)
+  bind(IRI(CONCAT(STR(?sectionDefinition), '-instance')) as ?sectionDefinitionInstance)
+  bind(IRI(CONCAT(STR(?divDefinitionClass1),'-instance')) as ?divDefinitionClass1Instance)
+  bind(IRI(CONCAT(STR(?divDefinitionClass2), '-', str(?memberClass),'-instance')) as ?divDefinitionClass2Instance)
+  bind(IRI(CONCAT(STR(?class_title), '-', str(?memberClass), '-instance')) as ?class_title_text_instance)
+  bind(IRI(CONCAT(STR(?H2_class_title), '-', str(?memberClass), '-instance')) as ?class_title_instance_h2)
+  bind(IRI(CONCAT(STR(?class_definition_text), '-', str(?memberClass), '-instance')) as ?class_definition_instance)
+  bind(IRI(CONCAT(STR(?class_dfn), '-', str(?memberClass), '-instance')) as ?class_dfn_instance)
+  
+}
+""".
+
+rule:ObjectProperties
+  a sh:SPARQLRule;
+  skos:prefLabel 'Object properties rule'@en;
+  rdfs:comment 'The object properties rule creates a section of object properties for the ontology in the document.'@en ;
+  sh:construct """
+prefix dct: <http://purl.org/dc/terms/>
+prefix dc:  <http://purl.org/dc/elements/1.1/>
+prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix function: <https://data.rijksfinancien.nl/html/model/function/>
+prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+prefix respec: <http://www.example.org/respec/> 
+prefix schema: <http://schema.org/>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+
+construct {
+
+	  ?divDefinitionObjectProperty1Instance rdf:type html:Div;
+	                               ?memberObjectPropertyString ?divDefinitionObjectProperty2Instance.
+	  ?divDefinitionObjectProperty2Instance rdf:type html:Section;
+                                   rdf:_1 ?objectProperty_title_instance_h2;
+                                   rdf:_2 ?objectProperty_definition_instance.
+      ?objectProperty_title_instance_h2     rdf:type html:H2;
+                                   ?memberTitle ?objectProperty_dfn_instance.
+      ?objectProperty_dfn_instance          rdf:type html:Dfn;
+	                               ?memberDfn ?objectProperty_title_text_instance.
+      ?objectProperty_title_text_instance   rdf:type html:TextElement;
+                                   html:fragment ?objectPropertyLabel2.
+      ?objectProperty_definition_instance   rdf:type html:TextElement;
+                                   html:fragment ?objectPropertyDefinition.
+    
+}
+where  {
+   {?sectionDefinition rdf:type html:Section;
+                       ?member ?divDefinitionObjectProperty1.
+	?divDefinitionObjectProperty1 rdf:type respec:ObjectPropertyDefinitionDiv;
+                       ?memberDiv ?divDefinitionObjectProperty2.				   				  
+    ?divDefinitionObjectProperty2 rdf:type respec:ObjectPropertyDefinitionInstance;       
+                        rdf:_1 ?H2_class_title;
+						rdf:_2 ?P_class_definition.
+	?H2_class_title a respec:ObjectProperty;
+                        ?memberTitle ?objectProperty_dfn.
+	?objectProperty_dfn rdf:type respec:ObjectPropertyDfn;
+	                    ?memberDfn ?objectProperty_title.
+    ?objectProperty_title        rdf:type respec:ObjectPropertyTitle.
+	?P_class_definition rdf:type respec:ObjectProperty;
+                        ?memberText ?objectProperty_definition_text.
+    ?objectProperty_definition_text a respec:ObjectPropertyDefinitionText.
+  }
+   
+   {SELECT ?objectProperty ?objectPropertyLabel ?objectPropertyDefinition (COUNT(?prevObjectProperty) + 1 AS ?memberObjectProperty)
+WHERE {
+  ?objectProperty a owl:ObjectProperty .
+  ?objectProperty skos:prefLabel ?objectPropertyLabel .
+  ?objectProperty skos:definition ?objectPropertyDefinition_original.
+  BIND(function:escapeHTML(?objectPropertyDefinition_original) as ?objectPropertyDefinition)
+  OPTIONAL {
+    ?prevObjectProperty a owl:ObjectProperty .
+    ?prevObjectProperty skos:prefLabel ?prevLabel .
+    FILTER(?prevLabel < ?objectPropertyLabel)
+  }
+}
+  GROUP BY ?objectPropertyLabel ?objectProperty ?objectPropertyDefinition
+  ORDER BY ?objectPropertyLabel
+}
+  BIND (IRI(CONCAT(str(rdf:),"_", str(?memberObjectProperty))) as ?memberObjectPropertyString)
+
+  # Create identifiers
+  bind(COALESCE(?objectPropertyLabel, "Unknown class label") as ?objectPropertyLabel2)
+  bind(IRI(CONCAT(STR(?sectionDefinition), '-instance')) as ?sectionDefinitionInstance)
+  bind(IRI(CONCAT(STR(?divDefinitionObjectProperty1),'-instance')) as ?divDefinitionObjectProperty1Instance)
+  bind(IRI(CONCAT(STR(?divDefinitionObjectProperty2), '-', str(?memberObjectProperty),'-instance')) as ?divDefinitionObjectProperty2Instance)
+  bind(IRI(CONCAT(STR(?objectProperty_title), '-', str(?memberObjectProperty), '-instance')) as ?objectProperty_title_text_instance)
+  bind(IRI(CONCAT(STR(?H2_class_title), '-', str(?memberObjectProperty), '-instance')) as ?objectProperty_title_instance_h2)
+  bind(IRI(CONCAT(STR(?objectProperty_definition_text), '-', str(?memberObjectProperty), '-instance')) as ?objectProperty_definition_instance)
+  bind(IRI(CONCAT(STR(?objectProperty_dfn), '-', str(?memberObjectProperty), '-instance')) as ?objectProperty_dfn_instance)
+  
+}
+""".
+
+rule:DatatypeProperties
+  a sh:SPARQLRule;
+  skos:prefLabel 'Datatype properties rule'@en;
+  rdfs:comment 'The datatype properties rule creates a section of datatype properties for the ontology in the document.'@en ;
+  sh:construct """
+prefix dct: <http://purl.org/dc/terms/>
+prefix dc:  <http://purl.org/dc/elements/1.1/>
+prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix function: <https://data.rijksfinancien.nl/html/model/function/>
+prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+prefix respec: <http://www.example.org/respec/> 
+prefix schema: <http://schema.org/>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+
+construct {
+
+	  ?divDefinitionDatatypeProperty1Instance rdf:type html:Div;
+	                               ?memberDatatypePropertyString ?divDefinitionDatatypeProperty2Instance.
+	  ?divDefinitionDatatypeProperty2Instance rdf:type html:Section;
+                                   rdf:_1 ?datatypeProperty_title_instance_h2;
+                                   rdf:_2 ?datatypeProperty_definition_instance.
+      ?datatypeProperty_title_instance_h2     rdf:type html:H2;
+                                   ?memberTitle ?datatypeProperty_dfn_instance.
+      ?datatypeProperty_dfn_instance          rdf:type html:Dfn;
+	                               ?memberDfn ?datatypeProperty_title_text_instance.
+      ?datatypeProperty_title_text_instance   rdf:type html:TextElement;
+                                   html:fragment ?datatypePropertyLabel2.
+      ?datatypeProperty_definition_instance   rdf:type html:TextElement;
+                                   html:fragment ?datatypePropertyDefinition.
+    
+}
+where  {
+   {?sectionDefinition rdf:type html:Section;
+                       ?member ?divDefinitionDatatypeProperty1.
+	?divDefinitionDatatypeProperty1 rdf:type respec:DatatypePropertyDefinitionDiv;
+                       ?memberDiv ?divDefinitionDatatypeProperty2.				   				  
+    ?divDefinitionDatatypeProperty2 rdf:type respec:DatatypePropertyDefinitionInstance;       
+                        rdf:_1 ?H2_class_title;
+						rdf:_2 ?P_class_definition.
+	?H2_class_title a respec:DatatypeProperty;
+                        ?memberTitle ?datatypeProperty_dfn.
+	?datatypeProperty_dfn rdf:type respec:DatatypePropertyDfn;
+	                    ?memberDfn ?datatypeProperty_title.
+    ?datatypeProperty_title        rdf:type respec:DatatypePropertyTitle.
+	?P_class_definition rdf:type respec:DatatypeProperty;
+                        ?memberText ?datatypeProperty_definition_text.
+     ?datatypeProperty_definition_text a respec:DatatypePropertyDefinitionText.
+  }
+   
+   {SELECT ?datatypeProperty ?datatypePropertyLabel ?datatypePropertyDefinition (COUNT(?prevDatatypeProperty) + 1 AS ?memberDatatypeProperty)
+WHERE {
+  ?datatypeProperty a owl:DatatypeProperty .
+  ?datatypeProperty skos:prefLabel ?datatypePropertyLabel .
+  ?datatypeProperty skos:definition ?datatypePropertyDefinition_original.
+  BIND(function:escapeHTML(?datatypePropertyDefinition_original) as ?datatypePropertyDefinition)
+  OPTIONAL {
+    ?prevDatatypeProperty a owl:DatatypeProperty .
+    ?prevDatatypeProperty skos:prefLabel ?prevLabel .
+    FILTER(?prevLabel < ?datatypePropertyLabel)
+  }
+}
+  GROUP BY ?datatypePropertyLabel ?datatypeProperty ?datatypePropertyDefinition
+  ORDER BY ?datatypePropertyLabel
+}
+  BIND (IRI(CONCAT(str(rdf:),"_", str(?memberDatatypeProperty))) as ?memberDatatypePropertyString)
+
+  # Create identifiers
+  bind(COALESCE(?datatypePropertyLabel, "Unknown class label") as ?datatypePropertyLabel2)
+  bind(IRI(CONCAT(STR(?sectionDefinition), '-instance')) as ?sectionDefinitionInstance)
+  bind(IRI(CONCAT(STR(?divDefinitionDatatypeProperty1),'-instance')) as ?divDefinitionDatatypeProperty1Instance)
+  bind(IRI(CONCAT(STR(?divDefinitionDatatypeProperty2), '-', str(?memberDatatypeProperty),'-instance')) as ?divDefinitionDatatypeProperty2Instance)
+  bind(IRI(CONCAT(STR(?datatypeProperty_title), '-', str(?memberDatatypeProperty), '-instance')) as ?datatypeProperty_title_text_instance)
+  bind(IRI(CONCAT(STR(?H2_class_title), '-', str(?memberDatatypeProperty), '-instance')) as ?datatypeProperty_title_instance_h2)
+  bind(IRI(CONCAT(STR(?datatypeProperty_definition_text), '-', str(?memberDatatypeProperty), '-instance')) as ?datatypeProperty_definition_instance)
+  bind(IRI(CONCAT(STR(?datatypeProperty_dfn), '-', str(?memberDatatypeProperty), '-instance')) as ?datatypeProperty_dfn_instance)
+  
+}
+""".
+
+rule:NodeShapes
+  a sh:SPARQLRule;
+  skos:prefLabel 'Node shapes rule'@en;
+  rdfs:comment 'The node shapes rule creates a section of node shapes for the ontology in the document.'@en ;
+  sh:construct """
+
+prefix dct: <http://purl.org/dc/terms/>
+prefix dc:  <http://purl.org/dc/elements/1.1/>
+prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix function: <https://data.rijksfinancien.nl/html/model/function/>
+prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+prefix respec: <http://www.example.org/respec/> 
+prefix schema: <http://schema.org/>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+
+construct {
+
+	  ?divDefinitionNodeShape1Instance rdf:type html:Div;
+	                               ?memberNodeShapeString ?divDefinitionNodeShape2Instance.
+	  ?divDefinitionNodeShape2Instance rdf:type html:Section;
+                                   rdf:_1 ?nodeShape_title_instance_h2;
+                                   rdf:_2 ?nodeShape_definition_instance.
+      ?nodeShape_title_instance_h2     rdf:type html:H2;
+                                   ?memberTitle ?nodeShape_dfn_instance.
+      ?nodeShape_dfn_instance          rdf:type html:Dfn;
+	                               ?memberDfn ?nodeShape_title_text_instance.
+      ?nodeShape_title_text_instance   rdf:type html:TextElement;
+                                   html:fragment ?nodeShapeLabel2.
+      ?nodeShape_definition_instance   rdf:type html:TextElement;
+                                   html:fragment ?nodeShapeDefinition.
+    
+}
+where  {
+   {?sectionDefinition rdf:type html:Section;
+                       ?member ?divDefinitionNodeShape1.
+	?divDefinitionNodeShape1 rdf:type respec:NodeShapeDefinitionDiv;
+                       ?memberDiv ?divDefinitionNodeShape2.				   				  
+    ?divDefinitionNodeShape2 rdf:type respec:NodeShapeDefinitionInstance;       
+                        rdf:_1 ?H2_class_title;
+						rdf:_2 ?P_class_definition.
+	?H2_class_title a respec:NodeShape;
+                        ?memberTitle ?nodeShape_dfn.
+	?nodeShape_dfn rdf:type respec:NodeShapeDfn;
+	                    ?memberDfn ?nodeShape_title.
+    ?nodeShape_title        rdf:type respec:NodeShapeTitle.
+	?P_class_definition rdf:type respec:NodeShape;
+                        ?memberText ?nodeShape_definition_text.
+     ?nodeShape_definition_text a respec:NodeShapeDefinitionText.
+  }
+   
+   {SELECT ?nodeShape ?nodeShapeLabel ?nodeShapeDefinition (COUNT(?prevNodeShape) + 1 AS ?memberNodeShape)
+WHERE {
+  ?nodeShape a sh:NodeShape .
+  ?nodeShape skos:prefLabel ?nodeShapeLabel .
+  OPTIONAL{
+  ?nodeShape skos:definition ?nodeShapeDefinition_original.}
+  BIND(function:escapeHTML(COALESCE(?nodeShapeDefinition_original, "No description available")) as ?nodeShapeDefinition)
+  OPTIONAL {
+    ?prevNodeShape a sh:NodeShape .
+    ?prevNodeShape skos:prefLabel ?prevLabel .
+    FILTER(?prevLabel < ?nodeShapeLabel)
+  }
+}
+  GROUP BY ?nodeShapeLabel ?nodeShape ?nodeShapeDefinition
+  ORDER BY ?nodeShapeLabel
+}
+  BIND (IRI(CONCAT(str(rdf:),"_", str(?memberNodeShape))) as ?memberNodeShapeString)
+
+  # Create identifiers
+  bind(COALESCE(?nodeShapeLabel, "Unknown class label") as ?nodeShapeLabel2)
+  bind(IRI(CONCAT(STR(?sectionDefinition), '-instance')) as ?sectionDefinitionInstance)
+  bind(IRI(CONCAT(STR(?divDefinitionNodeShape1),'-instance')) as ?divDefinitionNodeShape1Instance)
+  bind(IRI(CONCAT(STR(?divDefinitionNodeShape2), '-', str(?memberNodeShape),'-instance')) as ?divDefinitionNodeShape2Instance)
+  bind(IRI(CONCAT(STR(?nodeShape_title), '-', str(?memberNodeShape), '-instance')) as ?nodeShape_title_text_instance)
+  bind(IRI(CONCAT(STR(?H2_class_title), '-', str(?memberNodeShape), '-instance')) as ?nodeShape_title_instance_h2)
+  bind(IRI(CONCAT(STR(?nodeShape_definition_text), '-', str(?memberNodeShape), '-instance')) as ?nodeShape_definition_instance)
+  bind(IRI(CONCAT(STR(?nodeShape_dfn), '-', str(?memberNodeShape), '-instance')) as ?nodeShape_dfn_instance)
+  
+}
+""".
+
+function:escapeHTML
+    a sh:SPARQLFunction ;
+    rdfs:comment "Escapes HTML characters in the input string." ;
+    sh:parameter [
+        sh:path function:input ;
+        sh:datatype xsd:string ;
+        sh:description "The input string to escape HTML characters from." ;
+    ] ;
+    sh:returnType xsd:string ;
+    sh:select """
+       SELECT ?result WHERE {
+       BIND(replace(
+                    replace(
+                        replace(
+                            replace(
+                                replace(
+                                    $input,
+                                    '&', '&amp;', 'g'),
+                                '<', '&lt;', 'g'),
+                            '>', '&gt;', 'g'),
+                        '\"', '&quot;', 'g'),
+                    "\'", '&apos;', 'g')
+                AS ?result).
+        }
+        """ .
