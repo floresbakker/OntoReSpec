@@ -613,7 +613,9 @@ doc:54.8 a respec:ClassDefinitionInstance,
         html:Div ;
     rdfs:label "Div" ;
     rdf:_1 doc:54.9 ;
-	rdf:_2 doc:54.10 .
+	rdf:_2 doc:54.10 ;
+	rdf:_3 doc:54.12 ;
+	rdf:_4 doc:54.13.
 	
 doc:54.9 a respec:Class,
         respec:Template,
@@ -644,6 +646,17 @@ doc:54.10.1 a respec:ClassDefinitionText,
         html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "{{class definition}}" .
+	
+doc:54.12 a respec:ClassLineBreak,
+        respec:Template,
+        html:Br ;
+    rdfs:label "Br" .
+
+doc:54.13 a respec:ManchesterDefinition,
+        respec:Template,
+        html:TextElement ;
+    rdfs:label "text element" ;
+    html:fragment "{{manchester definition}}" .
 
 doc:55.1 a respec:StaticElement,
         respec:Template,

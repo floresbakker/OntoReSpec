@@ -6,9 +6,12 @@ Created on Wed Jul  5 18:40:53 2023
 
 
 """
+import os
 import pyshacl
 import rdflib 
 
+# Set the path to the desired standard directory. 
+directory_path = "C:/Users/Administrator/Documents/Branches/"
 
 # Function to read a graph (as a string) from a file 
 def readGraphFromFile(file_path):
@@ -20,9 +23,9 @@ def readGraphFromFile(file_path):
 
 # Function to write a graph to a file
 def writeGraph(graph):
-    graph.serialize(destination="C:/Users/Administrator/Documents/Branches/OntoRespec/Tools/OntoRespec/Output/respecDocument.ttl", format="turtle")
+    graph.serialize(destination=directory_path + "OntoReSpec/Tools/Output/respecDocument.ttl", format="turtle")
 
-# Function to call the PyShacl engine so that a RDF model of an HTML-based ReSpec-document can be serialized to HTML-code.
+# Function to call the PyShacl engine so that an instantiation of the ReSpec-template can be created.
 def iteratePyShacl(respec_generator, serializable_graph):
         
         # call PyShacl engine and apply the HTML vocabulary to the serializable HTML document
@@ -42,11 +45,19 @@ def iteratePyShacl(respec_generator, serializable_graph):
              
 
 # Get the OntoRespec vocabulary and place it in a string
-respec_generator = readGraphFromFile("C:/Users/Administrator/Documents/Branches/ontoRespec/Specification/OntoRespec.ttl")
+respec_generator = readGraphFromFile(directory_path +"OntoReSpec/Specification/OntoRespec.ttl")
 
-# Get the RDF-model of some HTML-based ReSpec document and place it in a string. 
-ontology_graph = readGraphFromFile("C:/Users/Administrator/Documents/Branches/htmlvocl/Specification/html.ttl")   
-template_graph = readGraphFromFile("C:/Users/Administrator/Documents/Branches/ontoRespec/Specification/ReSpecTemplate.ttl")
+# loop through any ReSpec RDF files in the input directory
+for filename in os.listdir(directory_path+"OntoReSpec/Tools/Input"):
+    if filename.endswith(".ttl"):
+        file_path = os.path.join(directory_path+"OntoReSpec/Tools/Input", filename)
+        
+        # Establish the stem of the file name for reuse in newly created files
+        filename_stem = os.path.splitext(filename)[0]
+
+# Get any RDF-based ReSpec document and place it in a string. 
+ontology_graph = readGraphFromFile(file_path)   
+template_graph = readGraphFromFile(directory_path + "OntoReSpec/Specification/ReSpecTemplate.ttl")
 
 # Join the HTML vocabulary and the RDF-model of the HTML-based ReSpec-document into a string
 serializable_graph_string = ontology_graph + template_graph

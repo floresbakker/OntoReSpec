@@ -3,6 +3,7 @@
 @prefix doc: <http://www.example.org/document/> .
 @prefix function: <https://data.rijksfinancien.nl/html/model/function/>.
 @prefix html: <https://data.rijksfinancien.nl/html/model/def/> .
+@prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -274,6 +275,7 @@ prefix dc:  <http://purl.org/dc/elements/1.1/>
 prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
 prefix function: <https://data.rijksfinancien.nl/html/model/function/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
@@ -283,39 +285,48 @@ prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
 construct {
 
-	  ?divDefinitionClass1Instance rdf:type html:Div;
-	                               ?memberClassString ?divDefinitionClass2Instance.
-	  ?divDefinitionClass2Instance rdf:type html:Section;
+      ?divDefinitionClass1Instance rdf:type html:Div;
+                                   ?memberClassString ?divDefinitionClass2Instance.
+      ?divDefinitionClass2Instance rdf:type html:Section;
                                    rdf:_1 ?class_title_instance_h2;
-                                   rdf:_2 ?class_definition_instance.
+                                   rdf:_2 ?class_definition_instance;
+                                   rdf:_3 ?class_linebreak_instance;  
+                                   rdf:_4 ?manchester_definition_instance.
       ?class_title_instance_h2     rdf:type html:H2;
                                    ?memberTitle ?class_dfn_instance.
       ?class_dfn_instance          rdf:type html:Dfn;
-	                               ?memberDfn ?class_title_text_instance.
+                                   ?memberDfn ?class_title_text_instance.
       ?class_title_text_instance   rdf:type html:TextElement;
                                    html:fragment ?classLabel2.
       ?class_definition_instance   rdf:type html:TextElement;
                                    html:fragment ?classDefinition.
-    
+      ?class_linebreak_instance    rdf:type html:Br.
+      ?manchester_definition_instance rdf:type html:TextElement;
+                                      html:fragment ?manchesterDefinition.
 }
 where  {
    {?sectionDefinition rdf:type html:Section;
                        ?member ?divDefinitionClass1.
-	?divDefinitionClass1 rdf:type respec:ClassDefinitionDiv;
-                       ?memberDiv ?divDefinitionClass2.				   				  
-    ?divDefinitionClass2 rdf:type respec:ClassDefinitionInstance;       
+    ?divDefinitionClass1 rdf:type respec:ClassDefinitionDiv;
+                       ?memberDiv ?divDefinitionClass2.
+    ?divDefinitionClass2 rdf:type respec:ClassDefinitionInstance;
                         rdf:_1 ?H2_class_title;
-						rdf:_2 ?P_class_definition.
-	?H2_class_title a respec:Class;
+                        rdf:_2 ?P_class_definition;
+						rdf:_3 ?class_linebreak;
+						rdf:_4 ?manchesterDefinitionText.
+    ?H2_class_title a respec:Class;
                         ?memberTitle ?class_dfn.
-	?class_dfn rdf:type respec:ClassDfn;
-	                    ?memberDfn ?class_title.
+    ?class_dfn rdf:type respec:ClassDfn;
+                        ?memberDfn ?class_title.
     ?class_title        rdf:type respec:ClassTitle.
-	?P_class_definition rdf:type respec:Class;
+    ?P_class_definition rdf:type respec:Class;
                         ?memberText ?class_definition_text.
-     ?class_definition_text a respec:ClassDefinitionText.
+    ?class_definition_text a respec:ClassDefinitionText.
+	?class_linebreak    rdf:type respec:ClassLineBreak.
+	?manchesterDefinitionText rdf:type respec:ManchesterDefinition.
+						
   }
-   
+
    {SELECT ?class ?classLabel ?classDefinition (COUNT(?prevClass) + 1 AS ?memberClass)
 WHERE {
   ?class a owl:Class .
@@ -333,6 +344,14 @@ WHERE {
 }
   BIND (IRI(CONCAT(str(rdf:),"_", str(?memberClass))) as ?memberClassString)
 
+{SELECT ?class ?manchesterDefinition
+WHERE {
+  ?class a owl:Class .
+  ?class manchester:definition ?manchesterDefinition.
+  
+  }
+}
+
   # Create identifiers
   bind(COALESCE(?classLabel, "Unknown class label") as ?classLabel2)
   bind(IRI(CONCAT(STR(?sectionDefinition), '-instance')) as ?sectionDefinitionInstance)
@@ -342,6 +361,8 @@ WHERE {
   bind(IRI(CONCAT(STR(?H2_class_title), '-', str(?memberClass), '-instance')) as ?class_title_instance_h2)
   bind(IRI(CONCAT(STR(?class_definition_text), '-', str(?memberClass), '-instance')) as ?class_definition_instance)
   bind(IRI(CONCAT(STR(?class_dfn), '-', str(?memberClass), '-instance')) as ?class_dfn_instance)
+  bind(IRI(CONCAT(STR(?class_linebreak), '-', str(?memberClass), '-instance')) as ?class_linebreak_instance)
+  bind(IRI(CONCAT(STR(?manchesterDefinitionText), '-', str(?memberClass), '-instance')) as ?manchester_definition_instance)
   
 }
 """.
@@ -365,15 +386,15 @@ prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
 construct {
 
-	  ?divDefinitionObjectProperty1Instance rdf:type html:Div;
-	                               ?memberObjectPropertyString ?divDefinitionObjectProperty2Instance.
-	  ?divDefinitionObjectProperty2Instance rdf:type html:Section;
+      ?divDefinitionObjectProperty1Instance rdf:type html:Div;
+                                            ?memberObjectPropertyString ?divDefinitionObjectProperty2Instance.
+      ?divDefinitionObjectProperty2Instance rdf:type html:Section;
                                    rdf:_1 ?objectProperty_title_instance_h2;
                                    rdf:_2 ?objectProperty_definition_instance.
       ?objectProperty_title_instance_h2     rdf:type html:H2;
                                    ?memberTitle ?objectProperty_dfn_instance.
       ?objectProperty_dfn_instance          rdf:type html:Dfn;
-	                               ?memberDfn ?objectProperty_title_text_instance.
+                                   ?memberDfn ?objectProperty_title_text_instance.
       ?objectProperty_title_text_instance   rdf:type html:TextElement;
                                    html:fragment ?objectPropertyLabel2.
       ?objectProperty_definition_instance   rdf:type html:TextElement;
@@ -383,17 +404,17 @@ construct {
 where  {
    {?sectionDefinition rdf:type html:Section;
                        ?member ?divDefinitionObjectProperty1.
-	?divDefinitionObjectProperty1 rdf:type respec:ObjectPropertyDefinitionDiv;
-                       ?memberDiv ?divDefinitionObjectProperty2.				   				  
-    ?divDefinitionObjectProperty2 rdf:type respec:ObjectPropertyDefinitionInstance;       
+    ?divDefinitionObjectProperty1 rdf:type respec:ObjectPropertyDefinitionDiv;
+                       ?memberDiv ?divDefinitionObjectProperty2.
+    ?divDefinitionObjectProperty2 rdf:type respec:ObjectPropertyDefinitionInstance;
                         rdf:_1 ?H2_class_title;
-						rdf:_2 ?P_class_definition.
-	?H2_class_title a respec:ObjectProperty;
+                        rdf:_2 ?P_class_definition.
+    ?H2_class_title a respec:ObjectProperty;
                         ?memberTitle ?objectProperty_dfn.
-	?objectProperty_dfn rdf:type respec:ObjectPropertyDfn;
-	                    ?memberDfn ?objectProperty_title.
+    ?objectProperty_dfn rdf:type respec:ObjectPropertyDfn;
+                        ?memberDfn ?objectProperty_title.
     ?objectProperty_title        rdf:type respec:ObjectPropertyTitle.
-	?P_class_definition rdf:type respec:ObjectProperty;
+    ?P_class_definition rdf:type respec:ObjectProperty;
                         ?memberText ?objectProperty_definition_text.
     ?objectProperty_definition_text a respec:ObjectPropertyDefinitionText.
   }
@@ -447,15 +468,15 @@ prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
 construct {
 
-	  ?divDefinitionDatatypeProperty1Instance rdf:type html:Div;
-	                               ?memberDatatypePropertyString ?divDefinitionDatatypeProperty2Instance.
-	  ?divDefinitionDatatypeProperty2Instance rdf:type html:Section;
+      ?divDefinitionDatatypeProperty1Instance rdf:type html:Div;
+                                              ?memberDatatypePropertyString ?divDefinitionDatatypeProperty2Instance.
+      ?divDefinitionDatatypeProperty2Instance rdf:type html:Section;
                                    rdf:_1 ?datatypeProperty_title_instance_h2;
                                    rdf:_2 ?datatypeProperty_definition_instance.
       ?datatypeProperty_title_instance_h2     rdf:type html:H2;
                                    ?memberTitle ?datatypeProperty_dfn_instance.
       ?datatypeProperty_dfn_instance          rdf:type html:Dfn;
-	                               ?memberDfn ?datatypeProperty_title_text_instance.
+                                   ?memberDfn ?datatypeProperty_title_text_instance.
       ?datatypeProperty_title_text_instance   rdf:type html:TextElement;
                                    html:fragment ?datatypePropertyLabel2.
       ?datatypeProperty_definition_instance   rdf:type html:TextElement;
@@ -465,17 +486,17 @@ construct {
 where  {
    {?sectionDefinition rdf:type html:Section;
                        ?member ?divDefinitionDatatypeProperty1.
-	?divDefinitionDatatypeProperty1 rdf:type respec:DatatypePropertyDefinitionDiv;
-                       ?memberDiv ?divDefinitionDatatypeProperty2.				   				  
-    ?divDefinitionDatatypeProperty2 rdf:type respec:DatatypePropertyDefinitionInstance;       
+    ?divDefinitionDatatypeProperty1 rdf:type respec:DatatypePropertyDefinitionDiv;
+                       ?memberDiv ?divDefinitionDatatypeProperty2.
+    ?divDefinitionDatatypeProperty2 rdf:type respec:DatatypePropertyDefinitionInstance;
                         rdf:_1 ?H2_class_title;
-						rdf:_2 ?P_class_definition.
-	?H2_class_title a respec:DatatypeProperty;
+                        rdf:_2 ?P_class_definition.
+    ?H2_class_title a respec:DatatypeProperty;
                         ?memberTitle ?datatypeProperty_dfn.
-	?datatypeProperty_dfn rdf:type respec:DatatypePropertyDfn;
-	                    ?memberDfn ?datatypeProperty_title.
+    ?datatypeProperty_dfn rdf:type respec:DatatypePropertyDfn;
+                        ?memberDfn ?datatypeProperty_title.
     ?datatypeProperty_title        rdf:type respec:DatatypePropertyTitle.
-	?P_class_definition rdf:type respec:DatatypeProperty;
+    ?P_class_definition rdf:type respec:DatatypeProperty;
                         ?memberText ?datatypeProperty_definition_text.
      ?datatypeProperty_definition_text a respec:DatatypePropertyDefinitionText.
   }
@@ -530,15 +551,15 @@ prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
 construct {
 
-	  ?divDefinitionNodeShape1Instance rdf:type html:Div;
-	                               ?memberNodeShapeString ?divDefinitionNodeShape2Instance.
-	  ?divDefinitionNodeShape2Instance rdf:type html:Section;
+      ?divDefinitionNodeShape1Instance rdf:type html:Div;
+                                       ?memberNodeShapeString ?divDefinitionNodeShape2Instance.
+      ?divDefinitionNodeShape2Instance rdf:type html:Section;
                                    rdf:_1 ?nodeShape_title_instance_h2;
                                    rdf:_2 ?nodeShape_definition_instance.
       ?nodeShape_title_instance_h2     rdf:type html:H2;
                                    ?memberTitle ?nodeShape_dfn_instance.
       ?nodeShape_dfn_instance          rdf:type html:Dfn;
-	                               ?memberDfn ?nodeShape_title_text_instance.
+                                   ?memberDfn ?nodeShape_title_text_instance.
       ?nodeShape_title_text_instance   rdf:type html:TextElement;
                                    html:fragment ?nodeShapeLabel2.
       ?nodeShape_definition_instance   rdf:type html:TextElement;
@@ -548,17 +569,17 @@ construct {
 where  {
    {?sectionDefinition rdf:type html:Section;
                        ?member ?divDefinitionNodeShape1.
-	?divDefinitionNodeShape1 rdf:type respec:NodeShapeDefinitionDiv;
+    ?divDefinitionNodeShape1 rdf:type respec:NodeShapeDefinitionDiv;
                        ?memberDiv ?divDefinitionNodeShape2.				   				  
     ?divDefinitionNodeShape2 rdf:type respec:NodeShapeDefinitionInstance;       
                         rdf:_1 ?H2_class_title;
-						rdf:_2 ?P_class_definition.
-	?H2_class_title a respec:NodeShape;
+                        rdf:_2 ?P_class_definition.
+    ?H2_class_title a respec:NodeShape;
                         ?memberTitle ?nodeShape_dfn.
-	?nodeShape_dfn rdf:type respec:NodeShapeDfn;
-	                    ?memberDfn ?nodeShape_title.
+    ?nodeShape_dfn rdf:type respec:NodeShapeDfn;
+                            ?memberDfn ?nodeShape_title.
     ?nodeShape_title        rdf:type respec:NodeShapeTitle.
-	?P_class_definition rdf:type respec:NodeShape;
+    ?P_class_definition rdf:type respec:NodeShape;
                         ?memberText ?nodeShape_definition_text.
      ?nodeShape_definition_text a respec:NodeShapeDefinitionText.
   }
