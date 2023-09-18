@@ -1,2 +1,2 @@
-# OntoRespec
+# OntoReSpec
 A RDF-based vocabulary to generate ReSpec specification documents
