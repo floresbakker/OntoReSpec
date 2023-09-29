@@ -602,7 +602,7 @@ doc:54.6.1 a respec:StaticElement,
     rdfs:label "text element" ;
     html:fragment "Classes" .
 
-doc:54.7 a respec:ClassDefinitionDiv,
+doc:54.7 a respec:ClassDefinition,
         respec:Template,
         html:Div ;
     rdfs:label "Div" ;

@@ -291,42 +291,40 @@ construct {
                                    rdf:_1 ?class_title_instance_h2;
                                    rdf:_2 ?class_definition_instance;
                                    rdf:_3 ?class_linebreak_instance;  
-                                   rdf:_4 ?manchester_definition_instance.
+								   rdf:_4 ?class_linebreak_instance2;
+								   rdf:_5 ?manchester_syntax_instance.
       ?class_title_instance_h2     rdf:type html:H2;
-                                   ?memberTitle ?class_dfn_instance.
+                                   rdf:_1 ?class_dfn_instance.
       ?class_dfn_instance          rdf:type html:Dfn;
-                                   ?memberDfn ?class_title_text_instance.
+                                   rdf:_1 ?class_title_text_instance.
       ?class_title_text_instance   rdf:type html:TextElement;
                                    html:fragment ?classLabel2.
       ?class_definition_instance   rdf:type html:TextElement;
                                    html:fragment ?classDefinition.
       ?class_linebreak_instance    rdf:type html:Br.
+	  ?class_linebreak_instance2   rdf:type html:Br.
+	  ?manchester_syntax_instance  rdf:type html:Aside;
+	                               html:class "note" ;
+                                   html:title "Manchester Syntax";
+								   rdf:_1 ?manchester_code_instance.
+      ?manchester_code_instance    rdf:type html:Code;
+								   rdf:_1 ?manchester_label_instance;
+								   rdf:_2 ?manchester_definition_instance.
+	  ?manchester_label_instance   rdf:type html:TextElement;
+                                   html:fragment ?manchesterLabelColon.
       ?manchester_definition_instance rdf:type html:TextElement;
-                                      html:fragment ?manchesterDefinition.
+                                    html:fragment ?manchesterDefinition.
 }
 where  {
-   {?sectionDefinition rdf:type html:Section;
-                       ?member ?divDefinitionClass1.
-    ?divDefinitionClass1 rdf:type respec:ClassDefinitionDiv;
-                       ?memberDiv ?divDefinitionClass2.
-    ?divDefinitionClass2 rdf:type respec:ClassDefinitionInstance;
-                        rdf:_1 ?H2_class_title;
-                        rdf:_2 ?P_class_definition;
-						rdf:_3 ?class_linebreak;
-						rdf:_4 ?manchesterDefinitionText.
-    ?H2_class_title a respec:Class;
-                        ?memberTitle ?class_dfn.
-    ?class_dfn rdf:type respec:ClassDfn;
-                        ?memberDfn ?class_title.
-    ?class_title        rdf:type respec:ClassTitle.
-    ?P_class_definition rdf:type respec:Class;
-                        ?memberText ?class_definition_text.
-    ?class_definition_text a respec:ClassDefinitionText.
-	?class_linebreak    rdf:type respec:ClassLineBreak.
-	?manchesterDefinitionText rdf:type respec:ManchesterDefinition.
+   
+   # Get the template 
+   
+   {?divDefinitionClass1 rdf:type respec:ClassDefinition.
 						
-  }
+   }
 
+   # Get the class from the ontology, the label and description, and the sequence order in which the class appears amidst other classes alphanumerically.
+   
    {SELECT ?class ?classLabel ?classDefinition (COUNT(?prevClass) + 1 AS ?memberClass)
 WHERE {
   ?class a owl:Class .
@@ -340,29 +338,41 @@ WHERE {
   }
 }
   GROUP BY ?classLabel ?class ?classDefinition
-  ORDER BY ?classLabel
+  ORDER BY ?classLabel # order alphanumerically so that the class definitions appear in the correct order
 }
-  BIND (IRI(CONCAT(str(rdf:),"_", str(?memberClass))) as ?memberClassString)
+  BIND (IRI(CONCAT(str(rdf:),"_", str(?memberClass))) as ?memberClassString) #this is the rdf:_x property that indicates the order in which the class appears
 
-{SELECT ?class ?manchesterDefinition
+# Get the manchester syntax metadata for the class
+
+{SELECT ?class ?manchesterLabel ?manchesterDefinition
 WHERE {
   ?class a owl:Class .
+  ?class manchester:label ?manchesterLabel.
   ?class manchester:definition ?manchesterDefinition.
   
   }
 }
-
+  bind(concat(str(?manchesterLabel), ': ') as ?manchesterLabelColon)
+  
   # Create identifiers
   bind(COALESCE(?classLabel, "Unknown class label") as ?classLabel2)
-  bind(IRI(CONCAT(STR(?sectionDefinition), '-instance')) as ?sectionDefinitionInstance)
+  
   bind(IRI(CONCAT(STR(?divDefinitionClass1),'-instance')) as ?divDefinitionClass1Instance)
-  bind(IRI(CONCAT(STR(?divDefinitionClass2), '-', str(?memberClass),'-instance')) as ?divDefinitionClass2Instance)
-  bind(IRI(CONCAT(STR(?class_title), '-', str(?memberClass), '-instance')) as ?class_title_text_instance)
-  bind(IRI(CONCAT(STR(?H2_class_title), '-', str(?memberClass), '-instance')) as ?class_title_instance_h2)
-  bind(IRI(CONCAT(STR(?class_definition_text), '-', str(?memberClass), '-instance')) as ?class_definition_instance)
-  bind(IRI(CONCAT(STR(?class_dfn), '-', str(?memberClass), '-instance')) as ?class_dfn_instance)
-  bind(IRI(CONCAT(STR(?class_linebreak), '-', str(?memberClass), '-instance')) as ?class_linebreak_instance)
-  bind(IRI(CONCAT(STR(?manchesterDefinitionText), '-', str(?memberClass), '-instance')) as ?manchester_definition_instance)
+  bind(IRI(CONCAT(STR(?divDefinitionClass1Instance), '-', str(?memberClass),'-1')) as ?divDefinitionClass2Instance)
+  bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-1')) as ?class_title_instance_h2)
+  bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-2')) as ?class_definition_instance)
+  bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-3')) as ?class_linebreak_instance)
+  bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-4')) as ?class_linebreak_instance2)
+  bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-5')) as ?manchester_syntax_instance)
+  
+  bind(IRI(CONCAT(STR(?class_title_instance_h2), '-1')) as ?class_dfn_instance)
+  bind(IRI(CONCAT(STR(?class_dfn_instance), '-1')) as ?class_title_text_instance)
+    
+  # Manchester Code 
+
+  bind(IRI(CONCAT(STR(?manchester_syntax_instance), '-1')) as ?manchester_code_instance)  
+  bind(IRI(CONCAT(STR(?manchester_code_instance), '-1')) as ?manchester_label_instance)
+  bind(IRI(CONCAT(STR(?manchester_code_instance), '-2')) as ?manchester_definition_instance)
   
 }
 """.

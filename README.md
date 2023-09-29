@@ -50,7 +50,7 @@ D. Go to the output folder in \OntoReSpec\Tools\Output and grab your Turtle-file
 
 
 NOTE: This is work in progress. If you want to use the (currently incomplete) OntoReSpec script now:
-1.  first go to https://github.com/floresbakker/manchestersyntax, download the repository and run the manchester syntax script for your ontology. This will enrich your ontology with Manchester Syntax properties. Get the file from the output folder. 
+1.  First go to https://github.com/floresbakker/manchestersyntax, download the repository and run the manchester syntax script for your ontology. This will enrich your ontology with Manchester Syntax properties. Get the file from the output folder. 
 2. Place the output of the manchestersyntax script as input into the OntoReSpec input folder, and run the OntoReSpec script. Get the file from the output folder.
 3. Then go to https://github.com/floresbakker/htmlvoc, download the repository.
 4. Place the output of the OntoReSpec script into the input folder of the RDF2HTML script and run that script. This will generate the HTML file of your ReSpec-document.
