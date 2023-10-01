@@ -285,77 +285,93 @@ prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
 construct {
 
-      ?divDefinitionClass1Instance rdf:type html:Div;
-                                   ?memberClassString ?divDefinitionClass2Instance.
-      ?divDefinitionClass2Instance rdf:type html:Section;
-                                   rdf:_1 ?class_title_instance_h2;
-                                   rdf:_2 ?class_definition_instance;
-                                   rdf:_3 ?class_linebreak_instance;  
-								   rdf:_4 ?class_linebreak_instance2;
-								   rdf:_5 ?manchester_syntax_instance.
-      ?class_title_instance_h2     rdf:type html:H2;
-                                   rdf:_1 ?class_dfn_instance.
-      ?class_dfn_instance          rdf:type html:Dfn;
-                                   rdf:_1 ?class_title_text_instance.
-      ?class_title_text_instance   rdf:type html:TextElement;
-                                   html:fragment ?classLabel2.
-      ?class_definition_instance   rdf:type html:TextElement;
-                                   html:fragment ?classDefinition.
-      ?class_linebreak_instance    rdf:type html:Br.
-	  ?class_linebreak_instance2   rdf:type html:Br.
-	  ?manchester_syntax_instance  rdf:type html:Aside;
-	                               html:class "note" ;
-                                   html:title "Manchester Syntax";
-								   rdf:_1 ?manchester_code_instance.
-      ?manchester_code_instance    rdf:type html:Code;
-								   rdf:_1 ?manchester_label_instance;
-								   rdf:_2 ?manchester_definition_instance.
-	  ?manchester_label_instance   rdf:type html:TextElement;
-                                   html:fragment ?manchesterLabelColon.
-      ?manchester_definition_instance rdf:type html:TextElement;
-                                    html:fragment ?manchesterDefinition.
+      ?divDefinitionClass1Instance            rdf:type html:Div;
+                                              ?memberClassString ?divDefinitionClass2Instance.
+      ?divDefinitionClass2Instance            rdf:type html:Section;
+                                              rdf:_1 ?class_title_instance_h2;
+                                              rdf:_2 ?class_definition_instance;
+                                              rdf:_3 ?class_linebreak_instance;  
+                                              rdf:_4 ?class_linebreak_instance2;
+                                              rdf:_5 ?manchester_syntax_instance.
+      ?class_title_instance_h2                rdf:type html:H2;
+                                              rdf:_1 ?class_dfn_instance.
+      ?class_dfn_instance                     rdf:type html:Dfn;
+                                              rdf:_1 ?class_title_text_instance.
+      ?class_title_text_instance              rdf:type html:TextElement;
+                                              html:fragment ?cleanedManchesterLabel.
+      ?class_definition_instance              rdf:type html:TextElement;
+                                              html:fragment ?classDefinition.
+      ?class_linebreak_instance               rdf:type html:Br.
+      ?class_linebreak_instance2              rdf:type html:Br.
+      ?manchester_syntax_instance             rdf:type html:Aside;
+                                              html:class "note" ;
+                                              html:title "Manchester Syntax";
+                                              rdf:_1 ?manchester_code_label_instance;
+                                              rdf:_2 ?manchester_code_definition_instance.
+      ?manchester_code_label_instance         rdf:type html:Code;
+                                              rdf:_1 ?manchester_label_link;
+                                              rdf:_2 ?colon.
+      ?manchester_code_definition_instance    rdf:type html:Code;
+                                              ?memberManchesterString  ?manchester_definition_block.
+      ?manchester_label_link                  rdf:type html:A;
+                                              rdf:_1 ?manchester_label_instance.
+      ?colon                                  rdf:type html:TextElement;
+                                              html:fragment ":".
+      ?manchester_label_instance              rdf:type html:TextElement;
+                                              html:fragment ?cleanedManchesterLabel.
+      ?manchester_definition_block            rdf:type html:P;
+                                              rdf:_1 ?manchester_definition_instance;
+                                              rdf:_2 ?class_linebreak_instance3.
+      ?manchester_definition_instance         rdf:type html:TextElement;
+                                              html:fragment ?manchesterDefinition.
+      ?class_linebreak_instance3              rdf:type html:Br.
 }
 where  {
    
    # Get the template 
    
    {?divDefinitionClass1 rdf:type respec:ClassDefinition.
-						
+
    }
 
    # Get the class from the ontology, the label and description, and the sequence order in which the class appears amidst other classes alphanumerically.
    
-   {SELECT ?class ?classLabel ?classDefinition (COUNT(?prevClass) + 1 AS ?memberClass)
-WHERE {
-  ?class a owl:Class .
-  ?class skos:prefLabel ?classLabel .
-  ?class skos:definition ?classDefinition_original.
-  BIND(function:escapeHTML(?classDefinition_original) as ?classDefinition)
-  OPTIONAL {
+   {SELECT ?class ?manchesterLabel ?classDefinition_original (COUNT(?prevClass) + 1 AS ?memberClass)
+    WHERE {
+      ?class a owl:Class .
+      ?class skos:definition ?classDefinition_original.
+      ?class manchester:label ?manchesterLabel.
+      
+    OPTIONAL {
     ?prevClass a owl:Class .
-    ?prevClass skos:prefLabel ?prevLabel .
-    FILTER(?prevLabel < ?classLabel)
-  }
-}
-  GROUP BY ?classLabel ?class ?classDefinition
-  ORDER BY ?classLabel # order alphanumerically so that the class definitions appear in the correct order
-}
-  BIND (IRI(CONCAT(str(rdf:),"_", str(?memberClass))) as ?memberClassString) #this is the rdf:_x property that indicates the order in which the class appears
+    ?prevClass manchester:label ?prevLabel .
+    FILTER(?prevLabel < ?manchesterLabel)
+     }
+    }
+    GROUP BY ?class ?manchesterLabel ?classDefinition
+    ORDER BY ?manchesterLabel # order alphanumerically so that the class definitions appear in the correct order
+   }
+   BIND(IRI(CONCAT(str(rdf:),"_", str(?memberClass))) as ?memberClassString) #this is the rdf:_x property that indicates the order in which the class appears
+   BIND(function:escapeHTML(concat(str(?manchesterLabel), ': ')) as ?manchesterLabelColon)
+   BIND(function:escapeHTML(?classDefinition_original) as ?classDefinition)
 
-# Get the manchester syntax metadata for the class
-
-{SELECT ?class ?manchesterLabel ?manchesterDefinition
-WHERE {
-  ?class a owl:Class .
-  ?class manchester:label ?manchesterLabel.
-  ?class manchester:definition ?manchesterDefinition.
+   {SELECT ?class ?manchesterDefinition (COUNT(?prevManchesterDefinition) + 1 AS ?memberManchester)
+    WHERE {
+      ?class a owl:Class .
+      ?class manchester:definition ?manchesterDefinition.  
+    OPTIONAL {
+      ?class manchester:definition ?prevManchesterDefinition .
+    FILTER(?prevManchesterDefinition < ?manchesterDefinition)
+    }
+   }
+   GROUP BY ?class ?manchesterDefinition ?class ?classDefinition
+   ORDER BY ?manchesterDefinition # order alphanumerically so that the class definitions appear in the correct order
+   }
   
-  }
-}
-  bind(concat(str(?manchesterLabel), ': ') as ?manchesterLabelColon)
+  BIND(IRI(CONCAT(str(rdf:),"_", str(?memberManchester))) as ?memberManchesterString) #this is the rdf:_x property that indicates the order in which the manchester definition appears
+  BIND(function:escapeHTML(?manchesterLabel) as ?cleanedManchesterLabel)
   
-  # Create identifiers
-  bind(COALESCE(?classLabel, "Unknown class label") as ?classLabel2)
+  # Create identifiers - generic
   
   bind(IRI(CONCAT(STR(?divDefinitionClass1),'-instance')) as ?divDefinitionClass1Instance)
   bind(IRI(CONCAT(STR(?divDefinitionClass1Instance), '-', str(?memberClass),'-1')) as ?divDefinitionClass2Instance)
@@ -364,15 +380,19 @@ WHERE {
   bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-3')) as ?class_linebreak_instance)
   bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-4')) as ?class_linebreak_instance2)
   bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-5')) as ?manchester_syntax_instance)
-  
   bind(IRI(CONCAT(STR(?class_title_instance_h2), '-1')) as ?class_dfn_instance)
   bind(IRI(CONCAT(STR(?class_dfn_instance), '-1')) as ?class_title_text_instance)
     
-  # Manchester Code 
+  # Create identifiers - Manchester Syntax 
 
-  bind(IRI(CONCAT(STR(?manchester_syntax_instance), '-1')) as ?manchester_code_instance)  
-  bind(IRI(CONCAT(STR(?manchester_code_instance), '-1')) as ?manchester_label_instance)
-  bind(IRI(CONCAT(STR(?manchester_code_instance), '-2')) as ?manchester_definition_instance)
+  bind(IRI(CONCAT(STR(?manchester_syntax_instance), '-1')) as ?manchester_code_label_instance)  
+  bind(IRI(CONCAT(STR(?manchester_syntax_instance), '-2')) as ?manchester_code_definition_instance)  
+  bind(IRI(CONCAT(STR(?manchester_code_label_instance), '-1')) as ?manchester_label_link)
+  bind(IRI(CONCAT(STR(?manchester_code_label_instance), '-2')) as ?colon)
+  bind(IRI(CONCAT(STR(?manchester_label_link), '-1')) as ?manchester_label_instance)
+  bind(IRI(CONCAT(STR(?manchester_code_definition_instance), '-',str(?memberManchester))) as ?manchester_definition_block)
+  bind(IRI(CONCAT(STR(?manchester_definition_block), '-1')) as ?manchester_definition_instance)
+  bind(IRI(CONCAT(STR(?manchester_definition_block), '-2')) as ?class_linebreak_instance3)
   
 }
 """.
@@ -469,6 +489,7 @@ prefix dc:  <http://purl.org/dc/elements/1.1/>
 prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
 prefix function: <https://data.rijksfinancien.nl/html/model/function/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
@@ -478,45 +499,57 @@ prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
 construct {
 
-      ?divDefinitionDatatypeProperty1Instance rdf:type html:Div;
-                                              ?memberDatatypePropertyString ?divDefinitionDatatypeProperty2Instance.
-      ?divDefinitionDatatypeProperty2Instance rdf:type html:Section;
-                                   rdf:_1 ?datatypeProperty_title_instance_h2;
-                                   rdf:_2 ?datatypeProperty_definition_instance.
-      ?datatypeProperty_title_instance_h2     rdf:type html:H2;
-                                   ?memberTitle ?datatypeProperty_dfn_instance.
-      ?datatypeProperty_dfn_instance          rdf:type html:Dfn;
-                                   ?memberDfn ?datatypeProperty_title_text_instance.
-      ?datatypeProperty_title_text_instance   rdf:type html:TextElement;
-                                   html:fragment ?datatypePropertyLabel2.
-      ?datatypeProperty_definition_instance   rdf:type html:TextElement;
-                                   html:fragment ?datatypePropertyDefinition.
-    
+      ?datatypeproperty_div                   rdf:type html:Div;
+                                              ?rdf_member ?datatypeproperty_section.
+      ?datatypeproperty_section               rdf:type html:Section;
+                                              rdf:_1 ?datatypeproperty_H2_title;
+                                              rdf:_2 ?datatypeproperty_definition;
+                                              rdf:_3 ?linebreak;  
+                                              rdf:_4 ?linebreak2;
+                                              rdf:_5 ?manchester_syntax.
+      ?datatypeproperty_H2_title              rdf:type html:H2;
+                                              rdf:_1 ?datatypeproperty_dfn.
+      ?datatypeproperty_dfn                   rdf:type html:Dfn;
+                                              rdf:_1 ?datatypeproperty_title.
+      ?datatypeproperty_title                 rdf:type html:TextElement;
+                                              html:fragment ?datatypePropertyLabel_text.
+      ?datatypeproperty_definition            rdf:type html:TextElement;
+                                              html:fragment ?datatypePropertyDefinition_text.
+      ?linebreak                              rdf:type html:Br.
+      ?linebreak2                             rdf:type html:Br.
+      ?manchester_syntax                      rdf:type html:Aside;
+                                              html:class "note" ;
+                                              html:title "Manchester Syntax";
+                                              rdf:_1 ?manchester_code_label;
+                                              rdf:_2 ?manchester_code_domain.
+      ?manchester_code_label                  rdf:type html:Code;
+                                              rdf:_1 ?manchester_label.
+      ?manchester_code_domain                 rdf:type html:Code;
+                                              rdf:_1  ?manchester_domain_paragraph.
+      ?manchester_label                       rdf:type html:TextElement;
+                                              html:fragment ?datatypePropertyManchesterLabel.
+      ?manchester_domain_paragraph            rdf:type html:P;
+                                              rdf:_1 ?manchester_domain;
+                                              rdf:_2 ?linebreak3.
+      ?manchester_domain                      rdf:type html:TextElement;
+                                              html:fragment ?datatypePropertyManchesterDomain.
+      ?linebreak3                             rdf:type html:Br.
+
 }
 where  {
-   {?sectionDefinition rdf:type html:Section;
-                       ?member ?divDefinitionDatatypeProperty1.
-    ?divDefinitionDatatypeProperty1 rdf:type respec:DatatypePropertyDefinitionDiv;
-                       ?memberDiv ?divDefinitionDatatypeProperty2.
-    ?divDefinitionDatatypeProperty2 rdf:type respec:DatatypePropertyDefinitionInstance;
-                        rdf:_1 ?H2_class_title;
-                        rdf:_2 ?P_class_definition.
-    ?H2_class_title a respec:DatatypeProperty;
-                        ?memberTitle ?datatypeProperty_dfn.
-    ?datatypeProperty_dfn rdf:type respec:DatatypePropertyDfn;
-                        ?memberDfn ?datatypeProperty_title.
-    ?datatypeProperty_title        rdf:type respec:DatatypePropertyTitle.
-    ?P_class_definition rdf:type respec:DatatypeProperty;
-                        ?memberText ?datatypeProperty_definition_text.
-     ?datatypeProperty_definition_text a respec:DatatypePropertyDefinitionText.
-  }
+   {?datatypeproperty_Template rdf:type respec:DatatypeProperty.}
    
-   {SELECT ?datatypeProperty ?datatypePropertyLabel ?datatypePropertyDefinition (COUNT(?prevDatatypeProperty) + 1 AS ?memberDatatypeProperty)
+   {SELECT ?datatypeProperty ?datatypePropertyLabel ?datatypePropertyManchesterLabel ?datatypePropertyManchesterDomain ?datatypePropertyDefinition_text (COUNT(?prevDatatypeProperty) + 1 AS ?member)
 WHERE {
   ?datatypeProperty a owl:DatatypeProperty .
   ?datatypeProperty skos:prefLabel ?datatypePropertyLabel .
   ?datatypeProperty skos:definition ?datatypePropertyDefinition_original.
-  BIND(function:escapeHTML(?datatypePropertyDefinition_original) as ?datatypePropertyDefinition)
+  ?datatypeProperty manchester:domain ?datatypePropertyManchesterDomain_original.
+  ?datatypeProperty manchester:label ?datatypePropertyManchesterLabel.
+  
+  BIND(function:escapeHTML(?datatypePropertyDefinition_original) as ?datatypePropertyDefinition_text)
+  BIND(function:escapeHTML(?datatypePropertyManchesterDomain_original) as ?datatypePropertyManchesterDomain)
+  
   OPTIONAL {
     ?prevDatatypeProperty a owl:DatatypeProperty .
     ?prevDatatypeProperty skos:prefLabel ?prevLabel .
@@ -526,18 +559,29 @@ WHERE {
   GROUP BY ?datatypePropertyLabel ?datatypeProperty ?datatypePropertyDefinition
   ORDER BY ?datatypePropertyLabel
 }
-  BIND (IRI(CONCAT(str(rdf:),"_", str(?memberDatatypeProperty))) as ?memberDatatypePropertyString)
+  BIND(IRI(CONCAT(str(rdf:),"_", str(?member))) as ?rdf_member)  
+  BIND(COALESCE(?datatypePropertyLabel, "Unknown class label") as ?datatypePropertyLabel_text)
 
   # Create identifiers
-  bind(COALESCE(?datatypePropertyLabel, "Unknown class label") as ?datatypePropertyLabel2)
-  bind(IRI(CONCAT(STR(?sectionDefinition), '-instance')) as ?sectionDefinitionInstance)
-  bind(IRI(CONCAT(STR(?divDefinitionDatatypeProperty1),'-instance')) as ?divDefinitionDatatypeProperty1Instance)
-  bind(IRI(CONCAT(STR(?divDefinitionDatatypeProperty2), '-', str(?memberDatatypeProperty),'-instance')) as ?divDefinitionDatatypeProperty2Instance)
-  bind(IRI(CONCAT(STR(?datatypeProperty_title), '-', str(?memberDatatypeProperty), '-instance')) as ?datatypeProperty_title_text_instance)
-  bind(IRI(CONCAT(STR(?H2_class_title), '-', str(?memberDatatypeProperty), '-instance')) as ?datatypeProperty_title_instance_h2)
-  bind(IRI(CONCAT(STR(?datatypeProperty_definition_text), '-', str(?memberDatatypeProperty), '-instance')) as ?datatypeProperty_definition_instance)
-  bind(IRI(CONCAT(STR(?datatypeProperty_dfn), '-', str(?memberDatatypeProperty), '-instance')) as ?datatypeProperty_dfn_instance)
   
+  BIND(IRI(CONCAT(STR(?datatypeproperty_Template),'-instance'))                   as ?datatypeproperty_div)
+  BIND(IRI(CONCAT(STR(?datatypeproperty_div), '-', str(?member)))                 as ?datatypeproperty_section)
+  BIND(IRI(CONCAT(STR(?datatypeproperty_section), '-1'))                          as ?datatypeproperty_H2_title) 
+  BIND(IRI(CONCAT(STR(?datatypeproperty_H2_title), '-1'))                         as ?datatypeproperty_dfn)
+  BIND(IRI(CONCAT(STR(?datatypeproperty_dfn), '-1'))                              as ?datatypeproperty_title)
+  BIND(IRI(CONCAT(STR(?datatypeproperty_section), '-2'))                          as ?datatypeproperty_definition)
+  BIND(IRI(CONCAT(STR(?datatypeproperty_section), '-3'))                          as ?linebreak)
+  BIND(IRI(CONCAT(STR(?datatypeproperty_section), '-4'))                          as ?linebreak2)
+  BIND(IRI(CONCAT(STR(?datatypeproperty_section), '-5'))                          as ?manchester_syntax)
+
+  # Create identifiers - Manchester Syntax 
+
+  BIND(IRI(CONCAT(STR(?manchester_syntax), '-1'))           as ?manchester_code_label)  
+  BIND(IRI(CONCAT(STR(?manchester_syntax), '-2'))           as ?manchester_code_domain)  
+  BIND(IRI(CONCAT(STR(?manchester_code_label), '-1'))       as ?manchester_label)
+  BIND(IRI(CONCAT(STR(?manchester_code_domain), '-1'))      as ?manchester_domain_paragraph)
+  BIND(IRI(CONCAT(STR(?manchester_domain_paragraph), '-1')) as ?manchester_domain)
+  BIND(IRI(CONCAT(STR(?manchester_domain_paragraph), '-2')) as ?linebreak3)
 }
 """.
 

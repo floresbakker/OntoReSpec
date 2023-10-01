@@ -739,7 +739,7 @@ doc:56.2.1 a respec:StaticElement,
     rdfs:label "text element" ;
     html:fragment "Datatype Properties" .
 
-doc:56.3 a respec:DatatypePropertyDefinitionDiv,
+doc:56.3 a respec:DatatypeProperty,
         respec:Template,
         html:Div ;
     rdfs:label "Div" ;
