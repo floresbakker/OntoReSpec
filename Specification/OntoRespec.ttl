@@ -364,7 +364,7 @@ where  {
     FILTER(?prevManchesterDefinition < ?manchesterDefinition)
     }
    }
-   GROUP BY ?class ?manchesterDefinition ?class ?classDefinition
+   GROUP BY ?class ?manchesterDefinition
    ORDER BY ?manchesterDefinition # order alphanumerically so that the class definitions appear in the correct order
    }
   
