@@ -2,7 +2,7 @@
 @prefix html: <https://data.rijksfinancien.nl/html/model/def/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix respec: <http://www.example.org/respec/> .
+@prefix respec: <https://respec.org/model/> .
 
 doc:1 a respec:Document,
         respec:TemplateDocument ;
@@ -29,6 +29,7 @@ doc:11.4.1 a respec:Configuration,
         shortName: "a shortName",
         xref: "web-platform",
         group: "working-group",
+		format: "markdown",
       };
     """ .
 
@@ -244,7 +245,7 @@ doc:3.2.9 a respec:StaticElement,
     html:fragment """
 """ .
 
-doc:30.4 a respec:StaticElement,
+doc:30.4 a respec:Introduction,
         respec:Template,
         html:Section ;
     rdfs:label "section" ;
@@ -253,97 +254,54 @@ doc:30.4 a respec:StaticElement,
     rdf:_3 doc:30.4.3 ;
     rdf:_4 doc:32.6 ;
     rdf:_5 doc:30.4.5 ;
-    rdf:_6 doc:33.6 ;
-    rdf:_7 doc:30.4.7 ;
     html:class "informative" .
 
-doc:30.4.1 a respec:StaticElement,
+doc:30.4.1 a respec:IntroductionItem,
         respec:Template,
         html:TextElement ;
     rdfs:label "text element" ;
     html:fragment """
 """ .
 
-doc:30.4.3 a respec:StaticElement,
+doc:30.4.3 a respec:IntroductionItem,
         respec:Template,
         html:TextElement ;
     rdfs:label "text element" ;
     html:fragment """
 """ .
 
-doc:30.4.5 a respec:StaticElement,
+doc:30.4.5 a respec:IntroductionItem,
         respec:Template,
         html:TextElement ;
     rdfs:label "text element" ;
     html:fragment """
 """ .
 
-doc:30.4.7 a respec:StaticElement,
-        respec:Template,
-        html:TextElement ;
-    rdfs:label "text element" ;
-    html:fragment """
-""" .
-
-doc:31.6 a respec:StaticElement,
+doc:31.6 a respec:IntroductionItem,
         respec:Template,
         html:H2 ;
     rdfs:label "h2" ;
     rdf:_1 doc:31.6.1 .
 
-doc:31.6.1 a respec:StaticElement,
+doc:31.6.1 a respec:IntroductionItem,
         respec:Template,
         html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "Introduction" .
 
-doc:32.6 a respec:StaticElement,
+doc:32.6 a respec:IntroductionItem,
         respec:Template,
         html:P ;
     rdfs:label "p" ;
     rdf:_1 doc:32.6.1 .
 
-doc:32.6.1 a respec:Introduction,
+doc:32.6.1 a respec:IntroductionItem,
         respec:Template,
         html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "Some informative introductory text." .
 
-doc:33.6 a respec:StaticElement,
-        respec:Template,
-        html:Aside ;
-    rdfs:label "aside" ;
-    rdf:_1 doc:33.6.1 ;
-    rdf:_2 doc:34.8 ;
-    rdf:_3 doc:33.6.3 ;
-    html:class "note" ;
-    html:title "A useful note" .
 
-doc:33.6.1 a respec:StaticElement,
-        respec:Template,
-        html:TextElement ;
-    rdfs:label "text element" ;
-    html:fragment """
-""" .
-
-doc:33.6.3 a respec:StaticElement,
-        respec:Template,
-        html:TextElement ;
-    rdfs:label "text element" ;
-    html:fragment """
-""" .
-
-doc:34.8 a respec:StaticElement,
-        respec:Template,
-        html:P ;
-    rdfs:label "p" ;
-    rdf:_1 doc:34.8.1 .
-
-doc:34.8.1 a respec:StaticElement,
-        respec:Template,
-        html:TextElement ;
-    rdfs:label "text element" ;
-    html:fragment "I'm a note!" .
 
 doc:37.4 a respec:StaticElement,
         respec:Template,
@@ -410,7 +368,7 @@ doc:38.7.1 a respec:Description,
     rdfs:label "text element" ;
     html:fragment "A description of the ontology" .
 
-doc:39.6 a respec:StaticElement,
+doc:39.6 a respec:Example,
         respec:Template,
         html:Aside ;
     rdfs:label "aside" ;
@@ -421,21 +379,21 @@ doc:39.6 a respec:StaticElement,
     rdf:_5 doc:39.6.5 ;
     html:class "example" .
 
-doc:39.6.1 a respec:StaticElement,
+doc:39.6.1 a respec:ExampleItem,
         respec:Template,
         html:TextElement ;
     rdfs:label "text element" ;
     html:fragment """
 """ .
 
-doc:39.6.3 a respec:StaticElement,
+doc:39.6.3 a respec:ExampleItem,
         respec:Template,
         html:TextElement ;
     rdfs:label "text element" ;
     html:fragment """
 """ .
 
-doc:39.6.5 a respec:StaticElement,
+doc:39.6.5 a respec:ExampleItem,
         respec:Template,
         html:TextElement ;
     rdfs:label "text element" ;
@@ -448,26 +406,26 @@ doc:4.4 a respec:StaticElement,
     rdfs:label "meta" ;
     html:charset "utf-8" .
 
-doc:40.8 a respec:StaticElement,
+doc:40.8 a respec:ExampleItem,
         respec:Template,
         html:P ;
     rdfs:label "p" ;
     rdf:_1 doc:40.8.1 .
 
-doc:40.8.1 a respec:StaticElement,
+doc:40.8.1 a respec:ExampleItem,
         respec:Template,
         html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "This is an example." .
 
-doc:41.8 a respec:StaticElement,
+doc:41.8 a respec:ExampleItem,
         respec:Template,
         html:Pre ;
     rdfs:label "pre" ;
     rdf:_1 doc:41.8.1 ;
     html:class "js" .
 
-doc:41.8.1 a respec:StaticElement,
+doc:41.8.1 a respec:ExampleItem,
         respec:Template,
         html:TextElement ;
     rdfs:label "text element" ;

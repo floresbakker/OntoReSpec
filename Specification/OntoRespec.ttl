@@ -7,13 +7,20 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix respec: <http://www.example.org/respec/> .
+@prefix respec: <https://respec.org/model/> .
 @prefix rule: <https://data.rijksfinancien.nl/html/model/rule/>.
 @prefix shp: <https://data.rijksfinancien.nl/html/model/shp/>.
 @prefix target: <https://data.rijksfinancien.nl/html/model/target/>.
 @prefix sh: <http://www.w3.org/ns/shacl#>.
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
 @prefix skos: <http://www.w3.org/2004/02/skos/core#>.
+
+respec:introduction
+	a owl:DatatypeProperty;
+    rdfs:domain owl:Ontology;
+    rdfs:range xsd:string;
+    skos:definition 'Property that links a text, in which an ontology is presented and introduced to an audience, to that very ontology.'@en;
+    skos:prefLabel 'has introduction'@en.
 
 shp:Document
   a sh:NodeShape;
@@ -29,7 +36,7 @@ prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <http://www.example.org/respec/> 
+prefix respec: <https://respec.org/model/> 
 
 construct {
   ?documentID
@@ -61,7 +68,7 @@ prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <http://www.example.org/respec/> 
+prefix respec: <https://respec.org/model/> 
 
 construct {
   ?elementID
@@ -93,7 +100,7 @@ construct {
 
 shp:OntologyMetadata
   a sh:NodeShape;
-  sh:rule rule:Title, rule:Description, rule:Abstract, rule:Version, rule:Classes, rule:ObjectProperties, rule:DatatypeProperties, rule:NodeShapes;
+  sh:rule rule:Title, rule:Introduction, rule:Description, rule:Example, rule:Abstract, rule:Version, rule:Classes, rule:ObjectProperties, rule:DatatypeProperties, rule:NodeShapes;
   sh:targetClass owl:Ontology.
 
 
@@ -108,7 +115,7 @@ prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <http://www.example.org/respec/> 
+prefix respec: <https://respec.org/model/> 
 prefix schema: <http://schema.org/>
 
 construct {
@@ -131,6 +138,50 @@ construct {
 }""".
 
 
+rule:Introduction
+  a sh:SPARQLRule;
+  skos:prefLabel 'Introduction rule'@en;
+  rdfs:comment 'The Introduction rule creates an introduction for the ontology in the document.'@en ;
+  sh:construct """
+prefix dct: <http://purl.org/dc/terms/>
+prefix dc:  <http://purl.org/dc/elements/1.1/>
+prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix function: <https://data.rijksfinancien.nl/html/model/function/>
+prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+prefix respec: <https://respec.org/model/> 
+prefix schema: <http://schema.org/>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+
+construct {
+  ?introductionSectionInstance        rdf:type html:Section;
+                                      rdf:_1 ?introductionH2;
+                                      rdf:_2 ?introductionParagraph;
+                                      html:class "informative".
+  ?introductionH2                     rdf:type html:H2;
+                                      rdf:_1 ?introductionTitle.
+  ?introductionTitle                  rdf:type html:TextElement;
+                                      html:fragment "Introduction".
+  ?introductionParagraph              rdf:type html:P;
+                                      rdf:_1 ?introductionText.
+  ?introductionText                   rdf:type html:TextElement;
+                                      html:fragment ?ontologyIntroduction.  
+} where {
+   {?introductionSection a respec:Introduction}
+    optional
+   {$this respec:introduction ?introduction}
+
+  BIND(COALESCE(function:escapeHTML(?introduction), "Introduction not available") as ?ontologyIntroduction)
+
+  # Create identifiers
+  bind(iri(concat(str(?introductionSection),'-instance')) as ?introductionSectionInstance)
+  bind(iri(concat(str(?introductionSectionInstance),'-1')) as ?introductionH2)
+  bind(iri(concat(str(?introductionSectionInstance),'-2')) as ?introductionParagraph)
+  bind(iri(concat(str(?introductionH2),'-1')) as ?introductionTitle)
+  bind(iri(concat(str(?introductionParagraph),'-1')) as ?introductionText)
+    
+}""".
 
 rule:Description
   a sh:SPARQLRule;
@@ -143,7 +194,7 @@ prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <http://www.example.org/respec/> 
+prefix respec: <https://respec.org/model/> 
 prefix schema: <http://schema.org/>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
@@ -170,7 +221,45 @@ construct {
     
 }""".
 
+rule:Example
+  a sh:SPARQLRule;
+  skos:prefLabel 'Example rule'@en;
+  rdfs:comment 'The Example rule creates an example for the ontology in the document.'@en ;
+  sh:construct """
+prefix dct: <http://purl.org/dc/terms/>
+prefix dc:  <http://purl.org/dc/elements/1.1/>
+prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix function: <https://data.rijksfinancien.nl/html/model/function/>
+prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+prefix respec: <https://respec.org/model/> 
+prefix schema: <http://schema.org/>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
+construct {
+  ?exampleElementAside   rdf:type html:Aside;
+                         html:class 'example';
+                         rdf:_1 ?exampleParagraph.
+  ?exampleParagraph      rdf:type html:P;
+                         rdf:_1 ?examplePre.
+  ?examplePre            rdf:type html:Pre;
+                         rdf:_1 ?exampleTextElement.
+  ?exampleTextElement    rdf:type html:TextElement;
+                         html:fragment ?ontologyExample.
+} where {
+  
+  ?exampleElement a respec:Example.
+  $this skos:example ?example.
+  BIND(function:escapeHTML(?example) as ?ontologyExample)
+  
+  # Create identifiers
+  BIND(IRI(CONCAT(STR(?exampleElement),'-instance')) as ?exampleElementAside)
+  BIND(IRI(CONCAT(STR(?exampleElementAside), '-1')) as ?exampleParagraph)
+  BIND(IRI(CONCAT(STR(?exampleParagraph),'-1')) as ?examplePre)
+  BIND(IRI(CONCAT(STR(?examplePre),'-1')) as ?exampleTextElement)
+    
+}""".
 
 rule:Abstract
   a sh:SPARQLRule;
@@ -183,7 +272,7 @@ prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <http://www.example.org/respec/> 
+prefix respec: <https://respec.org/model/> 
 
 construct {
   ?abstractTextElementID rdf:type html:TextElement;
@@ -214,7 +303,7 @@ prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix prov: <http://www.w3.org/ns/prov#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <http://www.example.org/respec/> 
+prefix respec: <https://respec.org/model/> 
 prefix schema: <http://schema.org/>
 
 construct {
@@ -279,7 +368,7 @@ prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <http://www.example.org/respec/> 
+prefix respec: <https://respec.org/model/> 
 prefix schema: <http://schema.org/>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
@@ -410,7 +499,7 @@ prefix html: <https://data.rijksfinancien.nl/html/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <http://www.example.org/respec/> 
+prefix respec: <https://respec.org/model/> 
 prefix schema: <http://schema.org/>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
@@ -493,7 +582,7 @@ prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <http://www.example.org/respec/> 
+prefix respec: <https://respec.org/model/> 
 prefix schema: <http://schema.org/>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
@@ -599,7 +688,7 @@ prefix html: <https://data.rijksfinancien.nl/html/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <http://www.example.org/respec/> 
+prefix respec: <https://respec.org/model/> 
 prefix schema: <http://schema.org/>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
