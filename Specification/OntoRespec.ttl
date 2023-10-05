@@ -428,6 +428,7 @@ prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 prefix respec: <https://respec.org/model/> 
 prefix schema: <http://schema.org/>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix vann: <http://purl.org/vocab/vann/>
 
 construct {
 
@@ -452,7 +453,8 @@ construct {
 											  rdf:_2 ?class_IRI_a.
       ?class_IRI_strong                       rdf:type html:Strong;
                                               rdf:_1 ?class_IRI_text.
-      ?class_IRI_text                         html:fragment 'IRI:'.
+      ?class_IRI_text                         rdf:type html:TextElement;
+                                              html:fragment 'IRI: '.
       ?class_IRI_a                            rdf:type html:A;
                                               html:href ?IRI_href;
                                               rdf:_1 ?IRI_value.
@@ -511,9 +513,17 @@ where  {
     GROUP BY ?class ?manchesterLabel ?classDefinition
     ORDER BY ?manchesterLabel # order alphanumerically so that the class definitions appear in the correct order
    }
+   
+   # Establishing the IRI, base IRI and relative IRI of the class
+   
+   OPTIONAL{
+   $this vann:preferredNamespaceUri ?IRI_base;
+         vann:preferredNamespacePrefix ?IRI_prefix.}
    BIND(STR(?class) as ?IRI_href)
-   BIND(STR(?class) as ?IRI_value_text)
-   BIND(IRI(CONCAT(str(rdf:),"_", str(?memberClass))) as ?memberClassString) #this is the rdf:_x property that indicates the order in which the class appears
+   BIND(STRAFTER(STR(?class), ?IRI_base) as ?IRI_reference)
+   BIND(COALESCE(CONCAT(STR(?IRI_prefix),":",?IRI_reference), ?IRI_href) as ?IRI_value_text) 
+   
+   BIND(IRI(CONCAT(str(rdf:),"_", str(?memberClass))) as ?memberClassString) 
    BIND(function:escapeHTML(concat(str(?manchesterLabel), ': ')) as ?manchesterLabelColon)
    BIND(function:escapeHTML(?classDefinition_original) as ?classDefinition)
 
@@ -581,11 +591,13 @@ prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 prefix respec: <https://respec.org/model/> 
 prefix schema: <http://schema.org/>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix vann: <http://purl.org/vocab/vann/>
 
 construct {
 
       ?divDefinitionObjectProperty1Instance rdf:type html:Div;
-                                            ?memberObjectPropertyString ?divDefinitionObjectProperty2Instance.
+                                            ?memberObjectPropertyString ?divDefinitionObjectProperty2Instance;
+											html:fragment ?absenceOfObjectPropertyDefinitions.
       ?divDefinitionObjectProperty2Instance rdf:type html:Section;
                                    rdf:_1 ?objectProperty_title_instance_h2;
                                    rdf:_2 ?objectProperty_definition_instance.
@@ -632,17 +644,19 @@ WHERE {
   GROUP BY ?objectPropertyLabel ?objectProperty ?objectPropertyDefinition
   ORDER BY ?objectPropertyLabel
 }
-  BIND (IRI(CONCAT(str(rdf:),"_", str(?memberObjectProperty))) as ?memberObjectPropertyString)
-
+  BIND(IRI(CONCAT(str(rdf:),"_", str(?memberObjectProperty))) as ?memberObjectPropertyString)
+  BIND(IF(!BOUND(?objectProperty), "This ontology does not define any object property.", ?unboundDummy) as ?absenceOfObjectPropertyDefinitions)
+  
   # Create identifiers
-  bind(COALESCE(?objectPropertyLabel, "Unknown class label") as ?objectPropertyLabel2)
-  bind(IRI(CONCAT(STR(?sectionDefinition), '-instance')) as ?sectionDefinitionInstance)
-  bind(IRI(CONCAT(STR(?divDefinitionObjectProperty1),'-instance')) as ?divDefinitionObjectProperty1Instance)
-  bind(IRI(CONCAT(STR(?divDefinitionObjectProperty2), '-', str(?memberObjectProperty),'-instance')) as ?divDefinitionObjectProperty2Instance)
-  bind(IRI(CONCAT(STR(?objectProperty_title), '-', str(?memberObjectProperty), '-instance')) as ?objectProperty_title_text_instance)
-  bind(IRI(CONCAT(STR(?H2_class_title), '-', str(?memberObjectProperty), '-instance')) as ?objectProperty_title_instance_h2)
-  bind(IRI(CONCAT(STR(?objectProperty_definition_text), '-', str(?memberObjectProperty), '-instance')) as ?objectProperty_definition_instance)
-  bind(IRI(CONCAT(STR(?objectProperty_dfn), '-', str(?memberObjectProperty), '-instance')) as ?objectProperty_dfn_instance)
+  
+  BIND(COALESCE(?objectPropertyLabel, "Unknown class label") as ?objectPropertyLabel2)
+  BIND(IRI(CONCAT(STR(?sectionDefinition), '-instance')) as ?sectionDefinitionInstance)
+  BIND(IRI(CONCAT(STR(?divDefinitionObjectProperty1),'-instance')) as ?divDefinitionObjectProperty1Instance)
+  BIND(IRI(CONCAT(STR(?divDefinitionObjectProperty2), '-', str(?memberObjectProperty),'-instance')) as ?divDefinitionObjectProperty2Instance)
+  BIND(IRI(CONCAT(STR(?objectProperty_title), '-', str(?memberObjectProperty), '-instance')) as ?objectProperty_title_text_instance)
+  BIND(IRI(CONCAT(STR(?H2_class_title), '-', str(?memberObjectProperty), '-instance')) as ?objectProperty_title_instance_h2)
+  BIND(IRI(CONCAT(STR(?objectProperty_definition_text), '-', str(?memberObjectProperty), '-instance')) as ?objectProperty_definition_instance)
+  BIND(IRI(CONCAT(STR(?objectProperty_dfn), '-', str(?memberObjectProperty), '-instance')) as ?objectProperty_dfn_instance)
   
 }
 """.
@@ -664,6 +678,7 @@ prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 prefix respec: <https://respec.org/model/> 
 prefix schema: <http://schema.org/>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix vann: <http://purl.org/vocab/vann/>
 
 construct {
 
@@ -671,25 +686,38 @@ construct {
                                               ?rdf_member ?datatypeproperty_section.
       ?datatypeproperty_section               rdf:type html:Section;
                                               rdf:_1 ?datatypeproperty_H2_title;
-                                              rdf:_2 ?datatypeproperty_definition;
-                                              rdf:_3 ?linebreak;  
-                                              rdf:_4 ?linebreak2;
-                                              rdf:_5 ?manchester_syntax.
+											  rdf:_2 ?datatypeproperty_IRI_p;
+											  rdf:_3 ?linebreak1;
+                                              rdf:_4 ?datatypeproperty_definition;
+                                              rdf:_5 ?linebreak2;  
+                                              rdf:_6 ?linebreak3;
+                                              rdf:_7 ?manchester_syntax.
       ?datatypeproperty_H2_title              rdf:type html:H2;
                                               rdf:_1 ?datatypeproperty_dfn.
       ?datatypeproperty_dfn                   rdf:type html:Dfn;
                                               rdf:_1 ?datatypeproperty_title.
       ?datatypeproperty_title                 rdf:type html:TextElement;
                                               html:fragment ?datatypePropertyLabel_text.
+      ?datatypeproperty_IRI_p                 rdf:type html:P;
+                                              rdf:_1 ?datatypeproperty_IRI_strong;
+											  rdf:_2 ?datatypeproperty_IRI_a.
+      ?datatypeproperty_IRI_strong            rdf:type html:Strong;
+                                              rdf:_1 ?datatypeproperty_IRI_text.
+      ?datatypeproperty_IRI_text              rdf:type html:TextElement;
+                                              html:fragment 'IRI: '.
+      ?datatypeproperty_IRI_a                 rdf:type html:A;
+                                              html:href ?IRI_href;
+                                              rdf:_1 ?IRI_value.
+      ?IRI_value                              rdf:type html:TextElement;
+                                              html:fragment ?IRI_value_text.	  
       ?datatypeproperty_definition            rdf:type html:TextElement;
                                               html:fragment ?datatypePropertyDefinition_text.
-      ?linebreak                              rdf:type html:Br.
-      ?linebreak2                             rdf:type html:Br.
       ?manchester_syntax                      rdf:type html:Aside;
                                               html:class "note" ;
                                               html:title "Manchester Syntax";
                                               rdf:_1 ?manchester_code_label;
-                                              rdf:_2 ?manchester_code_domain.
+                                              rdf:_2 ?manchester_code_domain;
+											  rdf:_3 ?manchester_code_range.
       ?manchester_code_label                  rdf:type html:Code;
                                               rdf:_1 ?manchester_label.
       ?manchester_code_domain                 rdf:type html:Code;
@@ -701,22 +729,33 @@ construct {
                                               rdf:_2 ?linebreak3.
       ?manchester_domain                      rdf:type html:TextElement;
                                               html:fragment ?datatypePropertyManchesterDomain.
-      ?linebreak3                             rdf:type html:Br.
-
+      ?manchester_code_range                  rdf:type html:Code;
+                                              rdf:_1  ?manchester_range_paragraph.
+      ?manchester_range_paragraph             rdf:type html:P;
+                                              rdf:_1 ?manchester_range;
+                                              rdf:_2 ?linebreak4.
+      ?manchester_range                       rdf:type html:TextElement;
+                                              html:fragment ?datatypePropertyManchesterRange.
+	  ?linebreak1                             rdf:type html:Br.
+      ?linebreak2                             rdf:type html:Br.
+	  ?linebreak3                             rdf:type html:Br.
+	  ?linebreak4                             rdf:type html:Br.
 }
 where  {
    {?datatypeproperty_Template rdf:type respec:DatatypeProperty.}
    
-   {SELECT ?datatypeProperty ?datatypePropertyLabel ?datatypePropertyManchesterLabel ?datatypePropertyManchesterDomain ?datatypePropertyDefinition_text (COUNT(?prevDatatypeProperty) + 1 AS ?member)
+   {SELECT ?datatypeProperty ?datatypePropertyLabel ?datatypePropertyManchesterLabel ?datatypePropertyManchesterDomain ?datatypePropertyManchesterRange ?datatypePropertyDefinition_text (COUNT(?prevDatatypeProperty) + 1 AS ?member)
 WHERE {
   ?datatypeProperty a owl:DatatypeProperty .
   ?datatypeProperty skos:prefLabel ?datatypePropertyLabel .
   ?datatypeProperty skos:definition ?datatypePropertyDefinition_original.
   ?datatypeProperty manchester:domain ?datatypePropertyManchesterDomain_original.
+  ?datatypeProperty manchester:range ?datatypePropertyManchesterRange_original.
   ?datatypeProperty manchester:label ?datatypePropertyManchesterLabel.
   
   BIND(function:escapeHTML(?datatypePropertyDefinition_original) as ?datatypePropertyDefinition_text)
   BIND(function:escapeHTML(?datatypePropertyManchesterDomain_original) as ?datatypePropertyManchesterDomain)
+  BIND(function:escapeHTML(?datatypePropertyManchesterRange_original) as ?datatypePropertyManchesterRange)
   
   OPTIONAL {
     ?prevDatatypeProperty a owl:DatatypeProperty .
@@ -730,6 +769,15 @@ WHERE {
   BIND(IRI(CONCAT(str(rdf:),"_", str(?member))) as ?rdf_member)  
   BIND(COALESCE(?datatypePropertyLabel, "Unknown class label") as ?datatypePropertyLabel_text)
 
+  # Establishing the IRI, base IRI and relative IRI of the class
+  
+  OPTIONAL{
+   $this vann:preferredNamespaceUri ?IRI_base;
+         vann:preferredNamespacePrefix ?IRI_prefix.}
+  BIND(STR(?datatypeProperty) as ?IRI_href)
+  BIND(STRAFTER(STR(?datatypeProperty), ?IRI_base) as ?IRI_reference)
+  BIND(COALESCE(CONCAT(STR(?IRI_prefix),":",?IRI_reference), ?IRI_href) as ?IRI_value_text) 
+
   # Create identifiers
   
   BIND(IRI(CONCAT(STR(?datatypeproperty_Template),'-instance'))                   as ?datatypeproperty_div)
@@ -737,19 +785,29 @@ WHERE {
   BIND(IRI(CONCAT(STR(?datatypeproperty_section), '-1'))                          as ?datatypeproperty_H2_title) 
   BIND(IRI(CONCAT(STR(?datatypeproperty_H2_title), '-1'))                         as ?datatypeproperty_dfn)
   BIND(IRI(CONCAT(STR(?datatypeproperty_dfn), '-1'))                              as ?datatypeproperty_title)
-  BIND(IRI(CONCAT(STR(?datatypeproperty_section), '-2'))                          as ?datatypeproperty_definition)
-  BIND(IRI(CONCAT(STR(?datatypeproperty_section), '-3'))                          as ?linebreak)
-  BIND(IRI(CONCAT(STR(?datatypeproperty_section), '-4'))                          as ?linebreak2)
-  BIND(IRI(CONCAT(STR(?datatypeproperty_section), '-5'))                          as ?manchester_syntax)
+  BIND(IRI(CONCAT(STR(?datatypeproperty_section), '-2'))                          as ?datatypeproperty_IRI_p) 
+  BIND(IRI(CONCAT(STR(?datatypeproperty_section), '-3'))                          as ?linebreak1)
+  BIND(IRI(CONCAT(STR(?datatypeproperty_IRI_p), '-1'))                            as ?datatypeproperty_IRI_strong)
+  BIND(IRI(CONCAT(STR(?datatypeproperty_IRI_p), '-2'))                            as ?datatypeproperty_IRI_a)
+  BIND(IRI(CONCAT(STR(?datatypeproperty_IRI_strong), '-1'))                       as ?datatypeproperty_IRI_text)
+  BIND(IRI(CONCAT(STR(?datatypeproperty_IRI_a), '-1'))                            as ?IRI_value)
+  BIND(IRI(CONCAT(STR(?datatypeproperty_section), '-4'))                          as ?datatypeproperty_definition)
+  BIND(IRI(CONCAT(STR(?datatypeproperty_section), '-5'))                          as ?linebreak2)
+  BIND(IRI(CONCAT(STR(?datatypeproperty_section), '-6'))                          as ?linebreak3)
+  BIND(IRI(CONCAT(STR(?datatypeproperty_section), '-7'))                          as ?manchester_syntax)
 
   # Create identifiers - Manchester Syntax 
 
   BIND(IRI(CONCAT(STR(?manchester_syntax), '-1'))           as ?manchester_code_label)  
   BIND(IRI(CONCAT(STR(?manchester_syntax), '-2'))           as ?manchester_code_domain)  
+  BIND(IRI(CONCAT(STR(?manchester_syntax), '-3'))           as ?manchester_code_range)  
   BIND(IRI(CONCAT(STR(?manchester_code_label), '-1'))       as ?manchester_label)
   BIND(IRI(CONCAT(STR(?manchester_code_domain), '-1'))      as ?manchester_domain_paragraph)
   BIND(IRI(CONCAT(STR(?manchester_domain_paragraph), '-1')) as ?manchester_domain)
   BIND(IRI(CONCAT(STR(?manchester_domain_paragraph), '-2')) as ?linebreak3)
+  BIND(IRI(CONCAT(STR(?manchester_code_range), '-1'))       as ?manchester_range_paragraph)
+  BIND(IRI(CONCAT(STR(?manchester_range_paragraph), '-1'))  as ?manchester_range)
+  BIND(IRI(CONCAT(STR(?manchester_range_paragraph), '-2'))  as ?linebreak4)
 }
 """.
 
