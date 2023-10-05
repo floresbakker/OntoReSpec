@@ -23,13 +23,12 @@ doc:11.4.1 a respec:Configuration,
       // All config options at https://respec.org/docs/
       var respecConfig = {
         specStatus: "ED",
-		latestVersion: "VersionURL",
+        latestVersion: "VersionURL",
         editors: [ name: "Your Name" ],
         github: "some-org/mySpec",
         shortName: "a shortName",
         xref: "web-platform",
         group: "working-group",
-		format: "markdown",
       };
     """ .
 
@@ -187,8 +186,7 @@ doc:28.6 a respec:StaticElement,
         respec:Template,
         html:P ;
     rdfs:label "p" ;
-    rdf:_1 doc:28.6.1 ;
-    html:fragment "<p>This is required.</p>" .
+    rdf:_1 doc:28.6.1 .
 
 doc:28.6.1 a respec:StatusOfThisDocument,
         respec:Template,
@@ -246,62 +244,61 @@ doc:3.2.9 a respec:StaticElement,
 """ .
 
 doc:30.4 a respec:Introduction,
-        respec:Template,
-        html:Section ;
-    rdfs:label "section" ;
-    rdf:_1 doc:30.4.1 ;
-    rdf:_2 doc:31.6 ;
-    rdf:_3 doc:30.4.3 ;
-    rdf:_4 doc:32.6 ;
-    rdf:_5 doc:30.4.5 ;
+        respec:Template, 
+		html:Section ;
+    rdf:_1 doc:30.4-1 ;
+    rdf:_2 doc:30.4-2 ;
+    rdf:_3 doc:30.4-3 ;
+    rdf:_4 doc:30.4-4 ;
+    rdf:_5 doc:30.4-5 ;
     html:class "informative" .
 
-doc:30.4.1 a respec:IntroductionItem,
-        respec:Template,
-        html:TextElement ;
-    rdfs:label "text element" ;
-    html:fragment """
-""" .
+doc:30.4-1 a html:H2 ;
+    rdf:_1 doc:30.4-1-1 .
 
-doc:30.4.3 a respec:IntroductionItem,
-        respec:Template,
-        html:TextElement ;
-    rdfs:label "text element" ;
-    html:fragment """
-""" .
-
-doc:30.4.5 a respec:IntroductionItem,
-        respec:Template,
-        html:TextElement ;
-    rdfs:label "text element" ;
-    html:fragment """
-""" .
-
-doc:31.6 a respec:IntroductionItem,
-        respec:Template,
-        html:H2 ;
-    rdfs:label "h2" ;
-    rdf:_1 doc:31.6.1 .
-
-doc:31.6.1 a respec:IntroductionItem,
-        respec:Template,
-        html:TextElement ;
-    rdfs:label "text element" ;
+doc:30.4-1-1 a html:TextElement ;
     html:fragment "Introduction" .
 
-doc:32.6 a respec:IntroductionItem,
-        respec:Template,
-        html:P ;
-    rdfs:label "p" ;
-    rdf:_1 doc:32.6.1 .
+doc:30.4-2 a html:TextElement ;
+    html:fragment "General introductory text"@en .
 
-doc:32.6.1 a respec:IntroductionItem,
-        respec:Template,
-        html:TextElement ;
-    rdfs:label "text element" ;
-    html:fragment "Some informative introductory text." .
+doc:30.4-3 a html:Section ;
+    rdf:_1 doc:30.4-3-1 ;
+    rdf:_2 doc:30.4-3-1-2 .
 
+doc:30.4-3-1 a html:H2 ;
+    rdf:_1 doc:30.4-3-1-1 .
 
+doc:30.4-3-1-1 a html:TextElement ;
+    html:fragment "Background" .
+
+doc:30.4-3-1-2 a html:TextElement ;
+    html:fragment "Background text" .
+
+doc:30.4-4 a html:Section ;
+    rdf:_1 doc:30.4-4-1 ;
+    rdf:_2 doc:30.4-4-1-2 .
+
+doc:30.4-4-1 a html:H2 ;
+    rdf:_1 doc:30.4-4-1-1 .
+
+doc:30.4-4-1-1 a html:TextElement ;
+    html:fragment "Ontology title"@en .
+
+doc:30.4-4-1-2 a html:TextElement .
+
+doc:30.4-5 a html:Section ;
+    rdf:_1 doc:30.4-5-1 ;
+    rdf:_2 doc:30.4-5-1-2 .
+
+doc:30.4-5-1 a html:H2 ;
+    rdf:_1 doc:30.4-5-1-1 .
+
+doc:30.4-5-1-1 a html:TextElement ;
+    html:fragment "Audience" .
+
+doc:30.4-5-1-2 a html:TextElement ;
+    html:fragment "Text in which is explained for which audience this technical specification document is intended."@en .
 
 doc:37.4 a respec:StaticElement,
         respec:Template,
@@ -475,7 +472,7 @@ doc:47.8.1 a respec:StaticElement,
         respec:Template,
         html:TextElement ;
     rdfs:label "text element" ;
-    html:fragment "I'm a sub-section" .
+    html:fragment "Current issues" .
 
 doc:48.8 a respec:StaticElement,
         respec:Template,

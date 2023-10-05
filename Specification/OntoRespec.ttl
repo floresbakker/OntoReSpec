@@ -156,31 +156,88 @@ prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
 construct {
   ?introductionSectionInstance        rdf:type html:Section;
-                                      rdf:_1 ?introductionH2;
-                                      rdf:_2 ?introductionParagraph;
+                                      rdf:_1 ?generalIntroductionH2;
+                                      rdf:_2 ?generalIntroduction_text;
+									  rdf:_3 ?introductionBackgroundSection;
+                                      rdf:_4 ?introductionOntologySection;
+									  rdf:_5 ?introductionAudienceSection;
                                       html:class "informative".
-  ?introductionH2                     rdf:type html:H2;
-                                      rdf:_1 ?introductionTitle.
-  ?introductionTitle                  rdf:type html:TextElement;
+  ?generalIntroductionH2              rdf:type html:H2;
+                                      rdf:_1 ?generalIntroduction_title.
+  ?generalIntroduction_title          rdf:type html:TextElement;
                                       html:fragment "Introduction".
-  ?introductionParagraph              rdf:type html:P;
-                                      rdf:_1 ?introductionText.
-  ?introductionText                   rdf:type html:TextElement;
-                                      html:fragment ?ontologyIntroduction.  
+  ?generalIntroduction_text           rdf:type html:TextElement;
+                                      html:fragment ?generalIntroduction.
+  ?introductionBackgroundSection      rdf:type html:Section;
+                                      rdf:_1 ?introductionBackgroundH2;
+                                      rdf:_2 ?introductionBackground_text.
+  ?introductionBackgroundH2           rdf:type html:H2;
+                                      rdf:_1 ?introductionBackground_title.
+  ?introductionBackground_title       rdf:type html:TextElement;
+                                      html:fragment "Background".
+  ?introductionBackground_text        rdf:type html:TextElement;
+                                      html:fragment ?introductionBackground.	
+  ?introductionOntologySection        rdf:type html:Section;
+                                      rdf:_1 ?introductionOntologyH2;
+                                      rdf:_2 ?introductionOntology_text.
+  ?introductionOntologyH2             rdf:type html:H2;
+                                      rdf:_1 ?introductionOntology_title.
+  ?introductionOntology_title         rdf:type html:TextElement;
+                                      html:fragment ?ontologyTitle.
+  ?introductionOntology_text          rdf:type html:TextElement;
+                                      html:fragment ?ontologyIntroduction.
+  ?introductionAudienceSection        rdf:type html:Section;
+                                      rdf:_1 ?introductionAudienceH2;
+                                      rdf:_2 ?introductionAudience_text.
+  ?introductionAudienceH2             rdf:type html:H2;
+                                      rdf:_1 ?introductionAudience_title.
+  ?introductionAudience_title         rdf:type html:TextElement;
+                                      html:fragment "Audience".
+  ?introductionAudience_text          rdf:type html:TextElement;
+                                      html:fragment ?introductionAudience.
 } where {
    {?introductionSection a respec:Introduction}
     optional
    {$this respec:introduction ?introduction}
-
-  BIND(COALESCE(function:escapeHTML(?introduction), "Introduction not available") as ?ontologyIntroduction)
-
+   optional
+   {$this respec:background ?background}
+   optional
+   {$this respec:ontologyIntroduction ?ontologyIntroduction}
+   optional
+   {$this respec:audience ?audience}
+   optional
+   {$this dc:title ?ontologyTitle1}
+   optional
+   {$this dct:title ?ontologyTitle2}
+   optional
+   {$this schema:name ?ontologyTitle3}
+  
+  BIND(COALESCE(?introduction, "Introduction not available") as ?generalIntroduction) 
+  BIND(COALESCE(?background, "Background not available") as ?introductionBackground) 
+  BIND(COALESCE(?ontologyTitle1, ?ontologyTitle2, ?ontologyTitle3, "Unknown title") as ?ontologyTitle)
+  BIND(COALESCE(?audience, "Audience not available") as ?introductionAudience) 
+  
   # Create identifiers
   bind(iri(concat(str(?introductionSection),'-instance')) as ?introductionSectionInstance)
-  bind(iri(concat(str(?introductionSectionInstance),'-1')) as ?introductionH2)
-  bind(iri(concat(str(?introductionSectionInstance),'-2')) as ?introductionParagraph)
-  bind(iri(concat(str(?introductionH2),'-1')) as ?introductionTitle)
-  bind(iri(concat(str(?introductionParagraph),'-1')) as ?introductionText)
+  bind(iri(concat(str(?introductionSectionInstance),'-1')) as ?generalIntroductionH2 )
+  bind(iri(concat(str(?introductionSectionInstance),'-2')) as ?generalIntroduction_text)
+  bind(iri(concat(str(?generalIntroductionH2 ),'-1')) as ?generalIntroduction_title )
     
+  bind(iri(concat(str(?introductionSectionInstance),'-3')) as ?introductionBackgroundSection )
+  bind(iri(concat(str(?introductionBackgroundSection),'-1')) as ?introductionBackgroundH2)
+  bind(iri(concat(str(?introductionBackgroundSection),'-2')) as ?introductionBackground_text)
+  bind(iri(concat(str(?introductionBackgroundH2),'-1')) as ?introductionBackground_title)
+  
+  bind(iri(concat(str(?introductionSectionInstance),'-4')) as ?introductionOntologySection )
+  bind(iri(concat(str(?introductionOntologySection),'-1')) as ?introductionOntologyH2)
+  bind(iri(concat(str(?introductionOntologySection),'-2')) as ?introductionOntology_text)
+  bind(iri(concat(str(?introductionOntologyH2),'-1')) as ?introductionOntology_title)
+  
+  bind(iri(concat(str(?introductionSectionInstance),'-5')) as ?introductionAudienceSection )
+  bind(iri(concat(str(?introductionAudienceSection),'-1')) as ?introductionAudienceH2)
+  bind(iri(concat(str(?introductionAudienceSection),'-2')) as ?introductionAudience_text)
+  bind(iri(concat(str(?introductionAudienceH2),'-1')) as ?introductionAudience_title)
+  
 }""".
 
 rule:Description
@@ -378,20 +435,31 @@ construct {
                                               ?memberClassString ?divDefinitionClass2Instance.
       ?divDefinitionClass2Instance            rdf:type html:Section;
                                               rdf:_1 ?class_title_instance_h2;
-                                              rdf:_2 ?class_definition_instance;
-                                              rdf:_3 ?class_linebreak_instance;  
-                                              rdf:_4 ?class_linebreak_instance2;
-                                              rdf:_5 ?manchester_syntax_instance.
+											  rdf:_2 ?class_IRI_p;
+											  rdf:_3 ?class_linebreak_instance1; 
+                                              rdf:_4 ?class_definition_instance;
+                                              rdf:_5 ?class_linebreak_instance2;  
+                                              rdf:_6 ?class_linebreak_instance3;
+                                              rdf:_7 ?manchester_syntax_instance.
       ?class_title_instance_h2                rdf:type html:H2;
                                               rdf:_1 ?class_dfn_instance.
       ?class_dfn_instance                     rdf:type html:Dfn;
                                               rdf:_1 ?class_title_text_instance.
       ?class_title_text_instance              rdf:type html:TextElement;
                                               html:fragment ?cleanedManchesterLabel.
+	  ?class_IRI_p                    		  rdf:type html:P;
+                                              rdf:_1 ?class_IRI_strong;
+											  rdf:_2 ?class_IRI_a.
+      ?class_IRI_strong                       rdf:type html:Strong;
+                                              rdf:_1 ?class_IRI_text.
+      ?class_IRI_text                         html:fragment 'IRI:'.
+      ?class_IRI_a                            rdf:type html:A;
+                                              html:href ?IRI_href;
+                                              rdf:_1 ?IRI_value.
+      ?IRI_value                              rdf:type html:TextElement;
+                                              html:fragment ?IRI_value_text.	  
       ?class_definition_instance              rdf:type html:TextElement;
                                               html:fragment ?classDefinition.
-      ?class_linebreak_instance               rdf:type html:Br.
-      ?class_linebreak_instance2              rdf:type html:Br.
       ?manchester_syntax_instance             rdf:type html:Aside;
                                               html:class "note" ;
                                               html:title "Manchester Syntax";
@@ -410,10 +478,13 @@ construct {
                                               html:fragment ?cleanedManchesterLabel.
       ?manchester_definition_block            rdf:type html:P;
                                               rdf:_1 ?manchester_definition_instance;
-                                              rdf:_2 ?class_linebreak_instance3.
+                                              rdf:_2 ?class_linebreak_instance4.
       ?manchester_definition_instance         rdf:type html:TextElement;
                                               html:fragment ?manchesterDefinition.
+      ?class_linebreak_instance1              rdf:type html:Br.
+	  ?class_linebreak_instance2              rdf:type html:Br.
       ?class_linebreak_instance3              rdf:type html:Br.
+	  ?class_linebreak_instance4              rdf:type html:Br.
 }
 where  {
    
@@ -440,6 +511,8 @@ where  {
     GROUP BY ?class ?manchesterLabel ?classDefinition
     ORDER BY ?manchesterLabel # order alphanumerically so that the class definitions appear in the correct order
    }
+   BIND(STR(?class) as ?IRI_href)
+   BIND(STR(?class) as ?IRI_value_text)
    BIND(IRI(CONCAT(str(rdf:),"_", str(?memberClass))) as ?memberClassString) #this is the rdf:_x property that indicates the order in which the class appears
    BIND(function:escapeHTML(concat(str(?manchesterLabel), ': ')) as ?manchesterLabelColon)
    BIND(function:escapeHTML(?classDefinition_original) as ?classDefinition)
@@ -465,10 +538,16 @@ where  {
   bind(IRI(CONCAT(STR(?divDefinitionClass1),'-instance')) as ?divDefinitionClass1Instance)
   bind(IRI(CONCAT(STR(?divDefinitionClass1Instance), '-', str(?memberClass),'-1')) as ?divDefinitionClass2Instance)
   bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-1')) as ?class_title_instance_h2)
-  bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-2')) as ?class_definition_instance)
-  bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-3')) as ?class_linebreak_instance)
-  bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-4')) as ?class_linebreak_instance2)
-  bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-5')) as ?manchester_syntax_instance)
+  bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-2')) as ?class_IRI_p)
+  bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-3')) as ?class_linebreak_instance1)
+  bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-4')) as ?class_definition_instance)
+  bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-5')) as ?class_linebreak_instance2)
+  bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-6')) as ?class_linebreak_instance3)
+  bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-7')) as ?manchester_syntax_instance)
+  bind(IRI(CONCAT(STR(?class_IRI_p), '-1')) as ?class_IRI_strong)
+  bind(IRI(CONCAT(STR(?class_IRI_p), '-2')) as ?class_IRI_a)
+  bind(IRI(CONCAT(STR(?class_IRI_strong), '-1')) as ?class_IRI_text)
+  bind(IRI(CONCAT(STR(?class_IRI_a), '-1')) as ?IRI_value)
   bind(IRI(CONCAT(STR(?class_title_instance_h2), '-1')) as ?class_dfn_instance)
   bind(IRI(CONCAT(STR(?class_dfn_instance), '-1')) as ?class_title_text_instance)
     
