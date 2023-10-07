@@ -707,7 +707,7 @@ doc:56.4 a respec:DatatypePropertyDefinitionInstance,
     rdf:_1 doc:56.9 ;
     rdf:_2 doc:56.10 .
 	
-doc:56.9 a respec:DatatypeProperty,
+doc:56.9 a respec:DatatypePropertyH2,
         respec:Template,
         html:H2 ;
     rdfs:label "h2" ;
@@ -725,7 +725,7 @@ doc:56.9.1 a respec:DatatypePropertyTitle,
     rdfs:label "text element" ;
     html:fragment "{{datatype property title}}" .
 
-doc:56.10 a respec:DatatypeProperty,
+doc:56.10 a respec:DatatypePropertyP,
         respec:Template,
         html:P ;
     rdfs:label "p" ;
