@@ -304,42 +304,13 @@ doc:37.4 a respec:StaticElement,
         respec:Template,
         html:Section ;
     rdfs:label "section" ;
-    rdf:_1 doc:37.4.1 ;
-    rdf:_2 doc:38.6 ;
-    rdf:_3 doc:37.4.3 ;
-	rdf:_4 doc:38.7 ;
-    rdf:_5 doc:39.6 ;
-    rdf:_6 doc:37.4.5 ;
-    rdf:_7 doc:46.6 ;
-    rdf:_8 doc:37.4.7 .
-
-doc:37.4.1 a respec:StaticElement,
-        respec:Template,
-        html:TextElement ;
-    rdfs:label "text element" ;
-    html:fragment """
-""" .
-
-doc:37.4.3 a respec:StaticElement,
-        respec:Template,
-        html:TextElement ;
-    rdfs:label "text element" ;
-    html:fragment """
-""" .
-
-doc:37.4.5 a respec:StaticElement,
-        respec:Template,
-        html:TextElement ;
-    rdfs:label "text element" ;
-    html:fragment """
-""" .
-
-doc:37.4.7 a respec:StaticElement,
-        respec:Template,
-        html:TextElement ;
-    rdfs:label "text element" ;
-    html:fragment """
-""" .
+    rdf:_1 doc:38.6 ;
+	rdf:_2 doc:38.7 ;
+    rdf:_3 doc:39.6 ;
+	rdf:_4 doc:40.7 ;
+	rdf:_5 doc:40.9 ;
+	rdf:_6 doc:41.6 ;
+    rdf:_7 doc:46.6 .
 
 doc:38.6 a respec:StaticElement,
         respec:Template,
@@ -369,33 +340,104 @@ doc:39.6 a respec:Example,
         respec:Template,
         html:Aside ;
     rdfs:label "aside" ;
-    rdf:_1 doc:39.6.1 ;
-    rdf:_2 doc:40.8 ;
-    rdf:_3 doc:39.6.3 ;
-    rdf:_4 doc:41.8 ;
-    rdf:_5 doc:39.6.5 ;
+    rdf:_1 doc:40.8 ;
+    rdf:_2 doc:41.8 ;
     html:class "example" .
 
-doc:39.6.1 a respec:ExampleItem,
+doc:40.7 a respec:StaticElement,
+        respec:Template,
+        html:H2 ;
+    rdfs:label "h2" ;
+	html:class "informative";
+    rdf:_1 doc:40.7.1 .
+	
+doc:40.7.1 a respec:StaticElement,
         respec:Template,
         html:TextElement ;
     rdfs:label "text element" ;
-    html:fragment """
-""" .
+    html:fragment "Namespace" .
 
-doc:39.6.3 a respec:ExampleItem,
+doc:40.9 a respec:StaticElement,
         respec:Template,
-        html:TextElement ;
-    rdfs:label "text element" ;
-    html:fragment """
-""" .
+        html:P ;
+    rdfs:label "P" ;
+    rdf:_1 doc:40.9.1 .
 
-doc:39.6.5 a respec:ExampleItem,
+doc:40.9.1 a respec:StaticElement,
         respec:Template,
         html:TextElement ;
     rdfs:label "text element" ;
-    html:fragment """
-""" .
+    html:fragment "The following namespace prefixes are used throughout this document." .
+
+doc:41.6 a respec:StaticElement,
+        respec:Template,
+        html:Table ;
+    rdfs:label "table element" ;
+	rdf:_1 doc:41.6.1;
+	rdf:_2 doc:41.6.2.
+	
+doc:41.6.1 a respec:StaticElement,
+        respec:Template,
+        html:Caption ;
+    rdfs:label "caption element" ;
+	rdf:_1 doc:41.6.1.1.
+
+doc:41.6.1.1 a respec:StaticElement,
+        respec:Template,
+        html:TextElement ;
+    rdfs:label "text element" ;
+    html:fragment "Prefixes and namespaces used in this specification".
+	
+doc:41.6.2 a respec:StaticElement,
+        respec:NameSpace,
+        respec:Template,
+        html:TableBody ;
+    rdfs:label "table body element" ;
+	rdf:_1 doc:41.6.2.1.
+
+doc:41.6.2.1 a respec:StaticElement,
+        respec:Template,
+        html:Row ;
+    rdfs:label "table row element" ;
+	rdf:_1 doc:41.6.2.1.1;
+	rdf:_2 doc:41.6.2.1.2;
+	rdf:_3 doc:41.6.2.1.3.
+
+doc:41.6.2.1.1 a respec:StaticElement,
+        respec:Template,
+        html:DataCell ;
+    rdfs:label "data cell element" ;
+	rdf:_1 doc:41.6.2.1.1.1.
+
+doc:41.6.2.1.1.1 a respec:StaticElement,
+        respec:Template,
+        html:TextElement ;
+    rdfs:label "text element" ;
+    html:fragment "prefix".
+
+doc:41.6.2.1.2 a respec:StaticElement,
+        respec:Template,
+        html:DataCell ;
+    rdfs:label "data cell element" ;
+	rdf:_1 doc:41.6.2.1.2.1.
+
+doc:41.6.2.1.2.1 a respec:StaticElement,
+        respec:Template,
+        html:TextElement ;
+    rdfs:label "text element" ;
+    html:fragment "namespace IRI".
+
+doc:41.6.2.1.3 a respec:StaticElement,
+        respec:Template,
+        html:DataCell ;
+    rdfs:label "data cell element" ;
+	rdf:_1 doc:41.6.2.1.3.1.
+
+doc:41.6.2.1.3.1 a respec:StaticElement,
+        respec:Template,
+        html:TextElement ;
+    rdfs:label "text element" ;
+    html:fragment "definition".
 
 doc:4.4 a respec:StaticElement,
         respec:Template,
@@ -435,32 +477,8 @@ doc:46.6 a respec:StaticElement,
         respec:Template,
         html:Section ;
     rdfs:label "section" ;
-    rdf:_1 doc:46.6.1 ;
-    rdf:_2 doc:47.8 ;
-    rdf:_3 doc:46.6.3 ;
-    rdf:_4 doc:48.8 ;
-    rdf:_5 doc:46.6.5 .
-
-doc:46.6.1 a respec:StaticElement,
-        respec:Template,
-        html:TextElement ;
-    rdfs:label "text element" ;
-    html:fragment """
-""" .
-
-doc:46.6.3 a respec:StaticElement,
-        respec:Template,
-        html:TextElement ;
-    rdfs:label "text element" ;
-    html:fragment """
-""" .
-
-doc:46.6.5 a respec:StaticElement,
-        respec:Template,
-        html:TextElement ;
-    rdfs:label "text element" ;
-    html:fragment """
-""" .
+    rdf:_1 doc:47.8 ;
+    rdf:_2 doc:48.8 .
 
 doc:47.8 a respec:StaticElement,
         respec:Template,
@@ -478,31 +496,15 @@ doc:48.8 a respec:StaticElement,
         respec:Template,
         html:P ;
     rdfs:label "p" ;
-    rdf:_1 doc:48.8.1 ;
-    rdf:_2 doc:48.8.2 ;
-    rdf:_3 doc:48.8.3 ;
+    rdf:_1 doc:48.8.2 ;
     html:class "issue" ;
     html:data-number "121" .
-
-doc:48.8.1 a respec:StaticElement,
-        respec:Template,
-        html:TextElement ;
-    rdfs:label "text element" ;
-    html:fragment """
-""" .
 
 doc:48.8.2 a respec:StaticElement,
         respec:Template,
         html:TextElement ;
     rdfs:label "text element" ;
     html:fragment " Issue can automatically be populated from GitHub " .
-
-doc:48.8.3 a respec:StaticElement,
-        respec:Template,
-        html:TextElement ;
-    rdfs:label "text element" ;
-    html:fragment """
-""" .
 
 doc:5.4 a respec:StaticElement,
         respec:Template,
