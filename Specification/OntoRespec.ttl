@@ -346,11 +346,10 @@ prefix void: <http://rdfs.org/ns/void#>
 prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 construct {
-  ?namespaceTableBodyInstance    ?rdf_member ?namespaceTableDataRow.
-  ?namespaceTableDataRow         rdf:type html:Row;
-    rdf:_1 ?namespacePrefixDataCell;
-    rdf:_2 ?namespaceIRIDataCell;
-    rdf:_3 ?namespaceDefinitionDataCell.
+  ?namespaceTableBodyInstance       ?rdf_member ?namespaceTableDataRow.
+  ?namespaceTableDataRow            rdf:type html:Row;
+                                    rdf:_1 ?namespacePrefixDataCell;
+                                    rdf:_2 ?namespaceIRIDataCell.
   ?namespacePrefixDataCell          rdf:type html:DataCell;
                                     rdf:_1 ?namespacePrefixDataCell_text.
   ?namespacePrefixDataCell_text     rdf:type html:TextElement;
@@ -361,8 +360,6 @@ construct {
                                     html:fragment ?IRI_base.							
   ?namespaceDefinitionDataCell      rdf:type html:DataCell;
                                     rdf:_1 ?namespaceDefinitionDataCell_text.
-  ?namespaceDefinitionDataCell_text rdf:type html:TextElement;
-                                    html:fragment "<definition here>".
 } where {
   ?nameSpaceTableBody a respec:NameSpace.
   {
@@ -422,10 +419,8 @@ construct {
   BIND(IRI(CONCAT(STR(?namespaceTableBodyInstance), '-',STR(?rowmember))) as ?namespaceTableDataRow)
   BIND(IRI(CONCAT(STR(?namespaceTableDataRow),'-1'))                      as ?namespacePrefixDataCell)
   BIND(IRI(CONCAT(STR(?namespaceTableDataRow),'-2'))                      as ?namespaceIRIDataCell)
-  BIND(IRI(CONCAT(STR(?namespaceTableDataRow),'-3'))                      as ?namespaceDefinitionDataCell)
   BIND(IRI(CONCAT(STR(?namespacePrefixDataCell),'-1'))                    as ?namespacePrefixDataCell_text)
   BIND(IRI(CONCAT(STR(?namespaceIRIDataCell),'-1'))                       as ?namespaceIRIDataCell_text)
-  BIND(IRI(CONCAT(STR(?namespaceDefinitionDataCell),'-1'))                as ?namespaceDefinitionDataCell_text)
 }
 """.
 
