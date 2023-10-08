@@ -412,7 +412,8 @@ doc:54.4 a respec:StaticElement,
 	rdf:_2 doc:54.3;
 	rdf:_3 doc:55.1;
 	rdf:_4 doc:56.1;
-	rdf:_5 doc:57.1.
+	rdf:_5 doc:57.1;
+	rdf:_6 doc:58.1.
 
 doc:54.5 a respec:StaticElement,
         respec:Template,
@@ -686,6 +687,68 @@ doc:57.10.1 a respec:NodeShapeDefinitionText,
         html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "{{node shape definition}}" .
+
+doc:58.1 a respec:StaticElement,
+        respec:Template,
+        html:Section ;
+    rdfs:label "Section" ;
+	rdf:_1 doc:58.2;
+	rdf:_2 doc:58.3.
+
+doc:58.2 a respec:StaticElement,
+        respec:Template,
+        html:H2 ;
+    rdfs:label "h2" ;
+    rdf:_1 doc:58.2.1 .
+
+doc:58.2.1 a respec:StaticElement,
+        respec:Template,
+        html:TextElement ;
+    rdfs:label "text element" ;
+    html:fragment "Named Individuals" .
+
+doc:58.3 a respec:NamedIndividualDefinitionDiv,
+        respec:Template,
+        html:Div ;
+    rdfs:label "Div" ;
+    rdf:_1 doc:58.4 .
+
+doc:58.4 a respec:NamedIndividualDefinitionInstance,
+        respec:Template,
+        html:Div ;
+    rdfs:label "Div" ;
+    rdf:_1 doc:58.9 ;
+    rdf:_2 doc:58.10 .
+	
+doc:58.9 a respec:NamedIndividual,
+        respec:Template,
+        html:H2 ;
+    rdfs:label "h2" ;
+    rdf:_1 doc:58.11 .
+
+doc:58.11 a respec:NamedIndividualDfn,
+        respec:Template,
+        html:Dfn ;
+    rdfs:label "Dfn" ;
+    rdf:_1 doc:58.9.1 .
+
+doc:58.9.1 a respec:NamedIndividualTitle,
+        respec:Template,
+        html:TextElement ;
+    rdfs:label "text element" ;
+    html:fragment "{{named individual title}}" .
+
+doc:58.10 a respec:NamedIndividual,
+        respec:Template,
+        html:P ;
+    rdfs:label "p" ;
+    rdf:_1 doc:58.10.1 .
+
+doc:58.10.1 a respec:NamedIndividualDefinitionText,
+        respec:Template,
+        html:TextElement ;
+    rdfs:label "text element" ;
+    html:fragment "{{named individual definition}}" .
 
 doc:6.4 a respec:StaticElement,
         respec:Template,

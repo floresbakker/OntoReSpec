@@ -380,6 +380,7 @@ construct {
           (void: "http://rdfs.org/ns/void#" "void")
           (xsd: "http://www.w3.org/2001/XMLSchema#" "xsd")
         }
+      $this owl:imports ?ontology.
       }
       UNION 
       {
@@ -539,7 +540,8 @@ prefix vann: <http://purl.org/vocab/vann/>
 construct {
 
       ?divDefinitionClass1Instance            rdf:type html:Div;
-                                              ?memberClassString ?divDefinitionClass2Instance.
+                                              ?memberClassString ?divDefinitionClass2Instance;
+											  html:fragment ?absenceOfClassDefinitions.
       ?divDefinitionClass2Instance            rdf:type html:Section;
                                               rdf:_1 ?class_title_instance_h2;
 											  rdf:_2 ?class_IRI_p;
@@ -648,6 +650,7 @@ where  {
   
   BIND(IRI(CONCAT(str(rdf:),"_", str(?memberManchester))) as ?memberManchesterString) #this is the rdf:_x property that indicates the order in which the manchester definition appears
   BIND(function:escapeHTML(?manchesterLabel) as ?cleanedManchesterLabel)
+  BIND(IF(!BOUND(?class), "This ontology does not define any classes.", ?unboundDummy) as ?absenceOfClassDefinitions)
   
   # Create identifiers - generic
   
@@ -751,7 +754,7 @@ WHERE {
   ORDER BY ?objectPropertyLabel
 }
   BIND(IRI(CONCAT(str(rdf:),"_", str(?memberObjectProperty))) as ?memberObjectPropertyString)
-  BIND(IF(!BOUND(?objectProperty), "This ontology does not define any object property.", ?unboundDummy) as ?absenceOfObjectPropertyDefinitions)
+  BIND(IF(!BOUND(?objectProperty), "This ontology does not define any object properties.", ?unboundDummy) as ?absenceOfObjectPropertyDefinitions)
   
   # Create identifiers
   
@@ -789,6 +792,7 @@ prefix vann: <http://purl.org/vocab/vann/>
 construct {
 
       ?datatypeproperty_div                   rdf:type html:Div;
+	                                          html:fragment ?absenceOfDataTypePropertyDefinitions;
                                               ?rdf_member ?datatypeproperty_section.
       ?datatypeproperty_section               rdf:type html:Section;
                                               rdf:_1 ?datatypeproperty_H2_title;
@@ -890,6 +894,7 @@ WHERE {
 }
   BIND(IRI(CONCAT(str(rdf:),"_", str(?member))) as ?rdf_member)  
   BIND(COALESCE(?datatypePropertyLabel, "Unknown class label") as ?datatypePropertyLabel_text)
+  BIND(IF(!BOUND(?datatypeProperty), "This ontology does not define any datatype properties.", ?unboundDummy) as ?absenceOfDataTypePropertyDefinitions)
 
   # Establishing the prefixed IRI of the datatype property.
   
@@ -953,6 +958,7 @@ prefix skos: <http://www.w3.org/2004/02/skos/core#>
 construct {
 
       ?divDefinitionNodeShape1Instance rdf:type html:Div;
+	                                   html:fragment ?absenceOfNodeShapeDefinitions;
                                        ?memberNodeShapeString ?divDefinitionNodeShape2Instance.
       ?divDefinitionNodeShape2Instance rdf:type html:Section;
                                    rdf:_1 ?nodeShape_title_instance_h2;
@@ -1002,6 +1008,7 @@ WHERE {
   ORDER BY ?nodeShapeLabel
 }
   BIND (IRI(CONCAT(str(rdf:),"_", str(?memberNodeShape))) as ?memberNodeShapeString)
+  BIND(IF(!BOUND(?nodeShape), "This ontology does not define any node shapes.", ?unboundDummy) as ?absenceOfNodeShapeDefinitions)
 
   # Create identifiers
   bind(COALESCE(?nodeShapeLabel, "Unknown class label") as ?nodeShapeLabel2)
