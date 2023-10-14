@@ -903,7 +903,7 @@ WHERE {
   ORDER BY ?datatypePropertyManchesterLabel_original
 }
   BIND(IRI(CONCAT(str(rdf:),"_", str(?member))) as ?rdf_member)  
-  BIND(COALESCE(?datatypePropertyManchesterLabel, "Unknown class label") as ?datatypePropertyLabel_text)
+  BIND(COALESCE(?datatypePropertyManchesterLabel_original, "Unknown class label") as ?datatypePropertyLabel_text)
   BIND(IF(!BOUND(?datatypeProperty), "This ontology does not define any datatype properties.", ?unboundDummy) as ?absenceOfDataTypePropertyDefinitions)
 
   # Establishing the prefixed IRI of the datatype property.
@@ -1084,7 +1084,7 @@ construct {
       ?IRI_value                              rdf:type html:TextElement;
                                               html:fragment ?prefixedIRI.	  
       ?namedindividual_definition            rdf:type html:TextElement;
-                                              html:fragment ?namedIndividualDefinition_text.
+                                              html:fragment "Definition of the named individual". #?namedIndividualDefinition_text.
       ?manchester_syntax                      rdf:type html:Aside;
                                               html:class "note" ;
                                               html:title "Manchester Syntax";
@@ -1096,7 +1096,7 @@ construct {
       ?manchester_code_type                   rdf:type html:Code;
                                               rdf:_1  ?manchester_type_paragraph.
       ?manchester_label                       rdf:type html:TextElement;
-                                              html:fragment ?namedIndividualManchesterLabel.
+                                              html:fragment ?namedIndividualLabel.
       ?manchester_type_paragraph            rdf:type html:P;
                                               rdf:_1 ?manchester_type;
                                               rdf:_2 ?linebreak4.
@@ -1118,32 +1118,26 @@ construct {
 where  {
    {?namedindividual_Template rdf:type respec:NamedIndividual.}
    
-   {SELECT ?namedIndividual ?namedIndividualLabel ?namedIndividualManchesterType ?namedIndividualManchesterFact (COUNT(?prevNamedIndividual) + 1 AS ?member)
+   {SELECT ?namedIndividual ?namedIndividualLabel ?type ?fact ?namedIndividualManchesterType ?namedIndividualManchesterFact (COUNT(?prevNamedIndividual) + 1 AS ?member)
 WHERE {
-  
-  {
-  {?namedIndividual manchester:type ?type.}
-  UNION
-  {?namedIndividual manchester:fact ?fact.}
-  }
-  
-  ?namedIndividual manchester:label ?namedIndividualLabel .
-    
-  BIND(function:escapeHTML(?type) as ?namedIndividualManchesterType)
-  BIND(function:escapeHTML(?fact) as ?namedIndividualManchesterFact)
-  
-  OPTIONAL {
-  {
-    {?prevNamedIndividual manchester:type ?prevType;
-	                      manchester:label ?prevLabel.}
-  UNION
-    {?prevNamedIndividual manchester:fact ?prevFact;
-	                      manchester:label ?prevLabel.}
-  }
-  }
-    FILTER(?prevLabel < ?namedIndividualLabel)
-  }
+  ?namedIndividual manchester:frame 'individual';
+                   manchester:label ?namedIndividualLabel .
 
+  OPTIONAL 
+    {?prevNamedIndividual manchester:frame 'individual';
+                          manchester:label ?prevLabel.
+  FILTER(?prevLabel < ?namedIndividualLabel)
+  }
+ 
+  OPTIONAL
+  {?namedIndividual manchester:type ?type.}
+  OPTIONAL
+  {?namedIndividual manchester:fact ?fact.}
+    
+  BIND(function:escapeHTML(COALESCE(?type, "No type defined")) as ?namedIndividualManchesterType)
+  BIND(function:escapeHTML(COALESCE(?fact, "No known facts")) as ?namedIndividualManchesterFact)
+
+  }
   GROUP BY ?namedIndividualLabel ?namedIndividual ?namedIndividualManchesterType ?namedIndividualManchesterFact
   ORDER BY ?namedIndividualLabel
 }
@@ -1175,16 +1169,16 @@ WHERE {
 
   # Create identifiers - Manchester Syntax 
 
-  BIND(IRI(CONCAT(STR(?manchester_syntax), '-1'))           as ?manchester_code_label)  
-  BIND(IF(BOUND(?namedIndividualManchesterType),         IRI(CONCAT(STR(?manchester_syntax), '-2')), ?unboundDummy)           as ?manchester_code_type)  
-  BIND(IF(BOUND(?namedIndividualManchesterFact),          IRI(CONCAT(STR(?manchester_syntax), '-3')), ?unboundDummy)            as ?manchester_code_fact)
-  BIND(IRI(CONCAT(STR(?manchester_code_label), '-1'))       as ?manchester_label)
-  BIND(IRI(CONCAT(STR(?manchester_code_type), '-1'))      as ?manchester_type_paragraph)
-  BIND(IRI(CONCAT(STR(?manchester_type_paragraph), '-1')) as ?manchester_type)
-  BIND(IRI(CONCAT(STR(?manchester_type_paragraph), '-2')) as ?linebreak4)
-  BIND(IRI(CONCAT(STR(?manchester_code_fact), '-1'))       as ?manchester_fact_paragraph)
-  BIND(IRI(CONCAT(STR(?manchester_fact_paragraph), '-1'))  as ?manchester_fact)
-  BIND(IRI(CONCAT(STR(?manchester_fact_paragraph), '-2'))  as ?linebreak5)
+  BIND(IRI(CONCAT(STR(?manchester_syntax), '-1'))                                           as ?manchester_code_label)  
+  BIND(IF(BOUND(?type),IRI(CONCAT(STR(?manchester_syntax), '-2')), ?unboundDummy)           as ?manchester_code_type)  
+  BIND(IF(BOUND(?fact),IRI(CONCAT(STR(?manchester_syntax), '-3')), ?unboundDummy)           as ?manchester_code_fact)
+  BIND(IRI(CONCAT(STR(?manchester_code_label), '-1'))                                       as ?manchester_label)
+  BIND(IRI(CONCAT(STR(?manchester_code_type), '-1'))                                        as ?manchester_type_paragraph)
+  BIND(IRI(CONCAT(STR(?manchester_type_paragraph), '-1'))                                   as ?manchester_type)
+  BIND(IRI(CONCAT(STR(?manchester_type_paragraph), '-2'))                                   as ?linebreak4)
+  BIND(IRI(CONCAT(STR(?manchester_code_fact), '-1'))                                        as ?manchester_fact_paragraph)
+  BIND(IRI(CONCAT(STR(?manchester_fact_paragraph), '-1'))                                   as ?manchester_fact)
+  BIND(IRI(CONCAT(STR(?manchester_fact_paragraph), '-2'))                                   as ?linebreak5)
 }
 """.
 
