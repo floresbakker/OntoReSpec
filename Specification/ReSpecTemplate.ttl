@@ -713,7 +713,7 @@ doc:58.3 a respec:NamedIndividualDefinitionDiv,
     rdfs:label "Div" ;
     rdf:_1 doc:58.4 .
 
-doc:58.4 a respec:NamedIndividualDefinitionInstance,
+doc:58.4 a respec:NamedIndividual,
         respec:Template,
         html:Div ;
     rdfs:label "Div" ;

@@ -637,13 +637,23 @@ where  {
 
    {SELECT ?class ?manchesterDefinition (COUNT(?prevManchesterDefinition) + 1 AS ?memberManchester)
     WHERE {
-      ?class a owl:Class .
-      ?class manchester:definition ?manchesterDefinition.  
+    
+	{ ?class a owl:Class .
+      ?class manchester:subClassOf ?manchesterDefinition_original.  
+      BIND(CONCAT("SubClassOf: ", ?manchesterDefinition_original) as ?manchesterDefinition)}
+	  UNION
+	{ ?class a owl:Class .
+      ?class manchester:equivalentTo ?manchesterDefinition_original. 
+	  BIND(CONCAT("EquivalentTo: ", ?manchesterDefinition_original) as ?manchesterDefinition)}  
     OPTIONAL {
-      ?class manchester:definition ?prevManchesterDefinition .
-    FILTER(?prevManchesterDefinition < ?manchesterDefinition)
-    }
-   }
+      {?class manchester:subClassOf ?prevManchesterDefinition_original.
+	  BIND(CONCAT("SubClassOf: ", ?prevManchesterDefinition_original) as ?prevManchesterDefinition)}
+	  UNION 
+	  {?class manchester:equivalentTo ?prevManchesterDefinition_original.
+	  BIND(CONCAT("EquivalentTo: ", ?prevManchesterDefinition_original) as ?prevManchesterDefinition)}
+      FILTER(?prevManchesterDefinition < ?manchesterDefinition)
+      }	
+   }	
    GROUP BY ?class ?manchesterDefinition
    ORDER BY ?manchesterDefinition # order alphanumerically so that the class definitions appear in the correct order
    }
@@ -864,13 +874,12 @@ construct {
 where  {
    {?datatypeproperty_Template rdf:type respec:DatatypeProperty.}
    
-   {SELECT ?datatypeProperty ?datatypePropertyLabel ?datatypePropertyManchesterLabel ?datatypePropertyManchesterDomain ?datatypePropertyManchesterRange ?datatypePropertyManchesterSubPropertyOf ?datatypePropertyDefinition_text (COUNT(?prevDatatypeProperty) + 1 AS ?member)
+   {SELECT ?datatypeProperty ?datatypePropertyManchesterLabel_original ?datatypePropertyManchesterLabel ?datatypePropertyManchesterDomain ?datatypePropertyManchesterRange ?datatypePropertyManchesterSubPropertyOf ?datatypePropertyDefinition_text (COUNT(?prevDatatypeProperty) + 1 AS ?member)
 WHERE {
   ?datatypeProperty a owl:DatatypeProperty .
-  ?datatypeProperty manchester:label ?datatypePropertyLabel .
-  ?datatypeProperty skos:definition ?datatypePropertyDefinition_original.
-  ?datatypeProperty manchester:datatypeProperty ?datatypePropertyManchesterLabel.
-  
+  ?datatypeProperty manchester:label ?datatypePropertyManchesterLabel_original .
+  OPTIONAL{
+  ?datatypeProperty skos:definition ?datatypePropertyDefinition_original.}
   OPTIONAL{
   ?datatypeProperty manchester:domain ?datatypePropertyManchesterDomain_original.}
   OPTIONAL{
@@ -878,22 +887,23 @@ WHERE {
   OPTIONAL{
   ?datatypeProperty manchester:subPropertyOf ?datatypePropertyManchesterSubPropertyOf_original.}
   
-  BIND(function:escapeHTML(?datatypePropertyDefinition_original) as ?datatypePropertyDefinition_text)
-  BIND(function:escapeHTML(?datatypePropertyManchesterDomain_original) as ?datatypePropertyManchesterDomain)
-  BIND(function:escapeHTML(?datatypePropertyManchesterRange_original) as ?datatypePropertyManchesterRange)
-  BIND(function:escapeHTML(?datatypePropertyManchesterSubPropertyOf_original) as ?datatypePropertyManchesterSubPropertyOf)
+  BIND(CONCAT("DatatypeProperty: ",function:escapeHTML(?datatypePropertyManchesterLabel_original)) as ?datatypePropertyManchesterLabel)
+  BIND(COALESCE(function:escapeHTML(?datatypePropertyDefinition_original), "No definition provided by this ontology.") as ?datatypePropertyDefinition_text)
+  BIND(CONCAT("Domain: ",function:escapeHTML(?datatypePropertyManchesterDomain_original)) as ?datatypePropertyManchesterDomain)
+  BIND(CONCAT("Range: ", function:escapeHTML(?datatypePropertyManchesterRange_original)) as ?datatypePropertyManchesterRange)
+  BIND(CONCAT("SubPropertyOf: ",function:escapeHTML(?datatypePropertyManchesterSubPropertyOf_original)) as ?datatypePropertyManchesterSubPropertyOf)
   
   OPTIONAL {
     ?prevDatatypeProperty a owl:DatatypeProperty .
     ?prevDatatypeProperty manchester:label ?prevLabel .
-    FILTER(?prevLabel < ?datatypePropertyLabel)
+    FILTER(?prevLabel < ?datatypePropertyManchesterLabel_original)
   }
 }
-  GROUP BY ?datatypePropertyLabel ?datatypeProperty ?datatypePropertyDefinition ?datatypePropertyManchesterLabel ?datatypePropertyManchesterDomain ?datatypePropertyManchesterRange ?datatypePropertyManchesterSubPropertyOf ?datatypePropertyDefinition_text 
-  ORDER BY ?datatypePropertyLabel
+  GROUP BY ?datatypePropertyManchesterLabel_original ?datatypePropertyManchesterLabel ?datatypeProperty ?datatypePropertyManchesterDomain ?datatypePropertyManchesterRange ?datatypePropertyManchesterSubPropertyOf ?datatypePropertyDefinition_text 
+  ORDER BY ?datatypePropertyManchesterLabel_original
 }
   BIND(IRI(CONCAT(str(rdf:),"_", str(?member))) as ?rdf_member)  
-  BIND(COALESCE(?datatypePropertyLabel, "Unknown class label") as ?datatypePropertyLabel_text)
+  BIND(COALESCE(?datatypePropertyManchesterLabel, "Unknown class label") as ?datatypePropertyLabel_text)
   BIND(IF(!BOUND(?datatypeProperty), "This ontology does not define any datatype properties.", ?unboundDummy) as ?absenceOfDataTypePropertyDefinitions)
 
   # Establishing the prefixed IRI of the datatype property.
@@ -1020,6 +1030,161 @@ WHERE {
   bind(IRI(CONCAT(STR(?nodeShape_definition_text), '-', str(?memberNodeShape), '-instance')) as ?nodeShape_definition_instance)
   bind(IRI(CONCAT(STR(?nodeShape_dfn), '-', str(?memberNodeShape), '-instance')) as ?nodeShape_dfn_instance)
   
+}
+""".
+
+rule:NamedIndividuals
+  a sh:SPARQLRule;
+  skos:prefLabel 'Named individuals rule'@en;
+  rdfs:comment 'The named individuals rule creates a section of named individuals for the ontology in the document.'@en ;
+  sh:construct """
+prefix dct: <http://purl.org/dc/terms/>
+prefix dc:  <http://purl.org/dc/elements/1.1/>
+prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix function: <https://data.rijksfinancien.nl/html/model/function/>
+prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+prefix respec: <https://respec.org/model/> 
+prefix schema: <http://schema.org/>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix vann: <http://purl.org/vocab/vann/>
+
+construct {
+
+      ?namedindividual_div                   rdf:type html:Div;
+	                                          html:fragment ?absenceOfNamedIndividualDefinitions;
+                                              ?rdf_member ?namedindividual_section.
+      ?namedindividual_section               rdf:type html:Section;
+                                              rdf:_1 ?namedindividual_H2_title;
+											  rdf:_2 ?namedindividual_IRI_p;
+											  rdf:_3 ?linebreak1;
+                                              rdf:_4 ?namedindividual_definition;
+                                              rdf:_5 ?linebreak2;  
+                                              rdf:_6 ?linebreak3;
+                                              rdf:_7 ?manchester_syntax.
+      ?namedindividual_H2_title              rdf:type html:H2;
+                                              rdf:_1 ?namedindividual_dfn.
+      ?namedindividual_dfn                   rdf:type html:Dfn;
+                                              rdf:_1 ?namedindividual_title.
+      ?namedindividual_title                 rdf:type html:TextElement;
+                                              html:fragment ?namedIndividualLabel_text.
+      ?namedindividual_IRI_p                 rdf:type html:P;
+                                              rdf:_1 ?namedindividual_IRI_strong;
+											  rdf:_2 ?namedindividual_IRI_a.
+      ?namedindividual_IRI_strong            rdf:type html:Strong;
+                                              rdf:_1 ?namedindividual_IRI_text.
+      ?namedindividual_IRI_text              rdf:type html:TextElement;
+                                              html:fragment 'IRI: '.
+      ?namedindividual_IRI_a                 rdf:type html:A;
+                                              html:href ?namedIndividual;
+                                              rdf:_1 ?IRI_value.
+      ?IRI_value                              rdf:type html:TextElement;
+                                              html:fragment ?prefixedIRI.	  
+      ?namedindividual_definition            rdf:type html:TextElement;
+                                              html:fragment ?namedIndividualDefinition_text.
+      ?manchester_syntax                      rdf:type html:Aside;
+                                              html:class "note" ;
+                                              html:title "Manchester Syntax";
+                                              rdf:_1 ?manchester_code_label;
+                                              rdf:_2 ?manchester_code_type;
+											  rdf:_3 ?manchester_code_fact.
+      ?manchester_code_label                  rdf:type html:Code;
+                                              rdf:_1 ?manchester_label.
+      ?manchester_code_type                   rdf:type html:Code;
+                                              rdf:_1  ?manchester_type_paragraph.
+      ?manchester_label                       rdf:type html:TextElement;
+                                              html:fragment ?namedIndividualManchesterLabel.
+      ?manchester_type_paragraph            rdf:type html:P;
+                                              rdf:_1 ?manchester_type;
+                                              rdf:_2 ?linebreak4.
+      ?manchester_type                      rdf:type html:TextElement;
+                                              html:fragment ?namedIndividualManchesterType.
+      ?manchester_code_fact                  rdf:type html:Code;
+                                              rdf:_1  ?manchester_fact_paragraph.
+      ?manchester_fact_paragraph             rdf:type html:P;
+                                              rdf:_1 ?manchester_fact;
+                                              rdf:_2 ?linebreak5.
+      ?manchester_fact                       rdf:type html:TextElement;
+                                              html:fragment ?namedIndividualManchesterFact.										  
+	  ?linebreak1                             rdf:type html:Br.
+      ?linebreak2                             rdf:type html:Br.
+	  ?linebreak3                             rdf:type html:Br.
+	  ?linebreak4                             rdf:type html:Br.
+	  ?linebreak5                             rdf:type html:Br.
+}
+where  {
+   {?namedindividual_Template rdf:type respec:NamedIndividual.}
+   
+   {SELECT ?namedIndividual ?namedIndividualLabel ?namedIndividualManchesterType ?namedIndividualManchesterFact (COUNT(?prevNamedIndividual) + 1 AS ?member)
+WHERE {
+  
+  {
+  {?namedIndividual manchester:type ?type.}
+  UNION
+  {?namedIndividual manchester:fact ?fact.}
+  }
+  
+  ?namedIndividual manchester:label ?namedIndividualLabel .
+    
+  BIND(function:escapeHTML(?type) as ?namedIndividualManchesterType)
+  BIND(function:escapeHTML(?fact) as ?namedIndividualManchesterFact)
+  
+  OPTIONAL {
+  {
+    {?prevNamedIndividual manchester:type ?prevType;
+	                      manchester:label ?prevLabel.}
+  UNION
+    {?prevNamedIndividual manchester:fact ?prevFact;
+	                      manchester:label ?prevLabel.}
+  }
+  }
+    FILTER(?prevLabel < ?namedIndividualLabel)
+  }
+
+  GROUP BY ?namedIndividualLabel ?namedIndividual ?namedIndividualManchesterType ?namedIndividualManchesterFact
+  ORDER BY ?namedIndividualLabel
+}
+  BIND(IRI(CONCAT(str(rdf:),"_", str(?member))) as ?rdf_member)  
+  BIND(COALESCE(?namedIndividualLabel, "Unknown class label") as ?namedIndividualLabel_text)
+  BIND(IF(!BOUND(?namedIndividual), "This ontology does not define any named individuals.", ?unboundDummy) as ?absenceOfNamedIndividualDefinitions)
+
+  # Establishing the prefixed IRI of the datatype property.
+  
+  BIND(function:getPrefixedIRI(?namedIndividual) as ?prefixedIRI)
+
+  # Create identifiers
+  
+  BIND(IRI(CONCAT(STR(?namedindividual_Template),'-instance'))                   as ?namedindividual_div)
+  BIND(IRI(CONCAT(STR(?namedindividual_div), '-', str(?member)))                 as ?namedindividual_section)
+  BIND(IRI(CONCAT(STR(?namedindividual_section), '-1'))                          as ?namedindividual_H2_title) 
+  BIND(IRI(CONCAT(STR(?namedindividual_H2_title), '-1'))                         as ?namedindividual_dfn)
+  BIND(IRI(CONCAT(STR(?namedindividual_dfn), '-1'))                              as ?namedindividual_title)
+  BIND(IRI(CONCAT(STR(?namedindividual_section), '-2'))                          as ?namedindividual_IRI_p) 
+  BIND(IRI(CONCAT(STR(?namedindividual_section), '-3'))                          as ?linebreak1)
+  BIND(IRI(CONCAT(STR(?namedindividual_IRI_p), '-1'))                            as ?namedindividual_IRI_strong)
+  BIND(IRI(CONCAT(STR(?namedindividual_IRI_p), '-2'))                            as ?namedindividual_IRI_a)
+  BIND(IRI(CONCAT(STR(?namedindividual_IRI_strong), '-1'))                       as ?namedindividual_IRI_text)
+  BIND(IRI(CONCAT(STR(?namedindividual_IRI_a), '-1'))                            as ?IRI_value)
+  BIND(IRI(CONCAT(STR(?namedindividual_section), '-4'))                          as ?namedindividual_definition)
+  BIND(IRI(CONCAT(STR(?namedindividual_section), '-5'))                          as ?linebreak2)
+  BIND(IRI(CONCAT(STR(?namedindividual_section), '-6'))                          as ?linebreak3)
+  BIND(IRI(CONCAT(STR(?namedindividual_section), '-7'))                          as ?manchester_syntax)
+
+  # Create identifiers - Manchester Syntax 
+
+  BIND(IRI(CONCAT(STR(?manchester_syntax), '-1'))           as ?manchester_code_label)  
+  BIND(IF(BOUND(?namedIndividualManchesterType),         IRI(CONCAT(STR(?manchester_syntax), '-2')), ?unboundDummy)           as ?manchester_code_type)  
+  BIND(IF(BOUND(?namedIndividualManchesterFact),          IRI(CONCAT(STR(?manchester_syntax), '-3')), ?unboundDummy)            as ?manchester_code_fact)
+  BIND(IRI(CONCAT(STR(?manchester_code_label), '-1'))       as ?manchester_label)
+  BIND(IRI(CONCAT(STR(?manchester_code_type), '-1'))      as ?manchester_type_paragraph)
+  BIND(IRI(CONCAT(STR(?manchester_type_paragraph), '-1')) as ?manchester_type)
+  BIND(IRI(CONCAT(STR(?manchester_type_paragraph), '-2')) as ?linebreak4)
+  BIND(IRI(CONCAT(STR(?manchester_code_fact), '-1'))       as ?manchester_fact_paragraph)
+  BIND(IRI(CONCAT(STR(?manchester_fact_paragraph), '-1'))  as ?manchester_fact)
+  BIND(IRI(CONCAT(STR(?manchester_fact_paragraph), '-2'))  as ?linebreak5)
 }
 """.
 
