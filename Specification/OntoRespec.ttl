@@ -100,7 +100,7 @@ construct {
 
 shp:OntologyMetadata
   a sh:NodeShape;
-  sh:rule rule:Title, rule:Introduction, rule:Description, rule:Example, rule:NameSpace, rule:Abstract, rule:Version, rule:Classes, rule:ObjectProperties, rule:DatatypeProperties, rule:NodeShapes;
+  sh:rule rule:Title, rule:Introduction, rule:Description, rule:Example, rule:NameSpace, rule:Abstract, rule:Version, rule:Classes, rule:ObjectProperties, rule:DatatypeProperties, rule:NodeShapes, rule:NamedIndividuals;
   sh:targetClass owl:Ontology.
 
 
@@ -1082,7 +1082,7 @@ construct {
                                               html:href ?namedIndividual;
                                               rdf:_1 ?IRI_value.
       ?IRI_value                              rdf:type html:TextElement;
-                                              html:fragment ?prefixedIRI.	  
+                                              html:fragment ?namedIndividual_IRI.   # later this will be changed to ?prefixedIRI, after figuring out how to deal with prefixes of namespaces other than the namespace of the ontology itself. 
       ?namedindividual_definition            rdf:type html:TextElement;
                                               html:fragment "Definition of the named individual". #?namedIndividualDefinition_text.
       ?manchester_syntax                      rdf:type html:Aside;
@@ -1118,7 +1118,7 @@ construct {
 where  {
    {?namedindividual_Template rdf:type respec:NamedIndividual.}
    
-   {SELECT ?namedIndividual ?namedIndividualLabel ?type ?fact ?namedIndividualManchesterType ?namedIndividualManchesterFact (COUNT(?prevNamedIndividual) + 1 AS ?member)
+   {SELECT ?namedIndividual ?namedIndividualLabel (COUNT(?prevNamedIndividual) + 1 AS ?member)
 WHERE {
   ?namedIndividual manchester:frame 'individual';
                    manchester:label ?namedIndividualLabel .
@@ -1129,13 +1129,13 @@ WHERE {
   FILTER(?prevLabel < ?namedIndividualLabel)
   }
  
-  OPTIONAL
-  {?namedIndividual manchester:type ?type.}
-  OPTIONAL
-  {?namedIndividual manchester:fact ?fact.}
+  #OPTIONAL
+  #{?namedIndividual manchester:type ?type.}
+  #OPTIONAL
+  #{?namedIndividual manchester:fact ?fact.}
     
-  BIND(function:escapeHTML(COALESCE(?type, "No type defined")) as ?namedIndividualManchesterType)
-  BIND(function:escapeHTML(COALESCE(?fact, "No known facts")) as ?namedIndividualManchesterFact)
+  #BIND(function:escapeHTML(COALESCE(?type, "No type defined")) as ?namedIndividualManchesterType)
+  #BIND(function:escapeHTML(COALESCE(?fact, "No known facts")) as ?namedIndividualManchesterFact)
 
   }
   GROUP BY ?namedIndividualLabel ?namedIndividual ?namedIndividualManchesterType ?namedIndividualManchesterFact
@@ -1145,9 +1145,10 @@ WHERE {
   BIND(COALESCE(?namedIndividualLabel, "Unknown class label") as ?namedIndividualLabel_text)
   BIND(IF(!BOUND(?namedIndividual), "This ontology does not define any named individuals.", ?unboundDummy) as ?absenceOfNamedIndividualDefinitions)
 
-  # Establishing the prefixed IRI of the datatype property.
+  # Establishing the prefixed IRI of the named individual.
   
-  BIND(function:getPrefixedIRI(?namedIndividual) as ?prefixedIRI)
+  # BIND(function:getPrefixedIRI(?namedIndividual) as ?prefixedIRI)  # find out how to establish a prefixed IRI for a named individual, when the namespace for indidivuals differs from the ontology.
+  BIND(STR(?namedIndividual) as ?namedIndividual_IRI)  # find out how to establish a prefixed IRI for a named individual, when the namespace for indidivuals differs from the ontology.
 
   # Create identifiers
   

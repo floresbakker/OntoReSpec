@@ -707,7 +707,7 @@ doc:58.2.1 a respec:StaticElement,
     rdfs:label "text element" ;
     html:fragment "Named Individuals" .
 
-doc:58.3 a respec:NamedIndividualDefinitionDiv,
+doc:58.3 a respec:StaticElement,
         respec:Template,
         html:Div ;
     rdfs:label "Div" ;
@@ -720,7 +720,7 @@ doc:58.4 a respec:NamedIndividual,
     rdf:_1 doc:58.9 ;
     rdf:_2 doc:58.10 .
 	
-doc:58.9 a respec:NamedIndividual,
+doc:58.9 a respec:NamedIndividualH2,
         respec:Template,
         html:H2 ;
     rdfs:label "h2" ;
@@ -738,7 +738,7 @@ doc:58.9.1 a respec:NamedIndividualTitle,
     rdfs:label "text element" ;
     html:fragment "{{named individual title}}" .
 
-doc:58.10 a respec:NamedIndividual,
+doc:58.10 a respec:NamedIndividualParagraph,
         respec:Template,
         html:P ;
     rdfs:label "p" ;
