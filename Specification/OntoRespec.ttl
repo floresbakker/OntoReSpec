@@ -183,7 +183,7 @@ construct {
   ?introductionOntologyH2             rdf:type html:H2;
                                       rdf:_1 ?introductionOntology_title.
   ?introductionOntology_title         rdf:type html:TextElement;
-                                      html:fragment ?ontologyTitle.
+                                      html:fragment "Objective".
   ?introductionOntology_text          rdf:type html:TextElement;
                                       html:fragment ?objective.
   ?introductionAudienceSection        rdf:type html:Section;
@@ -205,17 +205,11 @@ construct {
    {$this respec:objective ?objective}
    optional
    {$this respec:audience ?audience}
-   optional
-   {$this dc:title ?ontologyTitle1}
-   optional
-   {$this dct:title ?ontologyTitle2}
-   optional
-   {$this schema:name ?ontologyTitle3}
-  
-  BIND(COALESCE(?introduction, "Introduction not available") as ?generalIntroduction) 
-  BIND(COALESCE(?background, "Background not available") as ?introductionBackground) 
-  BIND(COALESCE(?ontologyTitle1, ?ontologyTitle2, ?ontologyTitle3, "Unknown title") as ?ontologyTitle)
-  BIND(COALESCE(?audience, "Audience not available") as ?introductionAudience) 
+    
+  BIND(COALESCE(?introduction, "This specification document does not describe an introduction to the ontology.") as ?generalIntroduction) 
+  BIND(COALESCE(?background, "This specification document does not describe the background of the ontology.") as ?introductionBackground) 
+  BIND(COALESCE(?objective, "This specification document does not define the objective of the ontology.") as ?introductionBackground) 
+  BIND(COALESCE(?audience, "This specification document does not describe the intended audience of the ontology.") as ?introductionAudience) 
   
   # Create identifiers
   bind(iri(concat(str(?introductionSection),'-instance')) as ?introductionSectionInstance)
