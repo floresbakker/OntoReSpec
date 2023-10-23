@@ -185,7 +185,7 @@ construct {
   ?introductionOntology_title         rdf:type html:TextElement;
                                       html:fragment ?ontologyTitle.
   ?introductionOntology_text          rdf:type html:TextElement;
-                                      html:fragment ?ontologyIntroduction.
+                                      html:fragment ?objective.
   ?introductionAudienceSection        rdf:type html:Section;
                                       rdf:_1 ?introductionAudienceH2;
                                       rdf:_2 ?introductionAudience_text.
@@ -202,7 +202,7 @@ construct {
    optional
    {$this respec:background ?background}
    optional
-   {$this respec:ontologyIntroduction ?ontologyIntroduction}
+   {$this respec:objective ?objective}
    optional
    {$this respec:audience ?audience}
    optional
@@ -260,7 +260,7 @@ construct {
   html:fragment ?ontologyDescription.
     
 } where {
-   {?textElement a respec:Description}
+   {?textElement a respec:Overview}
   optional
   {$this dc:description ?ontologyDescription1}
   optional
@@ -1120,11 +1120,11 @@ where  {
    
    {SELECT ?namedIndividual ?namedIndividualLabel (COUNT(?prevNamedIndividual) + 1 AS ?member)
 WHERE {
-  ?namedIndividual manchester:frame 'individual';
+  ?namedIndividual manchester:frame 'INDIVIDUAL';
                    manchester:label ?namedIndividualLabel .
 
   OPTIONAL 
-    {?prevNamedIndividual manchester:frame 'individual';
+    {?prevNamedIndividual manchester:frame 'INDIVIDUAL';
                           manchester:label ?prevLabel.
   FILTER(?prevLabel < ?namedIndividualLabel)
   }

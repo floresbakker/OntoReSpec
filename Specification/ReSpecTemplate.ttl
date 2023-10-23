@@ -180,10 +180,13 @@ doc:37.4 a respec:StaticElement,
     rdf:_1 doc:38.6 ;
 	rdf:_2 doc:38.7 ;
     rdf:_3 doc:39.6 ;
-	rdf:_4 doc:40.7 ;
-	rdf:_5 doc:40.9 ;
-	rdf:_6 doc:41.6 ;
-    rdf:_7 doc:46.6 .
+	rdf:_4 doc:40.4 ;
+	rdf:_5 doc:40.5 ;
+	rdf:_6 doc:40.6 ;
+	rdf:_7 doc:40.7 ;
+	rdf:_8 doc:40.9 ;
+	rdf:_9 doc:41.6 ;
+    rdf:_10 doc:46.6 .
 
 doc:38.6 a respec:StaticElement,
         respec:Template,
@@ -195,7 +198,7 @@ doc:38.6.1 a respec:StaticElement,
         respec:Template,
         html:TextElement ;
     rdfs:label "text element" ;
-    html:fragment "Description" .
+    html:fragment "Overview" .
 	
 doc:38.7 a respec:StaticElement,
         respec:Template,
@@ -203,11 +206,11 @@ doc:38.7 a respec:StaticElement,
     rdfs:label "p" ;
     rdf:_1 doc:38.7.1 .
 
-doc:38.7.1 a respec:Description,
+doc:38.7.1 a respec:Overview,
         respec:Template,
         html:TextElement ;
     rdfs:label "text element" ;
-    html:fragment "A description of the ontology" .
+    html:fragment "An overview of the ontology" .
 
 doc:39.6 a respec:Example,
         respec:Template,
@@ -216,6 +219,38 @@ doc:39.6 a respec:Example,
     rdf:_1 doc:40.8 ;
     rdf:_2 doc:41.8 ;
     html:class "example" .
+
+doc:40.4 a respec:StaticElement,
+        respec:Template,
+        html:H2 ;
+    rdfs:label "h2" ;
+	html:class "informative";
+    rdf:_1 doc:40.4.1 .
+	
+doc:40.4.1 a respec:StaticElement,
+        respec:Template,
+        html:TextElement ;
+    rdfs:label "text element" ;
+    html:fragment "Diagram" .
+
+doc:40.5 a respec:StaticElement,
+        respec:Template,
+        html:P ;
+    rdfs:label "P" ;
+    rdf:_1 doc:40.5.1 .
+
+doc:40.5.1 a respec:StaticElement,
+        respec:Template,
+        html:TextElement ;
+    rdfs:label "text element" ;
+    html:fragment "A diagram of the ontology" .
+
+doc:40.6 a respec:StaticElement,
+        respec:Template,
+        html:Embed ;
+    rdfs:label "Embed element" ;
+	html:src "mermaid.html";
+	html:style "width: 900px; height: 400px;".
 
 doc:40.7 a respec:StaticElement,
         respec:Template,
