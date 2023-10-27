@@ -1114,11 +1114,11 @@ where  {
    
    {SELECT ?namedIndividual ?namedIndividualLabel (COUNT(?prevNamedIndividual) + 1 AS ?member)
 WHERE {
-  ?namedIndividual manchester:frame 'INDIVIDUAL';
+  ?namedIndividual manchester:syntax 'INDIVIDUAL';
                    manchester:label ?namedIndividualLabel .
 
   OPTIONAL 
-    {?prevNamedIndividual manchester:frame 'INDIVIDUAL';
+    {?prevNamedIndividual manchester:syntax 'INDIVIDUAL';
                           manchester:label ?prevLabel.
   FILTER(?prevLabel < ?namedIndividualLabel)
   }
