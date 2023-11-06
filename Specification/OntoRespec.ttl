@@ -15,9 +15,14 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
 @prefix skos: <http://www.w3.org/2004/02/skos/core#>.
 
+respec:Ontology
+	rdfs:subClassOf owl:Ontology;
+    skos:definition 'A class to represent an ontology that is specified according to the W3C ReSpec standard.'@en;
+    skos:prefLabel 'ReSpec-specified Ontology'@en.
+
 respec:introduction
 	a owl:DatatypeProperty;
-    rdfs:domain owl:Ontology;
+    rdfs:domain respec:Ontology;
     rdfs:range xsd:string;
     skos:definition 'Property that links a text, in which an ontology is presented and introduced to an audience, to that very ontology.'@en;
     skos:prefLabel 'has introduction'@en.
@@ -101,7 +106,7 @@ construct {
 shp:OntologyMetadata
   a sh:NodeShape;
   sh:rule rule:Title, rule:Introduction, rule:Description, rule:Example, rule:NameSpace, rule:Abstract, rule:Version, rule:Classes, rule:ObjectProperties, rule:DatatypeProperties, rule:NodeShapes, rule:NamedIndividuals;
-  sh:targetClass owl:Ontology.
+  sh:targetClass respec:Ontology.
 
 
 rule:Title
@@ -185,7 +190,7 @@ construct {
   ?introductionOntology_title         rdf:type html:TextElement;
                                       html:fragment "Objective".
   ?introductionOntology_text          rdf:type html:TextElement;
-                                      html:fragment ?objective.
+                                      html:fragment ?introductionObjective.
   ?introductionAudienceSection        rdf:type html:Section;
                                       rdf:_1 ?introductionAudienceH2;
                                       rdf:_2 ?introductionAudience_text.
@@ -208,7 +213,7 @@ construct {
     
   BIND(COALESCE(?introduction, "This specification document does not describe an introduction to the ontology.") as ?generalIntroduction) 
   BIND(COALESCE(?background, "This specification document does not describe the background of the ontology.") as ?introductionBackground) 
-  BIND(COALESCE(?objective, "This specification document does not define the objective of the ontology.") as ?introductionBackground) 
+  BIND(COALESCE(?objective, "This specification document does not define the objective of the ontology.") as ?introductionObjective) 
   BIND(COALESCE(?audience, "This specification document does not describe the intended audience of the ontology.") as ?introductionAudience) 
   
   # Create identifiers
@@ -605,6 +610,7 @@ where  {
       ?class a owl:Class .
       ?class skos:definition ?classDefinition_original.
       ?class manchester:label ?manchesterLabel.
+	  ?class rdfs:isDefinedBy $this.
       
     OPTIONAL {
     ?prevClass a owl:Class .
@@ -612,7 +618,7 @@ where  {
     FILTER(?prevLabel < ?manchesterLabel)
      }
     }
-    GROUP BY ?class ?manchesterLabel ?classDefinition
+    GROUP BY ?class ?manchesterLabel ?classDefinition_original
     ORDER BY ?manchesterLabel # order alphanumerically so that the class definitions appear in the correct order
    }
    
@@ -683,7 +689,7 @@ where  {
   bind(IRI(CONCAT(STR(?manchester_label_link), '-1')) as ?manchester_label_instance)
   bind(IRI(CONCAT(STR(?manchester_code_definition_instance), '-',str(?memberManchester))) as ?manchester_definition_block)
   bind(IRI(CONCAT(STR(?manchester_definition_block), '-1')) as ?manchester_definition_instance)
-  bind(IRI(CONCAT(STR(?manchester_definition_block), '-2')) as ?class_linebreak_instance3)
+  bind(IRI(CONCAT(STR(?manchester_definition_block), '-2')) as ?class_linebreak_instance4)
   
 }
 """.
@@ -696,8 +702,10 @@ rule:ObjectProperties
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
 prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix dcm: <http://purl.org/dc/dcmitype/>
 prefix function: <https://data.rijksfinancien.nl/html/model/function/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
@@ -708,69 +716,150 @@ prefix vann: <http://purl.org/vocab/vann/>
 
 construct {
 
-      ?divDefinitionObjectProperty1Instance rdf:type html:Div;
-                                            ?memberObjectPropertyString ?divDefinitionObjectProperty2Instance;
-											html:fragment ?absenceOfObjectPropertyDefinitions.
-      ?divDefinitionObjectProperty2Instance rdf:type html:Section;
-                                   rdf:_1 ?objectProperty_title_instance_h2;
-                                   rdf:_2 ?objectProperty_definition_instance.
-      ?objectProperty_title_instance_h2     rdf:type html:H2;
-                                   ?memberTitle ?objectProperty_dfn_instance.
-      ?objectProperty_dfn_instance          rdf:type html:Dfn;
-                                   ?memberDfn ?objectProperty_title_text_instance.
-      ?objectProperty_title_text_instance   rdf:type html:TextElement;
-                                   html:fragment ?objectPropertyLabel2.
-      ?objectProperty_definition_instance   rdf:type html:TextElement;
-                                   html:fragment ?objectPropertyDefinition.
-    
+      ?objectproperty_div                   rdf:type html:Div;
+	                                          html:fragment ?absenceOfObjectPropertyDefinitions;
+                                              ?rdf_member ?objectproperty_section.
+      ?objectproperty_section               rdf:type html:Section;
+                                              rdf:_1 ?objectproperty_H2_title;
+											  rdf:_2 ?objectproperty_IRI_p;
+											  rdf:_3 ?linebreak1;
+                                              rdf:_4 ?objectproperty_definition;
+                                              rdf:_5 ?linebreak2;  
+                                              rdf:_6 ?linebreak3;
+                                              rdf:_7 ?manchester_syntax.
+      ?objectproperty_H2_title              rdf:type html:H2;
+                                              rdf:_1 ?objectproperty_dfn.
+      ?objectproperty_dfn                   rdf:type html:Dfn;
+                                              rdf:_1 ?objectproperty_title.
+      ?objectproperty_title                 rdf:type html:TextElement;
+                                              html:fragment ?objectPropertyLabel_text.
+      ?objectproperty_IRI_p                 rdf:type html:P;
+                                              rdf:_1 ?objectproperty_IRI_strong;
+											  rdf:_2 ?objectproperty_IRI_a.
+      ?objectproperty_IRI_strong            rdf:type html:Strong;
+                                              rdf:_1 ?objectproperty_IRI_text.
+      ?objectproperty_IRI_text              rdf:type html:TextElement;
+                                              html:fragment 'IRI: '.
+      ?objectproperty_IRI_a                 rdf:type html:A;
+                                              html:href ?objectProperty;
+                                              rdf:_1 ?IRI_value.
+      ?IRI_value                              rdf:type html:TextElement;
+                                              html:fragment ?prefixedIRI.	  
+      ?objectproperty_definition            rdf:type html:TextElement;
+                                              html:fragment ?objectPropertyDefinition_text.
+      ?manchester_syntax                      rdf:type html:Aside;
+                                              html:class "note" ;
+                                              html:title "Manchester Syntax";
+                                              rdf:_1 ?manchester_code_label;
+                                              rdf:_2 ?manchester_code_domain;
+											  rdf:_3 ?manchester_code_range;
+											  rdf:_4 ?manchester_code_subpropertyof.
+      ?manchester_code_label                  rdf:type html:Code;
+                                              rdf:_1 ?manchester_label.
+      ?manchester_code_domain                 rdf:type html:Code;
+                                              rdf:_1  ?manchester_domain_paragraph.
+      ?manchester_label                       rdf:type html:TextElement;
+                                              html:fragment ?objectPropertyManchesterLabel.
+      ?manchester_domain_paragraph            rdf:type html:P;
+                                              rdf:_1 ?manchester_domain;
+                                              rdf:_2 ?linebreak4.
+      ?manchester_domain                      rdf:type html:TextElement;
+                                              html:fragment ?objectPropertyManchesterDomain.
+      ?manchester_code_range                  rdf:type html:Code;
+                                              rdf:_1  ?manchester_range_paragraph.
+      ?manchester_range_paragraph             rdf:type html:P;
+                                              rdf:_1 ?manchester_range;
+                                              rdf:_2 ?linebreak5.
+      ?manchester_range                       rdf:type html:TextElement;
+                                              html:fragment ?objectPropertyManchesterRange.
+      ?manchester_code_subpropertyof          rdf:type html:Code;
+                                              rdf:_1  ?manchester_subpropertyof_paragraph.
+      ?manchester_subpropertyof_paragraph     rdf:type html:P;
+                                              rdf:_1 ?manchester_subpropertyof;
+                                              rdf:_2 ?linebreak6.
+      ?manchester_subpropertyof               rdf:type html:TextElement;
+                                              html:fragment ?objectPropertyManchesterSubPropertyOf.											  
+	  ?linebreak1                             rdf:type html:Br.
+      ?linebreak2                             rdf:type html:Br.
+	  ?linebreak3                             rdf:type html:Br.
+	  ?linebreak4                             rdf:type html:Br.
+	  ?linebreak5                             rdf:type html:Br.
+	  ?linebreak6                             rdf:type html:Br.
 }
 where  {
-   {?sectionDefinition rdf:type html:Section;
-                       ?member ?divDefinitionObjectProperty1.
-    ?divDefinitionObjectProperty1 rdf:type respec:ObjectPropertyDefinitionDiv;
-                       ?memberDiv ?divDefinitionObjectProperty2.
-    ?divDefinitionObjectProperty2 rdf:type respec:ObjectPropertyDefinitionInstance;
-                        rdf:_1 ?H2_class_title;
-                        rdf:_2 ?P_class_definition.
-    ?H2_class_title a respec:ObjectProperty;
-                        ?memberTitle ?objectProperty_dfn.
-    ?objectProperty_dfn rdf:type respec:ObjectPropertyDfn;
-                        ?memberDfn ?objectProperty_title.
-    ?objectProperty_title        rdf:type respec:ObjectPropertyTitle.
-    ?P_class_definition rdf:type respec:ObjectProperty;
-                        ?memberText ?objectProperty_definition_text.
-    ?objectProperty_definition_text a respec:ObjectPropertyDefinitionText.
-  }
+   {?objectproperty_Template rdf:type respec:ObjectProperty.}
    
-   {SELECT ?objectProperty ?objectPropertyLabel ?objectPropertyDefinition (COUNT(?prevObjectProperty) + 1 AS ?memberObjectProperty)
+   {SELECT ?objectProperty ?objectPropertyManchesterLabel_original ?objectPropertyManchesterLabel ?objectPropertyManchesterDomain ?objectPropertyManchesterRange ?objectPropertyManchesterSubPropertyOf ?objectPropertyDefinition_text (COUNT(?prevObjectProperty) + 1 AS ?member)
 WHERE {
   ?objectProperty a owl:ObjectProperty .
-  ?objectProperty skos:prefLabel ?objectPropertyLabel .
-  ?objectProperty skos:definition ?objectPropertyDefinition_original.
-  BIND(function:escapeHTML(?objectPropertyDefinition_original) as ?objectPropertyDefinition)
+  ?objectProperty manchester:label ?objectPropertyManchesterLabel_original .
+  ?objectProperty rdfs:isDefinedBy $this.
+  OPTIONAL{
+  ?objectProperty skos:definition ?objectPropertyDefinition_original.}
+  OPTIONAL{
+  ?objectProperty manchester:domain ?objectPropertyManchesterDomain_original.}
+  OPTIONAL{
+  ?objectProperty manchester:range ?objectPropertyManchesterRange_original.}
+  OPTIONAL{
+  ?objectProperty manchester:subPropertyOf ?objectPropertyManchesterSubPropertyOf_original.}
+  
+  BIND(CONCAT("ObjectProperty: ",function:escapeHTML(?objectPropertyManchesterLabel_original)) as ?objectPropertyManchesterLabel)
+  BIND(COALESCE(function:escapeHTML(?objectPropertyDefinition_original), "No definition provided by this ontology.") as ?objectPropertyDefinition_text)
+  BIND(CONCAT("Domain: ",function:escapeHTML(?objectPropertyManchesterDomain_original)) as ?objectPropertyManchesterDomain)
+  BIND(CONCAT("Range: ", function:escapeHTML(?objectPropertyManchesterRange_original)) as ?objectPropertyManchesterRange)
+  BIND(CONCAT("SubPropertyOf: ",function:escapeHTML(?objectPropertyManchesterSubPropertyOf_original)) as ?objectPropertyManchesterSubPropertyOf)
+  
   OPTIONAL {
     ?prevObjectProperty a owl:ObjectProperty .
-    ?prevObjectProperty skos:prefLabel ?prevLabel .
-    FILTER(?prevLabel < ?objectPropertyLabel)
+    ?prevObjectProperty manchester:label ?prevLabel .
+    FILTER(?prevLabel < ?objectPropertyManchesterLabel_original)
   }
 }
-  GROUP BY ?objectPropertyLabel ?objectProperty ?objectPropertyDefinition
-  ORDER BY ?objectPropertyLabel
+  GROUP BY ?objectPropertyManchesterLabel_original ?objectPropertyManchesterLabel ?objectProperty ?objectPropertyManchesterDomain ?objectPropertyManchesterRange ?objectPropertyManchesterSubPropertyOf ?objectPropertyDefinition_text 
+  ORDER BY ?objectPropertyManchesterLabel_original
 }
-  BIND(IRI(CONCAT(str(rdf:),"_", str(?memberObjectProperty))) as ?memberObjectPropertyString)
+  BIND(IRI(CONCAT(str(rdf:),"_", str(?member))) as ?rdf_member)  
+  BIND(COALESCE(?objectPropertyManchesterLabel_original, "Unknown class label") as ?objectPropertyLabel_text)
   BIND(IF(!BOUND(?objectProperty), "This ontology does not define any object properties.", ?unboundDummy) as ?absenceOfObjectPropertyDefinitions)
+
+  # Establishing the prefixed IRI of the object property.
   
+  BIND(function:getPrefixedIRI(?objectProperty) as ?prefixedIRI)
+
   # Create identifiers
   
-  BIND(COALESCE(?objectPropertyLabel, "Unknown class label") as ?objectPropertyLabel2)
-  BIND(IRI(CONCAT(STR(?sectionDefinition), '-instance')) as ?sectionDefinitionInstance)
-  BIND(IRI(CONCAT(STR(?divDefinitionObjectProperty1),'-instance')) as ?divDefinitionObjectProperty1Instance)
-  BIND(IRI(CONCAT(STR(?divDefinitionObjectProperty2), '-', str(?memberObjectProperty),'-instance')) as ?divDefinitionObjectProperty2Instance)
-  BIND(IRI(CONCAT(STR(?objectProperty_title), '-', str(?memberObjectProperty), '-instance')) as ?objectProperty_title_text_instance)
-  BIND(IRI(CONCAT(STR(?H2_class_title), '-', str(?memberObjectProperty), '-instance')) as ?objectProperty_title_instance_h2)
-  BIND(IRI(CONCAT(STR(?objectProperty_definition_text), '-', str(?memberObjectProperty), '-instance')) as ?objectProperty_definition_instance)
-  BIND(IRI(CONCAT(STR(?objectProperty_dfn), '-', str(?memberObjectProperty), '-instance')) as ?objectProperty_dfn_instance)
-  
+  BIND(IRI(CONCAT(STR(?objectproperty_Template),'-instance'))                   as ?objectproperty_div)
+  BIND(IRI(CONCAT(STR(?objectproperty_div), '-', str(?member)))                 as ?objectproperty_section)
+  BIND(IRI(CONCAT(STR(?objectproperty_section), '-1'))                          as ?objectproperty_H2_title) 
+  BIND(IRI(CONCAT(STR(?objectproperty_H2_title), '-1'))                         as ?objectproperty_dfn)
+  BIND(IRI(CONCAT(STR(?objectproperty_dfn), '-1'))                              as ?objectproperty_title)
+  BIND(IRI(CONCAT(STR(?objectproperty_section), '-2'))                          as ?objectproperty_IRI_p) 
+  BIND(IRI(CONCAT(STR(?objectproperty_section), '-3'))                          as ?linebreak1)
+  BIND(IRI(CONCAT(STR(?objectproperty_IRI_p), '-1'))                            as ?objectproperty_IRI_strong)
+  BIND(IRI(CONCAT(STR(?objectproperty_IRI_p), '-2'))                            as ?objectproperty_IRI_a)
+  BIND(IRI(CONCAT(STR(?objectproperty_IRI_strong), '-1'))                       as ?objectproperty_IRI_text)
+  BIND(IRI(CONCAT(STR(?objectproperty_IRI_a), '-1'))                            as ?IRI_value)
+  BIND(IRI(CONCAT(STR(?objectproperty_section), '-4'))                          as ?objectproperty_definition)
+  BIND(IRI(CONCAT(STR(?objectproperty_section), '-5'))                          as ?linebreak2)
+  BIND(IRI(CONCAT(STR(?objectproperty_section), '-6'))                          as ?linebreak3)
+  BIND(IRI(CONCAT(STR(?objectproperty_section), '-7'))                          as ?manchester_syntax)
+
+  # Create identifiers - Manchester Syntax 
+
+  BIND(IRI(CONCAT(STR(?manchester_syntax), '-1'))           as ?manchester_code_label)  
+  BIND(IF(BOUND(?objectPropertyManchesterDomain),         IRI(CONCAT(STR(?manchester_syntax), '-2')), ?unboundDummy)           as ?manchester_code_domain)  
+  BIND(IF(BOUND(?objectPropertyManchesterRange),          IRI(CONCAT(STR(?manchester_syntax), '-3')), ?unboundDummy)            as ?manchester_code_range)
+  BIND(IF(BOUND(?objectPropertyManchesterSubPropertyOf),  IRI(CONCAT(STR(?manchester_syntax), '-4')), ?unboundDummy)           as ?manchester_code_subpropertyof)
+  BIND(IRI(CONCAT(STR(?manchester_code_label), '-1'))       as ?manchester_label)
+  BIND(IRI(CONCAT(STR(?manchester_code_domain), '-1'))      as ?manchester_domain_paragraph)
+  BIND(IRI(CONCAT(STR(?manchester_domain_paragraph), '-1')) as ?manchester_domain)
+  BIND(IRI(CONCAT(STR(?manchester_domain_paragraph), '-2')) as ?linebreak4)
+  BIND(IRI(CONCAT(STR(?manchester_code_range), '-1'))       as ?manchester_range_paragraph)
+  BIND(IRI(CONCAT(STR(?manchester_range_paragraph), '-1'))  as ?manchester_range)
+  BIND(IRI(CONCAT(STR(?manchester_range_paragraph), '-2'))  as ?linebreak5)
+  BIND(IRI(CONCAT(STR(?manchester_code_subpropertyof), '-1')) as ?manchester_subpropertyof_paragraph)
+  BIND(IRI(CONCAT(STR(?manchester_subpropertyof_paragraph), '-1'))  as ?manchester_subpropertyof)
+  BIND(IRI(CONCAT(STR(?manchester_subpropertyof_paragraph), '-2'))  as ?linebreak6)
 }
 """.
 
@@ -782,6 +871,7 @@ rule:DatatypeProperties
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
 prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix dcm: <http://purl.org/dc/dcmitype/>
 prefix function: <https://data.rijksfinancien.nl/html/model/function/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
 prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
@@ -872,6 +962,7 @@ where  {
 WHERE {
   ?datatypeProperty a owl:DatatypeProperty .
   ?datatypeProperty manchester:label ?datatypePropertyManchesterLabel_original .
+  ?datatypeProperty rdfs:isDefinedBy $this.
   OPTIONAL{
   ?datatypeProperty skos:definition ?datatypePropertyDefinition_original.}
   OPTIONAL{
@@ -957,6 +1048,7 @@ prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
 prefix respec: <https://respec.org/model/> 
 prefix schema: <http://schema.org/>
+prefix sh: <http://www.w3.org/ns/shacl#>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
 construct {
@@ -999,6 +1091,7 @@ where  {
 WHERE {
   ?nodeShape a sh:NodeShape .
   ?nodeShape skos:prefLabel ?nodeShapeLabel .
+  ?nodeShape rdfs:isDefinedBy $this.
   OPTIONAL{
   ?nodeShape skos:definition ?nodeShapeDefinition_original.}
   BIND(function:escapeHTML(COALESCE(?nodeShapeDefinition_original, "No description available")) as ?nodeShapeDefinition)

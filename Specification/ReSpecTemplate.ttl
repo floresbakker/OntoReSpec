@@ -231,7 +231,7 @@ doc:40.4.1 a respec:StaticElement,
         respec:Template,
         html:TextElement ;
     rdfs:label "text element" ;
-    html:fragment "Diagram" .
+    html:fragment "Datamodel" .
 
 doc:40.5 a respec:StaticElement,
         respec:Template,
@@ -243,7 +243,7 @@ doc:40.5.1 a respec:StaticElement,
         respec:Template,
         html:TextElement ;
     rdfs:label "text element" ;
-    html:fragment "A diagram of the ontology" .
+    html:fragment "A visualisation of the ontology" .
 
 doc:40.6 a respec:StaticElement,
         respec:Template,
@@ -556,7 +556,7 @@ doc:55.2.1 a respec:StaticElement,
     rdfs:label "text element" ;
     html:fragment "Object Properties" .
 
-doc:55.3 a respec:ObjectPropertyDefinitionDiv,
+doc:55.3 a respec:ObjectProperty,
         respec:Template,
         html:Div ;
     rdfs:label "Div" ;
@@ -569,7 +569,7 @@ doc:55.4 a respec:ObjectPropertyDefinitionInstance,
     rdf:_1 doc:55.9 ;
     rdf:_2 doc:55.10 .
 	
-doc:55.9 a respec:ObjectProperty,
+doc:55.9 a respec:ObjectPropertyH2,
         respec:Template,
         html:H2 ;
     rdfs:label "h2" ;
@@ -587,7 +587,7 @@ doc:55.9.1 a respec:ObjectPropertyTitle,
     rdfs:label "text element" ;
     html:fragment "{{object property title}}" .
 
-doc:55.10 a respec:ObjectProperty,
+doc:55.10 a respec:ObjectPropertyP,
         respec:Template,
         html:P ;
     rdfs:label "p" ;
