@@ -2,6 +2,10 @@
 
 OntoReSpec is a RDF-based vocabulary to generate ReSpec specification documents for ontologies.
 
+# Status
+
+Unstable, no release yet. Work in progress. First working version planned for Q1 2024.
+
 # Background
 
 [ReSpec](https://respec.org/docs/) makes it easier to write technical documents. It was originally designed for writing W3C specifications, but now supports many output formats.
