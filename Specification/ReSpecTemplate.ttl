@@ -247,10 +247,10 @@ doc:40.5.1 a respec:StaticElement,
 
 doc:40.6 a respec:StaticElement,
         respec:Template,
-        html:Embed ;
-    rdfs:label "Embed element" ;
-	html:src "mermaid.html";
-	html:style "width: 900px; height: 400px;".
+        html:Iframe ;
+    rdfs:label "Iframe element" ;
+	html:src "diagram.html";
+	html:style "width: 900px; height: 400px; resize: both; overflow: auto;".
 
 doc:40.7 a respec:StaticElement,
         respec:Template,
