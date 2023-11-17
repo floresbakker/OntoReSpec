@@ -988,7 +988,7 @@ WHERE {
   ORDER BY ?datatypePropertyManchesterLabel_original
 }
   BIND(IRI(CONCAT(str(rdf:),"_", str(?member))) as ?rdf_member)  
-  BIND(COALESCE(?datatypePropertyManchesterLabel_original, "Unknown class label") as ?datatypePropertyLabel_text)
+  BIND(COALESCE(?datatypePropertyManchesterLabel_original, "Unknown label") as ?datatypePropertyLabel_text)
   BIND(IF(!BOUND(?datatypeProperty), "This ontology does not define any datatype properties.", ?unboundDummy) as ?absenceOfDataTypePropertyDefinitions)
 
   # Establishing the prefixed IRI of the datatype property.
@@ -1108,7 +1108,7 @@ WHERE {
   BIND(IF(!BOUND(?nodeShape), "This ontology does not define any node shapes.", ?unboundDummy) as ?absenceOfNodeShapeDefinitions)
 
   # Create identifiers
-  bind(COALESCE(?nodeShapeLabel, "Unknown class label") as ?nodeShapeLabel2)
+  bind(COALESCE(?nodeShapeLabel, "Unknown label") as ?nodeShapeLabel2)
   bind(IRI(CONCAT(STR(?sectionDefinition), '-instance')) as ?sectionDefinitionInstance)
   bind(IRI(CONCAT(STR(?divDefinitionNodeShape1),'-instance')) as ?divDefinitionNodeShape1Instance)
   bind(IRI(CONCAT(STR(?divDefinitionNodeShape2), '-', str(?memberNodeShape),'-instance')) as ?divDefinitionNodeShape2Instance)
@@ -1229,7 +1229,7 @@ WHERE {
   ORDER BY ?namedIndividualLabel
 }
   BIND(IRI(CONCAT(str(rdf:),"_", str(?member))) as ?rdf_member)  
-  BIND(COALESCE(?namedIndividualLabel, "Unknown class label") as ?namedIndividualLabel_text)
+  BIND(COALESCE(?namedIndividualLabel, "Unknown label") as ?namedIndividualLabel_text)
   BIND(IF(!BOUND(?namedIndividual), "This ontology does not define any named individuals.", ?unboundDummy) as ?absenceOfNamedIndividualDefinitions)
 
   # Establishing the prefixed IRI of the named individual.
@@ -1332,6 +1332,7 @@ function:getPrefixedIRI
   FILTER (STRSTARTS(STR($IRI), ?IRI_base))
   BIND(STR($IRI) as ?IRI_href)
   BIND(STRAFTER(STR($IRI), ?IRI_base) as ?IRI_reference)
-  BIND(COALESCE(CONCAT(STR(?IRI_prefix),":",?IRI_reference), ?IRI_href) as ?result)
+  BIND(COALESCE(CONCAT(STR(?IRI_prefix),":",?IRI_reference), ?IRI_href) as ?prefixedResult)
+  BIND(COALESCE(?prefixedResult, STR($IRI)) as ?result)
 }
         """ .
