@@ -601,72 +601,69 @@ where  {
    
    {?divDefinitionClass1 rdf:type respec:ClassDefinition.   }
 
-   # Get the class from the ontology, the label and description, and the sequence order in which the class appears amidst other classes alphanumerically.
-
-   {SELECT ?class ?manchesterLabel ?classDefinition_original ?manchesterDefinition ?memberClass ?memberManchester
-
+  # Get the class from the ontology, the label and description, and the sequence order in which the class appears amidst other classes alphanumerically.
+  {
+    SELECT ?class ?manchesterLabel ?classDefinition_original ?memberClass ?manchesterDefinition ?memberManchester
     WHERE {
-
- {
-
-    # Get the class ordered alphabetically on its label
-
-    SELECT ?class ?manchesterLabel ?classDefinition_original (COUNT(?prevClass) + 1 AS ?memberClass)
-
-    WHERE {
-
-      ?class a owl:Class .
-      ?class skos:definition ?classDefinition_original.
-      ?class manchester:label ?manchesterLabel.
-      ?class rdfs:isDefinedBy $this.
-
-      OPTIONAL {
-        ?prevClass a owl:Class .
-        ?prevClass manchester:label ?prevLabel .
-        FILTER(?prevLabel < ?manchesterLabel)
+      # Get the class ordered alphabetically on its label
+      {
+        SELECT ?class ?manchesterLabel ?classDefinition_original (COUNT(?prevClass) + 1 AS ?memberClass)
+        WHERE {
+          ?class a owl:Class .
+          ?class skos:definition ?classDefinition_original.
+          ?class manchester:label ?manchesterLabel.
+          ?class rdfs:isDefinedBy $this.
+          OPTIONAL {
+            ?prevClass a owl:Class .
+            ?prevClass manchester:label ?prevLabel .
+            FILTER(?prevLabel < ?manchesterLabel)
+          }
+        }
+        GROUP BY ?class ?manchesterLabel ?classDefinition_original
+        ORDER BY ?manchesterLabel
+      }
+      OPTIONAL 
+      { ?class a owl:Class .
+        # Get the possibly multiple definitions of the class, ordered alphabetically
+        {
+          SELECT ?class ?manchesterDefinition (COUNT(?prevManchesterDefinition) + 1 AS ?memberManchester)
+          WHERE {
+            {
+              SELECT ?class ?manchesterDefinition WHERE {
+                {
+                  ?class manchester:subClassOf ?manchesterDefinition_original.
+                  BIND(CONCAT("SubClassOf: ", ?manchesterDefinition_original) as ?manchesterDefinition)
+                }
+                UNION
+                {
+                  ?class manchester:equivalentTo ?manchesterDefinition_original.
+                  BIND(CONCAT("EquivalentTo: ", ?manchesterDefinition_original) as ?manchesterDefinition)
+                }
+              }
+            }
+            OPTIONAL {
+              {
+                SELECT ?class ?prevManchesterDefinition WHERE {
+                  {
+                    ?class manchester:subClassOf ?prevManchesterDefinition_original.
+                    BIND(CONCAT("SubClassOf: ", ?prevManchesterDefinition_original) as ?prevManchesterDefinition)
+                  }
+                  UNION
+                  {
+                    ?class manchester:equivalentTo ?prevManchesterDefinition_original.
+                    BIND(CONCAT("EquivalentTo: ", ?prevManchesterDefinition_original) as ?prevManchesterDefinition)
+                  }
+                }
+              }
+            }
+            FILTER(?prevManchesterDefinition < ?manchesterDefinition)
+          }     
+          GROUP BY ?class ?manchesterDefinition
+          ORDER BY ?manchesterDefinition
+        }
       }
     }
-    GROUP BY ?class ?manchesterLabel ?classDefinition_original
-    ORDER BY ?manchesterLabel
   }
-
-  OPTIONAL {
-
-    # Get the possibly multiple definitions of the class, ordered alphabetically
-    {
-      SELECT ?class ?manchesterDefinition (COUNT(?prevManchesterDefinition) + 1 AS ?memberManchester)
-      WHERE {
-        ?class a owl:Class .
-        {
-          ?class manchester:subClassOf ?manchesterDefinition_original.
-          BIND(CONCAT("SubClassOf: ", ?manchesterDefinition_original) as ?manchesterDefinition)
-        }
-        UNION
-
-        {
-          ?class manchester:equivalentTo ?manchesterDefinition_original.
-          BIND(CONCAT("EquivalentTo: ", ?manchesterDefinition_original) as ?manchesterDefinition)
-        }
-        OPTIONAL {
-          {
-            ?class manchester:subClassOf ?prevManchesterDefinition_original.
-            BIND(CONCAT("SubClassOf: ", ?prevManchesterDefinition_original) as ?prevManchesterDefinition)
-          }
-          UNION
-          {
-            ?class manchester:equivalentTo ?prevManchesterDefinition_original.
-            BIND(CONCAT("EquivalentTo: ", ?prevManchesterDefinition_original) as ?prevManchesterDefinition)
-          }
-          FILTER(?prevManchesterDefinition < ?manchesterDefinition)
-        }
-      }
-      GROUP BY ?class ?manchesterDefinition
-      ORDER BY ?manchesterDefinition
-
-    }
-   }
-  }
- }
 
   # If there are no classes defined by this ontology, then add text indicating this accordingly.
    
@@ -679,9 +676,8 @@ where  {
   
   # Clean up text (prevent html code)
   
-  BIND(concat(function:escapeHTML(?manchesterLabel), ': ') as ?manchesterLabelColon)
-  BIND(function:escapeHTML(?classDefinition_original) as ?classDefinition)
-  BIND(function:escapeHTML(?manchesterLabel) as ?cleanedManchesterLabel)
+  BIND(str(?classDefinition_original) as ?classDefinition)
+  BIND(str(?manchesterLabel) as ?cleanedManchesterLabel)
   
   # Establishing the IRI, base IRI and relative IRI of the class
 
@@ -691,7 +687,6 @@ where  {
    BIND(STR(?class) as ?IRI_href)
    BIND(STRAFTER(STR(?class), ?IRI_base) as ?IRI_reference)
    BIND(COALESCE(CONCAT(STR(?IRI_prefix),":",?IRI_reference), ?IRI_href) as ?IRI_value_text)
-
   
   # Create identifiers - generic
   
