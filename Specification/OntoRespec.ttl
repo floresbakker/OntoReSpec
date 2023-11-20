@@ -655,8 +655,8 @@ where  {
                   }
                 }
               }
-            }
             FILTER(?prevManchesterDefinition < ?manchesterDefinition)
+			}
           }     
           GROUP BY ?class ?manchesterDefinition
           ORDER BY ?manchesterDefinition
