@@ -129,12 +129,15 @@ construct {
     
 } where {
    {?titleTextElement a respec:TitleTextElement}
-  optional
-  {$this dc:title ?ontologyTitle1}
-  optional
-  {$this dct:title ?ontologyTitle2}
-  optional
-  {$this schema:name ?ontologyTitle3}
+  OPTIONAL
+  {$this dc:title ?ontologyTitle1
+  FILTER(LANG(?ontologyTitle1)='en')}
+  OPTIONAL
+  {$this dct:title ?ontologyTitle2
+  FILTER(LANG(?ontologyTitle2)='en')}
+  OPTIONAL
+  {$this schema:name ?ontologyTitle3
+  FILTER(LANG(?ontologyTitle3)='en')}
    
   BIND(COALESCE(?ontologyTitle1, ?ontologyTitle2, ?ontologyTitle3, "Unknown title") as ?ontologyTitle)
   # Create identifiers
@@ -202,14 +205,18 @@ construct {
                                       html:fragment ?introductionAudience.
 } where {
    {?introductionSection a respec:Introduction}
-    optional
-   {$this respec:introduction ?introduction}
-   optional
-   {$this respec:background ?background}
-   optional
-   {$this respec:objective ?objective}
-   optional
-   {$this respec:audience ?audience}
+   OPTIONAL
+   {$this respec:introduction ?introduction
+   FILTER (LANG(?introduction) = 'en')}
+   OPTIONAL
+   {$this respec:background ?background
+   FILTER (LANG(?background) = 'en')}
+   OPTIONAL
+   {$this respec:objective ?objective
+   FILTER (LANG(?objective) = 'en')}
+   OPTIONAL
+   {$this respec:audience ?audience
+   FILTER (LANG(?audience) = 'en')}
     
   BIND(COALESCE(?introduction, "This specification document does not describe an introduction to the ontology.") as ?generalIntroduction) 
   BIND(COALESCE(?background, "This specification document does not describe the background of the ontology.") as ?introductionBackground) 
@@ -260,16 +267,21 @@ construct {
     
 } where {
    {?textElement a respec:Overview}
-  optional
-  {$this dc:description ?ontologyDescription1}
-  optional
-  {$this dct:description ?ontologyDescription2}
-  optional
-  {$this rdfs:comment ?ontologyDescription3}
-  optional
-  {$this schema:description ?ontologyDescription4}
-  optional
-  {$this skos:note ?ontologyDescription5}
+  OPTIONAL
+  {$this dc:description ?ontologyDescription1
+  FILTER (LANG(?ontologyDescription1) = 'en')}
+  OPTIONAL
+  {$this dct:description ?ontologyDescription2
+  FILTER (LANG(?ontologyDescription2) = 'en')}
+  OPTIONAL
+  {$this rdfs:comment ?ontologyDescription3
+  FILTER (LANG(?ontologyDescription3) = 'en')}
+  OPTIONAL
+  {$this schema:description ?ontologyDescription4
+  FILTER (LANG(?ontologyDescription4) = 'en')}
+  OPTIONAL
+  {$this skos:note ?ontologyDescription5
+  FILTER (LANG(?ontologyDescription5) = 'en')}
 
   BIND(COALESCE(?ontologyDescription1, ?ontologyDescription2, ?ontologyDescription3, ?ontologyDescription4, ?ontologyDescription5,"Description not available") as ?ontologyDescription)
   # Create identifiers
@@ -307,6 +319,7 @@ construct {
   
   ?exampleElement a respec:Example.
   $this skos:example ?example.
+  FILTER (LANG(?example) = 'en')
   BIND(function:escapeHTML(?example) as ?ontologyExample)
   
   # Create identifiers
@@ -443,10 +456,12 @@ construct {
     
 } where {
    {?textElement a respec:Abstract}
-  optional
-  {$this dc:abstract ?ontologyAbstract1}
-  optional
-  {$this dct:abstract ?ontologyAbstract2}
+  OPTIONAL
+  {$this dc:abstract ?ontologyAbstract1
+  FILTER (LANG(?ontologyAbstract1) = 'en')}
+  OPTIONAL
+  {$this dct:abstract ?ontologyAbstract2
+  FILTER (LANG(?ontologyAbstract2) = 'en')}
   BIND(COALESCE(?ontologyAbstract1, ?ontologyAbstract2, "Abstract not available") as ?ontologyAbstract)
   # Create identifiers
   bind(iri(concat(str(?textElement),'-instance')) as ?abstractTextElementID)
