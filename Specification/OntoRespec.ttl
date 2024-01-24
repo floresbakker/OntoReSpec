@@ -555,11 +555,11 @@ construct {
 
       ?divDefinitionClass1Instance            rdf:type html:Div;
                                               ?memberClassString ?divDefinitionClass2Instance;
-											  html:fragment ?absenceOfClassDefinitions.
+                                              html:fragment ?absenceOfClassDefinitions.
       ?divDefinitionClass2Instance            rdf:type html:Section;
                                               rdf:_1 ?class_title_instance_h2;
-											  rdf:_2 ?class_IRI_p;
-											  rdf:_3 ?class_linebreak_instance1; 
+                                              rdf:_2 ?class_IRI_p;
+                                              rdf:_3 ?class_linebreak_instance1; 
                                               rdf:_4 ?class_definition_instance;
                                               rdf:_5 ?class_linebreak_instance2;  
                                               rdf:_6 ?class_linebreak_instance3;
@@ -570,9 +570,9 @@ construct {
                                               rdf:_1 ?class_title_text_instance.
       ?class_title_text_instance              rdf:type html:TextElement;
                                               html:fragment ?cleanedManchesterLabel.
-	  ?class_IRI_p                    		  rdf:type html:P;
+      ?class_IRI_p                            rdf:type html:P;
                                               rdf:_1 ?class_IRI_strong;
-											  rdf:_2 ?class_IRI_a.
+                                              rdf:_2 ?class_IRI_a.
       ?class_IRI_strong                       rdf:type html:Strong;
                                               rdf:_1 ?class_IRI_text.
       ?class_IRI_text                         rdf:type html:TextElement;
@@ -606,9 +606,9 @@ construct {
       ?manchester_definition_instance         rdf:type html:TextElement;
                                               html:fragment ?manchesterDefinition.
       ?class_linebreak_instance1              rdf:type html:Br.
-	  ?class_linebreak_instance2              rdf:type html:Br.
+      ?class_linebreak_instance2              rdf:type html:Br.
       ?class_linebreak_instance3              rdf:type html:Br.
-	  ?class_linebreak_instance4              rdf:type html:Br.
+      ?class_linebreak_instance4              rdf:type html:Br.
 }
 where  {
    
@@ -624,7 +624,7 @@ where  {
       {
         SELECT ?class ?manchesterLabel ?classDefinition_original (COUNT(?prevClass) + 1 AS ?memberClass)
         WHERE {
-          ?class a owl:Class .
+          ?class manchester:type 'CLASS'.
           ?class skos:definition ?classDefinition_original.
           ?class manchester:label ?manchesterLabel.
           ?class rdfs:isDefinedBy $this.
@@ -638,7 +638,7 @@ where  {
         ORDER BY ?manchesterLabel
       }
       OPTIONAL 
-      { ?class a owl:Class .
+      { ?class manchester:type 'CLASS'.
         # Get the possibly multiple definitions of the class, ordered alphabetically
         {
           SELECT ?class ?manchesterDefinition (COUNT(?prevManchesterDefinition) + 1 AS ?memberManchester)
@@ -671,7 +671,7 @@ where  {
                 }
               }
             FILTER(?prevManchesterDefinition < ?manchesterDefinition)
-			}
+           }
           }     
           GROUP BY ?class ?manchesterDefinition
           ORDER BY ?manchesterDefinition
@@ -1236,7 +1236,7 @@ construct {
                                               rdf:_1 ?manchester_fact;
                                               rdf:_2 ?linebreak5.
       ?manchester_fact                       rdf:type html:TextElement;
-                                              html:fragment ?namedIndividualManchesterFact.										  
+                                              html:fragment ?namedIndividualManchesterFact.
 	  ?linebreak1                             rdf:type html:Br.
       ?linebreak2                             rdf:type html:Br.
 	  ?linebreak3                             rdf:type html:Br.
@@ -1258,11 +1258,11 @@ WHERE {
   }
  
   #OPTIONAL
-  #{?namedIndividual manchester:type ?type.}
+  #{?namedIndividual manchester:class ?class.}
   #OPTIONAL
   #{?namedIndividual manchester:fact ?fact.}
     
-  #BIND(function:escapeHTML(COALESCE(?type, "No type defined")) as ?namedIndividualManchesterType)
+  #BIND(function:escapeHTML(COALESCE(?class, "No class defined")) as ?namedIndividualManchesterType)
   #BIND(function:escapeHTML(COALESCE(?fact, "No known facts")) as ?namedIndividualManchesterFact)
 
   }
@@ -1299,7 +1299,7 @@ WHERE {
   # Create identifiers - Manchester Syntax 
 
   BIND(IRI(CONCAT(STR(?manchester_syntax), '-1'))                                           as ?manchester_code_label)  
-  BIND(IF(BOUND(?type),IRI(CONCAT(STR(?manchester_syntax), '-2')), ?unboundDummy)           as ?manchester_code_type)  
+  BIND(IF(BOUND(?class),IRI(CONCAT(STR(?manchester_syntax), '-2')), ?unboundDummy)           as ?manchester_code_type)  
   BIND(IF(BOUND(?fact),IRI(CONCAT(STR(?manchester_syntax), '-3')), ?unboundDummy)           as ?manchester_code_fact)
   BIND(IRI(CONCAT(STR(?manchester_code_label), '-1'))                                       as ?manchester_label)
   BIND(IRI(CONCAT(STR(?manchester_code_type), '-1'))                                        as ?manchester_type_paragraph)
