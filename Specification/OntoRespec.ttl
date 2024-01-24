@@ -629,7 +629,7 @@ where  {
           ?class manchester:label ?manchesterLabel.
           ?class rdfs:isDefinedBy $this.
           OPTIONAL {
-            ?prevClass a owl:Class .
+            ?prevClass manchester:type 'CLASS'.
             ?prevClass manchester:label ?prevLabel .
             FILTER(?prevLabel < ?manchesterLabel)
           }
