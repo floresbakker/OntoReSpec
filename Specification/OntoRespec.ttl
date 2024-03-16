@@ -7,7 +7,7 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix respec: <https://respec.org/model/> .
+@prefix respec: <https://respec.org/model/def/> .
 @prefix rule: <https://data.rijksfinancien.nl/html/model/rule/>.
 @prefix shp: <https://data.rijksfinancien.nl/html/model/shp/>.
 @prefix target: <https://data.rijksfinancien.nl/html/model/target/>.
@@ -15,55 +15,52 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
 @prefix skos: <http://www.w3.org/2004/02/skos/core#>.
 
-respec:Ontology
-	rdfs:subClassOf owl:Ontology;
-    skos:definition 'A class to represent an ontology that is specified according to the W3C ReSpec standard.'@en;
-    skos:prefLabel 'ReSpec-specified Ontology'@en.
-
 respec:introduction
 	a owl:DatatypeProperty;
-    rdfs:domain respec:Ontology;
+    rdfs:domain respec:Generation;
     rdfs:range xsd:string;
     skos:definition 'Property that links a text, in which an ontology is presented and introduced to an audience, to that very ontology.'@en;
     skos:prefLabel 'has introduction'@en.
 
 shp:Document
   a sh:NodeShape;
-  sh:rule rule:Document;
-  sh:targetClass respec:TemplateDocument.
+  sh:rule rule:Document, rule:StaticElement, rule:Title, rule:Introduction, rule:Description, rule:Example, rule:NameSpace, rule:Abstract, rule:Configuration, rule:Classes, rule:ObjectProperties, rule:DatatypeProperties, rule:NodeShapes, rule:NamedIndividuals;
+  sh:targetClass respec:Generation.
 
 rule:Document
   a sh:SPARQLRule;
   skos:prefLabel 'Document rule'@en;
   rdfs:comment 'The Document rule creates a document and attaches its structure.'@en ;
   sh:construct """
+prefix dct: <http://purl.org/dc/terms/>
 prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
+prefix prov: <http://www.w3.org/ns/prov#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <https://respec.org/model/> 
+prefix respec: <https://respec.org/model/def/> 
 
 construct {
   ?documentID
     a html:Document, respec:Document ;
-    ?element ?childID .
+    ?element ?childID ;
+	prov:wasGeneratedBy $this;
+	dct:subject ?ontology.
     
 } where {
   
-  $this ?element ?child.
+  $this dct:subject ?ontology;
+        respec:documentNamespace ?namespace.
+  ?templateDocument rdf:type respec:TemplateDocument;
+                    ?element ?child.
   ?child  a/ rdfs:subClassOf* dom:Element.
   
   # Create identifiers
-  bind(iri(concat(str($this),'-instance')) as ?documentID)
+  bind(iri(concat(str(?templateDocument),'-instance')) as ?documentID)
   bind(iri(concat(str(?child),'-instance')) as ?childID)
   
 }""".
 
-shp:StaticElement
-  a sh:NodeShape;
-  sh:rule rule:StaticElement;
-  sh:targetClass respec:StaticElement.
-  
 rule:StaticElement
   a sh:SPARQLRule;
   skos:prefLabel 'Static Element rule'@en;
@@ -73,7 +70,7 @@ prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <https://respec.org/model/> 
+prefix respec: <https://respec.org/model/def/> 
 
 construct {
   ?elementID
@@ -84,30 +81,35 @@ construct {
 	?attribute ?attributeValue.
     
 } where {
-  $this a ?class.
+
+  $this respec:documentLanguage ?language;
+        respec:documentNamespace ?namespace.
+  ?templateClass a ?class,
+          respec:StaticElement.
+  
   OPTIONAL {
-        $this ?element ?child.
+  ?templateClass ?element ?child.
   ?child  a/ rdfs:subClassOf* dom:Element.}
+  
   OPTIONAL {
-  $this html:fragment ?fragment}
+  ?templateClass html:fragment ?fragment}
+  
   OPTIONAL {
-  $this rdfs:label ?label}
+  ?templateClass rdfs:label ?label
+  FILTER (LANG(?label) = ?language)
+  }
+  
   OPTIONAL {
-  $this ?attribute ?attributeValue.
+  ?templateClass ?attribute ?attributeValue.
   ?attribute rdfs:subPropertyOf html:attribute.
   }
   ?class rdfs:subClassOf* dom:Element.
+  
   # Create identifiers
-  bind(iri(concat(str($this),'-instance')) as ?elementID)
+  bind(iri(concat(str(?templateClass),'-instance')) as ?elementID)
   bind(iri(concat(str(?child),'-instance')) as ?childID)
   
 }""".
-
-shp:OntologyMetadata
-  a sh:NodeShape;
-  sh:rule rule:Title, rule:Introduction, rule:Description, rule:Example, rule:NameSpace, rule:Abstract, rule:Version, rule:Classes, rule:ObjectProperties, rule:DatatypeProperties, rule:NodeShapes, rule:NamedIndividuals;
-  sh:targetClass respec:Ontology.
-
 
 rule:Title
   a sh:SPARQLRule;
@@ -120,7 +122,7 @@ prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <https://respec.org/model/> 
+prefix respec: <https://respec.org/model/def/> 
 prefix schema: <http://schema.org/>
 
 construct {
@@ -130,21 +132,26 @@ construct {
 } where {
    {?titleTextElement a respec:TitleTextElement}
   OPTIONAL
-  {$this dc:title ?ontologyTitle1
-  FILTER(LANG(?ontologyTitle1)='en')}
+  {$this dct:subject ?ontology;
+         respec:documentLanguage ?language.
+  ?ontology dc:title ?ontologyTitle1.
+  FILTER(LANG(?ontologyTitle1)=?language)}
   OPTIONAL
-  {$this dct:title ?ontologyTitle2
-  FILTER(LANG(?ontologyTitle2)='en')}
+  {$this dct:subject ?ontology;
+         respec:documentLanguage ?language.
+  ?ontology dct:title ?ontologyTitle2.
+  FILTER(LANG(?ontologyTitle2)=?language)}
   OPTIONAL
-  {$this schema:name ?ontologyTitle3
-  FILTER(LANG(?ontologyTitle3)='en')}
+  {$this dct:subject ?ontology;
+         respec:documentLanguage ?language.
+  ?ontology schema:name ?ontologyTitle3.
+  FILTER(LANG(?ontologyTitle3)=?language)}
    
   BIND(COALESCE(?ontologyTitle1, ?ontologyTitle2, ?ontologyTitle3, "Unknown title") as ?ontologyTitle)
   # Create identifiers
   bind(iri(concat(str(?titleTextElement),'-instance')) as ?titleTextElementID)
     
 }""".
-
 
 rule:Introduction
   a sh:SPARQLRule;
@@ -158,7 +165,7 @@ prefix function: <https://data.rijksfinancien.nl/html/model/function/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <https://respec.org/model/> 
+prefix respec: <https://respec.org/model/def/> 
 prefix schema: <http://schema.org/>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
@@ -204,19 +211,21 @@ construct {
   ?introductionAudience_text          rdf:type html:TextElement;
                                       html:fragment ?introductionAudience.
 } where {
-   {?introductionSection a respec:Introduction}
+
+   {$this respec:documentLanguage ?language.
+   ?introductionSection a respec:Introduction}
    OPTIONAL
-   {$this respec:introduction ?introduction
-   FILTER (LANG(?introduction) = 'en')}
+   {$this respec:introduction ?introduction.
+   FILTER (LANG(?introduction) = ?language)}
    OPTIONAL
-   {$this respec:background ?background
-   FILTER (LANG(?background) = 'en')}
+   {$this respec:background ?background.
+   FILTER (LANG(?background) = ?language)}
    OPTIONAL
-   {$this respec:objective ?objective
-   FILTER (LANG(?objective) = 'en')}
+   {$this respec:objective ?objective.
+   FILTER (LANG(?objective) = ?language)}
    OPTIONAL
-   {$this respec:audience ?audience
-   FILTER (LANG(?audience) = 'en')}
+   {$this respec:audience ?audience.
+   FILTER (LANG(?audience) = ?language)}
     
   BIND(COALESCE(?introduction, "This specification document does not describe an introduction to the ontology.") as ?generalIntroduction) 
   BIND(COALESCE(?background, "This specification document does not describe the background of the ontology.") as ?introductionBackground) 
@@ -257,7 +266,7 @@ prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <https://respec.org/model/> 
+prefix respec: <https://respec.org/model/def/> 
 prefix schema: <http://schema.org/>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
@@ -266,22 +275,24 @@ construct {
   html:fragment ?ontologyDescription.
     
 } where {
-   {?textElement a respec:Overview}
+   {?textElement a respec:Overview.
+   $this respec:documentLanguage ?language;
+         dct:subject ?ontology.}
   OPTIONAL
-  {$this dc:description ?ontologyDescription1
-  FILTER (LANG(?ontologyDescription1) = 'en')}
+  {?ontology dc:description ?ontologyDescription1
+  FILTER (LANG(?ontologyDescription1) = ?language)}
   OPTIONAL
-  {$this dct:description ?ontologyDescription2
-  FILTER (LANG(?ontologyDescription2) = 'en')}
+  {?ontology dct:description ?ontologyDescription2
+  FILTER (LANG(?ontologyDescription2) = ?language)}
   OPTIONAL
-  {$this rdfs:comment ?ontologyDescription3
-  FILTER (LANG(?ontologyDescription3) = 'en')}
+  {?ontology rdfs:comment ?ontologyDescription3
+  FILTER (LANG(?ontologyDescription3) = ?language)}
   OPTIONAL
-  {$this schema:description ?ontologyDescription4
-  FILTER (LANG(?ontologyDescription4) = 'en')}
+  {?ontology schema:description ?ontologyDescription4
+  FILTER (LANG(?ontologyDescription4) = ?language)}
   OPTIONAL
-  {$this skos:note ?ontologyDescription5
-  FILTER (LANG(?ontologyDescription5) = 'en')}
+  {?ontology skos:note ?ontologyDescription5
+  FILTER (LANG(?ontologyDescription5) = ?language)}
 
   BIND(COALESCE(?ontologyDescription1, ?ontologyDescription2, ?ontologyDescription3, ?ontologyDescription4, ?ontologyDescription5,"Description not available") as ?ontologyDescription)
   # Create identifiers
@@ -301,7 +312,7 @@ prefix function: <https://data.rijksfinancien.nl/html/model/function/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <https://respec.org/model/> 
+prefix respec: <https://respec.org/model/def/> 
 prefix schema: <http://schema.org/>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
@@ -318,8 +329,10 @@ construct {
 } where {
   
   ?exampleElement a respec:Example.
-  $this skos:example ?example.
-  FILTER (LANG(?example) = 'en')
+  $this respec:documentLanguage ?language;
+        dct:subject ?ontology.
+  ?ontology skos:example ?example.
+  FILTER (LANG(?example) = ?language)
   BIND(function:escapeHTML(?example) as ?ontologyExample)
   
   # Create identifiers
@@ -347,7 +360,7 @@ prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix prov: <http://www.w3.org/ns/prov#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <https://respec.org/model/> 
+prefix respec: <https://respec.org/model/def/> 
 prefix rule: <https://data.rijksfinancien.nl/html/model/rule/>
 prefix shp: <https://data.rijksfinancien.nl/html/model/shp/>
 prefix target: <https://data.rijksfinancien.nl/html/model/target/>
@@ -357,6 +370,7 @@ prefix vann: <http://purl.org/vocab/vann/>
 prefix void: <http://rdfs.org/ns/void#>
 prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
+
 construct {
   ?namespaceTableBodyInstance       ?rdf_member ?namespaceTableDataRow.
   ?namespaceTableDataRow            rdf:type html:Row;
@@ -392,10 +406,12 @@ construct {
           (void: "http://rdfs.org/ns/void#" "void")
           (xsd: "http://www.w3.org/2001/XMLSchema#" "xsd")
         }
-      $this owl:imports ?ontology.
+      $this dct:subject ?subjectOntology.
+	  ?subjectOntology owl:imports ?ontology.
       }
       UNION 
       {
+	    $this dct:subject ?ontology.
         ?ontology vann:preferredNamespaceUri ?IRI_base;
                   vann:preferredNamespacePrefix ?IRI_prefix.
       }
@@ -448,20 +464,22 @@ prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <https://respec.org/model/> 
+prefix respec: <https://respec.org/model/def/> 
 
 construct {
   ?abstractTextElementID rdf:type html:TextElement;
   html:fragment ?ontologyAbstract.
     
 } where {
-   {?textElement a respec:Abstract}
+   {?textElement a respec:Abstract.
+    $this respec:documentLanguage ?language;
+          dct:subject ?ontology.}
   OPTIONAL
-  {$this dc:abstract ?ontologyAbstract1
-  FILTER (LANG(?ontologyAbstract1) = 'en')}
+  {?ontology dc:abstract ?ontologyAbstract1
+  FILTER (LANG(?ontologyAbstract1) = ?language)}
   OPTIONAL
-  {$this dct:abstract ?ontologyAbstract2
-  FILTER (LANG(?ontologyAbstract2) = 'en')}
+  {?ontology dct:abstract ?ontologyAbstract2
+  FILTER (LANG(?ontologyAbstract2) = ?language)}
   BIND(COALESCE(?ontologyAbstract1, ?ontologyAbstract2, "Abstract not available") as ?ontologyAbstract)
   # Create identifiers
   bind(iri(concat(str(?textElement),'-instance')) as ?abstractTextElementID)
@@ -469,10 +487,10 @@ construct {
 }""".       
     
 
-rule:Version
+rule:Configuration
   a sh:SPARQLRule;
-  skos:prefLabel 'Version rule'@en;
-  rdfs:comment 'The Version rule creates the version information for the ontology in the document.'@en ;
+  skos:prefLabel 'Configuration rule'@en;
+  rdfs:comment 'The Configuration rule creates the configuration information for the ontology in the document.'@en ;
   sh:construct """
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
@@ -481,7 +499,7 @@ prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix prov: <http://www.w3.org/ns/prov#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <https://respec.org/model/> 
+prefix respec: <https://respec.org/model/def/> 
 prefix schema: <http://schema.org/>
 
 construct {
@@ -493,26 +511,28 @@ construct {
   
   ?textElement a respec:Configuration;
                html:fragment ?fragment.
+  $this respec:documentLanguage ?language;
+        dct:subject ?ontology.
   optional
-  {$this owl:versionIRI ?ontologyVersion1}
+  {?ontology owl:versionIRI ?ontologyVersion1}
   optional
-  {$this schema:schemaVersion ?ontologyVersion2}
+  {?ontology schema:schemaVersion ?ontologyVersion2}
   optional
-  {$this owl:versionInfo ?ontologyVersionText1}
+  {?ontology owl:versionInfo ?ontologyVersionText1}
   optional
-  {$this dct:publisher ?workinggroup}
+  {?ontology dct:publisher ?workinggroup}
   optional
-  {$this dct:source ?github}
+  {?ontology dct:source ?github}
   { select (group_concat(?ontologyAuthorString;separator='') as ?ontologyAuthors) 
     {
   optional
-  {$this dct:creator ?ontologyAuthor1}
+  {?ontology dct:creator ?ontologyAuthor1}
   optional
-  {$this dc:creator ?ontologyAuthor2}
+  {?ontology dc:creator ?ontologyAuthor2}
   optional
-  {$this schema:creator ?ontologyAuthor3}
+  {?ontology schema:creator ?ontologyAuthor3}
   optional
-  {$this prov:wasAttributedTo ?ontologyAuthor4}
+  {?ontology prov:wasAttributedTo ?ontologyAuthor4}
 
   BIND(COALESCE(?ontologyAuthor1, ?ontologyAuthor2, ?ontologyAuthor3, ?ontologyAuthor4, "Author unknown") as ?ontologyAuthor)
   BIND(CONCAT('{name: "', STR(?ontologyAuthor), '"},') as ?ontologyAuthorString)
@@ -530,8 +550,6 @@ construct {
   
 }""".  
 
-
-
 rule:Classes
   a sh:SPARQLRule;
   skos:prefLabel 'Classes rule'@en;
@@ -546,7 +564,7 @@ prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <https://respec.org/model/> 
+prefix respec: <https://respec.org/model/def/> 
 prefix schema: <http://schema.org/>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 prefix vann: <http://purl.org/vocab/vann/>
@@ -627,10 +645,15 @@ where  {
           ?class manchester:type 'CLASS'.
           ?class skos:definition ?classDefinition_original.
           ?class manchester:label ?manchesterLabel.
-          ?class rdfs:isDefinedBy $this.
+          ?class rdfs:isDefinedBy ?ontology.
+		  $this  dct:subject ?ontology;
+		         respec:documentLanguage ?language.
+		  FILTER (LANG(?classDefinition_original) = ?language)				 
+		  FILTER (LANG(?manchesterLabel) = ?language)
           OPTIONAL {
             ?prevClass manchester:type 'CLASS'.
             ?prevClass manchester:label ?prevLabel .
+			FILTER (LANG(?prevLabel) = ?language)
             FILTER(?prevLabel < ?manchesterLabel)
           }
         }
@@ -691,13 +714,14 @@ where  {
   
   # Clean up text (prevent html code)
   
-  BIND(str(?classDefinition_original) as ?classDefinition)
+  BIND(function:escapeHTML(?classDefinition_original) as ?classDefinition)
   BIND(str(?manchesterLabel) as ?cleanedManchesterLabel)
   
   # Establishing the IRI, base IRI and relative IRI of the class
 
   OPTIONAL{
-   $this vann:preferredNamespaceUri ?IRI_base;
+   $this dct:subject ?ontology.
+   ?ontology vann:preferredNamespaceUri ?IRI_base;
          vann:preferredNamespacePrefix ?IRI_prefix.}
    BIND(STR(?class) as ?IRI_href)
    BIND(STRAFTER(STR(?class), ?IRI_base) as ?IRI_reference)
@@ -750,7 +774,7 @@ prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <https://respec.org/model/> 
+prefix respec: <https://respec.org/model/def/> 
 prefix schema: <http://schema.org/>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 prefix vann: <http://purl.org/vocab/vann/>
@@ -834,9 +858,15 @@ where  {
 WHERE {
   ?objectProperty a owl:ObjectProperty .
   ?objectProperty manchester:label ?objectPropertyManchesterLabel_original .
-  ?objectProperty rdfs:isDefinedBy $this.
+  ?objectProperty rdfs:isDefinedBy ?ontology.
+  $this dct:subject ?ontology;
+        respec:documentLanguage ?language.
+  FILTER (LANG(?objectPropertyManchesterLabel_original) = ?language)
+
   OPTIONAL{
-  ?objectProperty skos:definition ?objectPropertyDefinition_original.}
+  ?objectProperty skos:definition ?objectPropertyDefinition_original.
+  FILTER (LANG(?objectPropertyDefinition_original) = ?language)
+  } 
   OPTIONAL{
   ?objectProperty manchester:domain ?objectPropertyManchesterDomain_original.}
   OPTIONAL{
@@ -853,6 +883,7 @@ WHERE {
   OPTIONAL {
     ?prevObjectProperty a owl:ObjectProperty .
     ?prevObjectProperty manchester:label ?prevLabel .
+	FILTER (LANG(?prevLabel) = ?language)
     FILTER(?prevLabel < ?objectPropertyManchesterLabel_original)
   }
 }
@@ -919,7 +950,7 @@ prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <https://respec.org/model/> 
+prefix respec: <https://respec.org/model/def/> 
 prefix schema: <http://schema.org/>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 prefix vann: <http://purl.org/vocab/vann/>
@@ -1003,9 +1034,14 @@ where  {
 WHERE {
   ?datatypeProperty a owl:DatatypeProperty .
   ?datatypeProperty manchester:label ?datatypePropertyManchesterLabel_original .
-  ?datatypeProperty rdfs:isDefinedBy $this.
+  ?datatypeProperty rdfs:isDefinedBy ?ontology.
+  $this dct:subject ?ontology;
+        respec:documentLanguage ?language.
+  FILTER (LANG(?datatypePropertyManchesterLabel_original) = ?language)
   OPTIONAL{
-  ?datatypeProperty skos:definition ?datatypePropertyDefinition_original.}
+  ?datatypeProperty skos:definition ?datatypePropertyDefinition_original.
+  FILTER (LANG(?datatypePropertyDefinition_original) = ?language)
+  }
   OPTIONAL{
   ?datatypeProperty manchester:domain ?datatypePropertyManchesterDomain_original.}
   OPTIONAL{
@@ -1022,6 +1058,7 @@ WHERE {
   OPTIONAL {
     ?prevDatatypeProperty a owl:DatatypeProperty .
     ?prevDatatypeProperty manchester:label ?prevLabel .
+	FILTER (LANG(?prevLabel) = ?language)
     FILTER(?prevLabel < ?datatypePropertyManchesterLabel_original)
   }
 }
@@ -1087,7 +1124,7 @@ prefix html: <https://data.rijksfinancien.nl/html/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <https://respec.org/model/> 
+prefix respec: <https://respec.org/model/def/> 
 prefix schema: <http://schema.org/>
 prefix sh: <http://www.w3.org/ns/shacl#>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
@@ -1132,20 +1169,26 @@ where  {
 WHERE {
   ?nodeShape a sh:NodeShape .
   ?nodeShape skos:prefLabel ?nodeShapeLabel .
-  ?nodeShape rdfs:isDefinedBy $this.
+  ?nodeShape rdfs:isDefinedBy ?ontology.
+  $this dct:subject ?ontology;
+        respec:documentLanguage ?language.
+  FILTER (LANG(?nodeShapeLabel) = ?language)
   OPTIONAL{
-  ?nodeShape skos:definition ?nodeShapeDefinition_original.}
+  ?nodeShape skos:definition ?nodeShapeDefinition_original.
+  FILTER (LANG(?nodeShapeDefinition_original) = ?language)
+  }
   BIND(function:escapeHTML(COALESCE(?nodeShapeDefinition_original, "No description available")) as ?nodeShapeDefinition)
   OPTIONAL {
     ?prevNodeShape a sh:NodeShape .
     ?prevNodeShape skos:prefLabel ?prevLabel .
+	FILTER (LANG(?prevLabel) = ?language)
     FILTER(?prevLabel < ?nodeShapeLabel)
   }
 }
   GROUP BY ?nodeShapeLabel ?nodeShape ?nodeShapeDefinition
   ORDER BY ?nodeShapeLabel
 }
-  BIND (IRI(CONCAT(str(rdf:),"_", str(?memberNodeShape))) as ?memberNodeShapeString)
+  BIND(IRI(CONCAT(str(rdf:),"_", str(?memberNodeShape))) as ?memberNodeShapeString)
   BIND(IF(!BOUND(?nodeShape), "This ontology does not define any node shapes.", ?unboundDummy) as ?absenceOfNodeShapeDefinitions)
 
   # Create identifiers
@@ -1175,7 +1218,7 @@ prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <https://respec.org/model/> 
+prefix respec: <https://respec.org/model/def/> 
 prefix schema: <http://schema.org/>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 prefix vann: <http://purl.org/vocab/vann/>
@@ -1249,11 +1292,16 @@ where  {
    {SELECT ?namedIndividual ?namedIndividualLabel (COUNT(?prevNamedIndividual) + 1 AS ?member)
 WHERE {
   ?namedIndividual manchester:syntax 'INDIVIDUAL';
-                   manchester:label ?namedIndividualLabel .
+                   manchester:label ?namedIndividualLabel ;
+				   rdfs:isDefinedBy ?ontology.
+   $this dct:subject ?ontology;
+         respec:documentLanguage ?language.
+   FILTER (LANG(?namedIndividualLabel) = ?language)
 
   OPTIONAL 
     {?prevNamedIndividual manchester:syntax 'INDIVIDUAL';
                           manchester:label ?prevLabel.
+  FILTER (LANG(?prevLabel) = ?language)
   FILTER(?prevLabel < ?namedIndividualLabel)
   }
  
@@ -1295,6 +1343,161 @@ WHERE {
   BIND(IRI(CONCAT(STR(?namedindividual_section), '-5'))                          as ?linebreak2)
   BIND(IRI(CONCAT(STR(?namedindividual_section), '-6'))                          as ?linebreak3)
   BIND(IRI(CONCAT(STR(?namedindividual_section), '-7'))                          as ?manchester_syntax)
+
+  # Create identifiers - Manchester Syntax 
+
+  BIND(IRI(CONCAT(STR(?manchester_syntax), '-1'))                                           as ?manchester_code_label)  
+  BIND(IF(BOUND(?class),IRI(CONCAT(STR(?manchester_syntax), '-2')), ?unboundDummy)           as ?manchester_code_type)  
+  BIND(IF(BOUND(?fact),IRI(CONCAT(STR(?manchester_syntax), '-3')), ?unboundDummy)           as ?manchester_code_fact)
+  BIND(IRI(CONCAT(STR(?manchester_code_label), '-1'))                                       as ?manchester_label)
+  BIND(IRI(CONCAT(STR(?manchester_code_type), '-1'))                                        as ?manchester_type_paragraph)
+  BIND(IRI(CONCAT(STR(?manchester_type_paragraph), '-1'))                                   as ?manchester_type)
+  BIND(IRI(CONCAT(STR(?manchester_type_paragraph), '-2'))                                   as ?linebreak4)
+  BIND(IRI(CONCAT(STR(?manchester_code_fact), '-1'))                                        as ?manchester_fact_paragraph)
+  BIND(IRI(CONCAT(STR(?manchester_fact_paragraph), '-1'))                                   as ?manchester_fact)
+  BIND(IRI(CONCAT(STR(?manchester_fact_paragraph), '-2'))                                   as ?linebreak5)
+}
+""".
+
+rule:Concepts
+  a sh:SPARQLRule;
+  skos:prefLabel 'Concept rule'@en;
+  rdfs:comment 'The concept rule creates a section of concept for the ontology in the document.'@en ;
+  sh:construct """
+prefix dct: <http://purl.org/dc/terms/>
+prefix dc:  <http://purl.org/dc/elements/1.1/>
+prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix function: <https://data.rijksfinancien.nl/html/model/function/>
+prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+prefix respec: <https://respec.org/model/def/> 
+prefix schema: <http://schema.org/>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix vann: <http://purl.org/vocab/vann/>
+
+construct {
+
+      ?concept_div                   rdf:type html:Div;
+	                                          html:fragment ?absenceOfConceptDefinitions;
+                                              ?rdf_member ?concept_section.
+      ?concept_section               rdf:type html:Section;
+                                              rdf:_1 ?concept_H2_title;
+											  rdf:_2 ?concept_IRI_p;
+											  rdf:_3 ?linebreak1;
+                                              rdf:_4 ?concept_definition;
+                                              rdf:_5 ?linebreak2;  
+                                              rdf:_6 ?linebreak3;
+                                              rdf:_7 ?manchester_syntax.
+      ?concept_H2_title              rdf:type html:H2;
+                                              rdf:_1 ?concept_dfn.
+      ?concept_dfn                   rdf:type html:Dfn;
+                                              rdf:_1 ?concept_title.
+      ?concept_title                 rdf:type html:TextElement;
+                                              html:fragment ?conceptLabel_text.
+      ?concept_IRI_p                 rdf:type html:P;
+                                              rdf:_1 ?concept_IRI_strong;
+											  rdf:_2 ?concept_IRI_a.
+      ?concept_IRI_strong            rdf:type html:Strong;
+                                              rdf:_1 ?concept_IRI_text.
+      ?concept_IRI_text              rdf:type html:TextElement;
+                                              html:fragment 'IRI: '.
+      ?concept_IRI_a                 rdf:type html:A;
+                                              html:href ?concept;
+                                              rdf:_1 ?IRI_value.
+      ?IRI_value                              rdf:type html:TextElement;
+                                              html:fragment ?concept_IRI.   # later this will be changed to ?prefixedIRI, after figuring out how to deal with prefixes of namespaces other than the namespace of the ontology itself. 
+      ?concept_definition            rdf:type html:TextElement;
+                                              html:fragment "Definition of the concept". #?conceptDefinition_text.
+      ?manchester_syntax                      rdf:type html:Aside;
+                                              html:class "note" ;
+                                              html:title "Manchester Syntax";
+                                              rdf:_1 ?manchester_code_label;
+                                              rdf:_2 ?manchester_code_type;
+											  rdf:_3 ?manchester_code_fact.
+      ?manchester_code_label                  rdf:type html:Code;
+                                              rdf:_1 ?manchester_label.
+      ?manchester_code_type                   rdf:type html:Code;
+                                              rdf:_1  ?manchester_type_paragraph.
+      ?manchester_label                       rdf:type html:TextElement;
+                                              html:fragment ?conceptLabel.
+      ?manchester_type_paragraph            rdf:type html:P;
+                                              rdf:_1 ?manchester_type;
+                                              rdf:_2 ?linebreak4.
+      ?manchester_type                      rdf:type html:TextElement;
+                                              html:fragment ?conceptManchesterType.
+      ?manchester_code_fact                  rdf:type html:Code;
+                                              rdf:_1  ?manchester_fact_paragraph.
+      ?manchester_fact_paragraph             rdf:type html:P;
+                                              rdf:_1 ?manchester_fact;
+                                              rdf:_2 ?linebreak5.
+      ?manchester_fact                       rdf:type html:TextElement;
+                                              html:fragment ?conceptManchesterFact.
+	  ?linebreak1                             rdf:type html:Br.
+      ?linebreak2                             rdf:type html:Br.
+	  ?linebreak3                             rdf:type html:Br.
+	  ?linebreak4                             rdf:type html:Br.
+	  ?linebreak5                             rdf:type html:Br.
+}
+where  {
+   {?concept_Template rdf:type respec:Concept.}
+   
+   {SELECT ?concept ?conceptLabel (COUNT(?prevConcept) + 1 AS ?member)
+WHERE {
+  ?concept manchester:syntax 'CONCEPT';
+           manchester:label ?conceptLabel ;
+           rdfs:isDefinedBy ?ontology.	   
+  $this dct:subject ?ontology;
+        respec:documentLanguage ?language.
+  FILTER (LANG(?conceptLabel) = ?language)		
+
+  OPTIONAL 
+    {?prevConcept manchester:syntax 'CONCEPT';
+                          manchester:label ?prevLabel.
+  FILTER (LANG(?prevLabel) = ?language)
+  FILTER(?prevLabel < ?conceptLabel)
+  }
+ 
+  #OPTIONAL
+  #{?concept manchester:class ?class.}
+  #OPTIONAL
+  #{?concept manchester:fact ?fact.}
+    
+  #BIND(function:escapeHTML(COALESCE(?class, "No class defined")) as ?conceptManchesterType)
+  #BIND(function:escapeHTML(COALESCE(?fact, "No known facts")) as ?conceptManchesterFact)
+
+  }
+  GROUP BY ?conceptLabel ?concept ?conceptManchesterType ?conceptManchesterFact
+  ORDER BY ?conceptLabel
+}
+  BIND(IRI(CONCAT(str(rdf:),"_", str(?member))) as ?rdf_member)  
+  BIND(COALESCE(?conceptLabel, "Unknown label") as ?conceptLabel_text)
+  BIND(IF(!BOUND(?concept), "This ontology does not define any concepts.", ?unboundDummy) as ?absenceOfConceptDefinitions)
+
+  # Establishing the prefixed IRI of the named concept.
+  
+  # BIND(function:getPrefixedIRI(?concept) as ?prefixedIRI)  # find out how to establish a prefixed IRI for a concept, when the namespace for the concept differs from the ontology.
+  BIND(STR(?concept) as ?concept_IRI)  # find out how to establish a prefixed IRI for a concept, when the namespace for the concept differs from the ontology.
+
+  # Create identifiers
+  
+  BIND(IRI(CONCAT(STR(?concept_Template),'-instance'))                   as ?concept_div)
+  BIND(IRI(CONCAT(STR(?concept_div), '-', str(?member)))                 as ?concept_section)
+  BIND(IRI(CONCAT(STR(?concept_section), '-1'))                          as ?concept_H2_title) 
+  BIND(IRI(CONCAT(STR(?concept_H2_title), '-1'))                         as ?concept_dfn)
+  BIND(IRI(CONCAT(STR(?concept_dfn), '-1'))                              as ?concept_title)
+  BIND(IRI(CONCAT(STR(?concept_section), '-2'))                          as ?concept_IRI_p) 
+  BIND(IRI(CONCAT(STR(?concept_section), '-3'))                          as ?linebreak1)
+  BIND(IRI(CONCAT(STR(?concept_IRI_p), '-1'))                            as ?concept_IRI_strong)
+  BIND(IRI(CONCAT(STR(?concept_IRI_p), '-2'))                            as ?concept_IRI_a)
+  BIND(IRI(CONCAT(STR(?concept_IRI_strong), '-1'))                       as ?concept_IRI_text)
+  BIND(IRI(CONCAT(STR(?concept_IRI_a), '-1'))                            as ?IRI_value)
+  BIND(IRI(CONCAT(STR(?concept_section), '-4'))                          as ?concept_definition)
+  BIND(IRI(CONCAT(STR(?concept_section), '-5'))                          as ?linebreak2)
+  BIND(IRI(CONCAT(STR(?concept_section), '-6'))                          as ?linebreak3)
+  BIND(IRI(CONCAT(STR(?concept_section), '-7'))                          as ?manchester_syntax)
 
   # Create identifiers - Manchester Syntax 
 

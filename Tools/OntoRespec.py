@@ -47,7 +47,7 @@ def iteratePyShacl(respec_html_generator, serializable_graph):
 # Get the OntoRespec vocabulary and place it in a string
 respec_generator = readGraphFromFile(directory_path +"OntoReSpec/Specification/OntoRespec.ttl")
 # Get the HTML vocabulary and place it in a string
-html_vocabulary = readGraphFromFile(directory_path + "htmlvoc/Specification/html.ttl")
+html_vocabulary = readGraphFromFile(directory_path + "htmlvoc/Specification/html - core.ttl")
 
 respec_html_generator = respec_generator + html_vocabulary
 

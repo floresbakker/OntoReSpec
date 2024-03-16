@@ -2,7 +2,7 @@
 @prefix html: <https://data.rijksfinancien.nl/html/model/def/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix respec: <https://respec.org/model/> .
+@prefix respec: <https://respec.org/model/def/> .
 
 doc:1 a respec:Document,
         respec:TemplateDocument ;
@@ -448,7 +448,8 @@ doc:54.4 a respec:StaticElement,
 	rdf:_3 doc:55.1;
 	rdf:_4 doc:56.1;
 	rdf:_5 doc:57.1;
-	rdf:_6 doc:58.1.
+	rdf:_6 doc:58.1;
+	rdf:_7 doc:59.1.
 
 doc:54.5 a respec:StaticElement,
         respec:Template,
@@ -784,6 +785,68 @@ doc:58.10.1 a respec:NamedIndividualDefinitionText,
         html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "{{named individual definition}}" .
+	
+doc:59.1 a respec:StaticElement,
+        respec:Template,
+        html:Section ;
+    rdfs:label "Section" ;
+	rdf:_1 doc:59.2;
+	rdf:_2 doc:59.3.
+
+doc:59.2 a respec:StaticElement,
+        respec:Template,
+        html:H2 ;
+    rdfs:label "h2" ;
+    rdf:_1 doc:59.2.1 .
+
+doc:59.2.1 a respec:StaticElement,
+        respec:Template,
+        html:TextElement ;
+    rdfs:label "text element" ;
+    html:fragment "Concepts" .
+
+doc:59.3 a respec:StaticElement,
+        respec:Template,
+        html:Div ;
+    rdfs:label "Div" ;
+    rdf:_1 doc:59.4 .
+
+doc:59.4 a respec:Concept,
+        respec:Template,
+        html:Div ;
+    rdfs:label "Div" ;
+    rdf:_1 doc:59.9 ;
+    rdf:_2 doc:59.10 .
+	
+doc:59.9 a respec:ConceptH2,
+        respec:Template,
+        html:H2 ;
+    rdfs:label "h2" ;
+    rdf:_1 doc:59.11 .
+
+doc:59.11 a respec:ConceptDfn,
+        respec:Template,
+        html:Dfn ;
+    rdfs:label "Dfn" ;
+    rdf:_1 doc:59.9.1 .
+
+doc:59.9.1 a respec:ConceptTitle,
+        respec:Template,
+        html:TextElement ;
+    rdfs:label "text element" ;
+    html:fragment "{{concept title}}" .
+
+doc:59.10 a respec:ConceptParagraph,
+        respec:Template,
+        html:P ;
+    rdfs:label "p" ;
+    rdf:_1 doc:59.10.1 .
+
+doc:59.10.1 a respec:ConceptDefinitionText,
+        respec:Template,
+        html:TextElement ;
+    rdfs:label "text element" ;
+    html:fragment "{{concept definition}}" .
 
 doc:6.4 a respec:StaticElement,
         respec:Template,
