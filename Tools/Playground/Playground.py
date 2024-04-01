@@ -29,7 +29,7 @@ def readStringFromFile(file_path):
 
 # Function to write a graph to a file
 def writeGraph(graph):
-    graph.serialize(destination=directory_path + "OntoReSpec/Tools/Playground/Output/respecDocument.ttl", format="turtle")
+    graph.serialize(destination=directory_path + "OntoReSpec/Tools/Playground/static/output.ttl", format="turtle")
 
 # Get the SVG vocabulary and place it in a string
 respec_vocabulary     = readStringFromFile(directory_path + "OntoReSpec/Specification/OntoRespec.ttl")
