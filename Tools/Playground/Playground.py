@@ -296,11 +296,11 @@ def generateReSpec():
     generationGraph.add((doc[generation_iri], RDF.type, respec.Generation))
     generationGraph.add((doc[generation_iri], respec.documentLanguage, Literal(documentLanguage)))
     generationGraph.add((doc[generation_iri], respec.documentNamespace, Literal(documentNamespace)))
-    generationGraph.add((doc[generation_iri], respec.audience, Literal(audience)))
-    generationGraph.add((doc[generation_iri], respec.introduction, Literal(introduction)))
-    generationGraph.add((doc[generation_iri], respec.background, Literal(background)))
-    generationGraph.add((doc[generation_iri], respec.objective, Literal(objective)))
-    generationGraph.add((doc[generation_iri], respec.acknowledgements, Literal(acknowledgements)))
+    generationGraph.add((doc[generation_iri], respec.audience, Literal(audience, lang=documentLanguage)))
+    generationGraph.add((doc[generation_iri], respec.introduction, Literal(introduction, lang=documentLanguage)))
+    generationGraph.add((doc[generation_iri], respec.background, Literal(background, lang=documentLanguage)))
+    generationGraph.add((doc[generation_iri], respec.objective, Literal(objective, lang=documentLanguage)))
+    generationGraph.add((doc[generation_iri], respec.acknowledgements, Literal(acknowledgements, lang=documentLanguage)))
     
     # Let us establish which ontology needs to be documented in ReSpec
     generationGraph.parse(data=ontology , format="turtle")

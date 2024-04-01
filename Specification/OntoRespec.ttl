@@ -643,13 +643,16 @@ where  {
         SELECT ?class ?manchesterLabel ?classDefinition_original (COUNT(?prevClass) + 1 AS ?memberClass)
         WHERE {
           ?class manchester:type 'CLASS'.
-          ?class skos:definition ?classDefinition_original.
           ?class manchester:label ?manchesterLabel.
           ?class rdfs:isDefinedBy ?ontology.
 		  $this  dct:subject ?ontology;
 		         respec:documentLanguage ?language.
-		  FILTER (LANG(?classDefinition_original) = ?language)				 
 		  FILTER (LANG(?manchesterLabel) = ?language)
+		  
+		  OPTIONAL 
+          {?class skos:definition ?classDefinition_original.
+		  FILTER (LANG(?classDefinition_original) = ?language)}
+		  				 
           OPTIONAL {
             ?prevClass manchester:type 'CLASS'.
             ?prevClass manchester:label ?prevLabel .
@@ -714,7 +717,7 @@ where  {
   
   # Clean up text (prevent html code)
   
-  BIND(function:escapeHTML(?classDefinition_original) as ?classDefinition)
+  BIND(function:escapeHTML(COALESCE(?classDefinition_original, "This ontology does not provide a definition for the class.")) as ?classDefinition)
   BIND(str(?manchesterLabel) as ?cleanedManchesterLabel)
   
   # Establishing the IRI, base IRI and relative IRI of the class
@@ -1255,7 +1258,7 @@ construct {
       ?IRI_value                              rdf:type html:TextElement;
                                               html:fragment ?namedIndividual_IRI.   # later this will be changed to ?prefixedIRI, after figuring out how to deal with prefixes of namespaces other than the namespace of the ontology itself. 
       ?namedindividual_definition            rdf:type html:TextElement;
-                                              html:fragment "Definition of the named individual". #?namedIndividualDefinition_text.
+                                              html:fragment "This ontology does not provide a definition for the named individual". #?namedIndividualDefinition_text.
       ?manchester_syntax                      rdf:type html:Aside;
                                               html:class "note" ;
                                               html:title "Manchester Syntax";
@@ -1289,11 +1292,15 @@ construct {
 where  {
    {?namedindividual_Template rdf:type respec:NamedIndividual.}
    
-   {SELECT ?namedIndividual ?namedIndividualLabel (COUNT(?prevNamedIndividual) + 1 AS ?member)
+   {SELECT ?namedIndividual ?namedIndividualLabel ?definitionIndividual ?namedIndividualManchesterType (COUNT(?prevNamedIndividual) + 1 AS ?member)
 WHERE {
   ?namedIndividual manchester:syntax 'INDIVIDUAL';
+                   manchester:class ?namedIndividualManchesterType ;
                    manchester:label ?namedIndividualLabel ;
 				   rdfs:isDefinedBy ?ontology.
+   OPTIONAL
+   {?namedIndividual skos:definition ?definitionIndividual}
+   
    $this dct:subject ?ontology;
          respec:documentLanguage ?language.
    FILTER (LANG(?namedIndividualLabel) = ?language)
@@ -1306,19 +1313,16 @@ WHERE {
   }
  
   #OPTIONAL
-  #{?namedIndividual manchester:class ?class.}
-  #OPTIONAL
   #{?namedIndividual manchester:fact ?fact.}
-    
-  #BIND(function:escapeHTML(COALESCE(?class, "No class defined")) as ?namedIndividualManchesterType)
   #BIND(function:escapeHTML(COALESCE(?fact, "No known facts")) as ?namedIndividualManchesterFact)
 
   }
-  GROUP BY ?namedIndividualLabel ?namedIndividual ?namedIndividualManchesterType ?namedIndividualManchesterFact
+  GROUP BY ?namedIndividualLabel ?namedIndividual ?definitionIndividual ?namedIndividualManchesterType ### ?namedIndividualManchesterFact
   ORDER BY ?namedIndividualLabel
 }
   BIND(IRI(CONCAT(str(rdf:),"_", str(?member))) as ?rdf_member)  
   BIND(COALESCE(?namedIndividualLabel, "Unknown label") as ?namedIndividualLabel_text)
+  BIND(function:escapeHTML(COALESCE(?definitionIndividual, "This ontology does not provide a definition for the named individual.")) as ?cleanedDefinition)
   BIND(IF(!BOUND(?namedIndividual), "This ontology does not define any named individuals.", ?unboundDummy) as ?absenceOfNamedIndividualDefinitions)
 
   # Establishing the prefixed IRI of the named individual.
@@ -1347,7 +1351,7 @@ WHERE {
   # Create identifiers - Manchester Syntax 
 
   BIND(IRI(CONCAT(STR(?manchester_syntax), '-1'))                                           as ?manchester_code_label)  
-  BIND(IF(BOUND(?class),IRI(CONCAT(STR(?manchester_syntax), '-2')), ?unboundDummy)           as ?manchester_code_type)  
+  BIND(IRI(CONCAT(STR(?manchester_syntax), '-2'))                                           as ?manchester_code_type)  
   BIND(IF(BOUND(?fact),IRI(CONCAT(STR(?manchester_syntax), '-3')), ?unboundDummy)           as ?manchester_code_fact)
   BIND(IRI(CONCAT(STR(?manchester_code_label), '-1'))                                       as ?manchester_label)
   BIND(IRI(CONCAT(STR(?manchester_code_type), '-1'))                                        as ?manchester_type_paragraph)
@@ -1409,7 +1413,7 @@ construct {
                                               rdf:_1 ?IRI_value.
       ?IRI_value                              rdf:type html:TextElement;
                                               html:fragment ?concept_IRI.   # later this will be changed to ?prefixedIRI, after figuring out how to deal with prefixes of namespaces other than the namespace of the ontology itself. 
-      ?concept_definition            rdf:type html:TextElement;
+      ?concept_definition                     rdf:type html:TextElement;
                                               html:fragment "Definition of the concept". #?conceptDefinition_text.
       ?manchester_syntax                      rdf:type html:Aside;
                                               html:class "note" ;
@@ -1423,17 +1427,17 @@ construct {
                                               rdf:_1  ?manchester_type_paragraph.
       ?manchester_label                       rdf:type html:TextElement;
                                               html:fragment ?conceptLabel.
-      ?manchester_type_paragraph            rdf:type html:P;
+      ?manchester_type_paragraph              rdf:type html:P;
                                               rdf:_1 ?manchester_type;
                                               rdf:_2 ?linebreak4.
-      ?manchester_type                      rdf:type html:TextElement;
+      ?manchester_type                        rdf:type html:TextElement;
                                               html:fragment ?conceptManchesterType.
-      ?manchester_code_fact                  rdf:type html:Code;
+      ?manchester_code_fact                   rdf:type html:Code;
                                               rdf:_1  ?manchester_fact_paragraph.
-      ?manchester_fact_paragraph             rdf:type html:P;
+      ?manchester_fact_paragraph              rdf:type html:P;
                                               rdf:_1 ?manchester_fact;
                                               rdf:_2 ?linebreak5.
-      ?manchester_fact                       rdf:type html:TextElement;
+      ?manchester_fact                        rdf:type html:TextElement;
                                               html:fragment ?conceptManchesterFact.
 	  ?linebreak1                             rdf:type html:Br.
       ?linebreak2                             rdf:type html:Br.
