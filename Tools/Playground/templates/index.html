@@ -29,57 +29,85 @@
         /* Style for output container */
         .output-container {
             /* Optionally limit max-height to prevent excessive stretching */
-            max-height: 100%; /* Adjust as needed */
+            max-height: 150%; /* Adjust as needed */
+        }
+		
+		/* Style for download buttons */
+		.download-button {
+            width: 100%; /* Make buttons equally wide */
+            margin-bottom: 10px; /* Add margin between buttons */
+        }
+		
+		/* Style for the input/output sections */
+		.input-section, .output-section {
+            flex: 1;
+        }
+
+        /* Adjust spacing between sections */
+        .container > div {
+            margin-right: 10px;
+        }
+
+        /* Style for the bold text */
+        .section-title {
+            font-weight: bold;
+            margin-bottom: 5px;
         }
     </style>
 </head>
 <body>
     <h1>OntoReSpec</h1>
-    <!-- Container for the first form and its output box -->
+    <!-- Container for the form and its output box -->
     <div class="container">
-        <!-- First form -->
-        <div class="form">
-            <form action="http://localhost:5000/generateReSpec" method="post">
-                <label for="textInput">Ontology</label><br>
-                <textarea id="rdfInput" name="ontology" rows="15" cols="60">{{ontology}}</textarea><br>
-				 <label for="textInput">Introduction</label><br>
-                <textarea id="rdfInput" name="introduction" rows="15" cols="60">{{introduction}}</textarea><br>
-				 <label for="textInput">Background</label><br>
-                <textarea id="rdfInput" name="background" rows="15" cols="60">{{background}}</textarea><br>
-				 <label for="textInput">Audience</label><br>
-                <textarea id="rdfInput" name="audience" rows="15" cols="60">{{audience}}</textarea><br>
-				 <label for="textInput">Objective</label><br>
-                <textarea id="rdfInput" name="objective" rows="15" cols="60">{{objective}}</textarea><br>
-				 <label for="textInput">Acknowledgements</label><br>
-                <textarea id="rdfInput" name="acknowledgements" rows="15" cols="60">{{acknowledgements}}</textarea><br>
-				 <label for="textInput">Document Language</label><br>
-                <textarea id="rdfInput" name="documentLanguage" rows="5" cols="60">{{documentLanguage}}</textarea><br>
-				 <label for="textInput">Document Namespace</label><br>
-                <textarea id="rdfInput" name="documentNamespace" rows="5" cols="60">{{documentNamespace}}</textarea><br>
-                <button type="submit">Generate ReSpec Document</button>
-            </form>
+        <!-- Input section -->
+        <div class="input-section">
+            <div class="form">
+                <div class="section-title">Input</div> <!-- Bold 'Input' text -->
+                <form action="http://localhost:5000/generateReSpec" method="post">
+                    <label for="textInput">Ontology</label><br>
+                    <textarea id="rdfInput" name="ontology" rows="5" cols="100">{{ontology}}</textarea><br>
+                     <label for="textInput">Introduction</label><br>
+                    <textarea id="rdfInput" name="introduction" rows="5" cols="100">{{introduction}}</textarea><br>
+                     <label for="textInput">Background</label><br>
+                    <textarea id="rdfInput" name="background" rows="5" cols="100">{{background}}</textarea><br>
+                     <label for="textInput">Audience</label><br>
+                    <textarea id="rdfInput" name="audience" rows="5" cols="100">{{audience}}</textarea><br>
+                     <label for="textInput">Objective</label><br>
+                    <textarea id="rdfInput" name="objective" rows="5" cols="100">{{objective}}</textarea><br>
+                     <label for="textInput">Acknowledgements</label><br>
+                    <textarea id="rdfInput" name="acknowledgements" rows="5" cols="100">{{acknowledgements}}</textarea><br>
+                     <label for="textInput">Document Language</label><br>
+                    <textarea id="rdfInput" name="documentLanguage" rows="1" cols="50">{{documentLanguage}}</textarea><br>
+                     <label for="textInput">Document Namespace</label><br>
+                    <textarea id="rdfInput" name="documentNamespace" rows="1" cols="50">{{documentNamespace}}</textarea><br>
+                    <button type="submit">Generate ReSpec Document</button>
+                </form>
+            </div>
         </div>
 
-        <!-- Visual output box for the first form (generated HTML file) -->
-        <div class="output-box">
-            <!-- SVG content -->
-            {% if htmlOutput %}
-            <div class="output-container">
-                <!-- Use the safe filter to render SVG content without HTML escaping -->
-                {{ htmlOutput | safe }}
+        <!-- Output section -->
+        <div class="output-section">
+            <div class="output-box">
+                <div class="section-title">Output</div> <!-- Bold 'Output' text -->
+                <!-- HTML content -->
+                {% if htmlOutput %}
+                <div class="output-container">
+                    <!-- Use the safe filter to render HTML content without HTML escaping -->
+                    {{ htmlOutput | safe }}
+                </div>
+                {% else %}
+                <div class="output-container">
+                    ReSpec document is rendered here
+                </div>
+                {% endif %}
             </div>
-            {% else %}
-            <div class="output-container">
-                
-                ReSpec document is rendered here
+            <!-- Download buttons -->
+            <div>
+                <a href="/static/output.html" download="output.html"><button class="download-button">Download Output HTML</button></a><br>
+                <a href="/static/diagram.html" download="diagram.html"><button class="download-button">Download Diagram HTML</button></a><br>
+                <a href="/static/output.ttl" download="output.ttl"><button class="download-button">Download Output RDF</button></a>
             </div>
-            {% endif %}
         </div>
-        <div>
-            <a href="/static/output.html" download="output.html"><button>Download Output HTML</button></a><br>
-            <a href="/static/diagram.html" download="diagram.html"><button>Download Diagram HTML</button></a><br>
-			<a href="/static/output.ttl" download="output.ttl"><button>Download Output RDF</button></a>
-        </div>
-        </div>
+    </div>
 </body>
 </html>
