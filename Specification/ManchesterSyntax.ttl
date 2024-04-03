@@ -697,7 +697,7 @@ construct {
   UNION
   {$this rdfs:subClassOf ?superClass.
   FILTER NOT EXISTS {?superClass ?anyPredicate [].}
-  BIND(STRLANG(function:getLabel(?superClass), 'en') as ?manchesterDescription)
+  BIND(STRLANG(function:getLabel(?superClass), LANG(function:getLabel($this))) as ?manchesterDescription)
   }
   
   # Establish the label for the owl class. If a blank node, then use the description of the class als label, including manchester syntax 'subclass' notation. If an IRI, then use the preferred label.
@@ -770,7 +770,7 @@ construct {
   UNION
   {$this owl:equivalentClass ?equivalentClass.
   FILTER NOT EXISTS {?superClass ?anyPredicate [].}
-  BIND(STRLANG(function:getLabel(?superClass), LANG(function:getLabel(?superClass))) as ?manchesterDescription)
+  BIND(STRLANG(function:getLabel(?superClass), LANG(function:getLabel($this))) as ?manchesterDescription)
   }
   
   # Establish the label for the owl class. If a blank node, then use the description of the class als label, including manchester syntax 'EquivalentTo' notation. If an IRI, then use the preferred label.
