@@ -1,15 +1,16 @@
 from flask import Flask, request, render_template, url_for
-import rdflib
 from rdflib import Graph, Namespace, Literal, RDF, URIRef
 import pyshacl
-from bs4 import BeautifulSoup
-from bs4.element import Tag, NavigableString
 import datetime
+import os
 
 app = Flask(__name__)
 
+# Get the current working directory in which the Playground.py file is located.
+current_dir = os.getcwd()
+
 # Set the path to the desired standard directory. 
-directory_path = "C:/Users/Administrator/Documents/Branches/"
+directory_path = os.path.abspath(os.path.join(current_dir, '..', '..', '..'))
 
 # namespace declaration
 rdf    = Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
@@ -29,15 +30,15 @@ def readStringFromFile(file_path):
 
 # Function to write a graph to a file
 def writeGraph(graph):
-    graph.serialize(destination=directory_path + "OntoReSpec/Tools/Playground/static/output.ttl", format="turtle")
+    graph.serialize(destination=directory_path + "/OntoReSpec/Tools/Playground/static/output.ttl", format="turtle")
 
-# Get the SVG vocabulary and place it in a string
-respec_vocabulary     = readStringFromFile(directory_path + "OntoReSpec/Specification/OntoRespec.ttl")
-template_graph        = readStringFromFile(directory_path + "OntoReSpec/Specification/ReSpecTemplate.ttl" )
-html_serialisation    = readStringFromFile(directory_path + "htmlvoc/Specification/html - core.ttl")
-html_vocabulary       = readStringFromFile(directory_path + "htmlvoc/Specification/html - core.ttl")
-manchester_vocabulary = readStringFromFile(directory_path+"OntoManchester/Specification/manchestersyntax.ttl")
-mermaid_vocabulary    = readStringFromFile(directory_path+"OntoMermaid/Specification/mermaid.ttl")
+# Get the ReSpec vocabulary and place it in a string
+respec_vocabulary     = readStringFromFile(directory_path + "/OntoReSpec/Specification/OntoRespec.ttl")
+template_graph        = readStringFromFile(directory_path + "/OntoReSpec/Specification/ReSpecTemplate.ttl" )
+html_serialisation    = readStringFromFile(directory_path + "/htmlvoc/Specification/html - core.ttl")
+html_vocabulary       = readStringFromFile(directory_path + "/htmlvoc/Specification/html - core.ttl")
+manchester_vocabulary = readStringFromFile(directory_path+"/OntoReSpec/Specification/manchestersyntax.ttl")
+mermaid_vocabulary    = readStringFromFile(directory_path+"/OntoMermaid/Specification/mermaid.ttl")
 
 def generateManchester(manchester_generator, serializable_graph):
         
@@ -433,7 +434,7 @@ ORDER BY ?mermaid_code
             else:     
                  for result in resultquery:
                     mermaid_code = result["mermaid_code"]
-                    output_file_path = directory_path+"OntoReSpec/Tools/Playground/static/diagram.html"
+                    output_file_path = directory_path+"/OntoReSpec/Tools/Playground/static/diagram.html"
                     # Create the HTML content with the Mermaid code
                     html_start =  '''
                     <!DOCTYPE html>
@@ -599,7 +600,7 @@ def generateReSpec():
     # Serialize the document to HTML
     html_fragment = generateHTML(html_vocabulary, generationGraph)
     print("HTML fragment =", html_fragment)
-    filepath = directory_path+"OntoRespec/Tools/Playground/static/output.html"
+    filepath = directory_path+"/OntoRespec/Tools/Playground/static/output.html"
     src_filepath = url_for('static', filename='output.html')
     with open(filepath, 'w', encoding='utf-8') as file:
        file.write(html_fragment)

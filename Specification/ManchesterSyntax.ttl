@@ -1,0 +1,1802 @@
+prefix dcm: <http://purl.org/dc/dcmitype/>
+prefix dct: <http://purl.org/dc/terms/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfa: <http://www.w3.org/ns/rdfa#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix sh: <http://www.w3.org/ns/shacl#>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix status: <http://purl.org/adms/status/>
+prefix vann: <http://purl.org/vocab/vann/>
+prefix void: <http://rdfs.org/ns/void#>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+
+prefix function: <https://data.rijksfinancien.nl/manchester/model/function/>
+prefix graph: <https://data.rijksfinancien.nl/manchester/graph/>
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix rule: <https://data.rijksfinancien.nl/manchester/model/rule/>
+prefix shp: <https://data.rijksfinancien.nl/manchester/model/shp/>
+prefix standard: <https://data.rijksfinancien.nl/manchester/id/standard/>
+prefix target: <https://data.rijksfinancien.nl/manchester/model/target/>
+
+  manchester:
+    a
+      owl:Ontology,
+      void:Dataset;
+    dct:conformsTo 'https://www.w3.org/TR/owl2-manchester-syntax/'^^xsd:anyURI;
+    dct:created '2023-07-19'^^xsd:date;
+    dct:creator
+      'Flores Bakker',
+      'Wouter Beek';
+    dct:description '''The RDF-based Manchester Syntax Vocabulary can express OWL ontologies into Manchester Syntax. Manchester Syntax is a human-readable and compact syntax used to represent knowledge in the Web Ontology Language (OWL), which is a semantic web language based on RDF and used for defining and sharing ontologies. Manchester Syntax is designed to be human-readable and concise, making it easier for users to create and understand OWL ontologies. It provides an alternative to the more verbose syntax of OWL itself. '''@en;
+    dct:abstract '''The RDF-based Manchester Syntax Vocabulary can express OWL ontologies into Manchester Syntax. Manchester Syntax is a human-readable and compact syntax used to represent knowledge in the Web Ontology Language (OWL), which is a semantic web language based on RDF and used for defining and sharing ontologies. Manchester Syntax is designed to be human-readable and concise, making it easier for users to create and understand OWL ontologies. It provides an alternative to the more verbose syntax of OWL itself.  '''@en;
+    dct:language 'iso639-1:en';
+    dct:license 'http://creativecommons.org/licenses/by/4.0'^^xsd:anyURI;
+    dct:publisher <https://www.w3.org/community/manchestersyntax/>;
+    dct:source <https://github.com/floresbakker/manchestersyntax/>;
+    dct:subject 'HTML'@en;
+    dct:title 'HTML Ontology'@en;
+    foaf:homepage 'https://www.w3.org/community/manchestersyntax/'^^xsd:anyURI;
+    owl:imports
+      dct:,
+      owl:,
+      prov:,
+      rdf:,
+      rdfs:,
+      sh:,
+      skos:;
+    owl:versionInfo '0.1.0';
+    owl:versionIRI <https://github.com/floresbakker/manchestersyntax/tree/main>;
+    vann:preferredNamespacePrefix 'manchester';
+    vann:preferredNamespaceUri 'https://data.rijksfinancien.nl/manchestersyntax/model/def/';
+    void:subSet graph:model;
+    void:uriRegexPattern '^https://data.rijksfinancien.nl/manchestersyntax/def/';
+    void:uriSpace 'https://data.rijksfinancien.nl/manchestersyntax/model/def/'^^xsd:anyURI.
+
+  standard:manchestersyntax
+    a dct:Standard;
+    dct:created '2023-07-19'^^xsd:date;
+    dct:source 'https://www.w3.org/TR/owl2-manchester-syntax'^^xsd:anyURI;
+    skos:prefLabel 'Manchester Syntax'@en.
+
+### OWL Class
+
+ shp:SerializableOwlClass
+    a sh:NodeShape;
+    sh:rule rule:SerializeOwlClass;
+    sh:target target:SerializableOwlClass;
+    skos:prefLabel 'Serializable owl class shape'@en.
+
+  target:SerializableOwlClass
+    a sh:SPARQLTarget;
+    sh:select '''
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select $this {
+  # Any OWL or RDFS class that is not further expressed in class expression
+  
+  {$this a owl:Class.}
+  UNION
+  {$this a rdfs:Class.}
+  
+  filter not exists {
+    $this rdfs:subClassOf []
+  }
+  filter not exists {
+    $this owl:equivalentClass []
+  }
+  filter not exists {
+    $this owl:unionOf []
+  }
+  filter not exists {
+    $this owl:intersectionOf []
+  }
+  filter not exists {
+    $this owl:complementOf []
+  }
+  filter not exists {
+    $this owl:oneOf []
+  }
+  
+  # The OWL class must not have an Manchester Syntax string yet
+  
+  filter not exists {
+    $this manchester:label [].
+  }
+}
+  '''.
+
+  rule:SerializeOwlClass
+    a sh:SPARQLRule;
+    rdfs:comment 'A rule that creates a manchester syntax label and definition for an OWL Class.'@en;
+    skos:prefLabel 'Manchester Syntax serialisation rule for owl class'@en;
+    sh:construct '''
+prefix function: <https://data.rijksfinancien.nl/manchester/model/function/>
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+construct {
+
+  # create the manchester syntax for the OWL class to be serialized.
+  
+  $this manchester:syntax 'CLASS';
+        manchester:type 'CLASS';
+        manchester:label ?manchesterLabel.
+} where {
+  BIND(IF(isBlank($this),
+	  "Anonymous class"@en,
+	  STRLANG(CONCAT("[=",function:getLabel($this),"=]"), LANG(function:getLabel($this)))) as ?manchesterLabel)
+  
+} 
+'''.
+
+
+### OWL Restriction
+
+shp:SerializableOwlRestriction_AllValuesFrom
+    a sh:NodeShape;
+    sh:rule rule:SerializeOwlRestriction_AllValuesFrom;
+    sh:target target:SerializableOwlRestriction_AllValuesFrom;
+    skos:prefLabel 'Serializable owl restriction owl:allValuesFrom shape'@en.
+
+  target:SerializableOwlRestriction_AllValuesFrom
+    a sh:SPARQLTarget;
+    sh:select '''
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select $this {
+
+  # A OWL class restriction for which the underlying class expressions are already serialized to manchester syntax
+  
+  $this a owl:Restriction;
+        owl:allValuesFrom [].
+
+  filter not exists {
+    $this manchester:syntax "ONLY"
+   }
+   
+  minus {
+    $this owl:allValuesFrom ?someClass.
+    ?someClass ?anyPredicate [].
+      filter not exists {
+       ?someClass manchester:label []
+    }
+  }
+  
+  minus {
+    $this owl:onProperty ?someProperty.
+    ?someProperty ?anyPredicate [].
+    filter not exists {
+      ?someProperty manchester:label []
+  }
+ }
+}
+ 
+ '''.
+
+  rule:SerializeOwlRestriction_AllValuesFrom
+    a sh:SPARQLRule;
+    rdfs:comment 'A rule that creates a manchester syntax label and definition for OWL Restriction owl:allValuesFrom.'@en;
+    skos:prefLabel 'Manchester Syntax serialisation rule for owl restriction owl:allValuesFrom'@en;
+    sh:construct '''
+
+prefix function: <https://data.rijksfinancien.nl/manchester/model/function/>
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+construct {
+
+  # create the manchester syntax for the OWL class to be serialized.
+  
+  $this manchester:syntax "ONLY";
+        manchester:type 'CLASS';
+        manchester:label ?manchesterLabel;
+        manchester:equivalentTo ?equivalentTo.
+
+} where {
+
+  $this owl:allValuesFrom ?someClass;
+        owl:onProperty ?someProperty.
+  
+  # Get the labels for the class and property
+  ?someClass manchester:label ?classLabel.
+  ?someProperty manchester:label ?propertyLabel.
+  FILTER(LANG(?classLabel) = LANG(?propertyLabel))
+  
+  # Establish the full description of the OWL restriction class to be serialized.
+  BIND(CONCAT(?propertyLabel, " only ", ?classLabel) as ?manchesterString)
+  BIND(STRLANG(?manchesterString, LANG(?classLabel)) as ?manchesterDescription)
+    
+  # Establish the label for the owl class. If a blank node, then use the description of the class als label. If an IRI, then use the preferred label.
+  BIND(IF(isBlank($this), ?manchesterDescription, STRLANG(CONCAT("[=",function:getLabel($this), "=]"), LANG(function:getLabel($this)))) as ?manchesterLabel)
+  
+  # If the class is defined in the ontology with a IRI, then add the definition to it. If the class is a blank node, do not bother.
+  BIND(IF(isBlank($this), ?unboundDummy, ?manchesterDescription) as ?equivalentTo)
+}
+'''.
+
+shp:SerializableOwlRestriction_SomeValuesFrom
+    a sh:NodeShape;
+    sh:rule rule:SerializeOwlRestriction_SomeValuesFrom;
+    sh:target target:SerializableOwlRestriction_SomeValuesFrom;
+    skos:prefLabel 'Serializable owl restriction owl:someValuesFrom shape'@en.
+
+  target:SerializableOwlRestriction_SomeValuesFrom
+    a sh:SPARQLTarget;
+    sh:select '''
+
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select $this {
+
+  # A OWL class restriction for which the underlying class expressions are already serialized to manchester syntax
+  
+  $this a owl:Restriction;
+        owl:someValuesFrom [].
+
+  filter not exists {
+    $this manchester:syntax 'SOME'
+  }
+   
+  minus {
+    $this owl:someValuesFrom ?someClass.
+    ?someClass ?anyPredicate [].
+    filter not exists {
+     ?someClass manchester:label []
+    }
+   }
+ 
+  minus {
+    $this owl:onProperty ?someProperty.
+    ?someProperty ?anyPredicate [].
+    filter not exists {
+      ?someProperty manchester:label []
+    }
+  }
+}
+ '''.
+
+  rule:SerializeOwlRestriction_SomeValuesFrom
+    a sh:SPARQLRule;
+    rdfs:comment 'A rule that creates a manchester syntax label and definition for OWL Restriction owl:someValuesFrom.'@en;
+    skos:prefLabel 'Manchester Syntax serialisation rule for owl restriction owl:someValuesFrom'@en;
+    sh:construct '''
+
+prefix function: <https://data.rijksfinancien.nl/manchester/model/function/>
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+construct {
+
+  # create the manchester syntax for the OWL class to be serialized.
+  
+  $this manchester:syntax "SOME";
+        manchester:type 'CLASS';
+        manchester:label ?manchesterLabel;
+        manchester:equivalentTo ?equivalentTo.
+
+} where {
+
+  $this owl:someValuesFrom ?someClass;
+        owl:onProperty ?someProperty.
+  
+  # Get the labels for the class and property
+  ?someClass manchester:label ?classLabel.
+  ?someProperty manchester:label ?propertyLabel.
+  
+  # Establish the full description of the OWL restriction class to be serialized.
+  BIND(CONCAT(?propertyLabel, " some ", ?classLabel) as ?manchesterDescription)
+    
+  # Establish the label for the owl class. If a blank node, then use the description of the class als label. If an IRI, then use the preferred label.
+  BIND(IF(isBlank($this), ?manchesterDescription, CONCAT("[=",function:getLabel($this), "=]")) as ?manchesterLabel)
+  
+  # If the class is defined in the ontology with a IRI, then add the definition to it. If the class is a blank node, do not bother.
+  BIND(IF(isBlank($this), ?unboundDummy, ?manchesterDescription) as ?equivalentTo)
+}
+'''.
+
+
+shp:SerializableOwlRestriction_hasValue
+    a sh:NodeShape;
+    sh:rule rule:SerializeOwlRestriction_hasValue;
+    sh:target target:SerializableOwlRestriction_hasValue;
+    skos:prefLabel 'Serializable owl restriction owl:hasValue shape'@en.
+
+  target:SerializableOwlRestriction_hasValue
+    a sh:SPARQLTarget;
+    sh:select '''
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select $this {
+
+  # A OWL class restriction for which the underlying named individual is already serialized to manchester syntax
+  
+  $this a owl:Restriction;
+        owl:hasValue [].
+
+  filter not exists {
+   $this manchester:syntax 'VALUE'
+  }
+   
+  minus {
+    $this owl:hasValue ?value.
+    ?value ?anyPredicate [].
+    filter not exists {
+     ?value manchester:syntax 'INDIVIDUAL'.
+    }
+	filter not exists {
+     ?value manchester:syntax 'CONCEPTSCHEME'.
+    }
+	filter not exists {
+     ?value manchester:syntax 'CONCEPT'.
+    }
+  }
+  
+  minus {
+    $this owl:onProperty ?someProperty.
+    ?someProperty ?anyPredicate [].
+    filter not exists {
+      ?someProperty manchester:label []
+    }
+  }
+ }
+  '''.
+
+  rule:SerializeOwlRestriction_hasValue
+    a sh:SPARQLRule;
+    rdfs:comment 'A rule that creates a manchester syntax label and definition for OWL Restriction owl:hasValue.'@en;
+    skos:prefLabel 'Manchester Syntax serialisation rule for owl restriction owl:hasValue'@en;
+    sh:construct '''
+
+prefix function: <https://data.rijksfinancien.nl/manchester/model/function/>
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+construct {
+
+  # create the manchester syntax for the OWL class to be serialized.
+  
+  $this manchester:syntax "VALUE";
+        manchester:type 'CLASS';
+        manchester:label ?manchesterLabel;
+        manchester:equivalentTo ?equivalentTo.
+
+} where {
+
+  $this owl:hasValue ?someIndividual;
+        owl:onProperty ?someProperty.
+  
+  OPTIONAL
+  # Get the labels for the individual and property
+  {?someIndividual manchester:label ?originalIndividualLabel.}
+  BIND(COALESCE(?originalIndividualLabel, STRLANG(STR(?someIndividual), 'en')) as ?individualLabel)
+  
+  OPTIONAL
+  {?someProperty manchester:label ?originalPropertyLabel.}
+  BIND(COALESCE(?originalPropertyLabel, STRLANG(STR(?someProperty), 'en')) as ?propertyLabel)
+  
+  FILTER (LANG(?propertyLabel) = LANG(?individualLabel))
+  
+  # Establish the full description of the OWL restriction class to be serialized.
+  BIND(STRLANG(CONCAT(?propertyLabel, " value ", ?individualLabel),LANG(?individualLabel)) as ?manchesterDescription)
+    
+  # Establish the label for the owl class. If a blank node, then use the description of the class als label. If an IRI, then use the preferred label.
+  BIND(IF(isBlank($this), ?manchesterDescription, STRLANG(CONCAT("[=",function:getLabel($this), "=]"), LANG(function:getLabel($this)))) as ?manchesterLabel)
+  
+  # If the class is defined in the ontology with a IRI, then add the definition to it. If the class is a blank node, do not bother.
+  BIND(IF(isBlank($this), ?unboundDummy, ?manchesterDescription) as ?equivalentTo)
+}
+  '''.
+
+shp:SerializableOwlRestriction_cardinality
+    a sh:NodeShape;
+    sh:rule rule:SerializeOwlRestriction_cardinality;
+    sh:target target:SerializableOwlRestriction_cardinality;
+    skos:prefLabel 'Serializable owl restriction owl:cardinality shape'@en.
+
+  target:SerializableOwlRestriction_cardinality
+    a sh:SPARQLTarget;
+    sh:select '''
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select $this {
+
+  # A OWL class restriction for which the underlying class expressions are already serialized to manchester syntax
+  
+  $this a owl:Restriction;
+        owl:cardinality [];
+        owl:onProperty ?someProperty.
+   
+  filter not exists {
+     $this manchester:syntax 'EXACTLY'
+  }
+
+  minus {
+    $this owl:onProperty ?someProperty.
+    ?someProperty ?anyPredicate [].
+    filter not exists {
+      ?someProperty manchester:label []
+    }
+  }
+}
+  '''.
+
+  rule:SerializeOwlRestriction_cardinality
+    a sh:SPARQLRule;
+    rdfs:comment 'A rule that creates a manchester syntax label and definition for OWL Restriction owl:cardinality.'@en;
+    skos:prefLabel 'Manchester Syntax serialisation rule for owl restriction owl:cardinality'@en;
+    sh:construct '''
+
+prefix function: <https://data.rijksfinancien.nl/manchester/model/function/>
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+construct {
+
+  # create the manchester syntax for the OWL class to be serialized.
+  
+  $this manchester:syntax 'EXACTLY';
+        manchester:type 'CLASS';
+        manchester:label ?manchesterLabel;
+        manchester:equivalentTo ?equivalentTo.
+  
+} where {
+
+  # Get the label for the property and cardinality
+  $this owl:cardinality ?n;
+        owl:onProperty ?someProperty.
+  ?someProperty manchester:label ?labelProperty.
+  
+  # Get the defining label
+  BIND(CONCAT(?labelProperty, " exactly ", str(?n)) as ?manchesterString)
+  BIND(STRLANG(?manchesterString, LANG(?labelProperty)) as ?manchesterDescription)
+ 
+  # Establish the label for the owl class. If a blank node, then use the description of the class als label. If an IRI, then use the preferred label.
+  BIND(IF(isBlank($this), ?manchesterDescription, STRLANG(CONCAT("[=",function:getLabel($this), "=]"), LANG(function:getLabel($this)))) as ?manchesterLabel)
+  
+  # If the class is defined in the ontology with a IRI, then add the definition to it. If the class is a blank node, do not bother.
+  BIND(IF(isBlank($this), ?unboundDummy, ?manchesterDescription) as ?equivalentTo)
+}  '''.
+
+shp:SerializableOwlRestriction_maxCardinality
+    a sh:NodeShape;
+    sh:rule rule:SerializeOwlRestriction_maxCardinality;
+    sh:target target:SerializableOwlRestriction_maxCardinality;
+    skos:prefLabel 'Serializable owl restriction owl:maxCardinality shape'@en.
+
+  target:SerializableOwlRestriction_maxCardinality
+    a sh:SPARQLTarget;
+    sh:select '''
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select $this {
+
+  # A OWL class restriction for which the underlying class expressions are already serialized to manchester syntax
+  
+  $this a owl:Restriction;
+        owl:maxCardinality [];
+        owl:onProperty ?someProperty.
+   
+  filter not exists {
+    $this manchester:syntax 'MAX'
+  }
+
+  minus {
+    $this owl:onProperty ?someProperty.
+    ?someProperty ?anyPredicate [].
+    filter not exists {
+      ?someProperty manchester:label []
+    }
+  }
+}
+  '''.
+
+  rule:SerializeOwlRestriction_maxCardinality
+    a sh:SPARQLRule;
+    rdfs:comment 'A rule that creates a manchester syntax label and definition for OWL Restriction owl:maxCardinality.'@en;
+    skos:prefLabel 'Manchester Syntax serialisation rule for owl restriction owl:maxCardinality'@en;
+    sh:construct '''
+
+prefix function: <https://data.rijksfinancien.nl/manchester/model/function/>
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+construct {
+
+  # create the manchester syntax for the OWL class to be serialized.
+  
+  $this manchester:syntax 'MAX';
+        manchester:type 'CLASS';
+        manchester:label ?manchesterLabel;
+        manchester:equivalentTo ?equivalentTo.
+  
+} where {
+
+  # Get the label for the property and cardinality
+  $this owl:maxCardinality ?n;
+        owl:onProperty ?someProperty.
+  ?someProperty manchester:label ?labelProperty.
+  
+  # Get the defining label
+  BIND(CONCAT(str(?labelProperty), " max ", str(?n)) as ?manchesterString)
+  BIND(STRLANG(?manchesterString, LANG(?labelProperty)) as ?manchesterDescription)
+  
+  # Establish the label for the owl class. If a blank node, then use the description of the class als label. If an IRI, then use the preferred label.
+  BIND(IF(isBlank($this), ?manchesterDescription, STRLANG(CONCAT("[=",function:getLabel($this), "=]"), LANG(function:getLabel($this)))) as ?manchesterLabel)
+  
+  # If the class is defined in the ontology with a IRI, then add the definition to it. If the class is a blank node, do not bother.
+  BIND(IF(isBlank($this), ?unboundDummy, ?manchesterDescription) as ?equivalentTo)
+} 
+'''.
+
+shp:SerializableOwlRestriction_minCardinality
+    a sh:NodeShape;
+    sh:rule rule:SerializeOwlRestriction_minCardinality;
+    sh:target target:SerializableOwlRestriction_minCardinality;
+    skos:prefLabel 'Serializable owl restriction owl:minCardinality shape'@en.
+
+  target:SerializableOwlRestriction_minCardinality
+    a sh:SPARQLTarget;
+    sh:select '''
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select $this {
+
+  # A OWL class restriction for which the underlying class expressions are already serialized to manchester syntax
+  
+  $this a owl:Restriction;
+        owl:minCardinality [].
+   
+  filter not exists {
+    $this manchester:syntax 'MIN'
+  }
+
+  minus {
+    $this owl:onProperty ?someProperty.
+    ?someProperty ?anyPredicate [].
+    filter not exists {
+      ?someProperty manchester:label []
+    }
+  }
+}
+  '''.
+
+  rule:SerializeOwlRestriction_minCardinality
+    a sh:SPARQLRule;
+    rdfs:comment 'A rule that creates a manchester syntax label and definition for OWL Restriction owl:minCardinality.'@en;
+    skos:prefLabel 'Manchester Syntax serialisation rule for owl restriction owl:minCardinality'@en;
+    sh:construct '''
+
+prefix function: <https://data.rijksfinancien.nl/manchester/model/function/>
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+construct {
+
+  # create the manchester syntax for the OWL class to be serialized.
+  
+  $this manchester:syntax 'MIN';
+        manchester:type 'CLASS';
+        manchester:label ?manchesterLabel;
+        manchester:equivalentTo ?equivalentTo.
+  
+} where {
+
+  # Get the label for the property and cardinality
+  $this owl:minCardinality ?n;
+        owl:onProperty ?someProperty.
+  ?someProperty manchester:label ?labelProperty.
+  
+  # Get the manhest
+  BIND(CONCAT(str(?labelProperty), " min ", str(?n)) as ?manchesterString)
+  BIND(STRLANG(?manchesterString, LANG(?labelProperty)) as ?manchesterDescription)
+  
+  # Establish the label for the owl class. If a blank node, then use the description of the class als label. If an IRI, then use the preferred label.
+  BIND(IF(isBlank($this), ?manchesterDescription, STRLANG(CONCAT("[=",function:getLabel($this), "=]"),LANG(function:getLabel($this)))) as ?manchesterLabel)
+  
+  # If the class is defined in the ontology with a IRI, then add the definition to it. If the class is a blank node, do not bother.
+  BIND(IF(isBlank($this), ?unboundDummy, ?manchesterDescription) as ?equivalentTo)
+
+} 
+'''.
+
+shp:Serializable_subClassOf
+    a sh:NodeShape;
+    sh:rule rule:Serialize_subClassOf;
+    sh:target target:Serializable_subClassOf;
+    skos:prefLabel 'Serializable rdfs:subClassOf shape'@en.
+
+  target:Serializable_subClassOf
+    a sh:SPARQLTarget;
+    sh:select '''
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select $this {
+
+  # A subclass of some other, atomic or composite, class, of which the latter's underlying class expressions are already serialized to manchester syntax.
+  
+  $this rdfs:subClassOf [].
+   
+   filter not exists {
+    $this manchester:syntax 'SUBCLASSOF'
+   }
+  
+   minus {
+    $this rdfs:subClassOf ?someClass.
+    ?someClass ?anyPredicate [].
+    filter not exists {
+     ?someClass manchester:label []
+    }
+   }
+  }
+  '''.
+
+  rule:Serialize_subClassOf
+    a sh:SPARQLRule;
+    rdfs:comment 'A rule that creates a manchester syntax label and definition for rdfs:subClassOf classes.'@en;
+    skos:prefLabel 'Manchester Syntax serialisation rule for rdfs:subClassOf classes.'@en;
+    sh:construct '''
+
+prefix function: <https://data.rijksfinancien.nl/manchester/model/function/>
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+construct {
+
+  # create the manchester syntax for the class to be serialized.
+  $this manchester:syntax 'SUBCLASSOF';
+        manchester:type 'CLASS';
+        manchester:subClassOf ?subClassOf;
+        manchester:label ?manchesterLabel.
+
+} where {
+  
+  {$this rdfs:subClassOf ?superClass.
+  ?superClass manchester:label ?manchesterDescription.}
+  UNION
+  {$this rdfs:subClassOf ?superClass.
+  FILTER NOT EXISTS {?superClass ?anyPredicate [].}
+  BIND(STRLANG(function:getLabel(?superClass), 'en') as ?manchesterDescription)
+  }
+  
+  # Establish the label for the owl class. If a blank node, then use the description of the class als label, including manchester syntax 'subclass' notation. If an IRI, then use the preferred label.
+  BIND(IF(isBlank($this), STRLANG(CONCAT("SubClassOf: ",?manchesterDescription), LANG(?manchesterDescription)), STRLANG(CONCAT("[=",function:getLabel($this), "=]"), LANG(function:getLabel($this)))) as ?manchesterLabel)
+  
+  # If the class is explicitly defined in the ontology with a IRI, then add the definition to it. If the class is a blank node, do not bother.
+  BIND(IF(isBlank($this), ?unboundDummy, ?manchesterDescription) as ?subClassOf)
+  }
+'''.
+
+shp:Serializable_equivalentClass
+    a sh:NodeShape;
+    sh:rule rule:Serialize_equivalentClass;
+    sh:target target:Serializable_equivalentClass;
+    skos:prefLabel 'Serializable owl:equivalentClass shape'@en.
+
+  target:Serializable_equivalentClass
+    a sh:SPARQLTarget;
+    sh:select '''
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select $this {
+
+  # An equivalent class of some other class, of which the latter's underlying class expressions are already serialized to manchester syntax.
+  
+  $this owl:equivalentClass [].
+  
+  filter not exists {
+    $this manchester:syntax 'EQUIVALENTTO'
+   }
+  
+  minus {
+    $this owl:equivalentClass ?equivalentClass.
+    ?equivalentClass ?anyPredicate [].
+    filter not exists {
+     ?equivalentClass manchester:label []
+    }
+   }
+  }
+  '''.
+
+  rule:Serialize_equivalentClass
+    a sh:SPARQLRule;
+    rdfs:comment 'A rule that creates a manchester syntax label and definition for owl:equivalentClass classes.'@en;
+    skos:prefLabel 'Manchester Syntax serialisation rule for owl:equivalentClass classes.'@en;
+    sh:construct '''
+
+prefix function: <https://data.rijksfinancien.nl/manchester/model/function/>
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+construct {
+
+  # create the manchester syntax for the class to be serialized.
+  
+  $this manchester:syntax 'EQUIVALENTTO';
+        manchester:type 'CLASS';
+        manchester:label ?manchesterLabel;
+        manchester:equivalentTo ?equivalentTo. 
+
+} where {
+
+  {$this owl:equivalentClass ?equivalentClass.
+  ?equivalentClass manchester:label ?manchesterDescription.}
+  UNION
+  {$this owl:equivalentClass ?equivalentClass.
+  FILTER NOT EXISTS {?superClass ?anyPredicate [].}
+  BIND(STRLANG(function:getLabel(?superClass), LANG(function:getLabel(?superClass))) as ?manchesterDescription)
+  }
+  
+  # Establish the label for the owl class. If a blank node, then use the description of the class als label, including manchester syntax 'EquivalentTo' notation. If an IRI, then use the preferred label.
+  BIND(IF(isBlank($this), STRLANG(CONCAT("EquivalentTo: ",?manchesterDescription), LANG(?manchesterDescription)), STRLANG(CONCAT("[=",function:getLabel($this), "=]"), LANG(function:getLabel($this)))) as ?manchesterLabel)
+  
+  # If the class is explicitly defined in the ontology with a IRI, then add the definition to it. If the class is a blank node, do not bother.
+  BIND(IF(isBlank($this), ?unboundDummy, ?manchesterDescription) as ?equivalentTo)
+  
+}
+'''.
+
+shp:Serializable_unionOf
+    a sh:NodeShape;
+    sh:rule rule:Serialize_unionOf;
+    sh:target target:Serializable_unionOf;
+    skos:prefLabel 'Serializable owl:unionOf shape'@en.
+
+  target:Serializable_unionOf
+    a sh:SPARQLTarget;
+    sh:select '''
+
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select $this {
+
+  # A OWL class restriction for which the underlying class expressions are already serialized to manchester syntax
+  
+  $this owl:unionOf [].
+  
+  filter not exists {
+    $this manchester:syntax "OR"
+   }
+   
+  minus {
+    $this owl:unionOf/rdf:rest*/rdf:first ?someClass.
+    ?someClass ?anyPredicate [].
+    filter not exists {
+     ?someClass manchester:label []
+    }
+  }
+ }
+  '''.
+
+  rule:Serialize_unionOf
+    a sh:SPARQLRule;
+    rdfs:comment 'A rule that creates a manchester syntax label and definition for owl:unionOf classes.'@en;
+    skos:prefLabel 'Manchester Syntax serialisation rule for owl:unionOf classes.'@en;
+    sh:construct '''
+
+prefix function: <https://data.rijksfinancien.nl/manchester/model/function/>
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+construct {
+
+  # create the manchester syntax for the OWL class to be serialized.
+  
+  $this  manchester:syntax "OR";
+         manchester:type 'CLASS';
+         manchester:label ?manchesterLabel;
+         manchester:equivalentTo ?equivalentTo.
+        
+} where {
+
+  {SELECT ?lang (GROUP_CONCAT(?label;SEPARATOR=' or ') AS ?manchesterLangDescription) WHERE {
+  $this owl:unionOf/rdf:rest*/rdf:first ?listItem.
+  
+  # Add internal classes that are defined in this ontology
+  {?listItem manchester:label ?label.
+  BIND(LANG(?label) as ?lang)}
+    
+  UNION
+  # Also add external classes that are not defined in any triple in this ontology
+  {FILTER NOT EXISTS {?listItem ?anyPredicate []}
+  BIND(IF(isBlank($this),?unboundDummy,?listItem) as ?label)
+    }
+   }
+  GROUP BY ?lang
+  }
+  BIND(STRLANG(?manchesterLangDescription, ?lang) as ?manchesterDescription)
+  
+  # Establish the label for the owl class. If a blank node, then use the description of the class als label, including manchester syntax ' or ' notation. If an IRI, then use the preferred label.
+  BIND(IF(isBlank($this), ?manchesterDescription, STRLANG(CONCAT("[=",function:getLabel($this), "=]"), ?lang)) as ?manchesterLabel)
+  
+  # If the class is explicitly defined in the ontology with a IRI, then add the definition to it. If the class is a blank node, do not bother.
+  BIND(IF(isBlank($this), ?unboundDummy, ?manchesterDescription) as ?equivalentTo) 
+  
+}
+'''.
+
+shp:Serializable_intersectionOf
+    a sh:NodeShape;
+    sh:rule rule:Serialize_intersectionOf;
+    sh:target target:Serializable_intersectionOf;
+    skos:prefLabel 'Serializable owl:intersectionOf shape'@en.
+
+  target:Serializable_intersectionOf
+    a sh:SPARQLTarget;
+    sh:select '''
+
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select $this {
+
+  # A class that is the intersection of other classes for which the latter's underlying class expressions are already serialized to manchester syntax or for which the latter's underlying class expressions involve external classes not defined in this ontology.
+  
+  $this owl:intersectionOf [].
+  
+  filter not exists {
+    $this manchester:syntax "AND"
+   }
+   
+  minus {
+    $this owl:intersectionOf/rdf:rest*/rdf:first ?someClass.
+    ?someClass ?somePredicate [].
+    filter not exists {
+     ?someClass manchester:syntax [].
+    }
+  }
+ }
+  '''.
+
+  rule:Serialize_intersectionOf
+    a sh:SPARQLRule;
+    rdfs:comment 'A rule that creates a manchester syntax label and definition for owl:intersectionOf classes.'@en;
+    skos:prefLabel 'Manchester Syntax serialisation rule for owl:intersectionOf classes.'@en;
+    sh:construct '''
+
+prefix function: <https://data.rijksfinancien.nl/manchester/model/function/>
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+construct {
+
+  # create the manchester syntax for the OWL class to be serialized.
+  
+  $this manchester:syntax "AND"; 
+        manchester:type 'CLASS';
+        manchester:label ?manchesterLabel;
+        manchester:equivalentTo ?equivalentTo.
+        
+} where {
+
+  {select ?lang (group_concat(?label;separator=' and ') as ?manchesterLangDescription) where {
+  $this owl:intersectionOf/rdf:rest*/rdf:first ?listItem.
+  
+  # Add internal classes that are defined in this ontology
+  {?listItem manchester:label ?label.
+  BIND(LANG(?label) as ?lang)}
+  
+  UNION
+  # Also add external classes that are not defined in any triple in this ontology
+  {FILTER NOT EXISTS {?listItem ?anyPredicate []}
+  BIND(IF(isBlank($this),?unboundDummy,function:getLabel(?listItem)) as ?label)
+      }
+    }
+  GROUP BY ?lang
+  }
+  
+  BIND(STRLANG(?manchesterLangDescription, ?lang) as ?manchesterDescription)
+  
+  # Establish the label for the owl class. If a blank node, then use the description of the class als label, including manchester syntax ' and ' notation. If an IRI, then use the preferred label.
+  BIND(IF(isBlank($this), ?manchesterDescription, STRLANG(CONCAT("[=",function:getLabel($this), "=]"), ?lang)) as ?manchesterLabel)
+  
+  # If the class is explicitly defined in the ontology with a IRI, then add the definition to it. If the class is a blank node, do not bother.
+  BIND(IF(isBlank($this), ?unboundDummy, ?manchesterDescription) as ?equivalentTo) 
+
+}
+'''.
+
+
+shp:Serializable_oneOf
+    a sh:NodeShape;
+    sh:rule rule:Serialize_oneOf;
+    sh:target target:Serializable_oneOf;
+    skos:prefLabel 'Serializable owl:oneOf shape'@en.
+
+  target:Serializable_oneOf
+    a sh:SPARQLTarget;
+    sh:select '''
+
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select $this {
+
+  # A OWL class restriction for which the underlying class expressions are already serialized to manchester syntax
+  
+  $this owl:oneOf [].
+  
+  filter not exists {
+    $this manchester:syntax "{}"
+   }
+   
+  minus {
+    $this owl:oneOf/rdf:rest*/rdf:first ?someIndividual.
+    filter not exists {
+     ?someIndividual manchester:label []
+    }
+  }
+ }
+  '''.
+
+  rule:Serialize_oneOf
+    a sh:SPARQLRule;
+    rdfs:comment 'A rule that creates a manchester syntax label and definition for owl:oneOf classes.'@en;
+    skos:prefLabel 'Manchester Syntax serialisation rule for owl:oneOf classes.'@en;
+    sh:construct '''
+
+prefix function: <https://data.rijksfinancien.nl/manchester/model/function/>
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+construct {
+
+  # create the manchester syntax for the OWL class to be serialized.
+  
+  $this manchester:syntax "{}";
+        manchester:type 'CLASS';
+        manchester:label ?manchesterLabel;
+        manchester:equivalentTo ?equivalentTo.
+  
+} where {
+
+  {select ?lang (group_concat(?label;separator=' ') as ?individualLabels) where {
+  $this owl:oneOf/rdf:rest*/rdf:first/manchester:label ?label.
+  BIND(LANG(?label) as ?lang)
+    }
+  GROUP BY ?lang
+  }
+
+  BIND(STRLANG(CONCAT("{", ?individualLabels, "}"), ?lang) as ?manchesterDescription)
+
+  # Establish the label for the owl class. If a blank node, then use the description of the class als label, including manchester syntax ' {} ' notation. If an IRI, then use the preferred label.
+  BIND(IF(isBlank($this), ?manchesterDescription, STRLANG(CONCAT("[=",function:getLabel($this), "=]"), ?lang)) as ?manchesterLabel)
+  
+  # If the class is explicitly defined in the ontology with a IRI, then add the definition to it. If the class is a blank node, do not bother.
+  BIND(IF(isBlank($this), ?unboundDummy, ?manchesterDescription) as ?equivalentTo) 
+}
+'''.
+
+shp:Serializable_complementOf
+    a sh:NodeShape;
+    sh:rule rule:Serialize_complementOf;
+    sh:target target:Serializable_complementOf;
+    skos:prefLabel 'Serializable owl:complementOf shape'@en.
+
+  target:Serializable_complementOf
+    a sh:SPARQLTarget;
+    sh:select '''
+
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select $this {
+
+  # A class that is the complement of some other class, of which the latter's underlying class expressions are already serialized to manchester syntax.
+  
+  $this owl:complementOf [].
+  
+  filter not exists {
+    $this manchester:syntax "NOT"
+   }
+   
+  minus {
+    $this owl:complementOf ?someClass.
+    ?someClass ?anyPredicate [].
+    filter not exists {
+     ?someClass manchester:label []
+    }
+   }
+  }
+  '''.
+
+  rule:Serialize_complementOf
+    a sh:SPARQLRule;
+    rdfs:comment 'A rule that creates a manchester syntax label and definition for owl:complementOf classes.'@en;
+    skos:prefLabel 'Manchester Syntax serialisation rule for owl:complementOf classes.'@en;
+    sh:construct '''
+
+prefix function: <https://data.rijksfinancien.nl/manchester/model/function/>
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+construct {
+
+  # create the manchester syntax for the OWL class to be serialized.
+  
+  $this manchester:syntax "NOT";
+        manchester:type 'CLASS';
+        manchester:label ?manchesterLabel;
+        manchester:equivalentTo ?equivalentTo.
+       
+} where {
+
+  {$this owl:complementOf ?someClass.
+  ?someClass manchester:label ?explicitDefinition.
+  BIND(LANG(?explicitDefinition) as ?lang)}
+  
+  # There may be complement classes that unfortunately do not get defined in the turtle file. 
+  UNION { 
+  $this owl:complementOf ?someClass.
+  FILTER NOT EXISTS { ?someClass ?anyPredicate []}
+  BIND(function:getLabel(?someClass) as ?implicitDefinition)
+  BIND(LANG(function:getLabel($this)) as ?lang)
+  }
+  
+  # Get the label of the class to be serialized.
+  BIND(STRLANG(CONCAT("not ", str(COALESCE(?explicitDefinition, ?implicitDefinition))), ?lang) as ?manchesterDescription)
+  
+  # Establish the label for the owl class. If a blank node, then use the description of the class als label, including manchester syntax 'not ' notation. If an IRI, then use the preferred label.
+  BIND(IF(isBlank($this), ?manchesterDescription, STRLANG(CONCAT("[=",function:getLabel($this), "=]"), ?lang)) as ?manchesterLabel)
+  
+  # If the class is explicitly defined in the ontology with a IRI, then add the definition to it. If the class is a blank node, do not bother.
+  BIND(IF(isBlank($this), ?unboundDummy, ?manchesterDescription) as ?equivalentTo) 
+  } 
+'''.
+
+shp:Serializable_RDF_Property
+    a sh:NodeShape;
+    sh:rule rule:Serialize_RDF_Property;
+    sh:target target:Serialize_RDF_Property;
+    skos:prefLabel 'Serializable rdf:Property shape'@en.
+
+  target:Serialize_RDF_Property
+    a sh:SPARQLTarget;
+    sh:select '''
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select $this {
+
+  # A RDF property for which underlying class expressions are already serialized to manchester syntax, but which does not have subPropertyOf or equivalentProperty relations.
+  
+  $this rdf:type rdf:Property.
+  filter not exists {
+  $this manchester:syntax 'PROPERTY'}
+   
+  minus {
+    $this rdfs:domain ?someDomainClass.
+    ?someDomainClass ?anyPredicate [].
+    filter not exists {
+     ?someDomainClass manchester:label []
+    }
+  }
+  
+  minus {
+    $this rdfs:range ?someRangeClass.
+    ?someRangeClass ?anyPredicate [].
+    filter not exists {
+     ?someRangeClass manchester:label []
+   }
+  }
+ }
+  '''.
+
+
+  rule:Serialize_RDF_Property
+    a sh:SPARQLRule;
+    rdfs:comment 'A rule that creates a manchester syntax label and definition for the rdfs:domain and rdfs:range of a rdf:Property.'@en;
+    skos:prefLabel 'Manchester Syntax serialisation rule for rdf:Property.'@en;
+    sh:construct '''
+
+prefix function: <https://data.rijksfinancien.nl/manchester/model/function/>
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+construct {
+
+  # create the manchester syntax for the OWL property to be serialized.
+  
+  $this manchester:syntax 'PROPERTY';
+        manchester:label ?manchesterLabel;
+        manchester:domain ?manchesterDomain;
+        manchester:range ?manchesterRange.
+        
+} where {
+
+  # Label of RDF property
+   BIND(LANG(function:getLabel($this)) as ?lang)
+   BIND(STRLANG(CONCAT("[=",function:getLabel($this),"=]"), ?lang) as ?manchesterLabel)
+  
+  # Domain
+  OPTIONAL
+  {
+    {$this rdfs:domain ?domainClass.
+    ?domainClass manchester:label ?explicitDomain.
+	} 
+    UNION
+    {
+    $this rdfs:domain ?domainClass.
+    FILTER NOT EXISTS {?domainClass ?anyPredicate []} 
+    BIND(IF(isBlank(?domainClass), ?unboundDummy, STRLANG(function:getLabel(?domainClass), LANG(function:getLabel($this)))) as ?implicitDomain)
+    }
+  }
+  BIND(COALESCE(?explicitDomain, ?implicitDomain) as ?manchesterDomain)
+  
+  # Range 
+  OPTIONAL
+  {
+    
+   {$this rdfs:range ?rangeClass.
+   ?rangeClass manchester:label ?explicitRange.}
+   
+   UNION
+   {
+   $this rdfs:range ?rangeClass.
+   FILTER NOT EXISTS {?rangeClass ?anyPredicate []}
+   BIND(IF(isBlank(?rangeClass), ?unboundDummy, STRLANG(function:getLabel(?rangeClass), LANG(function:getLabel($this)))) as ?implicitRange)
+    }
+  }
+BIND(COALESCE(?explicitRange, ?implicitRange) as ?manchesterRange)
+  
+}  
+'''.
+
+shp:Serializable_datatypeProperty
+    a sh:NodeShape;
+    sh:rule rule:Serialize_datatypeProperty;
+    sh:target target:Serialize_datatypeProperty;
+    skos:prefLabel 'Serializable owl:DatatypeProperty shape'@en.
+
+  target:Serialize_datatypeProperty
+    a sh:SPARQLTarget;
+    sh:select '''
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select $this {
+
+  # A datatype property for which underlying class expressions are already serialized to manchester syntax, but which does not have subPropertyOf or equivalentProperty relations.
+  
+  $this rdf:type owl:DatatypeProperty.
+  filter not exists {
+  $this manchester:syntax 'DATATYPEPROPERTY'}
+   
+  minus {
+    $this rdfs:domain ?someDomainClass.
+    ?someDomainClass ?anyPredicate [].
+    filter not exists {
+     ?someDomainClass manchester:label []
+   }
+  }
+ }
+  '''.
+
+
+  rule:Serialize_datatypeProperty
+    a sh:SPARQLRule;
+    rdfs:comment 'A rule that creates a manchester syntax label and definition for the rdfs:domain of an owl:DatatypeProperty.'@en;
+    skos:prefLabel 'Manchester Syntax serialisation rule for owl:DatatypeProperty.'@en;
+    sh:construct '''
+
+prefix function: <https://data.rijksfinancien.nl/manchester/model/function/>
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+
+construct {
+
+  # create the manchester syntax for the OWL property to be serialized.
+  
+  $this manchester:syntax 'DATATYPEPROPERTY';
+        manchester:label ?manchesterLabel;
+        manchester:domain ?manchesterDomain;
+        manchester:range ?manchesterRange.
+        
+} where {
+
+
+  # Label of datatype property
+  
+  BIND(LANG(function:getLabel($this)) as ?lang)
+  BIND(STRLANG(CONCAT("[=",function:getLabel($this),"=]"), ?lang) as ?manchesterLabel)
+  
+ # Domain
+  OPTIONAL
+  {
+  
+    {$this rdfs:domain ?domainClass.
+    ?domainClass manchester:label ?explicitDomain.}
+    
+    UNION
+    {
+    $this rdfs:domain ?domainClass.
+    FILTER NOT EXISTS {?domainClass ?anyPredicate []} 
+    BIND(IF(isBlank(?domainClass), ?unboundDummy, STRLANG(function:getLabel(?domainClass), LANG(function:getLabel($this)))) as ?implicitDomain)
+    }
+  }
+  BIND(COALESCE(?explicitDomain, ?implicitDomain) as ?manchesterDomain)
+  
+  # Range 
+  OPTIONAL
+  {$this rdfs:range ?rangeDatatype.
+  BIND(STRLANG(function:getPrefixedIRI(?rangeDatatype), LANG(function:getLabel($this))) as ?manchesterRange)
+  }
+}  
+'''.
+
+shp:Serializable_objectProperty
+    a sh:NodeShape;
+    sh:rule rule:Serialize_objectProperty;
+    sh:target target:Serialize_objectProperty;
+    skos:prefLabel 'Serializable owl:ObjectProperty shape'@en.
+
+  target:Serialize_objectProperty
+    a sh:SPARQLTarget;
+    sh:select '''
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select $this {
+
+  # An object property for which underlying class expressions are already serialized to manchester syntax, but which does not have subPropertyOf or equivalentProperty relations.
+  
+  $this rdf:type owl:ObjectProperty.
+  filter not exists {
+  $this manchester:syntax 'OBJECTPROPERTY'}
+   
+  minus {
+    $this rdfs:domain ?someDomainClass.
+    ?someDomainClass ?anyPredicate [].
+    filter not exists {
+     ?someDomainClass manchester:label []
+    }
+  }
+  
+  minus {
+    $this rdfs:range ?someRangeClass.
+    ?someRangeClass ?anyPredicate [].
+    filter not exists {
+     ?someRangeClass manchester:label []
+   }
+  }
+ }
+  '''.
+
+
+  rule:Serialize_objectProperty
+    a sh:SPARQLRule;
+    rdfs:comment 'A rule that creates a manchester syntax label and definition for the rdfs:domain and rdfs:range of an owl:ObjectProperty.'@en;
+    skos:prefLabel 'Manchester Syntax serialisation rule for owl:ObjectProperty.'@en;
+    sh:construct '''
+
+prefix function: <https://data.rijksfinancien.nl/manchester/model/function/>
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+construct {
+
+  # create the manchester syntax for the OWL property to be serialized.
+  
+  $this manchester:syntax 'OBJECTPROPERTY';
+        manchester:label ?manchesterLabel;
+        manchester:domain ?manchesterDomain;
+        manchester:range ?manchesterRange.
+
+} where {
+
+  # Label of object property
+  BIND(LANG(function:getLabel($this)) as ?lang)
+  BIND(STRLANG(CONCAT("[=",function:getLabel($this),"=]"), ?lang) as ?manchesterLabel)
+  
+  # Domain
+  OPTIONAL
+  {
+  
+    {$this rdfs:domain ?domainClass.
+    ?domainClass manchester:label ?explicitDomain.}
+    
+    UNION
+    {
+    $this rdfs:domain ?domainClass.
+    FILTER NOT EXISTS {?domainClass ?anyPredicate []} 
+    BIND(IF(isBlank(?domainClass), ?unboundDummy, STRLANG(function:getLabel(?domainClass), LANG(function:getLabel($this)))) as ?implicitDomain)
+    }
+  }
+  BIND(COALESCE(?explicitDomain, ?implicitDomain) as ?manchesterDomain)
+  
+  # Range 
+  OPTIONAL
+  {
+    
+   {$this rdfs:range ?rangeClass.
+   ?rangeClass manchester:label ?explicitRange.}
+   
+   UNION
+   {
+   $this rdfs:range ?rangeClass.
+   FILTER NOT EXISTS {?rangeClass ?anyPredicate []}
+   BIND(IF(isBlank(?rangeClass), ?unboundDummy, STRLANG(function:getLabel(?rangeClass), LANG(function:getLabel($this)))) as ?implicitRange)
+    }
+  }
+BIND(COALESCE(?explicitRange, ?implicitRange) as ?manchesterRange)
+  
+}    
+'''.
+
+shp:Serializable_subPropertyOf
+    a sh:NodeShape;
+    sh:rule rule:Serialize_subPropertyOf;
+    sh:target target:Serialize_subPropertyOf;
+    skos:prefLabel 'Serializable owl:DatatypeProperty shape with a rdfs:subPropertyOf relation.'@en.
+
+  target:Serialize_subPropertyOf
+    a sh:SPARQLTarget;
+    sh:select '''
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select $this {
+
+  # A datatype or object property for which exists some subproperty relation.
+  
+  $this rdfs:subPropertyOf ?someProperty.
+  filter not exists {
+    $this manchester:subPropertyOf []
+    }
+  
+  minus {
+    $this rdfs:subPropertyOf ?someProperty.
+    ?someProperty ?anyPredicate [].
+     filter not exists {
+     ?someProperty manchester:label []
+    }
+   }
+}
+'''.
+
+  rule:Serialize_subPropertyOf
+    a sh:SPARQLRule;
+    rdfs:comment 'A rule that creates a manchester syntax for an owl:DatatypeProperty with a subPropertyOf relation.'@en;
+    skos:prefLabel 'Manchester Syntax serialisation rule for owl:DatatypeProperty with a subPropertyOf relation.'@en;
+    sh:construct '''
+
+prefix function: <https://data.rijksfinancien.nl/manchester/model/function/>
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+
+construct {
+
+  # create the manchester syntax for the OWL property to be serialized.
+  
+  $this manchester:syntax 'SUBPROPERTY';
+        manchester:subPropertyOf ?manchesterSuperProperty.		
+  
+} where {
+
+  $this rdfs:subPropertyOf ?superProperty.
+  
+  {?superProperty manchester:label ?manchesterSuperProperty.}
+  UNION
+  {
+  $this rdfs:subPropertyOf ?superProperty.
+  FILTER NOT EXISTS {?superProperty ?anyPredicate []}
+  BIND(STRLANG(function:getLabel(?superProperty), LANG(function:getLabel($this))) as ?manchesterSuperProperty)
+  }
+}  
+'''.
+
+shp:Serializable_equivalentProperty
+    a sh:NodeShape;
+    sh:rule rule:Serialize_equivalentProperty;
+    sh:target target:Serialize_equivalentProperty;
+    skos:prefLabel 'Serializable owl:DatatypeProperty shape with a owl:equivalentProperty relation.'@en.
+
+  target:Serialize_equivalentProperty
+    a sh:SPARQLTarget;
+    sh:select '''
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select $this {
+
+  # A datatype or object property for which exists some equivalent property relation.
+  $this owl:equivalentProperty ?someProperty.
+  
+  filter not exists {
+  $this manchester:equivalentProperty []}
+  
+  minus {
+  $this owl:equivalentProperty ?someProperty.
+  ?someProperty ?anyPredicate [].
+    filter not exists 
+      {
+       ?someProperty manchester:label []
+      }   
+  }
+}
+'''.
+
+  rule:Serialize_equivalentProperty
+    a sh:SPARQLRule;
+    rdfs:comment 'A rule that creates a manchester syntax for an owl:DatatypeProperty with an equivalentProperty relation.'@en;
+    skos:prefLabel 'Manchester Syntax serialisation rule for owl:DatatypeProperty with an equivalentProperty relation.'@en;
+    sh:construct '''
+
+prefix function: <https://data.rijksfinancien.nl/manchester/model/function/>
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+
+construct {
+
+  # create the manchester syntax for the OWL property to be serialized.
+  
+  $this manchester:syntax 'EQUIVALENTPROPERTY';
+        manchester:equivalentProperty ?manchesterEquivalentProperty.
+  
+} where {
+
+  $this owl:equivalentProperty ?equivalentProperty.
+  BIND(LANG(function:getLabel($this)) as ?lang)
+  
+  {?equivalentProperty manchester:label ?manchesterEquivalentProperty.}
+  UNION
+  {$this owl:equivalentProperty ?equivalentProperty.
+  FILTER NOT EXISTS {?equivalentProperty ?anyPredicate []}
+  BIND(STRLANG(function:getLabel(?equivalentProperty), ?lang) as ?manchesterEquivalentProperty)
+  } 
+}  
+'''.
+
+shp:Serializable_namedIndividual
+    a sh:NodeShape;
+    sh:rule rule:Serialize_namedIndividual;
+    sh:target target:Serialize_namedIndividual;
+    skos:prefLabel 'Serializable Named Individual shape.'@en.
+
+target:Serialize_namedIndividual
+    a sh:SPARQLTarget;
+    sh:select '''
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix respec: <https://respec.org/model/> 
+prefix sh: <http://www.w3.org/ns/shacl#>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+
+select $this {
+
+  # A named individual for which underlying class expressions are already serialized to manchester syntax.
+  
+  $this rdf:type ?class.   
+  filter not exists {
+    $this manchester:syntax 'INDIVIDUAL'
+  }  
+ 
+  minus {
+    $this rdf:type ?class. 
+    ?class ?anyPredicate [].
+    filter not exists {
+     ?class manchester:label []
+    }
+  }
+
+# Make sure to only query instantiations of classes, and not ontologies, classes, complex classes, properties, annotations, SHACL shapes nor SKOS concepts:
+
+FILTER (?class NOT IN (sh:PropertyShape, sh:NodeShape, sh:SPARQLRule, sh:SPARQLTarget, rdfs:Class, rdf:Property, owl:Class, owl:DatatypeProperty, owl:ObjectProperty, owl:FunctionalProperty, owl:IrreflexiveProperty, owl:Restriction, owl:Ontology, owl:InverseFunctionalProperty, owl:InverseProperty, owl:AllDifferent, owl:AnnotationProperty, owl:NegativePropertyAssertion, owl:OntologyProperty, owl:AllDisjointClasses, owl:AllDisjointProperties, owl:Annotation,owl:AsymmetricProperty, owl:Axiom, owl:DataRange, owl:DeprecatedClass, owl:DeprecatedProperty, skos:Concept, skos:ConceptScheme, skos:Collection, respec:Ontology))
+}
+'''.
+
+rule:Serialize_namedIndividual
+  a sh:SPARQLRule;
+  skos:prefLabel 'Named individuals rule'@en;
+  rdfs:comment 'The named individuals rule serializes an named individual into Manchester Syntax.'@en ;
+  sh:construct """
+
+prefix function: <https://data.rijksfinancien.nl/manchester/model/function/>
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+
+construct {
+  # create the manchester syntax for the named individual to be serialized.
+  $this manchester:syntax 'INDIVIDUAL';
+        manchester:label ?manchesterLabel;
+        manchester:class ?manchesterClass;
+        manchester:fact ?manchesterFact.
+} where {
+
+  # Label of the named individual
+  
+  $this a ?class.
+  BIND(function:getLabel($this) as ?manchesterLabel)
+  BIND(LANG(function:getLabel($this)) as ?lang)
+  
+  # Class description   
+  OPTIONAL
+  {  ?class manchester:label ?explicitClassName.}
+  BIND(COALESCE(?explicitClassName, function:getLabel(?class)) as ?className)
+  BIND(STRLANG(CONCAT("Type: ", ?className), LANG(function:getLabel(?class))) as ?manchesterClass)
+  
+  # Fact description
+  OPTIONAL
+  {$this ?property ?literal.
+   ?property rdf:type owl:DatatypeProperty;
+              manchester:label ?propertyLabel.
+  }
+  OPTIONAL
+  {$this ?property ?object.
+   ?property rdf:type owl:ObjectProperty;
+              manchester:label ?propertyLabel.
+  OPTIONAL{?object   manchester:label ?explicitObjectLabel.}
+  BIND(COALESCE(?explicitObjectLabel, function:getLabel(?object)) as ?objectLabel)
+  FILTER (LANG(?propertyLabel) = LANG(?objectLabel))
+  }
+  BIND(STRLANG(CONCAT("Fact:  ", function:getPrefixedIRI(?propertyLabel), " ", COALESCE(str(?literal), ?objectLabel)), LANG(?propertyLabel)) as ?manchesterFact)
+}
+  
+""".
+
+shp:Serializable_conceptScheme
+    a sh:NodeShape;
+    sh:rule rule:Serialize_conceptScheme;
+    sh:target target:Serialize_conceptScheme;
+    skos:prefLabel 'Serializable concept scheme shape.'@en.
+
+target:Serialize_conceptScheme
+    a sh:SPARQLTarget;
+    sh:select '''
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix respec: <https://respec.org/model/> 
+prefix sh: <http://www.w3.org/ns/shacl#>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+
+select $this {
+
+  # A concept scheme
+  
+  $this rdf:type skos:ConceptScheme.   
+  filter not exists {
+    $this manchester:syntax 'CONCEPTSCHEME'
+  }  
+ 
+
+
+}
+'''.
+
+rule:Serialize_conceptScheme
+  a sh:SPARQLRule;
+  skos:prefLabel 'Concept scheme rule'@en;
+  rdfs:comment 'The concept scheme rule serializes a concept scheme into Manchester Syntax.'@en ;
+  sh:construct """
+
+prefix function: <https://data.rijksfinancien.nl/manchester/model/function/>
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+
+construct {
+  # create the manchester syntax for the named individual to be serialized.
+  $this manchester:syntax 'CONCEPTSCHEME';
+        manchester:class 'Type: Concept Scheme';
+        manchester:label ?manchesterLabel.
+
+} where {
+
+  # Label of the concept scheme
+  BIND(STRLANG(function:getLabel($this), LANG(function:getLabel($this))) as ?manchesterLabel)
+}
+
+""".
+
+shp:Serializable_concept
+    a sh:NodeShape;
+    sh:rule rule:Serialize_concept;
+    sh:target target:Serialize_concept;
+    skos:prefLabel 'Serializable concept shape.'@en.
+
+target:Serialize_concept
+    a sh:SPARQLTarget;
+    sh:select '''
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix respec: <https://respec.org/model/> 
+prefix sh: <http://www.w3.org/ns/shacl#>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+
+select $this {
+
+  # A concept 
+  
+  $this rdf:type skos:Concept.   
+  filter not exists {
+    $this manchester:syntax 'CONCEPT'
+  }  
+}
+'''.
+
+rule:Serialize_concept
+  a sh:SPARQLRule;
+  skos:prefLabel 'Concept rule'@en;
+  rdfs:comment 'The concept rule serializes a concept into Manchester Syntax.'@en ;
+  sh:construct """
+
+prefix function: <https://data.rijksfinancien.nl/manchester/model/function/>
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+
+construct {
+  # create the manchester syntax for the named individual to be serialized.
+  $this manchester:syntax 'CONCEPT';
+        manchester:class 'Type: Concept';
+        manchester:label ?manchesterLabel.
+
+} where {
+
+  # Label of the concept 
+  BIND(STRLANG(function:getLabel($this), LANG(function:getLabel($this))) as ?manchesterLabel)
+}
+
+""".
+
+function:getPrefixedIRI
+    a sh:SPARQLFunction ;
+    rdfs:comment "Gets prefixed IRI from full IRI." ;
+    sh:parameter [
+        sh:path function:IRI ;
+        sh:datatype xsd:anyURI ;
+        sh:description "The full IRI of a RDF resource as defined in an ontology." ;
+    ] ;
+    sh:returnType xsd:string ;
+    sh:select """
+       SELECT ?result WHERE {
+{
+    VALUES (?IRI_base ?IRI_prefix) {
+      ("http://purl.org/dc/dcmitype/" "dcm")
+      ("http://purl.org/dc/terms/" "dct")
+      ("http://xmlns.com/foaf/0.1/" "foaf")
+      ("http://www.w3.org/2002/07/owl#" "owl")
+      ("http://www.w3.org/ns/prov#" "prov")
+      ("http://www.w3.org/1999/02/22-rdf-syntax-ns#" "rdf")
+      ("http://www.w3.org/ns/rdfa#" "rdfa")
+      ("http://www.w3.org/2000/01/rdf-schema#" "rdfs")
+      ("http://www.w3.org/ns/shacl#" "sh")
+      ("http://www.w3.org/2004/02/skos/core#" "skos")
+      ("http://purl.org/adms/status/" "status")
+      ("http://purl.org/vocab/vann/" "vann")
+      ("http://rdfs.org/ns/void#" "void")
+      ("http://www.w3.org/2001/XMLSchema#" "xsd")
+    }
+  }
+  UNION 
+  {
+    ?ontology vann:preferredNamespaceUri ?IRI_base;
+              vann:preferredNamespacePrefix ?IRI_prefix.
+  }
+  FILTER (STRSTARTS(STR($IRI), ?IRI_base))
+  BIND(STR($IRI) as ?IRI_href)
+  BIND(STRAFTER(STR($IRI), ?IRI_base) as ?IRI_reference)
+  BIND(COALESCE(CONCAT(STR(?IRI_prefix),":",?IRI_reference), ?IRI_href) as ?result)
+}
+        """ .
+
+function:getLabel
+    a sh:SPARQLFunction ;
+    rdfs:comment "Gets a label for a RDF resource." ;
+    sh:parameter [
+        sh:path function:resource ;
+        sh:datatype xsd:anyURI ;
+        sh:description "The full IRI of a RDF resource as defined in an ontology." ;
+    ] ;
+    sh:returnType xsd:string ;
+    sh:select """
+       SELECT ?result WHERE {
+  
+  BIND(STRLANG(REPLACE(STR($resource),'.*[/#]',''),'en') as ?implicitLabel)
+  
+  OPTIONAL
+  {$resource skos:prefLabel ?preferredLabel.}
+  
+  OPTIONAL 
+  {$resource rdfs:label ?alternativeLabel.}
+      
+  # Establish label
+  BIND(COALESCE(?preferredLabel, ?alternativeLabel, ?implicitLabel) as ?result)
+}
+""" .
