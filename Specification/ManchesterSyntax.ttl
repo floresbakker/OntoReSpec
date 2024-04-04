@@ -210,8 +210,11 @@ construct {
         owl:onProperty ?someProperty.
   
   # Get the labels for the class and property
-  ?someClass manchester:label ?classLabel.
-  ?someProperty manchester:label ?propertyLabel.
+  OPTIONAL {?someClass manchester:label ?optionalClassLabel.}
+  OPTIONAL {?someProperty manchester:label ?optionalPropertyLabel.}
+  
+  BIND(COALESCE(?optionalClassLabel, function:getLabel(?someClass)) as ?classLabel)
+  BIND(COALESCE(?optionalPropertyLabel, function:getLabel(?someProperty)) as ?propertyLabel)
   FILTER(LANG(?classLabel) = LANG(?propertyLabel))
   
   # Establish the full description of the OWL restriction class to be serialized.
@@ -297,8 +300,13 @@ construct {
         owl:onProperty ?someProperty.
   
   # Get the labels for the class and property
-  ?someClass manchester:label ?classLabel.
-  ?someProperty manchester:label ?propertyLabel.
+  OPTIONAL{?someClass manchester:label ?optionalClassLabel.}
+  OPTIONAL{?someProperty manchester:label ?optionalPropertyLabel.}
+  
+  BIND(COALESCE(?optionalClassLabel, function:getLabel(?someClass)) as ?classLabel)
+  BIND(COALESCE(?optionalPropertyLabel, function:getLabel(?someProperty)) as ?propertyLabel)
+  
+  FILTER(LANG(?classLabel) = LANG(?propertyLabel))
   
   # Establish the full description of the OWL restriction class to be serialized.
   BIND(CONCAT(?propertyLabel, " some ", ?classLabel) as ?manchesterDescription)
@@ -387,14 +395,14 @@ construct {
   $this owl:hasValue ?someIndividual;
         owl:onProperty ?someProperty.
   
-  OPTIONAL
   # Get the labels for the individual and property
-  {?someIndividual manchester:label ?originalIndividualLabel.}
-  BIND(COALESCE(?originalIndividualLabel, STRLANG(STR(?someIndividual), 'en')) as ?individualLabel)
+  OPTIONAL
+  {?someIndividual manchester:label ?optionalIndividualLabel.}
+  BIND(COALESCE(?optionalIndividualLabel, STRLANG(STR(?someIndividual), LANG(function:getLabel(?someIndividual)))) as ?individualLabel)
   
   OPTIONAL
   {?someProperty manchester:label ?originalPropertyLabel.}
-  BIND(COALESCE(?originalPropertyLabel, STRLANG(STR(?someProperty), 'en')) as ?propertyLabel)
+  BIND(COALESCE(?originalPropertyLabel, STRLANG(STR(?someProperty), LANG(function:getLabel(?someProperty)))) as ?propertyLabel)
   
   FILTER (LANG(?propertyLabel) = LANG(?individualLabel))
   
@@ -471,7 +479,8 @@ construct {
   # Get the label for the property and cardinality
   $this owl:cardinality ?n;
         owl:onProperty ?someProperty.
-  ?someProperty manchester:label ?labelProperty.
+  OPTIONAL{?someProperty manchester:label ?optionalLabelProperty.}
+  BIND(COALESCE(?optionalLabelProperty, function:getLabel(?someProperty)) as ?labelProperty)
   
   # Get the defining label
   BIND(CONCAT(?labelProperty, " exactly ", str(?n)) as ?manchesterString)
@@ -546,7 +555,8 @@ construct {
   # Get the label for the property and cardinality
   $this owl:maxCardinality ?n;
         owl:onProperty ?someProperty.
-  ?someProperty manchester:label ?labelProperty.
+  OPTIONAL {?someProperty manchester:label ?optionalLabelProperty.}
+  BIND(COALESCE(?optionalLabelProperty, function:getLabel(?someProperty)) as ?labelProperty)
   
   # Get the defining label
   BIND(CONCAT(str(?labelProperty), " max ", str(?n)) as ?manchesterString)
@@ -621,9 +631,10 @@ construct {
   # Get the label for the property and cardinality
   $this owl:minCardinality ?n;
         owl:onProperty ?someProperty.
-  ?someProperty manchester:label ?labelProperty.
+  OPTIONAL{?someProperty manchester:label ?optionalLabelProperty.}
+  BIND(COALESCE(?optionalLabelProperty, function:getLabel(?someProperty)) as ?labelProperty)
   
-  # Get the manhest
+  # Get the description
   BIND(CONCAT(str(?labelProperty), " min ", str(?n)) as ?manchesterString)
   BIND(STRLANG(?manchesterString, LANG(?labelProperty)) as ?manchesterDescription)
   
@@ -692,13 +703,9 @@ construct {
 
 } where {
   
-  {$this rdfs:subClassOf ?superClass.
-  ?superClass manchester:label ?manchesterDescription.}
-  UNION
-  {$this rdfs:subClassOf ?superClass.
-  FILTER NOT EXISTS {?superClass ?anyPredicate [].}
-  BIND(STRLANG(function:getLabel(?superClass), LANG(function:getLabel($this))) as ?manchesterDescription)
-  }
+  $this rdfs:subClassOf ?superClass.
+  OPTIONAL{?superClass manchester:label ?optionalManchesterDescription.}
+  BIND(COALESCE(?optionalManchesterDescription, STRLANG(function:getLabel(?superClass), LANG(function:getLabel($this)))) as ?manchesterDescription)
   
   # Establish the label for the owl class. If a blank node, then use the description of the class als label, including manchester syntax 'subclass' notation. If an IRI, then use the preferred label.
   BIND(IF(isBlank($this), STRLANG(CONCAT("SubClassOf: ",?manchesterDescription), LANG(?manchesterDescription)), STRLANG(CONCAT("[=",function:getLabel($this), "=]"), LANG(function:getLabel($this)))) as ?manchesterLabel)
@@ -765,13 +772,9 @@ construct {
 
 } where {
 
-  {$this owl:equivalentClass ?equivalentClass.
-  ?equivalentClass manchester:label ?manchesterDescription.}
-  UNION
-  {$this owl:equivalentClass ?equivalentClass.
-  FILTER NOT EXISTS {?superClass ?anyPredicate [].}
-  BIND(STRLANG(function:getLabel(?superClass), LANG(function:getLabel($this))) as ?manchesterDescription)
-  }
+  $this owl:equivalentClass ?equivalentClass.
+  OPTIONAL {?equivalentClass manchester:label ?optionalManchesterDescription.}
+  BIND(COALESCE(?optionalManchesterDescription, STRLANG(function:getLabel(?equivalentClass), LANG(function:getLabel($this)))) as ?manchesterDescription)
   
   # Establish the label for the owl class. If a blank node, then use the description of the class als label, including manchester syntax 'EquivalentTo' notation. If an IRI, then use the preferred label.
   BIND(IF(isBlank($this), STRLANG(CONCAT("EquivalentTo: ",?manchesterDescription), LANG(?manchesterDescription)), STRLANG(CONCAT("[=",function:getLabel($this), "=]"), LANG(function:getLabel($this)))) as ?manchesterLabel)
@@ -843,16 +846,11 @@ construct {
   {SELECT ?lang (GROUP_CONCAT(?label;SEPARATOR=' or ') AS ?manchesterLangDescription) WHERE {
   $this owl:unionOf/rdf:rest*/rdf:first ?listItem.
   
-  # Add internal classes that are defined in this ontology
-  {?listItem manchester:label ?label.
-  BIND(LANG(?label) as ?lang)}
-    
-  UNION
-  # Also add external classes that are not defined in any triple in this ontology
-  {FILTER NOT EXISTS {?listItem ?anyPredicate []}
-  BIND(IF(isBlank($this),?unboundDummy,?listItem) as ?label)
-    }
-   }
+  # Add label
+  OPTIONAL {?listItem manchester:label ?optionalLabel.}
+  BIND(COALESCE(?optionalLabel, IF(isBlank($this),?unboundDummy, function:getLabel(?listItem))) as ?label)
+  BIND(LANG(?label) as ?lang)
+  }
   GROUP BY ?lang
   }
   BIND(STRLANG(?manchesterLangDescription, ?lang) as ?manchesterDescription)
@@ -927,16 +925,9 @@ construct {
   {select ?lang (group_concat(?label;separator=' and ') as ?manchesterLangDescription) where {
   $this owl:intersectionOf/rdf:rest*/rdf:first ?listItem.
   
-  # Add internal classes that are defined in this ontology
-  {?listItem manchester:label ?label.
-  BIND(LANG(?label) as ?lang)}
-  
-  UNION
-  # Also add external classes that are not defined in any triple in this ontology
-  {FILTER NOT EXISTS {?listItem ?anyPredicate []}
-  BIND(IF(isBlank($this),?unboundDummy,function:getLabel(?listItem)) as ?label)
-      }
-    }
+  OPTIONAL {?listItem manchester:label ?optionalLabel.}
+  BIND(COALESCE(?optionalLabel, IF(isBlank($this),?unboundDummy, function:getLabel(?listItem))) as ?label)
+  }
   GROUP BY ?lang
   }
   
@@ -1010,9 +1001,11 @@ construct {
 } where {
 
   {select ?lang (group_concat(?label;separator=' ') as ?individualLabels) where {
-  $this owl:oneOf/rdf:rest*/rdf:first/manchester:label ?label.
-  BIND(LANG(?label) as ?lang)
-    }
+  $this owl:oneOf/rdf:rest*/rdf:first ?listItem.
+  
+  OPTIONAL {?listItem manchester:label ?optionalLabel.}
+  BIND(COALESCE(?optionalLabel, IF(isBlank($this),?unboundDummy, function:getLabel(?listItem))) as ?label)
+  }
   GROUP BY ?lang
   }
 
@@ -1084,17 +1077,10 @@ construct {
        
 } where {
 
-  {$this owl:complementOf ?someClass.
-  ?someClass manchester:label ?explicitDefinition.
-  BIND(LANG(?explicitDefinition) as ?lang)}
-  
-  # There may be complement classes that unfortunately do not get defined in the turtle file. 
-  UNION { 
   $this owl:complementOf ?someClass.
-  FILTER NOT EXISTS { ?someClass ?anyPredicate []}
-  BIND(function:getLabel(?someClass) as ?implicitDefinition)
-  BIND(LANG(function:getLabel($this)) as ?lang)
-  }
+  OPTIONAL {?someClass manchester:label ?optionalExplicitDefinition.}
+  BIND(COALESCE(?optionalExplicitDefinition, STRLANG(function:getLabel(?someClass), LANG(function:getLabel($this)))) as ?explicitDefinition)
+  BIND(LANG(?explicitDefinition) as ?lang)
   
   # Get the label of the class to be serialized.
   BIND(STRLANG(CONCAT("not ", str(COALESCE(?explicitDefinition, ?implicitDefinition))), ?lang) as ?manchesterDescription)
@@ -1178,33 +1164,31 @@ construct {
   # Domain
   OPTIONAL
   {
-    {$this rdfs:domain ?domainClass.
-    ?domainClass manchester:label ?explicitDomain.
-	} 
-    UNION
-    {
-    $this rdfs:domain ?domainClass.
-    FILTER NOT EXISTS {?domainClass ?anyPredicate []} 
-    BIND(IF(isBlank(?domainClass), ?unboundDummy, STRLANG(function:getLabel(?domainClass), LANG(function:getLabel($this)))) as ?implicitDomain)
-    }
-  }
+  $this rdfs:domain ?domainClass.
+  BIND(IF(isBlank(?domainClass), ?unboundDummy, STRLANG(function:getLabel(?domainClass), LANG(function:getLabel($this)))) as ?implicitDomain)}
+  
+  OPTIONAL
+  {
+  $this rdfs:domain ?domainClass.
+  ?domainClass manchester:label ?explicitDomain.
+  } 
+  
   BIND(COALESCE(?explicitDomain, ?implicitDomain) as ?manchesterDomain)
   
   # Range 
   OPTIONAL
   {
-    
-   {$this rdfs:range ?rangeClass.
-   ?rangeClass manchester:label ?explicitRange.}
-   
-   UNION
-   {
-   $this rdfs:range ?rangeClass.
-   FILTER NOT EXISTS {?rangeClass ?anyPredicate []}
-   BIND(IF(isBlank(?rangeClass), ?unboundDummy, STRLANG(function:getLabel(?rangeClass), LANG(function:getLabel($this)))) as ?implicitRange)
-    }
+  $this rdfs:range ?rangeClass.
+  BIND(IF(isBlank(?rangeClass), ?unboundDummy, STRLANG(function:getLabel(?rangeClass), LANG(function:getLabel($this)))) as ?implicitRange)
   }
-BIND(COALESCE(?explicitRange, ?implicitRange) as ?manchesterRange)
+  
+  OPTIONAL
+  {
+  $this rdfs:range ?rangeClass.
+  ?rangeClass manchester:label ?explicitRange.
+  }
+  
+  BIND(COALESCE(?explicitRange, ?implicitRange) as ?manchesterRange)
   
 }  
 '''.
@@ -1266,7 +1250,6 @@ construct {
         
 } where {
 
-
   # Label of datatype property
   
   BIND(LANG(function:getLabel($this)) as ?lang)
@@ -1274,18 +1257,15 @@ construct {
   
  # Domain
   OPTIONAL
-  {
-  
-    {$this rdfs:domain ?domainClass.
-    ?domainClass manchester:label ?explicitDomain.}
-    
-    UNION
-    {
-    $this rdfs:domain ?domainClass.
-    FILTER NOT EXISTS {?domainClass ?anyPredicate []} 
-    BIND(IF(isBlank(?domainClass), ?unboundDummy, STRLANG(function:getLabel(?domainClass), LANG(function:getLabel($this)))) as ?implicitDomain)
-    }
+  {$this rdfs:domain ?domainClass.
+  BIND(IF(isBlank(?domainClass), ?unboundDummy, STRLANG(function:getLabel(?domainClass), LANG(function:getLabel($this)))) as ?implicitDomain)
   }
+  
+  OPTIONAL
+  {$this rdfs:domain ?domainClass.
+  ?domainClass manchester:label ?explicitDomain.
+  }
+  
   BIND(COALESCE(?explicitDomain, ?implicitDomain) as ?manchesterDomain)
   
   # Range 
@@ -1366,35 +1346,33 @@ construct {
   
   # Domain
   OPTIONAL
-  {
+   {
+   $this rdfs:domain ?domainClass.
+   BIND(IF(isBlank(?domainClass), ?unboundDummy, STRLANG(function:getLabel(?domainClass), LANG(function:getLabel($this)))) as ?implicitDomain)
+   }
   
-    {$this rdfs:domain ?domainClass.
-    ?domainClass manchester:label ?explicitDomain.}
-    
-    UNION
-    {
-    $this rdfs:domain ?domainClass.
-    FILTER NOT EXISTS {?domainClass ?anyPredicate []} 
-    BIND(IF(isBlank(?domainClass), ?unboundDummy, STRLANG(function:getLabel(?domainClass), LANG(function:getLabel($this)))) as ?implicitDomain)
-    }
-  }
+  OPTIONAL
+   {
+   $this rdfs:domain ?domainClass.
+   ?domainClass manchester:label ?explicitDomain.
+   }
+ 
   BIND(COALESCE(?explicitDomain, ?implicitDomain) as ?manchesterDomain)
   
   # Range 
   OPTIONAL
-  {
-    
-   {$this rdfs:range ?rangeClass.
-   ?rangeClass manchester:label ?explicitRange.}
-   
-   UNION
    {
    $this rdfs:range ?rangeClass.
-   FILTER NOT EXISTS {?rangeClass ?anyPredicate []}
    BIND(IF(isBlank(?rangeClass), ?unboundDummy, STRLANG(function:getLabel(?rangeClass), LANG(function:getLabel($this)))) as ?implicitRange)
-    }
-  }
-BIND(COALESCE(?explicitRange, ?implicitRange) as ?manchesterRange)
+   }
+
+  OPTIONAL 
+   {
+   $this rdfs:range ?rangeClass.
+   ?rangeClass manchester:label ?explicitRange.
+   }
+
+   BIND(COALESCE(?explicitRange, ?implicitRange) as ?manchesterRange)
   
 }    
 '''.
@@ -1456,13 +1434,11 @@ construct {
 
   $this rdfs:subPropertyOf ?superProperty.
   
-  {?superProperty manchester:label ?manchesterSuperProperty.}
-  UNION
-  {
-  $this rdfs:subPropertyOf ?superProperty.
-  FILTER NOT EXISTS {?superProperty ?anyPredicate []}
-  BIND(STRLANG(function:getLabel(?superProperty), LANG(function:getLabel($this))) as ?manchesterSuperProperty)
-  }
+  OPTIONAL
+  {?superProperty manchester:label ?optionalManchesterSuperProperty.}
+  
+  BIND(COALESCE(?optionalManchesterSuperProperty, STRLANG(function:getLabel(?superProperty), LANG(function:getLabel($this)))) as ?manchesterSuperProperty)
+  
 }  
 '''.
 
@@ -1524,12 +1500,11 @@ construct {
   $this owl:equivalentProperty ?equivalentProperty.
   BIND(LANG(function:getLabel($this)) as ?lang)
   
-  {?equivalentProperty manchester:label ?manchesterEquivalentProperty.}
-  UNION
-  {$this owl:equivalentProperty ?equivalentProperty.
-  FILTER NOT EXISTS {?equivalentProperty ?anyPredicate []}
-  BIND(STRLANG(function:getLabel(?equivalentProperty), ?lang) as ?manchesterEquivalentProperty)
-  } 
+  OPTIONAL
+  {?equivalentProperty manchester:label ?optionalManchesterEquivalentProperty.}
+  
+  BIND(COALESCE(?optionalManchesterEquivalentProperty, STRLANG(function:getLabel(?equivalentProperty), ?lang)) as ?manchesterEquivalentProperty)
+ 
 }  
 '''.
 

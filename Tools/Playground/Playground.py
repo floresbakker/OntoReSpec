@@ -185,7 +185,7 @@ WHERE {
     $this manchester:syntax 'OBJECTPROPERTY'.
   }
   filter not exists {
-    $this manchester:syntax 'SUBPROPERTYOF'.
+    $this manchester:syntax 'SUBPROPERTY'.
   }
   filter not exists {
     $this manchester:syntax 'EQUIVALENTPROPERTY'.
