@@ -1053,7 +1053,7 @@ WHERE {
   ?datatypeProperty manchester:subPropertyOf ?datatypePropertyManchesterSubPropertyOf_original.}
   
   BIND(CONCAT("DatatypeProperty: ",function:escapeHTML(?datatypePropertyManchesterLabel_original)) as ?datatypePropertyManchesterLabel)
-  BIND(IF(BOUND(datatypePropertyDefinition_original), COALESCE(function:escapeHTML(?datatypePropertyDefinition_original)), "No definition provided by this ontology.") as ?datatypePropertyDefinition_text)
+  BIND(IF(BOUND(?datatypePropertyDefinition_original), COALESCE(function:escapeHTML(?datatypePropertyDefinition_original)), "No definition provided by this ontology.") as ?datatypePropertyDefinition_text)
   BIND(IF(BOUND(?datatypePropertyManchesterDomain_original), CONCAT("Domain: ",function:escapeHTML(?datatypePropertyManchesterDomain_original)), ?unboundDummy) as ?datatypePropertyManchesterDomain)
   BIND(IF(BOUND(?datatypePropertyManchesterRange_original), CONCAT("Range: ", function:escapeHTML(?datatypePropertyManchesterRange_original)), ?unboundDummy) as ?datatypePropertyManchesterRange)
   BIND(IF(BOUND(?datatypePropertyManchesterSubPropertyOf_original), CONCAT("SubPropertyOf: ",function:escapeHTML(?datatypePropertyManchesterSubPropertyOf_original)), ?unboundDummy) as ?datatypePropertyManchesterSubPropertyOf)
