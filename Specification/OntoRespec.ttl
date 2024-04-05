@@ -878,10 +878,10 @@ WHERE {
   ?objectProperty manchester:subPropertyOf ?objectPropertyManchesterSubPropertyOf_original.}
   
   BIND(CONCAT("ObjectProperty: ",function:escapeHTML(?objectPropertyManchesterLabel_original)) as ?objectPropertyManchesterLabel)
-  BIND(COALESCE(function:escapeHTML(?objectPropertyDefinition_original), "No definition provided by this ontology.") as ?objectPropertyDefinition_text)
-  BIND(CONCAT("Domain: ",function:escapeHTML(?objectPropertyManchesterDomain_original)) as ?objectPropertyManchesterDomain)
-  BIND(CONCAT("Range: ", function:escapeHTML(?objectPropertyManchesterRange_original)) as ?objectPropertyManchesterRange)
-  BIND(CONCAT("SubPropertyOf: ",function:escapeHTML(?objectPropertyManchesterSubPropertyOf_original)) as ?objectPropertyManchesterSubPropertyOf)
+  BIND(IF(BOUND(?objectPropertyDefinition_original), function:escapeHTML(?objectPropertyDefinition_original), "No definition provided by this ontology.") as ?objectPropertyDefinition_text)
+  BIND(IF(BOUND(?objectPropertyManchesterDomain_original), CONCAT("Domain: ",function:escapeHTML(?objectPropertyManchesterDomain_original)), ?unboundDummy) as ?objectPropertyManchesterDomain)
+  BIND(IF(BOUND(?objectPropertyManchesterRange_original), CONCAT("Range: ", function:escapeHTML(?objectPropertyManchesterRange_original)), ?unboundDummy) as ?objectPropertyManchesterRange)
+  BIND(IF(BOUND(?objectPropertyManchesterSubPropertyOf_original), CONCAT("SubPropertyOf: ",function:escapeHTML(?objectPropertyManchesterSubPropertyOf_original)), ?unboundDummy) as ?objectPropertyManchesterSubPropertyOf)
   
   OPTIONAL {
     ?prevObjectProperty a owl:ObjectProperty .
@@ -1053,10 +1053,10 @@ WHERE {
   ?datatypeProperty manchester:subPropertyOf ?datatypePropertyManchesterSubPropertyOf_original.}
   
   BIND(CONCAT("DatatypeProperty: ",function:escapeHTML(?datatypePropertyManchesterLabel_original)) as ?datatypePropertyManchesterLabel)
-  BIND(COALESCE(function:escapeHTML(?datatypePropertyDefinition_original), "No definition provided by this ontology.") as ?datatypePropertyDefinition_text)
-  BIND(CONCAT("Domain: ",function:escapeHTML(?datatypePropertyManchesterDomain_original)) as ?datatypePropertyManchesterDomain)
-  BIND(CONCAT("Range: ", function:escapeHTML(?datatypePropertyManchesterRange_original)) as ?datatypePropertyManchesterRange)
-  BIND(CONCAT("SubPropertyOf: ",function:escapeHTML(?datatypePropertyManchesterSubPropertyOf_original)) as ?datatypePropertyManchesterSubPropertyOf)
+  BIND(IF(BOUND(datatypePropertyDefinition_original), COALESCE(function:escapeHTML(?datatypePropertyDefinition_original)), "No definition provided by this ontology.") as ?datatypePropertyDefinition_text)
+  BIND(IF(BOUND(?datatypePropertyManchesterDomain_original), CONCAT("Domain: ",function:escapeHTML(?datatypePropertyManchesterDomain_original)), ?unboundDummy) as ?datatypePropertyManchesterDomain)
+  BIND(IF(BOUND(?datatypePropertyManchesterRange_original), CONCAT("Range: ", function:escapeHTML(?datatypePropertyManchesterRange_original)), ?unboundDummy) as ?datatypePropertyManchesterRange)
+  BIND(IF(BOUND(?datatypePropertyManchesterSubPropertyOf_original), CONCAT("SubPropertyOf: ",function:escapeHTML(?datatypePropertyManchesterSubPropertyOf_original)), ?unboundDummy) as ?datatypePropertyManchesterSubPropertyOf)
   
   OPTIONAL {
     ?prevDatatypeProperty a owl:DatatypeProperty .
