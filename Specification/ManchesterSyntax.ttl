@@ -1629,9 +1629,6 @@ select $this {
   filter not exists {
     $this manchester:syntax 'CONCEPTSCHEME'
   }  
- 
-
-
 }
 '''.
 
@@ -1656,7 +1653,7 @@ construct {
 } where {
 
   # Label of the concept scheme
-  BIND(STRLANG(function:getLabel($this), LANG(function:getLabel($this))) as ?manchesterLabel)
+  BIND(function:getLabel($this) as ?manchesterLabel)
 }
 
 """.
@@ -1710,7 +1707,7 @@ construct {
 } where {
 
   # Label of the concept 
-  BIND(STRLANG(function:getLabel($this), LANG(function:getLabel($this))) as ?manchesterLabel)
+  BIND(function:getLabel($this) as ?manchesterLabel)
 }
 
 """.
