@@ -538,7 +538,7 @@ def generateHTML(shaclgraph, serializable_graph):
 
 @app.route('/generateReSpec', methods=['POST'])
 def generateReSpec():
-    print("Starting to generate the ReSpec document...")
+    print("Starting generation of the ReSpec document...")
     ontology = request.form['ontology']
     introduction = request.form['introduction']
     background = request.form['background']
@@ -587,24 +587,24 @@ def generateReSpec():
         generationGraph.add((doc[generation_iri], dct.subject, URIRef(result.ontology)))
     
     # Generating Mermaid diagram 
-    print("Creating Mermaid diagram...")
+    print("Step #1. Creating the Mermaid diagram...")
     generateDiagram(mermaid_vocabulary, generationGraph)
     writeGraph(generationGraph, 'diagram')
     
     # Enriching the ontology with manchester metadata
-    print("Creating Manchester Syntax...")
+    print("Step #2. Creating Manchester Syntax labels...")
     generationGraph = generateManchester(manchester_vocabulary, generationGraph)
     writeGraph(generationGraph, 'manchestersyntax')
     
     # Build the ReSpec structure of the document in RDF
-    print("Creating ReSpec structure...")
+    print("Step #3. Creating the ReSpec document structure...")
     generationGraph.parse(data=html_vocabulary, format="turtle")
     generationGraph.parse(data=template_graph, format="turtle")
     generationGraph = generateReSpecRDF(respec_vocabulary, generationGraph)
     writeGraph(generationGraph, 'respec')
     
     # Serialize the document to HTML
-    print("Creating HTML code...")
+    print("Step #4. Creating HTML code...")
     html_fragment = generateHTML(html_vocabulary, generationGraph)
     print("HTML fragment =", html_fragment)
     filepath = directory_path+"/OntoRespec/Tools/Playground/static/output.html"
