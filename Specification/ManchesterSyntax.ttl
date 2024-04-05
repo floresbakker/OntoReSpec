@@ -16,6 +16,7 @@ prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 prefix function: <https://data.rijksfinancien.nl/manchester/model/function/>
 prefix graph: <https://data.rijksfinancien.nl/manchester/graph/>
 prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix respec: <https://respec.org/model/def/> 
 prefix rule: <https://data.rijksfinancien.nl/manchester/model/rule/>
 prefix shp: <https://data.rijksfinancien.nl/manchester/model/shp/>
 prefix standard: <https://data.rijksfinancien.nl/manchester/id/standard/>
@@ -1764,7 +1765,7 @@ function:getLabel
     ] ;
     sh:returnType xsd:string ;
     sh:select """
-       SELECT ?result WHERE {
+  SELECT ?result WHERE {
   
   [] respec:documentLanguage ?lang.
 
@@ -1772,11 +1773,11 @@ function:getLabel
   
   OPTIONAL
   {$resource skos:prefLabel ?preferredLabel.
-  FILTER (LANG(?preferredLabel = ?lang)}
+  FILTER (LANG(?preferredLabel = ?lang))}
   
   OPTIONAL 
   {$resource rdfs:label ?alternativeLabel.
-   FILTER (LANG(?alternativeLabel = ?lang)}
+   FILTER (LANG(?alternativeLabel = ?lang))}
       
   # Establish label
   BIND(COALESCE(?preferredLabel, ?alternativeLabel, ?implicitLabel) as ?result)
