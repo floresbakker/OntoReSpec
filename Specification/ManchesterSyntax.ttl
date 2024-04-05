@@ -129,6 +129,7 @@ construct {
         manchester:type 'CLASS';
         manchester:label ?manchesterLabel.
 } where {
+    .
   BIND(IF(isBlank($this),
 	  "Anonymous class"@en,
 	  STRLANG(CONCAT("[=",function:getLabel($this),"=]"), LANG(function:getLabel($this)))) as ?manchesterLabel)
@@ -1765,13 +1766,17 @@ function:getLabel
     sh:select """
        SELECT ?result WHERE {
   
-  BIND(STRLANG(REPLACE(STR($resource),'.*[/#]',''),'en') as ?implicitLabel)
+  [] respec:documentLanguage ?lang.
+
+  BIND(STRLANG(REPLACE(STR($resource),'.*[/#]',''),?lang) as ?implicitLabel)
   
   OPTIONAL
-  {$resource skos:prefLabel ?preferredLabel.}
+  {$resource skos:prefLabel ?preferredLabel.
+  FILTER (LANG(?preferredLabel = ?lang)}
   
   OPTIONAL 
-  {$resource rdfs:label ?alternativeLabel.}
+  {$resource rdfs:label ?alternativeLabel.
+   FILTER (LANG(?alternativeLabel = ?lang)}
       
   # Establish label
   BIND(COALESCE(?preferredLabel, ?alternativeLabel, ?implicitLabel) as ?result)
