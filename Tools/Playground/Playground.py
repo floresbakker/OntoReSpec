@@ -42,6 +42,7 @@ mermaid_vocabulary    = readStringFromFile(directory_path+"/OntoMermaid/Specific
 
 def generateManchester(manchester_generator, serializable_graph):
         
+        print("Iteration run to create manchester syntax.")
         # call PyShacl engine and apply the HTML vocabulary to the serializable HTML document
         pyshacl.validate(
         data_graph=serializable_graph,
@@ -203,6 +204,7 @@ WHERE {
 
 def generateReSpecRDF(shaclgraph, serializable_graph):
         
+        print("Iteration run to create the ReSpec structure.")
         # call PyShacl engine and apply the SVG vocabulary to the serializable SVG document
         pyshacl.validate(
         data_graph=serializable_graph,
@@ -221,6 +223,7 @@ def generateReSpecRDF(shaclgraph, serializable_graph):
 
 def generateDiagram(mermaid_generator, serializable_graph):
         
+        print("Iteration run to create the diagram.")
         # call PyShacl engine and apply the HTML vocabulary to the serializable HTML document
         pyshacl.validate(
         data_graph=serializable_graph,
@@ -481,6 +484,7 @@ ORDER BY ?mermaid_code
 
 def generateHTML(shaclgraph, serializable_graph):
         
+        print("Iteration run to create html code.")
         # call PyShacl engine and apply the html vocabulary to the serializable html document
         pyshacl.validate(
         data_graph=serializable_graph,
@@ -538,6 +542,7 @@ def generateHTML(shaclgraph, serializable_graph):
 
 @app.route('/generateReSpec', methods=['POST'])
 def generateReSpec():
+    print("Starting to generate the ReSpec document.")
     ontology = request.form['ontology']
     introduction = request.form['introduction']
     background = request.form['background']
