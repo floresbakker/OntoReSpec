@@ -927,6 +927,7 @@ construct {
   
   OPTIONAL {?listItem manchester:label ?optionalLabel.}
   BIND(COALESCE(?optionalLabel, IF(isBlank($this),?unboundDummy, function:getLabel(?listItem))) as ?label)
+  BIND(LANG(?label) as ?lang)
   }
   GROUP BY ?lang
   }
@@ -1005,6 +1006,7 @@ construct {
   
   OPTIONAL {?listItem manchester:label ?optionalLabel.}
   BIND(COALESCE(?optionalLabel, IF(isBlank($this),?unboundDummy, function:getLabel(?listItem))) as ?label)
+  BIND(LANG(?label) as ?lang)
   }
   GROUP BY ?lang
   }
@@ -1158,8 +1160,8 @@ construct {
 } where {
 
   # Label of RDF property
-   BIND(LANG(function:getLabel($this)) as ?lang)
-   BIND(STRLANG(CONCAT("[=",function:getLabel($this),"=]"), ?lang) as ?manchesterLabel)
+  BIND(LANG(function:getLabel($this)) as ?lang)
+  BIND(STRLANG(CONCAT("[=",function:getLabel($this),"=]"), ?lang) as ?manchesterLabel)
   
   # Domain
   OPTIONAL
