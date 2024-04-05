@@ -29,8 +29,8 @@ def readStringFromFile(file_path):
     return file_content
 
 # Function to write a graph to a file
-def writeGraph(graph):
-    graph.serialize(destination=directory_path + "/OntoReSpec/Tools/Playground/static/output.ttl", format="turtle")
+def writeGraph(graph, name):
+    graph.serialize(destination=directory_path + "/OntoReSpec/Tools/Playground/static/" + name + ".ttl", format="turtle")
 
 # Get the ReSpec vocabulary and place it in a string
 respec_vocabulary     = readStringFromFile(directory_path + "/OntoReSpec/Specification/OntoRespec.ttl")
@@ -42,7 +42,6 @@ mermaid_vocabulary    = readStringFromFile(directory_path+"/OntoMermaid/Specific
 
 def generateManchester(manchester_generator, serializable_graph):
         
-        print("Iteration run to create manchester syntax.")
         # call PyShacl engine and apply the HTML vocabulary to the serializable HTML document
         pyshacl.validate(
         data_graph=serializable_graph,
@@ -204,7 +203,6 @@ WHERE {
 
 def generateReSpecRDF(shaclgraph, serializable_graph):
         
-        print("Iteration run to create the ReSpec structure.")
         # call PyShacl engine and apply the SVG vocabulary to the serializable SVG document
         pyshacl.validate(
         data_graph=serializable_graph,
@@ -223,7 +221,6 @@ def generateReSpecRDF(shaclgraph, serializable_graph):
 
 def generateDiagram(mermaid_generator, serializable_graph):
         
-        print("Iteration run to create the diagram.")
         # call PyShacl engine and apply the HTML vocabulary to the serializable HTML document
         pyshacl.validate(
         data_graph=serializable_graph,
@@ -484,7 +481,6 @@ ORDER BY ?mermaid_code
 
 def generateHTML(shaclgraph, serializable_graph):
         
-        print("Iteration run to create html code.")
         # call PyShacl engine and apply the html vocabulary to the serializable html document
         pyshacl.validate(
         data_graph=serializable_graph,
@@ -516,7 +512,7 @@ def generateHTML(shaclgraph, serializable_graph):
         for result in resultquery:
             print ("ask result = ", result)
             if result == False:
-                writeGraph(serializable_graph)
+                writeGraph(serializable_graph, 'html')
                 return generateHTML(shaclgraph, serializable_graph)
          
             else:
@@ -542,7 +538,7 @@ def generateHTML(shaclgraph, serializable_graph):
 
 @app.route('/generateReSpec', methods=['POST'])
 def generateReSpec():
-    print("Starting to generate the ReSpec document.")
+    print("Starting to generate the ReSpec document...")
     ontology = request.form['ontology']
     introduction = request.form['introduction']
     background = request.form['background']
@@ -590,19 +586,25 @@ def generateReSpec():
     for result in ontologyQuery:
         generationGraph.add((doc[generation_iri], dct.subject, URIRef(result.ontology)))
     
-    # Generating diagram 
+    # Generating Mermaid diagram 
+    print("Creating Mermaid diagram...")
     generateDiagram(mermaid_vocabulary, generationGraph)
+    writeGraph(generationGraph, 'diagram')
     
     # Enriching the ontology with manchester metadata
+    print("Creating Manchester Syntax...")
     generationGraph = generateManchester(manchester_vocabulary, generationGraph)
+    writeGraph(generationGraph, 'manchestersyntax')
     
     # Build the ReSpec structure of the document in RDF
+    print("Creating ReSpec structure...")
     generationGraph.parse(data=html_vocabulary, format="turtle")
     generationGraph.parse(data=template_graph, format="turtle")
     generationGraph = generateReSpecRDF(respec_vocabulary, generationGraph)
-    writeGraph(generationGraph)
+    writeGraph(generationGraph, 'respec')
     
     # Serialize the document to HTML
+    print("Creating HTML code...")
     html_fragment = generateHTML(html_vocabulary, generationGraph)
     print("HTML fragment =", html_fragment)
     filepath = directory_path+"/OntoRespec/Tools/Playground/static/output.html"
