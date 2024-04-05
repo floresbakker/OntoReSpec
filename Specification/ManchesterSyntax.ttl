@@ -130,7 +130,7 @@ construct {
         manchester:type 'CLASS';
         manchester:label ?manchesterLabel.
 } where {
-    .
+  
   BIND(IF(isBlank($this),
 	  "Anonymous class"@en,
 	  STRLANG(CONCAT("[=",function:getLabel($this),"=]"), LANG(function:getLabel($this)))) as ?manchesterLabel)
@@ -1765,9 +1765,15 @@ function:getLabel
     ] ;
     sh:returnType xsd:string ;
     sh:select """
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix respec: <https://respec.org/model/def/> 
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+
   SELECT ?result WHERE {
   
-  [] respec:documentLanguage ?lang.
+  ?respecRun respec:documentLanguage ?lang.
 
   BIND(STRLANG(REPLACE(STR($resource),'.*[/#]',''),?lang) as ?implicitLabel)
   
