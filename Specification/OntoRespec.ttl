@@ -718,7 +718,7 @@ where  {
   # Clean up text (prevent html code)
   
   BIND(function:escapeHTML(COALESCE(?classDefinition_original, "This ontology does not provide a definition for the class.")) as ?classDefinition)
-  BIND(str(?manchesterLabel) as ?cleanedManchesterLabel)
+  BIND(function:escapeHTML(?manchesterLabel) as ?cleanedManchesterLabel)
   
   # Establishing the IRI, base IRI and relative IRI of the class
 
@@ -755,7 +755,7 @@ where  {
   bind(IRI(CONCAT(STR(?manchester_code_label_instance), '-1')) as ?manchester_label_link)
   bind(IRI(CONCAT(STR(?manchester_code_label_instance), '-2')) as ?colon)
   bind(IRI(CONCAT(STR(?manchester_label_link), '-1')) as ?manchester_label_instance)
-  bind(IRI(CONCAT(STR(?manchester_code_definition_instance), '-',str(?memberManchester))) as ?manchester_definition_block)
+  bind(IRI(CONCAT(STR(?manchester_code_definition_instance), '-a',str(?memberManchester))) as ?manchester_definition_block)
   bind(IRI(CONCAT(STR(?manchester_definition_block), '-1')) as ?manchester_definition_instance)
   bind(IRI(CONCAT(STR(?manchester_definition_block), '-2')) as ?class_linebreak_instance4)
   

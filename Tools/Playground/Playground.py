@@ -510,7 +510,6 @@ def generateHTML(shaclgraph, serializable_graph):
 
         # Check whether another iteration is needed. If the html root of the document contains a html:fragment statement then the serialisation is considered done.
         for result in resultquery:
-            print ("ask result = ", result)
             if result == False:
                 writeGraph(serializable_graph, 'html')
                 return generateHTML(shaclgraph, serializable_graph)
