@@ -1,0 +1,19 @@
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix sh: <http://www.w3.org/ns/shacl#>
+prefix : <https://data.rijksfinancien.nl/mermaid/model/def/>
+
+SELECT (GROUP_CONCAT(?label; separator="\n") AS ?mermaid_code)
+WHERE {
+  ?element :label ?label.
+  
+  minus {
+      ?this owl:annotatedTarget ?target.
+      ?target (:|!:)* ?element.
+      ?element :label ?label
+      FILTER isBlank(?target)
+      FILTER isBlank(?element)}
+  
+}
+ORDER BY ?mermaid_code

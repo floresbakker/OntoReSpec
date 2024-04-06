@@ -24,7 +24,7 @@ respec:introduction
 
 shp:Document
   a sh:NodeShape;
-  sh:rule rule:Document, rule:StaticElement, rule:Title, rule:Introduction, rule:Description, rule:Example, rule:NameSpace, rule:Abstract, rule:Configuration, rule:Classes, rule:ObjectProperties, rule:DatatypeProperties, rule:NodeShapes, rule:NamedIndividuals;
+  sh:rule rule:Document, rule:StaticElement, rule:Title, rule:Introduction, rule:Description, rule:Example, rule:NameSpace, rule:Abstract, rule:Configuration, rule:Classes, rule:ObjectProperties, rule:DatatypeProperties, rule:NodeShapes, rule:NamedIndividuals, rule:Concepts;
   sh:targetClass respec:Generation.
 
 rule:Document
@@ -623,8 +623,8 @@ construct {
                                               rdf:_1 ?manchester_code_label_instance;
                                               rdf:_2 ?manchester_code_definition_instance.
       ?manchester_code_label_instance         rdf:type html:Code;
-                                              rdf:_1 ?manchester_label_link;
-                                              rdf:_2 ?colon.
+                                              rdf:_1 ?manchester_label_class;
+											  rdf:_2 ?manchester_label_link.
       ?manchester_code_definition_instance    rdf:type html:Code;
 	                                          rdf:_1 ?manchester_definition_div_equivalence;
 											  rdf:_2 ?manchester_definition_div_subclass.
@@ -632,30 +632,28 @@ construct {
                                               ?memberManchesterStringEquivalentTo  ?manchester_definition_block_equivalence.
       ?manchester_definition_div_subclass     rdf:type html:Div;
                                               ?memberManchesterStringSubClassOf  ?manchester_definition_block_subclass.
+      ?manchester_label_class                 rdf:type html:TextElement;
+                                              html:fragment "Class: ".
       ?manchester_label_link                  rdf:type html:A;
                                               rdf:_1 ?manchester_label_instance.
-      ?colon                                  rdf:type html:TextElement;
-                                              html:fragment ":".
       ?manchester_label_instance              rdf:type html:TextElement;
                                               html:fragment ?cleanedManchesterLabel.
       ?manchester_definition_block_equivalence            rdf:type html:P;
                                                           rdf:_1 ?manchester_definition_instance_equivalence;
-                                                          rdf:_2 ?class_linebreak_instance4_equivalence.
+                                                          rdf:_2 ?class_linebreak_instance5.
       ?manchester_definition_instance_equivalence         rdf:type html:TextElement;
                                                           html:fragment ?manchesterDefinition.
-
-
-?manchester_definition_block_subclass            rdf:type html:P;
-                                                    rdf:_1 ?manchester_definition_instance_subclass;
-                                                    rdf:_2 ?class_linebreak_instance4_subclass.
-?manchester_definition_instance_subclass         rdf:type html:TextElement;
-                                                    html:fragment ?manchesterDefinitionS.
+      ?manchester_definition_block_subclass               rdf:type html:P;
+                                                          rdf:_1 ?manchester_definition_instance_subclass;
+                                                          rdf:_2 ?class_linebreak_instance6.
+      ?manchester_definition_instance_subclass            rdf:type html:TextElement;
+                                                          html:fragment ?manchesterDefinitionS.
                                                     
       ?class_linebreak_instance1                          rdf:type html:Br.
       ?class_linebreak_instance2                          rdf:type html:Br.
       ?class_linebreak_instance3                          rdf:type html:Br.
-      ?class_linebreak_instance4_equivalence              rdf:type html:Br.
-      ?class_linebreak_instance4_subclass              rdf:type html:Br.
+      ?class_linebreak_instance5                          rdf:type html:Br.
+      ?class_linebreak_instance6                          rdf:type html:Br.
 }
 where  {
 
@@ -793,17 +791,17 @@ where  {
 
   bind(IRI(CONCAT(STR(?manchester_syntax_instance), '-1')) as ?manchester_code_label_instance)  
   bind(IRI(CONCAT(STR(?manchester_syntax_instance), '-2')) as ?manchester_code_definition_instance)  
-  bind(IRI(CONCAT(STR(?manchester_code_label_instance), '-1')) as ?manchester_label_link)
-  bind(IRI(CONCAT(STR(?manchester_code_label_instance), '-2')) as ?colon)
+  bind(IRI(CONCAT(STR(?manchester_code_label_instance), '-1')) as ?manchester_label_class)
+  bind(IRI(CONCAT(STR(?manchester_code_label_instance), '-2')) as ?manchester_label_link)
   bind(IRI(CONCAT(STR(?manchester_label_link), '-1')) as ?manchester_label_instance)
   bind(IRI(CONCAT(STR(?manchester_code_definition_instance), '-1')) as ?manchester_definition_div_equivalence)
   bind(IRI(CONCAT(STR(?manchester_code_definition_instance), '-2')) as ?manchester_definition_div_subclass)
   bind(IRI(CONCAT(STR(?manchester_definition_div_equivalence), '-',str(?memberManchesterEquivalentTo))) as ?manchester_definition_block_equivalence)
   bind(IRI(CONCAT(STR(?manchester_definition_block_equivalence), '-1')) as ?manchester_definition_instance_equivalence)
-  bind(IRI(CONCAT(STR(?manchester_definition_block_equivalence), '-2')) as ?class_linebreak_instance4_equivalence)
+  bind(IRI(CONCAT(STR(?manchester_definition_block_equivalence), '-2')) as ?class_linebreak_instance5)
   bind(IRI(CONCAT(STR(?manchester_definition_div_subclass),'-',str(?memberManchesterSubClassOf))) as ?manchester_definition_block_subclass)
   bind(IRI(CONCAT(STR(?manchester_definition_block_subclass), '-1')) as ?manchester_definition_instance_subclass)
-  bind(IRI(CONCAT(STR(?manchester_definition_block_subclass), '-2')) as ?class_linebreak_instance4_subclass)
+  bind(IRI(CONCAT(STR(?manchester_definition_block_subclass), '-2')) as ?class_linebreak_instance6)
   
 }
 
@@ -1275,10 +1273,10 @@ prefix vann: <http://purl.org/vocab/vann/>
 
 construct {
 
-      ?namedindividual_div                   rdf:type html:Div;
+      ?namedindividual_div                    rdf:type html:Div;
 	                                          html:fragment ?absenceOfNamedIndividualDefinitions;
                                               ?rdf_member ?namedindividual_section.
-      ?namedindividual_section               rdf:type html:Section;
+      ?namedindividual_section                rdf:type html:Section;
                                               rdf:_1 ?namedindividual_H2_title;
 											  rdf:_2 ?namedindividual_IRI_p;
 											  rdf:_3 ?linebreak1;
@@ -1286,26 +1284,26 @@ construct {
                                               rdf:_5 ?linebreak2;  
                                               rdf:_6 ?linebreak3;
                                               rdf:_7 ?manchester_syntax.
-      ?namedindividual_H2_title              rdf:type html:H2;
+      ?namedindividual_H2_title               rdf:type html:H2;
                                               rdf:_1 ?namedindividual_dfn.
-      ?namedindividual_dfn                   rdf:type html:Dfn;
+      ?namedindividual_dfn                    rdf:type html:Dfn;
                                               rdf:_1 ?namedindividual_title.
-      ?namedindividual_title                 rdf:type html:TextElement;
-                                              html:fragment ?namedIndividualLabel_text.
-      ?namedindividual_IRI_p                 rdf:type html:P;
+      ?namedindividual_title                  rdf:type html:TextElement;
+                                              html:fragment ?namedIndividualLabel.
+      ?namedindividual_IRI_p                  rdf:type html:P;
                                               rdf:_1 ?namedindividual_IRI_strong;
 											  rdf:_2 ?namedindividual_IRI_a.
-      ?namedindividual_IRI_strong            rdf:type html:Strong;
+      ?namedindividual_IRI_strong             rdf:type html:Strong;
                                               rdf:_1 ?namedindividual_IRI_text.
-      ?namedindividual_IRI_text              rdf:type html:TextElement;
+      ?namedindividual_IRI_text               rdf:type html:TextElement;
                                               html:fragment 'IRI: '.
-      ?namedindividual_IRI_a                 rdf:type html:A;
+      ?namedindividual_IRI_a                  rdf:type html:A;
                                               html:href ?namedIndividual;
                                               rdf:_1 ?IRI_value.
       ?IRI_value                              rdf:type html:TextElement;
                                               html:fragment ?namedIndividual_IRI.   # later this will be changed to ?prefixedIRI, after figuring out how to deal with prefixes of namespaces other than the namespace of the ontology itself. 
-      ?namedindividual_definition            rdf:type html:TextElement;
-                                              html:fragment "This ontology does not provide a definition for the named individual". #?namedIndividualDefinition_text.
+      ?namedindividual_definition             rdf:type html:TextElement;
+                                              html:fragment ?cleanedDefinition.
       ?manchester_syntax                      rdf:type html:Aside;
                                               html:class "note" ;
                                               html:title "Manchester Syntax";
@@ -1313,23 +1311,26 @@ construct {
                                               rdf:_2 ?manchester_code_type;
 											  rdf:_3 ?manchester_code_fact.
       ?manchester_code_label                  rdf:type html:Code;
-                                              rdf:_1 ?manchester_label.
+	                                          rdf:_1 ?manchester_individual;
+                                              rdf:_2 ?manchester_label.
       ?manchester_code_type                   rdf:type html:Code;
                                               rdf:_1  ?manchester_type_paragraph.
+      ?manchester_individual                  rdf:type html:TextElement;
+                                              html:fragment "Individual: ".											  
       ?manchester_label                       rdf:type html:TextElement;
                                               html:fragment ?namedIndividualLabel.
-      ?manchester_type_paragraph            rdf:type html:P;
+      ?manchester_type_paragraph              rdf:type html:P;
                                               rdf:_1 ?manchester_type;
-                                              rdf:_2 ?linebreak4.
-      ?manchester_type                      rdf:type html:TextElement;
-                                              html:fragment ?namedIndividualManchesterType.
-      ?manchester_code_fact                  rdf:type html:Code;
+                                              rdf:_2 ?linebreak4.										  
+      ?manchester_type                        rdf:type html:TextElement;
+                                              html:fragment ?cleanedClass.
+      ?manchester_code_fact                   rdf:type html:Code;
                                               rdf:_1  ?manchester_fact_paragraph.
-      ?manchester_fact_paragraph             rdf:type html:P;
-                                              rdf:_1 ?manchester_fact;
-                                              rdf:_2 ?linebreak5.
-      ?manchester_fact                       rdf:type html:TextElement;
-                                              html:fragment ?namedIndividualManchesterFact.
+      ?manchester_fact_paragraph              rdf:type html:P;
+											  rdf:_1 ?manchester_fact;
+                                              rdf:_2 ?linebreak5.											  
+      ?manchester_fact                        rdf:type html:TextElement;
+                                              html:fragment ?cleanedFact.
 	  ?linebreak1                             rdf:type html:Br.
       ?linebreak2                             rdf:type html:Br.
 	  ?linebreak3                             rdf:type html:Br.
@@ -1339,37 +1340,40 @@ construct {
 where  {
    {?namedindividual_Template rdf:type respec:NamedIndividual.}
    
-   {SELECT ?namedIndividual ?namedIndividualLabel ?definitionIndividual ?namedIndividualManchesterType (COUNT(?prevNamedIndividual) + 1 AS ?member)
+   {SELECT ?namedIndividual ?namedIndividualLabel ?cleanedDefinition ?cleanedClass ?cleanedFact (COUNT(?prevNamedIndividual) + 1 AS ?member)
 WHERE {
   ?namedIndividual manchester:syntax 'INDIVIDUAL';
-                   manchester:class ?namedIndividualManchesterType ;
+                   manchester:class ?class ;
                    manchester:label ?namedIndividualLabel ;
 				   rdfs:isDefinedBy ?ontology.
-   OPTIONAL
-   {?namedIndividual skos:definition ?definitionIndividual}
+   
+   BIND(function:escapeHTML(?class) as ?cleanedClass)
    
    $this dct:subject ?ontology;
          respec:documentLanguage ?language.
    FILTER (LANG(?namedIndividualLabel) = ?language)
+   
+   OPTIONAL
+   {?namedIndividual skos:definition ?definitionIndividual
+   FILTER(LANG(?definitionIndividual) = ?language)}
 
-  OPTIONAL 
-    {?prevNamedIndividual manchester:syntax 'INDIVIDUAL';
+   BIND(IF(BOUND(?definitionIndividual), function:escapeHTML(?definitionIndividual), "No known definition") as ?cleanedDefinition)
+
+   OPTIONAL
+   {?namedIndividual manchester:fact ?fact.}
+   BIND(IF(BOUND(?fact), function:escapeHTML(?fact), "No known facts") as ?cleanedFact)
+  
+   OPTIONAL 
+   {?prevNamedIndividual manchester:syntax 'INDIVIDUAL';
                           manchester:label ?prevLabel.
-  FILTER (LANG(?prevLabel) = ?language)
-  FILTER(?prevLabel < ?namedIndividualLabel)
+     FILTER (LANG(?prevLabel) = ?language)
+     FILTER(?prevLabel < ?namedIndividualLabel)
+   }
   }
- 
-  #OPTIONAL
-  #{?namedIndividual manchester:fact ?fact.}
-  #BIND(function:escapeHTML(COALESCE(?fact, "No known facts")) as ?namedIndividualManchesterFact)
-
-  }
-  GROUP BY ?namedIndividualLabel ?namedIndividual ?definitionIndividual ?namedIndividualManchesterType ### ?namedIndividualManchesterFact
+  GROUP BY ?namedIndividualLabel ?namedIndividual ?cleanedDefinition ?cleanedClass ?cleanedFact 
   ORDER BY ?namedIndividualLabel
 }
   BIND(IRI(CONCAT(str(rdf:),"_", str(?member))) as ?rdf_member)  
-  BIND(COALESCE(?namedIndividualLabel, "Unknown label") as ?namedIndividualLabel_text)
-  BIND(function:escapeHTML(COALESCE(?definitionIndividual, "This ontology does not provide a definition for the named individual.")) as ?cleanedDefinition)
   BIND(IF(!BOUND(?namedIndividual), "This ontology does not define any named individuals.", ?unboundDummy) as ?absenceOfNamedIndividualDefinitions)
 
   # Establishing the prefixed IRI of the named individual.
@@ -1400,7 +1404,8 @@ WHERE {
   BIND(IRI(CONCAT(STR(?manchester_syntax), '-1'))                                           as ?manchester_code_label)  
   BIND(IRI(CONCAT(STR(?manchester_syntax), '-2'))                                           as ?manchester_code_type)  
   BIND(IF(BOUND(?fact),IRI(CONCAT(STR(?manchester_syntax), '-3')), ?unboundDummy)           as ?manchester_code_fact)
-  BIND(IRI(CONCAT(STR(?manchester_code_label), '-1'))                                       as ?manchester_label)
+  BIND(IRI(CONCAT(STR(?manchester_code_label), '-1'))                                       as ?manchester_individual)
+  BIND(IRI(CONCAT(STR(?manchester_code_label), '-2'))                                       as ?manchester_label)
   BIND(IRI(CONCAT(STR(?manchester_code_type), '-1'))                                        as ?manchester_type_paragraph)
   BIND(IRI(CONCAT(STR(?manchester_type_paragraph), '-1'))                                   as ?manchester_type)
   BIND(IRI(CONCAT(STR(?manchester_type_paragraph), '-2'))                                   as ?linebreak4)
@@ -1461,17 +1466,19 @@ construct {
       ?IRI_value                              rdf:type html:TextElement;
                                               html:fragment ?concept_IRI.   # later this will be changed to ?prefixedIRI, after figuring out how to deal with prefixes of namespaces other than the namespace of the ontology itself. 
       ?concept_definition                     rdf:type html:TextElement;
-                                              html:fragment "Definition of the concept". #?conceptDefinition_text.
+                                              html:fragment ?cleanedDefinition.
       ?manchester_syntax                      rdf:type html:Aside;
                                               html:class "note" ;
                                               html:title "Manchester Syntax";
                                               rdf:_1 ?manchester_code_label;
-                                              rdf:_2 ?manchester_code_type;
-											  rdf:_3 ?manchester_code_fact.
+                                              rdf:_2 ?manchester_code_type.
       ?manchester_code_label                  rdf:type html:Code;
-                                              rdf:_1 ?manchester_label.
+	                                          rdf:_1 ?manchester_concept;
+                                              rdf:_2 ?manchester_label.
       ?manchester_code_type                   rdf:type html:Code;
                                               rdf:_1  ?manchester_type_paragraph.
+      ?manchester_concept                     rdf:type html:TextElement;
+                                              html:fragment "Concept: ".											  
       ?manchester_label                       rdf:type html:TextElement;
                                               html:fragment ?conceptLabel.
       ?manchester_type_paragraph              rdf:type html:P;
@@ -1479,23 +1486,16 @@ construct {
                                               rdf:_2 ?linebreak4.
       ?manchester_type                        rdf:type html:TextElement;
                                               html:fragment ?conceptManchesterType.
-      ?manchester_code_fact                   rdf:type html:Code;
-                                              rdf:_1  ?manchester_fact_paragraph.
-      ?manchester_fact_paragraph              rdf:type html:P;
-                                              rdf:_1 ?manchester_fact;
-                                              rdf:_2 ?linebreak5.
-      ?manchester_fact                        rdf:type html:TextElement;
-                                              html:fragment ?conceptManchesterFact.
 	  ?linebreak1                             rdf:type html:Br.
       ?linebreak2                             rdf:type html:Br.
 	  ?linebreak3                             rdf:type html:Br.
 	  ?linebreak4                             rdf:type html:Br.
-	  ?linebreak5                             rdf:type html:Br.
+
 }
-where  {
+WHERE  {
    {?concept_Template rdf:type respec:Concept.}
    
-   {SELECT ?concept ?conceptLabel (COUNT(?prevConcept) + 1 AS ?member)
+   {SELECT ?concept ?conceptLabel ?cleanedDefinition (COUNT(?prevConcept) + 1 AS ?member)
 WHERE {
   ?concept manchester:syntax 'CONCEPT';
            manchester:label ?conceptLabel ;
@@ -1503,24 +1503,22 @@ WHERE {
   $this dct:subject ?ontology;
         respec:documentLanguage ?language.
   FILTER (LANG(?conceptLabel) = ?language)		
+  
+  OPTIONAL
+  {?concept skos:definition ?definition.
+   FILTER (LANG(?definition) = ?language)
+   }
 
+  BIND(IF(BOUND(?definition), COALESCE(function:escapeHTML(?definition)), "No definition provided by this ontology.") as ?cleanedDefinition)
+   
   OPTIONAL 
-    {?prevConcept manchester:syntax 'CONCEPT';
-                          manchester:label ?prevLabel.
-  FILTER (LANG(?prevLabel) = ?language)
-  FILTER(?prevLabel < ?conceptLabel)
+   {?prevConcept manchester:syntax 'CONCEPT';
+                 manchester:label ?prevLabel.
+    FILTER (LANG(?prevLabel) = ?language)
+    FILTER(?prevLabel < ?conceptLabel)
+   }
   }
- 
-  #OPTIONAL
-  #{?concept manchester:class ?class.}
-  #OPTIONAL
-  #{?concept manchester:fact ?fact.}
-    
-  #BIND(function:escapeHTML(COALESCE(?class, "No class defined")) as ?conceptManchesterType)
-  #BIND(function:escapeHTML(COALESCE(?fact, "No known facts")) as ?conceptManchesterFact)
-
-  }
-  GROUP BY ?conceptLabel ?concept ?conceptManchesterType ?conceptManchesterFact
+  GROUP BY ?conceptLabel ?concept ?cleanedDefinition
   ORDER BY ?conceptLabel
 }
   BIND(IRI(CONCAT(str(rdf:),"_", str(?member))) as ?rdf_member)  
@@ -1553,15 +1551,12 @@ WHERE {
   # Create identifiers - Manchester Syntax 
 
   BIND(IRI(CONCAT(STR(?manchester_syntax), '-1'))                                           as ?manchester_code_label)  
-  BIND(IF(BOUND(?class),IRI(CONCAT(STR(?manchester_syntax), '-2')), ?unboundDummy)           as ?manchester_code_type)  
-  BIND(IF(BOUND(?fact),IRI(CONCAT(STR(?manchester_syntax), '-3')), ?unboundDummy)           as ?manchester_code_fact)
-  BIND(IRI(CONCAT(STR(?manchester_code_label), '-1'))                                       as ?manchester_label)
+  BIND(IF(BOUND(?class),IRI(CONCAT(STR(?manchester_syntax), '-2')), ?unboundDummy)          as ?manchester_code_type)  
+  BIND(IRI(CONCAT(STR(?manchester_code_label), '-1'))                                       as ?manchester_concept)
+  BIND(IRI(CONCAT(STR(?manchester_code_label), '-2'))                                       as ?manchester_label)
   BIND(IRI(CONCAT(STR(?manchester_code_type), '-1'))                                        as ?manchester_type_paragraph)
   BIND(IRI(CONCAT(STR(?manchester_type_paragraph), '-1'))                                   as ?manchester_type)
   BIND(IRI(CONCAT(STR(?manchester_type_paragraph), '-2'))                                   as ?linebreak4)
-  BIND(IRI(CONCAT(STR(?manchester_code_fact), '-1'))                                        as ?manchester_fact_paragraph)
-  BIND(IRI(CONCAT(STR(?manchester_fact_paragraph), '-1'))                                   as ?manchester_fact)
-  BIND(IRI(CONCAT(STR(?manchester_fact_paragraph), '-2'))                                   as ?linebreak5)
 }
 """.
 

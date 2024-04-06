@@ -1576,14 +1576,14 @@ construct {
   # Label of the named individual
   
   $this a ?class.
-  BIND(function:getLabel($this) as ?manchesterLabel)
+  BIND(STRLANG(CONCAT("[=",function:getLabel($this),"=]"), LANG(function:getLabel($this))) as ?manchesterLabel)
   BIND(LANG(function:getLabel($this)) as ?lang)
   
   # Class description   
   OPTIONAL
   {  ?class manchester:label ?explicitClassName.}
   BIND(COALESCE(?explicitClassName, function:getLabel(?class)) as ?className)
-  BIND(STRLANG(CONCAT("Type: ", ?className), LANG(function:getLabel(?class))) as ?manchesterClass)
+  BIND(STRLANG(CONCAT("Types: ", ?className), LANG(function:getLabel(?class))) as ?manchesterClass)
   
   # Fact description
   OPTIONAL
@@ -1599,7 +1599,7 @@ construct {
   BIND(COALESCE(?explicitObjectLabel, function:getLabel(?object)) as ?objectLabel)
   FILTER (LANG(?propertyLabel) = LANG(?objectLabel))
   }
-  BIND(STRLANG(CONCAT("Fact:  ", function:getPrefixedIRI(?propertyLabel), " ", COALESCE(str(?literal), ?objectLabel)), LANG(?propertyLabel)) as ?manchesterFact)
+  BIND(STRLANG(CONCAT("Facts:  ", function:getPrefixedIRI(?propertyLabel), " ", COALESCE(str(?literal), ?objectLabel)), LANG(?propertyLabel)) as ?manchesterFact)
 }
   
 """.
@@ -1653,7 +1653,7 @@ construct {
 } where {
 
   # Label of the concept scheme
-  BIND(function:getLabel($this) as ?manchesterLabel)
+  BIND(STRLANG(CONCAT("[=",function:getLabel($this),"=]"), LANG(function:getLabel($this))) as ?manchesterLabel)
 }
 
 """.
@@ -1707,7 +1707,7 @@ construct {
 } where {
 
   # Label of the concept 
-  BIND(function:getLabel($this) as ?manchesterLabel)
+  BIND(STRLANG(CONCAT("[=",function:getLabel($this),"=]"), LANG(function:getLabel($this))) as ?manchesterLabel)
 }
 
 """.

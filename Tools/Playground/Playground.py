@@ -28,9 +28,11 @@ def readStringFromFile(file_path):
             file_content = file.read()
     return file_content
 
+
 # Function to write a graph to a file
 def writeGraph(graph, name):
     graph.serialize(destination=directory_path + "/OntoReSpec/Tools/Playground/static/" + name + ".ttl", format="turtle")
+
 
 # Get the ReSpec vocabulary and place it in a string
 respec_vocabulary     = readStringFromFile(directory_path + "/OntoReSpec/Specification/OntoRespec.ttl")
@@ -39,6 +41,12 @@ html_serialisation    = readStringFromFile(directory_path + "/htmlvoc/Specificat
 html_vocabulary       = readStringFromFile(directory_path + "/htmlvoc/Specification/html - core.ttl")
 manchester_vocabulary = readStringFromFile(directory_path+"/OntoReSpec/Specification/manchestersyntax.ttl")
 mermaid_vocabulary    = readStringFromFile(directory_path+"/OntoMermaid/Specification/mermaid.ttl")
+manchester_query      = readStringFromFile(directory_path + "/OntoReSpec/Tools/Playground/static/manchesterQuery.rq")
+mermaid_status_query  = readStringFromFile(directory_path + "/OntoReSpec/Tools/Playground/static/mermaidStatusQuery.rq")
+mermaid_result_query  = readStringFromFile(directory_path + "/OntoReSpec/Tools/Playground/static/mermaidResultQuery.rq")
+html_status_query     = readStringFromFile(directory_path + "/OntoReSpec/Tools/Playground/static/htmlStatusQuery.rq")
+html_result_query     = readStringFromFile(directory_path + "/OntoReSpec/Tools/Playground/static/htmlResultQuery.rq")
+ontology_query        = readStringFromFile(directory_path + "/OntoReSpec/Tools/Playground/static/ontologyQuery.rq")
 
 def generateManchester(manchester_generator, serializable_graph):
         
@@ -55,143 +63,7 @@ def generateManchester(manchester_generator, serializable_graph):
         debug=False,
         )
         
-        resultquery = serializable_graph.query('''
-            
-prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
-prefix owl: <http://www.w3.org/2002/07/owl#>
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix sh: <http://www.w3.org/ns/shacl#>
-ASK
-WHERE {
-  # Any OWL or RDFS entity that is not yet described in terms of the manchester syntax
-  {
-    $this a owl:Class.
-  }  
-  UNION
-  {
-    $this a rdfs:Class.
-  }
-  UNION
-  {
-    $this rdfs:subClassOf []
-  }
-  UNION
-  {
-    $this owl:equivalentClass []
-  }
-  UNION
-  {
-    $this owl:unionOf []
-  }
-  UNION
-  {
-    $this owl:intersectionOf []
-  }
-  UNION
-  {
-    $this owl:complementOf []
-  }
-  UNION
-  {
-    $this owl:oneOf []
-  }
-  UNION
-  {
-    $this owl:allValuesFrom []
-  }
-  UNION
-  {
-    $this owl:someValuesFrom []
-  }
-  UNION
-  {
-    $this owl:hasValue []
-  }
-  UNION
-  {
-    $this owl:cardinality []
-  }
-  UNION
-  {
-    $this owl:maxCardinality []
-  }
-  UNION
-  {
-    $this owl:minCardinality []
-  }  
-  UNION
-  {
-    $this rdf:type owl:DatatypeProperty.
-  }
-  UNION
-  {
-    $this rdf:type owl:ObjectProperty.
-  }
-  UNION
-  {
-    $this rdfs:subPropertyOf [].
-  }
-  UNION
-  {
-    $this owl:equivalentProperty [].
-  }
-  filter not exists {
-    $this manchester:syntax 'CLASS'.
-  }
-  filter not exists {
-    $this manchester:syntax 'CLASS'.
-  }
-  filter not exists {
-    $this manchester:syntax 'SUBCLASSOF'.
-  }
-  filter not exists {
-    $this manchester:syntax 'EQUIVALENTTO'.
-  }
-  filter not exists {
-    $this manchester:syntax 'OR'.
-  }
-  filter not exists {
-    $this manchester:syntax 'AND'.
-  }
-  filter not exists {
-    $this manchester:syntax 'NOT'.
-  }
-  filter not exists {
-    $this manchester:syntax '{}'.
-  }
-  filter not exists {
-    $this manchester:syntax 'ONLY'.
-  }
-  filter not exists {
-    $this manchester:syntax 'SOME'.
-  }
-  filter not exists {
-    $this manchester:syntax 'VALUE'.
-  }
-  filter not exists {
-    $this manchester:syntax 'EXACTLY'.
-  }
-  filter not exists {
-    $this manchester:syntax 'MAX'.
-  }
-  filter not exists {
-    $this manchester:syntax 'MIN'.
-  }
-  filter not exists {
-    $this manchester:syntax 'DATATYPEPROPERTY'.
-  }
-  filter not exists {
-    $this manchester:syntax 'OBJECTPROPERTY'.
-  }
-  filter not exists {
-    $this manchester:syntax 'SUBPROPERTY'.
-  }
-  filter not exists {
-    $this manchester:syntax 'EQUIVALENTPROPERTY'.
-  }
-}
-        ''')   
+        resultquery = serializable_graph.query(manchester_query)   
 
         # Check whether another iteration is needed. If every OWL and RDFS construct contains a manchester:syntax statement, the processing is considered done.
         for result in resultquery:
@@ -234,198 +106,8 @@ def generateDiagram(mermaid_generator, serializable_graph):
         debug=False,
         )
         
-       
-        statusquery = serializable_graph.query('''
-            
-prefix mermaid: <https://data.rijksfinancien.nl/mermaid/model/def/>
-prefix owl: <http://www.w3.org/2002/07/owl#>
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix sh: <http://www.w3.org/ns/shacl#>
-ASK
-WHERE {
-  # Any OWL or RDFS entity that is not yet described in terms of the manchester syntax
-  {
-    $this a owl:Class.
-  }  
-  UNION
-  {
-    $this a rdfs:Class.
-  }
-  UNION
-  {
-    $this rdfs:subClassOf []
-  }
-  UNION
-  {
-    $this owl:equivalentClass []
-  }
-  UNION
-  {
-    $this owl:unionOf []
-  }
-  UNION
-  {
-    $this owl:intersectionOf []
-  }
-  UNION
-  {
-    $this owl:complementOf []
-  }
-  UNION
-  {
-    $this owl:oneOf []
-  }
-  UNION
-  {
-    $this owl:allValuesFrom []
-  }
-  UNION
-  {
-    $this owl:someValuesFrom []
-  }
-  UNION
-  {
-    $this owl:hasValue []
-  }
-  UNION
-  {
-    $this owl:cardinality []
-  }
-  UNION
-  {
-    $this owl:maxCardinality []
-  }
-  UNION
-  {
-    $this owl:minCardinality []
-  }  
-  UNION
-  {
-   $this rdf:type rdf:Property
-  }
-  UNION
-  {
-    $this rdf:type owl:DatatypeProperty.
-  }
-  UNION
-  {
-    $this rdf:type owl:ObjectProperty.
-  }
-  UNION
-  {
-    $this rdfs:subPropertyOf []
-    FILTER NOT EXISTS {$this rdf:type owl:AnnotationProperty}.
-    FILTER NOT EXISTS {$this rdf:type owl:InverseFunctionalProperty}
-    FILTER NOT EXISTS {$this rdf:type owl:FunctionalProperty}
-  }
-  UNION
-  {
-    $this owl:equivalentProperty [].
-  }
-  filter not exists {
-    $this mermaid:syntax 'CLASS'.
-  }
-  filter not exists {
-    $this mermaid:syntax 'CLASS'.
-  }
-  filter not exists {
-    $this mermaid:syntax 'SUBCLASSOF'.
-  }
-  filter not exists {
-    $this mermaid:syntax 'EQUIVALENTTO'.
-  }
-  filter not exists {
-    $this mermaid:syntax 'OR'.
-  }
-  filter not exists {
-    $this mermaid:syntax 'AND'.
-  }
-  filter not exists {
-    $this mermaid:syntax 'NOT'.
-  }
-  filter not exists {
-    $this mermaid:syntax '{}'.
-  }
-  filter not exists {
-    $this mermaid:syntax 'ONLY'.
-  }
-  filter not exists {
-    $this mermaid:syntax 'SOME'.
-  }
-  filter not exists {
-    $this mermaid:syntax 'VALUE'.
-  }
-  filter not exists {
-    $this mermaid:syntax 'EXACTLY'.
-  }
-  filter not exists {
-    $this mermaid:syntax 'MAX'.
-  }
-  filter not exists {
-    $this mermaid:syntax 'MIN'.
-  }
-  filter not exists {
-    $this mermaid:syntax 'RDF_PROPERTY'.
-  }
-  filter not exists {
-    $this mermaid:syntax 'DATATYPEPROPERTY'.
-  }
-  filter not exists {
-    $this mermaid:syntax 'OBJECTPROPERTY'.
-  }
-  filter not exists {
-    $this mermaid:syntax 'SUBPROPERTYOF'.
-  }
-  filter not exists {
-    $this mermaid:syntax 'EQUIVALENTPROPERTY'.
-  }
-  filter not exists {
-    $this mermaid:syntax 'OR-DATATYPE'.
-  }
-  filter not exists {
-    $this mermaid:syntax 'AND-DATATYPE'.
-  }
-  filter not exists {
-    $this mermaid:syntax 'NOT-DATATYPE'.
-  }
-  filter not exists {
-    $this mermaid:syntax '{}-DATATYPE'.
-  }
-  filter not exists {
-    $this mermaid:syntax 'EXACTLYQUALIFIED'.
-  }
-  filter not exists {
-    $this mermaid:syntax 'MAXQUALIFIED'.
-  }
-  filter not exists {
-    $this mermaid:syntax 'MINQUALIFIED'.
-  }
-}
-        ''')   
-
-        resultquery = serializable_graph.query('''
-            
-prefix owl: <http://www.w3.org/2002/07/owl#>
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix sh: <http://www.w3.org/ns/shacl#>
-prefix : <https://data.rijksfinancien.nl/mermaid/model/def/>
-
-SELECT (GROUP_CONCAT(?label; separator="\\n") AS ?mermaid_code)
-WHERE {
-  ?element :label ?label.
-  
-  minus {
-      ?this owl:annotatedTarget ?target.
-      ?target (:|!:)* ?element.
-      ?element :label ?label
-      FILTER isBlank(?target)
-      FILTER isBlank(?element)}
-  
-}
-ORDER BY ?mermaid_code
-        ''')   
+        statusquery = serializable_graph.query(mermaid_status_query)
+        resultquery = serializable_graph.query(mermaid_result_query)  
 
         # Check whether another iteration is needed. If every OWL and RDFS construct contains a mermaid:syntax statement, the processing is considered done.
         for status in statusquery:
@@ -495,43 +177,17 @@ def generateHTML(shaclgraph, serializable_graph):
         )
       
         # Query to know if the document has been fully serialised by testing whether the root has a html:fragment property. If it has, the algorithm has reached the final level of the document.
-        resultquery = serializable_graph.query('''
-            
-       PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-       PREFIX html: <https://data.rijksfinancien.nl/html/model/def/>
-       PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-
-       ASK 
-       WHERE {
-         ?document a html:Document ;
-                 html:fragment ?fragment.
-       }
-        ''')   
+        statusQuery = serializable_graph.query(html_status_query) 
 
         # Check whether another iteration is needed. If the html root of the document contains a html:fragment statement then the serialisation is considered done.
-        for result in resultquery:
-            if result == False:
+        for status in statusQuery:
+            if status == False:
                 writeGraph(serializable_graph, 'html')
                 return generateHTML(shaclgraph, serializable_graph)
          
             else:
-                htmlQuery = serializable_graph.query('''
-                   
-               PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-               PREFIX html: <https://data.rijksfinancien.nl/html/model/def/>
-               PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-
-               select ?fragment
-               WHERE {
-                 ?document a html:Document ;
-                         html:fragment ?fragment.
-               }
-
-               ''')   
-
-         
+                htmlQuery = serializable_graph.query(html_result_query)
                 for html in htmlQuery:
-                    print ("html.fragment = ", html.fragment)
                     return html.fragment
 
 
@@ -568,19 +224,7 @@ def generateReSpec():
     # Let us establish which ontology needs to be documented in ReSpec
     generationGraph.parse(data=ontology , format="turtle")
     
-    ontologyQuery = generationGraph.query('''
-       
-   PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-   PREFIX html: <https://data.rijksfinancien.nl/html/model/def/>
-   PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-
-   select ?ontology
-   WHERE {
-     ?ontology a owl:Ontology .
-   }
-
-   ''')   
-
+    ontologyQuery = generationGraph.query(ontology_query) 
 
     for result in ontologyQuery:
         generationGraph.add((doc[generation_iri], dct.subject, URIRef(result.ontology)))
@@ -605,7 +249,7 @@ def generateReSpec():
     # Serialize the document to HTML
     print("Step #4. Creating HTML code...")
     html_fragment = generateHTML(html_vocabulary, generationGraph)
-    print("HTML fragment =", html_fragment)
+    print("...Done")
     filepath = directory_path+"/OntoRespec/Tools/Playground/static/output.html"
     src_filepath = url_for('static', filename='output.html')
     with open(filepath, 'w', encoding='utf-8') as file:

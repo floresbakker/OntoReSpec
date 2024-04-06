@@ -1,0 +1,134 @@
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix sh: <http://www.w3.org/ns/shacl#>
+ASK
+WHERE {
+  # Any OWL or RDFS entity that is not yet described in terms of the manchester syntax
+  {
+    $this a owl:Class.
+  }  
+  UNION
+  {
+    $this a rdfs:Class.
+  }
+  UNION
+  {
+    $this rdfs:subClassOf []
+  }
+  UNION
+  {
+    $this owl:equivalentClass []
+  }
+  UNION
+  {
+    $this owl:unionOf []
+  }
+  UNION
+  {
+    $this owl:intersectionOf []
+  }
+  UNION
+  {
+    $this owl:complementOf []
+  }
+  UNION
+  {
+    $this owl:oneOf []
+  }
+  UNION
+  {
+    $this owl:allValuesFrom []
+  }
+  UNION
+  {
+    $this owl:someValuesFrom []
+  }
+  UNION
+  {
+    $this owl:hasValue []
+  }
+  UNION
+  {
+    $this owl:cardinality []
+  }
+  UNION
+  {
+    $this owl:maxCardinality []
+  }
+  UNION
+  {
+    $this owl:minCardinality []
+  }  
+  UNION
+  {
+    $this rdf:type owl:DatatypeProperty.
+  }
+  UNION
+  {
+    $this rdf:type owl:ObjectProperty.
+  }
+  UNION
+  {
+    $this rdfs:subPropertyOf [].
+  }
+  UNION
+  {
+    $this owl:equivalentProperty [].
+  }
+  filter not exists {
+    $this manchester:syntax 'CLASS'.
+  }
+  filter not exists {
+    $this manchester:syntax 'CLASS'.
+  }
+  filter not exists {
+    $this manchester:syntax 'SUBCLASSOF'.
+  }
+  filter not exists {
+    $this manchester:syntax 'EQUIVALENTTO'.
+  }
+  filter not exists {
+    $this manchester:syntax 'OR'.
+  }
+  filter not exists {
+    $this manchester:syntax 'AND'.
+  }
+  filter not exists {
+    $this manchester:syntax 'NOT'.
+  }
+  filter not exists {
+    $this manchester:syntax '{}'.
+  }
+  filter not exists {
+    $this manchester:syntax 'ONLY'.
+  }
+  filter not exists {
+    $this manchester:syntax 'SOME'.
+  }
+  filter not exists {
+    $this manchester:syntax 'VALUE'.
+  }
+  filter not exists {
+    $this manchester:syntax 'EXACTLY'.
+  }
+  filter not exists {
+    $this manchester:syntax 'MAX'.
+  }
+  filter not exists {
+    $this manchester:syntax 'MIN'.
+  }
+  filter not exists {
+    $this manchester:syntax 'DATATYPEPROPERTY'.
+  }
+  filter not exists {
+    $this manchester:syntax 'OBJECTPROPERTY'.
+  }
+  filter not exists {
+    $this manchester:syntax 'SUBPROPERTY'.
+  }
+  filter not exists {
+    $this manchester:syntax 'EQUIVALENTPROPERTY'.
+  }
+}
