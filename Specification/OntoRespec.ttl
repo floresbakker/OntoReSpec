@@ -559,6 +559,21 @@ prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
 prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
 prefix function: <https://data.rijksfinancien.nl/html/model/function/>
+prefix html: <https://data.rijksfinancien.nl/html/model/def/>
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix respec: <https://respec.org/model/def/>
+prefix schema: <http://schema.org/>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix vann: <http://purl.org/vocab/vann/>
+
+       
+prefix dct: <http://purl.org/dc/terms/>
+prefix dc:  <http://purl.org/dc/elements/1.1/>
+prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix function: <https://data.rijksfinancien.nl/html/model/function/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
 prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
@@ -611,96 +626,121 @@ construct {
                                               rdf:_1 ?manchester_label_link;
                                               rdf:_2 ?colon.
       ?manchester_code_definition_instance    rdf:type html:Code;
-                                              ?memberManchesterString  ?manchester_definition_block.
+	                                          rdf:_1 ?manchester_definition_div_equivalence;
+											  rdf:_2 ?manchester_definition_div_subclass.
+	  ?manchester_definition_div_equivalence  rdf:type html:Div;
+                                              ?memberManchesterStringEquivalentTo  ?manchester_definition_block_equivalence.
+      ?manchester_definition_div_subclass     rdf:type html:Div;
+                                              ?memberManchesterStringSubClassOf  ?manchester_definition_block_subclass.
       ?manchester_label_link                  rdf:type html:A;
                                               rdf:_1 ?manchester_label_instance.
       ?colon                                  rdf:type html:TextElement;
                                               html:fragment ":".
       ?manchester_label_instance              rdf:type html:TextElement;
                                               html:fragment ?cleanedManchesterLabel.
-      ?manchester_definition_block            rdf:type html:P;
-                                              rdf:_1 ?manchester_definition_instance;
-                                              rdf:_2 ?class_linebreak_instance4.
-      ?manchester_definition_instance         rdf:type html:TextElement;
-                                              html:fragment ?manchesterDefinition.
-      ?class_linebreak_instance1              rdf:type html:Br.
-      ?class_linebreak_instance2              rdf:type html:Br.
-      ?class_linebreak_instance3              rdf:type html:Br.
-      ?class_linebreak_instance4              rdf:type html:Br.
+      ?manchester_definition_block_equivalence            rdf:type html:P;
+                                                          rdf:_1 ?manchester_definition_instance_equivalence;
+                                                          rdf:_2 ?class_linebreak_instance4_equivalence.
+      ?manchester_definition_instance_equivalence         rdf:type html:TextElement;
+                                                          html:fragment ?manchesterDefinition.
+
+
+?manchester_definition_block_subclass            rdf:type html:P;
+                                                    rdf:_1 ?manchester_definition_instance_subclass;
+                                                    rdf:_2 ?class_linebreak_instance4_subclass.
+?manchester_definition_instance_subclass         rdf:type html:TextElement;
+                                                    html:fragment ?manchesterDefinitionS.
+                                                    
+      ?class_linebreak_instance1                          rdf:type html:Br.
+      ?class_linebreak_instance2                          rdf:type html:Br.
+      ?class_linebreak_instance3                          rdf:type html:Br.
+      ?class_linebreak_instance4_equivalence              rdf:type html:Br.
+      ?class_linebreak_instance4_subclass              rdf:type html:Br.
 }
 where  {
-   
-   # Get the template 
-   
-   {?divDefinitionClass1 rdf:type respec:ClassDefinition.   }
+
+  # Get the template
+
+  {
+    ?divDefinitionClass1 rdf:type respec:ClassDefinition.
+  }
 
   # Get the class from the ontology, the label and description, and the sequence order in which the class appears amidst other classes alphanumerically.
   {
-    SELECT ?class ?manchesterLabel ?classDefinition_original ?memberClass ?manchesterDefinition ?memberManchester
-    WHERE {
+    select ?class ?manchesterLabel ?classDefinition_original ?memberClass ?manchesterDefinition ?manchesterDefinitionS ?memberManchesterEquivalentTo ?memberManchesterSubClassOf
+    where {
       # Get the class ordered alphabetically on its label
       {
-        SELECT ?class ?manchesterLabel ?classDefinition_original (COUNT(?prevClass) + 1 AS ?memberClass)
-        WHERE {
+        select ?class ?manchesterLabel ?classDefinition_original (count(?prevClass) + 1 as ?memberClass)
+        where {
           ?class manchester:type 'CLASS'.
           ?class manchester:label ?manchesterLabel.
           ?class rdfs:isDefinedBy ?ontology.
-		  $this  dct:subject ?ontology;
-		         respec:documentLanguage ?language.
-		  FILTER (LANG(?manchesterLabel) = ?language)
-		  
-		  OPTIONAL 
-          {?class skos:definition ?classDefinition_original.
-		  FILTER (LANG(?classDefinition_original) = ?language)}
-		  				 
-          OPTIONAL {
+          $this  dct:subject ?ontology;
+                 respec:documentLanguage ?language.
+          filter (lang(?manchesterLabel) = ?language)
+
+          optional
+          {
+            ?class skos:definition ?classDefinition_original.
+            filter (lang(?classDefinition_original) = ?language)
+          }
+
+          optional {
             ?prevClass manchester:type 'CLASS'.
             ?prevClass manchester:label ?prevLabel .
-			FILTER (LANG(?prevLabel) = ?language)
-            FILTER(?prevLabel < ?manchesterLabel)
+            filter (lang(?prevLabel) = ?language)
+            filter(?prevLabel < ?manchesterLabel)
           }
         }
-        GROUP BY ?class ?manchesterLabel ?classDefinition_original
-        ORDER BY ?manchesterLabel
+        group by ?class ?manchesterLabel ?classDefinition_original
+        order by ?manchesterLabel
       }
-      OPTIONAL 
-      { ?class manchester:type 'CLASS'.
+      optional # EquivalentTo
+      {
+        ?class manchester:type 'CLASS'.
         # Get the possibly multiple definitions of the class, ordered alphabetically
         {
-          SELECT ?class ?manchesterDefinition (COUNT(?prevManchesterDefinition) + 1 AS ?memberManchester)
-          WHERE {
-            {
-              SELECT ?class ?manchesterDefinition WHERE {
-                {
-                  ?class manchester:subClassOf ?manchesterDefinition_original.
-                  BIND(CONCAT("SubClassOf: ", ?manchesterDefinition_original) as ?manchesterDefinition)
-                }
-                UNION
-                {
-                  ?class manchester:equivalentTo ?manchesterDefinition_original.
-                  BIND(CONCAT("EquivalentTo: ", ?manchesterDefinition_original) as ?manchesterDefinition)
-                }
-              }
+          select ?class ?manchesterDefinition (count(?prevManchesterDefinition) + 1 as ?memberManchesterEquivalentTo)
+          where {
+
+            ?class manchester:equivalentTo ?manchesterDefinition_original.
+            bind(concat("EquivalentTo: ", ?manchesterDefinition_original) as ?manchesterDefinition)
+            optional {
+              ?prevClassE manchester:equivalentTo ?prevManchesterDefinition_original.
+              bind(concat("EquivalentTo: ", ?prevManchesterDefinition_original) as ?prevManchesterDefinition)
+              filter(?prevManchesterDefinition < ?manchesterDefinition)
             }
-            OPTIONAL {
-              {
-                SELECT ?class ?prevManchesterDefinition WHERE {
-                  {
-                    ?class manchester:subClassOf ?prevManchesterDefinition_original.
-                    BIND(CONCAT("SubClassOf: ", ?prevManchesterDefinition_original) as ?prevManchesterDefinition)
-                  }
-                  UNION
-                  {
-                    ?class manchester:equivalentTo ?prevManchesterDefinition_original.
-                    BIND(CONCAT("EquivalentTo: ", ?prevManchesterDefinition_original) as ?prevManchesterDefinition)
-                  }
-                }
-              }
-            FILTER(?prevManchesterDefinition < ?manchesterDefinition)
-           }
-          }     
-          GROUP BY ?class ?manchesterDefinition
-          ORDER BY ?manchesterDefinition
+          }
+          group by ?class ?manchesterDefinition
+          order by ?class ?manchesterDefinition
+        }
+      }
+      optional # SubClassOf
+      {
+        ?class manchester:type 'CLASS'.
+        # Get the possibly multiple definitions of the class, ordered alphabetically
+        {
+          select ?class ?manchesterDefinitionS (count(?prevManchesterDefinitionS) + 1 as ?memberManchesterSubClassOf)
+          where {
+
+
+            ?class manchester:subClassOf ?manchesterDefinition_original.
+            bind(concat("SubClassOf: ", ?manchesterDefinition_original) as ?manchesterDefinitionS)
+
+
+            optional {
+
+
+              ?prevClassS manchester:subClassOf ?prevManchesterDefinition_original.
+              bind(concat("SubClassOf: ", ?prevManchesterDefinition_original) as ?prevManchesterDefinitionS)
+
+
+              filter(?prevManchesterDefinitionS < ?manchesterDefinitionS)
+            }
+          }
+          group by ?class ?manchesterDefinitionS
+          order by ?class ?manchesterDefinitionS
         }
       }
     }
@@ -713,7 +753,8 @@ where  {
   # Establish order predicate
   
   BIND(IRI(CONCAT(str(rdf:),"_", str(?memberClass))) as ?memberClassString) #this is the rdf:_x property that indicates the order in which the class appears
-  BIND(IRI(CONCAT(str(rdf:),"_", str(?memberManchester))) as ?memberManchesterString) #this is the rdf:_x property that indicates the order in which the manchester definition appears
+  BIND(IRI(CONCAT(str(rdf:),"_", str(?memberManchesterEquivalentTo))) as ?memberManchesterStringEquivalentTo) #this is the rdf:_x property that indicates the order in which the manchester definition appears
+  BIND(IRI(CONCAT(str(rdf:),"_", str(?memberManchesterSubClassOf))) as ?memberManchesterStringSubClassOf) #this is the rdf:_x property that indicates the order in which the manchester definition appears
   
   # Clean up text (prevent html code)
   
@@ -755,11 +796,17 @@ where  {
   bind(IRI(CONCAT(STR(?manchester_code_label_instance), '-1')) as ?manchester_label_link)
   bind(IRI(CONCAT(STR(?manchester_code_label_instance), '-2')) as ?colon)
   bind(IRI(CONCAT(STR(?manchester_label_link), '-1')) as ?manchester_label_instance)
-  bind(IRI(CONCAT(STR(?manchester_code_definition_instance), '-a',str(?memberManchester))) as ?manchester_definition_block)
-  bind(IRI(CONCAT(STR(?manchester_definition_block), '-1')) as ?manchester_definition_instance)
-  bind(IRI(CONCAT(STR(?manchester_definition_block), '-2')) as ?class_linebreak_instance4)
+  bind(IRI(CONCAT(STR(?manchester_code_definition_instance), '-1')) as ?manchester_definition_div_equivalence)
+  bind(IRI(CONCAT(STR(?manchester_code_definition_instance), '-2')) as ?manchester_definition_div_subclass)
+  bind(IRI(CONCAT(STR(?manchester_definition_div_equivalence), '-',str(?memberManchesterEquivalentTo))) as ?manchester_definition_block_equivalence)
+  bind(IRI(CONCAT(STR(?manchester_definition_block_equivalence), '-1')) as ?manchester_definition_instance_equivalence)
+  bind(IRI(CONCAT(STR(?manchester_definition_block_equivalence), '-2')) as ?class_linebreak_instance4_equivalence)
+  bind(IRI(CONCAT(STR(?manchester_definition_div_subclass),'-',str(?memberManchesterSubClassOf))) as ?manchester_definition_block_subclass)
+  bind(IRI(CONCAT(STR(?manchester_definition_block_subclass), '-1')) as ?manchester_definition_instance_subclass)
+  bind(IRI(CONCAT(STR(?manchester_definition_block_subclass), '-2')) as ?class_linebreak_instance4_subclass)
   
 }
+
 """.
 
 rule:ObjectProperties
