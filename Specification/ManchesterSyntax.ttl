@@ -401,11 +401,11 @@ construct {
   # Get the labels for the individual and property
   OPTIONAL
   {?someIndividual manchester:label ?optionalIndividualLabel.}
-  BIND(COALESCE(?optionalIndividualLabel, STRLANG(STR(?someIndividual), LANG(function:getLabel(?someIndividual)))) as ?individualLabel)
+  BIND(COALESCE(?optionalIndividualLabel, function:getLabel(?someIndividual)) as ?individualLabel)
   
   OPTIONAL
   {?someProperty manchester:label ?originalPropertyLabel.}
-  BIND(COALESCE(?originalPropertyLabel, STRLANG(STR(?someProperty), LANG(function:getLabel(?someProperty)))) as ?propertyLabel)
+  BIND(COALESCE(?originalPropertyLabel, function:getLabel(?someProperty)) as ?propertyLabel)
   
   FILTER (LANG(?propertyLabel) = LANG(?individualLabel))
   
@@ -1084,7 +1084,7 @@ construct {
 
   $this owl:complementOf ?someClass.
   OPTIONAL {?someClass manchester:label ?optionalExplicitDefinition.}
-  BIND(COALESCE(?optionalExplicitDefinition, STRLANG(function:getLabel(?someClass), LANG(function:getLabel($this)))) as ?explicitDefinition)
+  BIND(COALESCE(?optionalExplicitDefinition, function:getLabel(?someClass)) as ?explicitDefinition)
   BIND(LANG(?explicitDefinition) as ?lang)
   
   # Get the label of the class to be serialized.
@@ -1170,7 +1170,8 @@ construct {
   OPTIONAL
   {
   $this rdfs:domain ?domainClass.
-  BIND(IF(isBlank(?domainClass), ?unboundDummy, STRLANG(function:getLabel(?domainClass), LANG(function:getLabel($this)))) as ?implicitDomain)}
+  BIND(IF(isBlank(?domainClass), ?unboundDummy, function:getLabel(?domainClass)) as ?implicitDomain)
+  }
   
   OPTIONAL
   {
@@ -1184,7 +1185,7 @@ construct {
   OPTIONAL
   {
   $this rdfs:range ?rangeClass.
-  BIND(IF(isBlank(?rangeClass), ?unboundDummy, STRLANG(function:getLabel(?rangeClass), LANG(function:getLabel($this)))) as ?implicitRange)
+  BIND(IF(isBlank(?rangeClass), ?unboundDummy, function:getLabel(?rangeClass)) as ?implicitRange)
   }
   
   OPTIONAL
@@ -1263,7 +1264,7 @@ construct {
  # Domain
   OPTIONAL
   {$this rdfs:domain ?domainClass.
-  BIND(IF(isBlank(?domainClass), ?unboundDummy, STRLANG(function:getLabel(?domainClass), LANG(function:getLabel($this)))) as ?implicitDomain)
+  BIND(IF(isBlank(?domainClass), ?unboundDummy, function:getLabel(?domainClass)) as ?implicitDomain)
   }
   
   OPTIONAL
@@ -1353,7 +1354,7 @@ construct {
   OPTIONAL
    {
    $this rdfs:domain ?domainClass.
-   BIND(IF(isBlank(?domainClass), ?unboundDummy, STRLANG(function:getLabel(?domainClass), LANG(function:getLabel($this)))) as ?implicitDomain)
+   BIND(IF(isBlank(?domainClass), ?unboundDummy, function:getLabel(?domainClass)) as ?implicitDomain)
    }
   
   OPTIONAL
@@ -1368,7 +1369,7 @@ construct {
   OPTIONAL
    {
    $this rdfs:range ?rangeClass.
-   BIND(IF(isBlank(?rangeClass), ?unboundDummy, STRLANG(function:getLabel(?rangeClass), LANG(function:getLabel($this)))) as ?implicitRange)
+   BIND(IF(isBlank(?rangeClass), ?unboundDummy, function:getLabel(?rangeClass)) as ?implicitRange)
    }
 
   OPTIONAL 
@@ -1442,7 +1443,7 @@ construct {
   OPTIONAL
   {?superProperty manchester:label ?optionalManchesterSuperProperty.}
   
-  BIND(COALESCE(?optionalManchesterSuperProperty, STRLANG(function:getLabel(?superProperty), LANG(function:getLabel($this)))) as ?manchesterSuperProperty)
+  BIND(COALESCE(?optionalManchesterSuperProperty, function:getLabel(?superProperty)) as ?manchesterSuperProperty)
   
 }  
 '''.
@@ -1508,7 +1509,7 @@ construct {
   OPTIONAL
   {?equivalentProperty manchester:label ?optionalManchesterEquivalentProperty.}
   
-  BIND(COALESCE(?optionalManchesterEquivalentProperty, STRLANG(function:getLabel(?equivalentProperty), ?lang)) as ?manchesterEquivalentProperty)
+  BIND(COALESCE(?optionalManchesterEquivalentProperty, function:getLabel(?equivalentProperty)) as ?manchesterEquivalentProperty)
  
 }  
 '''.
