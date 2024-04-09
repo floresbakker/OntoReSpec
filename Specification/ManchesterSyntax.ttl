@@ -214,8 +214,8 @@ construct {
   # Get the labels for the class and property
   OPTIONAL {?someClass manchester:label ?optionalClassLabel.}
   OPTIONAL {?someProperty manchester:label ?optionalPropertyLabel.}
-  
-  BIND(COALESCE(?optionalClassLabel, function:getLabel(?someClass)) as ?classLabel)
+  BIND(IF(isIRI(?someClass), function:getLabel(?someClass), ?unboundDummy) as ?implicitClassLabel)
+  BIND(COALESCE(?optionalClassLabel, ?implicitClassLabel) as ?classLabel)
   BIND(COALESCE(?optionalPropertyLabel, function:getLabel(?someProperty)) as ?propertyLabel)
   FILTER(LANG(?classLabel) = LANG(?propertyLabel))
   
@@ -304,8 +304,8 @@ construct {
   # Get the labels for the class and property
   OPTIONAL{?someClass manchester:label ?optionalClassLabel.}
   OPTIONAL{?someProperty manchester:label ?optionalPropertyLabel.}
-  
-  BIND(COALESCE(?optionalClassLabel, function:getLabel(?someClass)) as ?classLabel)
+  BIND(IF(isIRI(?someClass), function:getLabel(?someClass), ?unboundDummy) as ?implicitClassLabel)
+  BIND(COALESCE(?optionalClassLabel, ?implicitClassLabel) as ?classLabel)
   BIND(COALESCE(?optionalPropertyLabel, function:getLabel(?someProperty)) as ?propertyLabel)
   
   FILTER(LANG(?classLabel) = LANG(?propertyLabel))
@@ -708,7 +708,8 @@ construct {
   
   $this rdfs:subClassOf ?superClass.
   OPTIONAL{?superClass manchester:label ?optionalManchesterDescription.}
-  BIND(COALESCE(?optionalManchesterDescription, function:getLabel(?superClass)) as ?manchesterDescription)
+  BIND(IF(isIRI(?superClass), function:getLabel(?superClass), ?unboundDummy) as ?implicitClassLabel)
+  BIND(COALESCE(?optionalManchesterDescription, ?implicitClassLabel) as ?manchesterDescription)
   
   # Establish the label for the owl class. If a blank node, then use the description of the class als label, including manchester syntax 'subclass' notation. If an IRI, then use the preferred label.
   BIND(IF(isBlank($this), STRLANG(CONCAT("SubClassOf: ",?manchesterDescription), LANG(?manchesterDescription)), STRLANG(CONCAT("[=",function:getLabel($this), "=]"), LANG(function:getLabel($this)))) as ?manchesterLabel)
@@ -777,7 +778,8 @@ construct {
 
   $this owl:equivalentClass ?equivalentClass.
   OPTIONAL {?equivalentClass manchester:label ?optionalManchesterDescription.}
-  BIND(COALESCE(?optionalManchesterDescription, function:getLabel(?equivalentClass)) as ?manchesterDescription)
+  BIND(IF(isIRI(?equivalentClass), function:getLabel(?equivalentClass), ?unboundDummy) as ?implicitClassLabel)
+  BIND(COALESCE(?optionalManchesterDescription, ?implicitClassLabel) as ?manchesterDescription)
   
   # Establish the label for the owl class. If a blank node, then use the description of the class als label, including manchester syntax 'EquivalentTo' notation. If an IRI, then use the preferred label.
   BIND(IF(isBlank($this), STRLANG(CONCAT("EquivalentTo: ",?manchesterDescription), LANG(?manchesterDescription)), STRLANG(CONCAT("[=",function:getLabel($this), "=]"), LANG(function:getLabel($this)))) as ?manchesterLabel)
