@@ -676,7 +676,6 @@ where  {
           ?class rdfs:isDefinedBy ?ontology.
           $this  dct:subject ?ontology;
                  respec:documentLanguage ?language.
-          filter (lang(?manchesterLabel) = ?language)
 
           optional
           {
@@ -687,7 +686,6 @@ where  {
           optional {
             ?prevClass manchester:type 'CLASS'.
             ?prevClass manchester:label ?prevLabel .
-            filter (lang(?prevLabel) = ?language)
             filter(?prevLabel < ?manchesterLabel)
           }
         }
@@ -759,15 +757,9 @@ where  {
   BIND(function:escapeHTML(COALESCE(?classDefinition_original, "This ontology does not provide a definition for the class.")) as ?classDefinition)
   BIND(function:escapeHTML(?manchesterLabel) as ?cleanedManchesterLabel)
   
-  # Establishing the IRI, base IRI and relative IRI of the class
+  # Establishing the IRI of the class
 
-  OPTIONAL{
-   $this dct:subject ?ontology.
-   ?ontology vann:preferredNamespaceUri ?IRI_base;
-         vann:preferredNamespacePrefix ?IRI_prefix.}
-   BIND(STR(?class) as ?IRI_href)
-   BIND(STRAFTER(STR(?class), ?IRI_base) as ?IRI_reference)
-   BIND(COALESCE(CONCAT(STR(?IRI_prefix),":",?IRI_reference), ?IRI_href) as ?IRI_value_text)
+   BIND(STR(?class) as ?IRI_value_text)
   
   # Create identifiers - generic
   
@@ -857,7 +849,7 @@ construct {
                                               html:href ?objectProperty;
                                               rdf:_1 ?IRI_value.
       ?IRI_value                              rdf:type html:TextElement;
-                                              html:fragment ?prefixedIRI.	  
+                                              html:fragment ?fullIRI.	  
       ?objectproperty_definition            rdf:type html:TextElement;
                                               html:fragment ?objectPropertyDefinition_text.
       ?manchester_syntax                      rdf:type html:Aside;
@@ -909,7 +901,6 @@ WHERE {
   ?objectProperty rdfs:isDefinedBy ?ontology.
   $this dct:subject ?ontology;
         respec:documentLanguage ?language.
-  FILTER (LANG(?objectPropertyManchesterLabel_original) = ?language)
 
   OPTIONAL{
   ?objectProperty skos:definition ?objectPropertyDefinition_original.
@@ -931,7 +922,6 @@ WHERE {
   OPTIONAL {
     ?prevObjectProperty a owl:ObjectProperty .
     ?prevObjectProperty manchester:label ?prevLabel .
-	FILTER (LANG(?prevLabel) = ?language)
     FILTER(?prevLabel < ?objectPropertyManchesterLabel_original)
   }
 }
@@ -942,9 +932,9 @@ WHERE {
   BIND(COALESCE(?objectPropertyManchesterLabel_original, "Unknown class label") as ?objectPropertyLabel_text)
   BIND(IF(!BOUND(?objectProperty), "This ontology does not define any object properties.", ?unboundDummy) as ?absenceOfObjectPropertyDefinitions)
 
-  # Establishing the prefixed IRI of the object property.
+  # Establishing the full IRI of the object property.
   
-  BIND(function:getPrefixedIRI(?objectProperty) as ?prefixedIRI)
+  BIND(STR(?objectProperty) as ?fullIRI)
 
   # Create identifiers
   
@@ -1033,7 +1023,7 @@ construct {
                                               html:href ?datatypeProperty;
                                               rdf:_1 ?IRI_value.
       ?IRI_value                              rdf:type html:TextElement;
-                                              html:fragment ?prefixedIRI.	  
+                                              html:fragment ?fullIRI.	  
       ?datatypeproperty_definition            rdf:type html:TextElement;
                                               html:fragment ?datatypePropertyDefinition_text.
       ?manchester_syntax                      rdf:type html:Aside;
@@ -1085,7 +1075,7 @@ WHERE {
   ?datatypeProperty rdfs:isDefinedBy ?ontology.
   $this dct:subject ?ontology;
         respec:documentLanguage ?language.
-  FILTER (LANG(?datatypePropertyManchesterLabel_original) = ?language)
+
   OPTIONAL{
   ?datatypeProperty skos:definition ?datatypePropertyDefinition_original.
   FILTER (LANG(?datatypePropertyDefinition_original) = ?language)
@@ -1106,7 +1096,6 @@ WHERE {
   OPTIONAL {
     ?prevDatatypeProperty a owl:DatatypeProperty .
     ?prevDatatypeProperty manchester:label ?prevLabel .
-	FILTER (LANG(?prevLabel) = ?language)
     FILTER(?prevLabel < ?datatypePropertyManchesterLabel_original)
   }
 }
@@ -1119,7 +1108,7 @@ WHERE {
 
   # Establishing the prefixed IRI of the datatype property.
   
-  BIND(function:getPrefixedIRI(?datatypeProperty) as ?prefixedIRI)
+  BIND(STR(?datatypeProperty) as ?fullIRI)
 
   # Create identifiers
   
@@ -1220,7 +1209,7 @@ WHERE {
   ?nodeShape rdfs:isDefinedBy ?ontology.
   $this dct:subject ?ontology;
         respec:documentLanguage ?language.
-  FILTER (LANG(?nodeShapeLabel) = ?language)
+
   OPTIONAL{
   ?nodeShape skos:definition ?nodeShapeDefinition_original.
   FILTER (LANG(?nodeShapeDefinition_original) = ?language)
@@ -1229,7 +1218,6 @@ WHERE {
   OPTIONAL {
     ?prevNodeShape a sh:NodeShape .
     ?prevNodeShape skos:prefLabel ?prevLabel .
-	FILTER (LANG(?prevLabel) = ?language)
     FILTER(?prevLabel < ?nodeShapeLabel)
   }
 }
@@ -1351,7 +1339,6 @@ WHERE {
    
    $this dct:subject ?ontology;
          respec:documentLanguage ?language.
-   FILTER (LANG(?namedIndividualLabel) = ?language)
    
    OPTIONAL
    {?namedIndividual skos:definition ?definitionIndividual
@@ -1366,7 +1353,6 @@ WHERE {
    OPTIONAL 
    {?prevNamedIndividual manchester:syntax 'INDIVIDUAL';
                           manchester:label ?prevLabel.
-     FILTER (LANG(?prevLabel) = ?language)
      FILTER(?prevLabel < ?namedIndividualLabel)
    }
   }
@@ -1376,10 +1362,9 @@ WHERE {
   BIND(IRI(CONCAT(str(rdf:),"_", str(?member))) as ?rdf_member)  
   BIND(IF(!BOUND(?namedIndividual), "This ontology does not define any named individuals.", ?unboundDummy) as ?absenceOfNamedIndividualDefinitions)
 
-  # Establishing the prefixed IRI of the named individual.
+  # Establishing the full IRI of the named individual.
   
-  # BIND(function:getPrefixedIRI(?namedIndividual) as ?prefixedIRI)  # find out how to establish a prefixed IRI for a named individual, when the namespace for indidivuals differs from the ontology.
-  BIND(STR(?namedIndividual) as ?namedIndividual_IRI)  # find out how to establish a prefixed IRI for a named individual, when the namespace for indidivuals differs from the ontology.
+  BIND(STR(?namedIndividual) as ?namedIndividual_IRI)  
 
   # Create identifiers
   
@@ -1501,8 +1486,7 @@ WHERE {
            manchester:label ?conceptLabel ;
            rdfs:isDefinedBy ?ontology.	   
   $this dct:subject ?ontology;
-        respec:documentLanguage ?language.
-  FILTER (LANG(?conceptLabel) = ?language)		
+        respec:documentLanguage ?language.	
   
   OPTIONAL
   {?concept skos:definition ?definition.
@@ -1514,7 +1498,6 @@ WHERE {
   OPTIONAL 
    {?prevConcept manchester:syntax 'CONCEPT';
                  manchester:label ?prevLabel.
-    FILTER (LANG(?prevLabel) = ?language)
     FILTER(?prevLabel < ?conceptLabel)
    }
   }
@@ -1525,10 +1508,9 @@ WHERE {
   BIND(COALESCE(?conceptLabel, "Unknown label") as ?conceptLabel_text)
   BIND(IF(!BOUND(?concept), "This ontology does not define any concepts.", ?unboundDummy) as ?absenceOfConceptDefinitions)
 
-  # Establishing the prefixed IRI of the named concept.
+  # Establishing the full IRI of the named concept.
   
-  # BIND(function:getPrefixedIRI(?concept) as ?prefixedIRI)  # find out how to establish a prefixed IRI for a concept, when the namespace for the concept differs from the ontology.
-  BIND(STR(?concept) as ?concept_IRI)  # find out how to establish a prefixed IRI for a concept, when the namespace for the concept differs from the ontology.
+  BIND(STR(?concept) as ?concept_IRI) 
 
   # Create identifiers
   
@@ -1586,43 +1568,3 @@ function:escapeHTML
         }
         """ .
 		
-function:getPrefixedIRI
-    a sh:SPARQLFunction ;
-    rdfs:comment "Gets prefixed IRI from full IRI." ;
-    sh:parameter [
-        sh:path function:IRI ;
-        sh:datatype xsd:anyURI ;
-        sh:description "The full IRI of a RDF resource as defined in an ontology." ;
-    ] ;
-    sh:returnType xsd:string ;
-    sh:select """
-       SELECT ?result WHERE {
-{
-    VALUES (?ontology ?IRI_base ?IRI_prefix) {
-      (dcm: "http://purl.org/dc/dcmitype/" "dcm")
-      (dct: "http://purl.org/dc/terms/" "dct")
-      (foaf: "http://xmlns.com/foaf/0.1/" "foaf")
-      (owl: "http://www.w3.org/2002/07/owl#" "owl")
-      (prov: "http://www.w3.org/ns/prov#" "prov")
-      (rdf: "http://www.w3.org/1999/02/22-rdf-syntax-ns#" "rdf")
-      (rdfs: "http://www.w3.org/2000/01/rdf-schema#" "rdfs")
-      (sh: "http://www.w3.org/ns/shacl#" "sh")
-      (skos: "http://www.w3.org/2004/02/skos/core#" "skos")
-      (status: "http://purl.org/adms/status/" "status")
-      (vann: "http://purl.org/vocab/vann/" "vann")
-      (void: "http://rdfs.org/ns/void#" "void")
-      (xsd: "http://www.w3.org/2001/XMLSchema#" "xsd")
-    }
-  }
-  UNION 
-  {
-    ?ontology vann:preferredNamespaceUri ?IRI_base;
-              vann:preferredNamespacePrefix ?IRI_prefix.
-  }
-  FILTER (STRSTARTS(STR($IRI), ?IRI_base))
-  BIND(STR($IRI) as ?IRI_href)
-  BIND(STRAFTER(STR($IRI), ?IRI_base) as ?IRI_reference)
-  BIND(COALESCE(CONCAT(STR(?IRI_prefix),":",?IRI_reference), ?IRI_href) as ?prefixedResult)
-  BIND(COALESCE(?prefixedResult, STR($IRI)) as ?result)
-}
-        """ .
