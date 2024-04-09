@@ -611,7 +611,7 @@ construct {
       ?class_IRI_text                         rdf:type html:TextElement;
                                               html:fragment 'IRI: '.
       ?class_IRI_a                            rdf:type html:A;
-                                              html:href ?IRI_href;
+                                              html:href ?IRI_value_text;
                                               rdf:_1 ?IRI_value.
       ?IRI_value                              rdf:type html:TextElement;
                                               html:fragment ?IRI_value_text.	  
@@ -846,7 +846,7 @@ construct {
       ?objectproperty_IRI_text              rdf:type html:TextElement;
                                               html:fragment 'IRI: '.
       ?objectproperty_IRI_a                 rdf:type html:A;
-                                              html:href ?objectProperty;
+                                              html:href ?fullIRI;
                                               rdf:_1 ?IRI_value.
       ?IRI_value                              rdf:type html:TextElement;
                                               html:fragment ?fullIRI.	  
@@ -1020,7 +1020,7 @@ construct {
       ?datatypeproperty_IRI_text              rdf:type html:TextElement;
                                               html:fragment 'IRI: '.
       ?datatypeproperty_IRI_a                 rdf:type html:A;
-                                              html:href ?datatypeProperty;
+                                              html:href ?fullIRI;
                                               rdf:_1 ?IRI_value.
       ?IRI_value                              rdf:type html:TextElement;
                                               html:fragment ?fullIRI.	  
@@ -1286,10 +1286,10 @@ construct {
       ?namedindividual_IRI_text               rdf:type html:TextElement;
                                               html:fragment 'IRI: '.
       ?namedindividual_IRI_a                  rdf:type html:A;
-                                              html:href ?namedIndividual;
+                                              html:href ?fullIRI;
                                               rdf:_1 ?IRI_value.
       ?IRI_value                              rdf:type html:TextElement;
-                                              html:fragment ?namedIndividual_IRI.   # later this will be changed to ?prefixedIRI, after figuring out how to deal with prefixes of namespaces other than the namespace of the ontology itself. 
+                                              html:fragment ?fullIRI.   
       ?namedindividual_definition             rdf:type html:TextElement;
                                               html:fragment ?cleanedDefinition.
       ?manchester_syntax                      rdf:type html:Aside;
@@ -1364,7 +1364,7 @@ WHERE {
 
   # Establishing the full IRI of the named individual.
   
-  BIND(STR(?namedIndividual) as ?namedIndividual_IRI)  
+  BIND(STR(?namedIndividual) as ?fullIRI)  
 
   # Create identifiers
   
@@ -1446,10 +1446,10 @@ construct {
       ?concept_IRI_text              rdf:type html:TextElement;
                                               html:fragment 'IRI: '.
       ?concept_IRI_a                 rdf:type html:A;
-                                              html:href ?concept;
+                                              html:href ?concept_IRI;
                                               rdf:_1 ?IRI_value.
       ?IRI_value                              rdf:type html:TextElement;
-                                              html:fragment ?concept_IRI.   # later this will be changed to ?prefixedIRI, after figuring out how to deal with prefixes of namespaces other than the namespace of the ontology itself. 
+                                              html:fragment ?concept_IRI. 
       ?concept_definition                     rdf:type html:TextElement;
                                               html:fragment ?cleanedDefinition.
       ?manchester_syntax                      rdf:type html:Aside;
