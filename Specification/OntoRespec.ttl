@@ -16,7 +16,7 @@
 @prefix skos: <http://www.w3.org/2004/02/skos/core#>.
 
 respec:introduction
-	a owl:DatatypeProperty;
+    a owl:DatatypeProperty;
     rdfs:domain respec:Generation;
     rdfs:range xsd:string;
     skos:definition 'Property that links a text, in which an ontology is presented and introduced to an audience, to that very ontology.'@en;
@@ -44,8 +44,8 @@ construct {
   ?documentID
     a html:Document, respec:Document ;
     ?element ?childID ;
-	prov:wasGeneratedBy $this;
-	dct:subject ?ontology.
+    prov:wasGeneratedBy $this;
+    dct:subject ?ontology.
     
 } where {
   
@@ -78,8 +78,8 @@ construct {
     rdfs:label ?label;
     html:fragment ?fragment;
     ?element ?childID ;
-	?attribute ?attributeValue.
-    
+    ?attribute ?attributeValue.
+
 } where {
 
   $this respec:documentLanguage ?language;
@@ -628,61 +628,61 @@ construct {
                                                       rdf:_2 ?manchester_table_body_instance_equivalence;
                                                       rdf:_3 ?manchester_table_body_instance_subclass;
                                                       rdf:_4 ?manchester_table_body_instance_seeAlso.
-      ?manchester_table_body_instance_class          rdf:type html:Tbody;
+      ?manchester_table_body_instance_class          rdf:type html:TableBody;
                                                       rdf:_1  ?manchester_definition_tr_class;
                                                       rdf:_2  ?manchester_definition_tr_class_empty_row.
       ?manchester_definition_tr_class               rdf:type html:Row;
                                                       rdf:_1 ?manchester_definition_class_type_td;
                                                       rdf:_2 ?manchester_definition_class_value_td.
-      ?manchester_definition_class_type_td          rdf:type html:Td;
+      ?manchester_definition_class_type_td          rdf:type html:DataCell;
                                                       rdf:_1 ?manchester_definition_class_type_text. 
       ?manchester_definition_class_type_text        rdf:type html:TextElement;
                                                       html:fragment 'Class:'.
-      ?manchester_definition_class_value_td         rdf:type html:Td;
+      ?manchester_definition_class_value_td         rdf:type html:DataCell;
                                                       rdf:_1 ?manchester_definition_class_value_text.
       ?manchester_definition_class_value_text       rdf:type html:TextElement;
                                                       html:fragment ?cleanedManchesterLabel.
       ?manchester_definition_tr_class_empty_row     rdf:type html:Row;
                                                       rdf:_1 ?manchester_definition_class_empty_td1;
                                                       rdf:_2 ?manchester_definition_class_empty_td2.
-      ?manchester_definition_class_empty_td1          rdf:type html:Td.
-      ?manchester_definition_class_empty_td2          rdf:type html:Td.
-      ?manchester_table_body_instance_equivalence   rdf:type html:Tbody;
+      ?manchester_definition_class_empty_td1          rdf:type html:DataCell.
+      ?manchester_definition_class_empty_td2          rdf:type html:DataCell.
+      ?manchester_table_body_instance_equivalence   rdf:type html:TableBody;
                                                       ?memberManchesterStringEquivalentTo  ?manchester_definition_tr_equivalence.
       ?manchester_definition_tr_equivalence         rdf:type html:Row;
                                                       rdf:_1 ?manchester_definition_equivalence_type_td;
                                                       rdf:_2 ?manchester_definition_equivalence_value_td.
-      ?manchester_definition_equivalence_type_td    rdf:type html:Td;
+      ?manchester_definition_equivalence_type_td    rdf:type html:DataCell;
                                                       rdf:_1 ?manchester_definition_equivalence_type_text. 
       ?manchester_definition_equivalence_type_text  rdf:type html:TextElement;
                                                       html:fragment 'EquivalentTo:'.
-      ?manchester_definition_equivalence_value_td   rdf:type html:Td;
+      ?manchester_definition_equivalence_value_td   rdf:type html:DataCell;
                                                       rdf:_1 ?manchester_definition_equivalence_value_text.
       ?manchester_definition_equivalence_value_text rdf:type html:TextElement;
                                                       html:fragment ?manchesterDefinition.
-      ?manchester_table_body_instance_subclass       rdf:type html:Tbody;
+      ?manchester_table_body_instance_subclass       rdf:type html:TableBody;
                                                       ?memberManchesterStringSubClassOf  ?manchester_definition_tr_subclass.
       ?manchester_definition_tr_subclass            rdf:type html:Row;
                                                       rdf:_1 ?manchester_definition_subclass_type_td;
                                                       rdf:_2 ?manchester_definition_subclass_value_td.
-      ?manchester_definition_subclass_type_td       rdf:type html:Td;
+      ?manchester_definition_subclass_type_td       rdf:type html:DataCell;
                                                       rdf:_1 ?manchester_definition_subclass_type_text. 
       ?manchester_definition_subclass_type_text     rdf:type html:TextElement;
                                                       html:fragment 'SubClassOf:'.
-      ?manchester_definition_subclass_value_td      rdf:type html:Td;
+      ?manchester_definition_subclass_value_td      rdf:type html:DataCell;
                                                       rdf:_1 ?manchester_definition_subclass_value_text.
       ?manchester_definition_subclass_value_text    rdf:type html:TextElement;
                                                       html:fragment ?manchesterDefinitionS.
-      ?manchester_table_body_instance_seeAlso       rdf:type html:Tbody;
+      ?manchester_table_body_instance_seeAlso       rdf:type html:TableBody;
                                                       ?memberManchesterStringSeeAlso  ?manchester_definition_tr_seeAlso.
       ?manchester_definition_tr_seeAlso             rdf:type html:Row;
                                                       rdf:_1 ?manchester_definition_seeAlso_type_td;
                                                       rdf:_2 ?manchester_definition_seeAlso_value_td.
-      ?manchester_definition_seeAlso_type_td        rdf:type html:Td;
+      ?manchester_definition_seeAlso_type_td        rdf:type html:DataCell;
                                                       rdf:_1 ?manchester_definition_seeAlso_type_text. 
       ?manchester_definition_seeAlso_type_text      rdf:type html:TextElement;
                                                       html:fragment 'SeeAlso:'.
-      ?manchester_definition_seeAlso_value_td       rdf:type html:Td;
+      ?manchester_definition_seeAlso_value_td       rdf:type html:DataCell;
                                                       rdf:_1 ?manchester_definition_seeAlso_value_text.
       ?manchester_definition_seeAlso_value_text     rdf:type html:TextElement;
                                                       html:fragment ?manchesterDefinitionS.
