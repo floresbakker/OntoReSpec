@@ -685,7 +685,7 @@ construct {
       ?manchester_definition_seeAlso_value_td       rdf:type html:DataCell;
                                                       rdf:_1 ?manchester_definition_seeAlso_value_text.
       ?manchester_definition_seeAlso_value_text     rdf:type html:TextElement;
-                                                      html:fragment ?manchesterDefinitionS.
+                                                      html:fragment ?seeAlsoLabel.
                                                     
       ?class_linebreak_instance1                          rdf:type html:Br.
       ?class_linebreak_instance2                          rdf:type html:Br.
