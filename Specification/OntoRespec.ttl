@@ -173,9 +173,9 @@ construct {
   ?introductionSectionInstance        rdf:type html:Section;
                                       rdf:_1 ?generalIntroductionH2;
                                       rdf:_2 ?generalIntroduction_text;
-									  rdf:_3 ?introductionBackgroundSection;
+                                      rdf:_3 ?introductionBackgroundSection;
                                       rdf:_4 ?introductionOntologySection;
-									  rdf:_5 ?introductionAudienceSection;
+                                      rdf:_5 ?introductionAudienceSection;
                                       html:class "informative".
   ?generalIntroductionH2              rdf:type html:H2;
                                       rdf:_1 ?generalIntroduction_title.
@@ -348,28 +348,12 @@ rule:NameSpace
   skos:prefLabel 'Namespace rule'@en;
   rdfs:comment 'The Namespace rule creates a namespace declaration for the ontology in the document.'@en ;
   sh:construct """
-prefix dcm: <http://purl.org/dc/dcmitype/>
-prefix dct: <http://purl.org/dc/terms/>
-prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
-prefix doc: <http://www.example.org/document/> 
-prefix foaf: <http://xmlns.com/foaf/0.1/>
-prefix function: <https://data.rijksfinancien.nl/html/model/function/>
-prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
-prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/> 
-prefix owl: <http://www.w3.org/2002/07/owl#>
-prefix prov: <http://www.w3.org/ns/prov#>
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <https://respec.org/model/def/> 
-prefix rule: <https://data.rijksfinancien.nl/html/model/rule/>
-prefix shp: <https://data.rijksfinancien.nl/html/model/shp/>
-prefix target: <https://data.rijksfinancien.nl/html/model/target/>
-prefix sh: <http://www.w3.org/ns/shacl#>
-prefix status: <http://purl.org/adms/status/>
-prefix vann: <http://purl.org/vocab/vann/>
-prefix void: <http://rdfs.org/ns/void#>
-prefix xsd: <http://www.w3.org/2001/XMLSchema#>
-prefix skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX html: <https://data.rijksfinancien.nl/html/model/def/> 
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX respec: <https://respec.org/model/def/> 
+PREFIX sh: <http://www.w3.org/ns/shacl#>
+PREFIX vann: <http://purl.org/vocab/vann/>
 
 construct {
   ?namespaceTableBodyInstance       ?rdf_member ?namespaceTableDataRow.
@@ -379,77 +363,67 @@ construct {
   ?namespacePrefixDataCell          rdf:type html:DataCell;
                                     rdf:_1 ?namespacePrefixDataCell_text.
   ?namespacePrefixDataCell_text     rdf:type html:TextElement;
-                                    html:fragment ?IRI_prefix.
+                                    html:fragment ?prefix.
   ?namespaceIRIDataCell             rdf:type html:DataCell;
                                     rdf:_1 ?namespaceIRIDataCell_text.
   ?namespaceIRIDataCell_text        rdf:type html:TextElement;
-                                    html:fragment ?IRI_base.							
+                                    html:fragment ?namespace.
   ?namespaceDefinitionDataCell      rdf:type html:DataCell;
                                     rdf:_1 ?namespaceDefinitionDataCell_text.
 } where {
   ?nameSpaceTableBody a respec:NameSpace.
   {
-    SELECT ?ontology ?IRI_prefix ?IRI_base (COUNT(?prevOntology) + 2 AS ?rowmember) WHERE {
-      {
-        VALUES (?ontology ?IRI_base ?IRI_prefix) {
-          (dcm: "http://purl.org/dc/dcmitype/" "dcm")
-          (dct: "http://purl.org/dc/terms/" "dct")
-          (foaf: "http://xmlns.com/foaf/0.1/" "foaf")
-          (owl: "http://www.w3.org/2002/07/owl#" "owl")
-          (prov: "http://www.w3.org/ns/prov#" "prov")
-          (rdf: "http://www.w3.org/1999/02/22-rdf-syntax-ns#" "rdf")
-          (rdfs: "http://www.w3.org/2000/01/rdf-schema#" "rdfs")
-          (sh: "http://www.w3.org/ns/shacl#" "sh")
-          (skos: "http://www.w3.org/2004/02/skos/core#" "skos")
-          (status: "http://purl.org/adms/status/" "status")
-          (vann: "http://purl.org/vocab/vann/" "vann")
-          (void: "http://rdfs.org/ns/void#" "void")
-          (xsd: "http://www.w3.org/2001/XMLSchema#" "xsd")
-        }
-      $this dct:subject ?subjectOntology.
-	  ?subjectOntology owl:imports ?ontology.
-      }
-      UNION 
-      {
-	    $this dct:subject ?ontology.
-        ?ontology vann:preferredNamespaceUri ?IRI_base;
-                  vann:preferredNamespacePrefix ?IRI_prefix.
-      }
-      OPTIONAL {
-        {
-          VALUES (?prevOntology ?prevIRI_prefix) {
-            (dcm:  "dcm")
-            (dct:  "dct")
-            (foaf: "foaf")
-            (owl:  "owl")
-            (prov: "prov")
-            (rdf:  "rdf")
-            (rdfs: "rdfs")
-            (sh: "sh")
-            (skos: "skos")
-            (status: "status")
-            (vann: "vann")
-            (void: "void")
-            (xsd: "xsd")
-          }
-        }
-        UNION 
-        {
-          ?prevOntology vann:preferredNamespacePrefix ?prevIRI_prefix.
-        }
-        FILTER (?prevIRI_prefix < ?IRI_prefix)
-      }
+  SELECT ?prefix ?namespace (COUNT(?prevPrefix) + 2 AS ?rowmember) WHERE {
+
+  # Get the namespace declarations for the ontology ordered by prefix
+  
+    {
+      $this sh:declare ?prefixDeclaration.
+      ?prefixDeclaration sh:namespace ?namespace;
+                         # e.g. "http://example.org/"
+                         sh:prefix ?prefix.
+      # e.g. "ex"
     }
-    GROUP BY ?ontology ?IRI_prefix ?IRI_base
+    UNION 
+
+    # Get the namespace declaration for the ontology itself
+    {
+      $this vann:preferredNamespaceUri ?namespace;
+                # e.g. "http://example.org/"
+                vann:preferredNamespacePrefix ?prefix.
+      # e.g. "ex"
+    }
+  
+  OPTIONAL{
+    {
+      ?ontology sh:declare ?prevPrefixDeclaration.
+      ?prevPrefixDeclaration sh:namespace ?prevNamespace;
+                             # e.g. "http://example.org/"
+                             sh:prefix ?prevPrefix.
+      # e.g. "ex"
+    }
+    UNION 
+
+    {
+      ?ontology vann:preferredNamespaceUri ?prevNamespace;
+                    # e.g. "http://example.org/"
+                    vann:preferredNamespacePrefix ?prevPrefix.
+      # e.g. "ex"
+    }
+    FILTER (?prevPrefix < ?prefix)
   }
-  BIND(IRI(CONCAT(str(rdf:),"_", str(?rowmember))) as ?rdf_member) 
-  # Create identifiers
-  BIND(IRI(CONCAT(STR(?nameSpaceTableBody),'-instance'))                  as ?namespaceTableBodyInstance)
-  BIND(IRI(CONCAT(STR(?namespaceTableBodyInstance), '-',STR(?rowmember))) as ?namespaceTableDataRow)
-  BIND(IRI(CONCAT(STR(?namespaceTableDataRow),'-1'))                      as ?namespacePrefixDataCell)
-  BIND(IRI(CONCAT(STR(?namespaceTableDataRow),'-2'))                      as ?namespaceIRIDataCell)
-  BIND(IRI(CONCAT(STR(?namespacePrefixDataCell),'-1'))                    as ?namespacePrefixDataCell_text)
-  BIND(IRI(CONCAT(STR(?namespaceIRIDataCell),'-1'))                       as ?namespaceIRIDataCell_text)
+}
+GROUP BY ?prefix ?namespace
+ORDER BY ?prefix}
+
+BIND(IRI(CONCAT(str(rdf:),"_", str(?rowmember))) as ?rdf_member)
+# Create identifiers
+BIND(IRI(CONCAT(STR(?nameSpaceTableBody),'-instance'))                  as ?namespaceTableBodyInstance)
+BIND(IRI(CONCAT(STR(?namespaceTableBodyInstance), '-',STR(?rowmember))) as ?namespaceTableDataRow)
+BIND(IRI(CONCAT(STR(?namespaceTableDataRow),'-1'))                      as ?namespacePrefixDataCell)
+BIND(IRI(CONCAT(STR(?namespaceTableDataRow),'-2'))                      as ?namespaceIRIDataCell)
+BIND(IRI(CONCAT(STR(?namespacePrefixDataCell),'-1'))                    as ?namespacePrefixDataCell_text)
+BIND(IRI(CONCAT(STR(?namespaceIRIDataCell),'-1'))                       as ?namespaceIRIDataCell_text)
 }
 """.
 
@@ -1102,13 +1076,13 @@ construct {
                                               rdf:_1 ?manchester_subpropertyof;
                                               rdf:_2 ?linebreak6.
       ?manchester_subpropertyof               rdf:type html:TextElement;
-                                              html:fragment ?datatypePropertyManchesterSubPropertyOf.											  
-	  ?linebreak1                             rdf:type html:Br.
+                                              html:fragment ?datatypePropertyManchesterSubPropertyOf.
+      ?linebreak1                             rdf:type html:Br.
       ?linebreak2                             rdf:type html:Br.
-	  ?linebreak3                             rdf:type html:Br.
-	  ?linebreak4                             rdf:type html:Br.
-	  ?linebreak5                             rdf:type html:Br.
-	  ?linebreak6                             rdf:type html:Br.
+      ?linebreak3                             rdf:type html:Br.
+      ?linebreak4                             rdf:type html:Br.
+      ?linebreak5                             rdf:type html:Br.
+      ?linebreak6                             rdf:type html:Br.
 }
 where  {
    {?datatypeproperty_Template rdf:type respec:DatatypeProperty.}
@@ -1756,7 +1730,7 @@ function:escapeHTML
                 AS ?result).
         }
         """ .
-		
+
 function:getPrefixedIRI
     a sh:SPARQLFunction ;
     rdfs:comment "Gets prefixed IRI from full IRI." ;

@@ -280,11 +280,11 @@ doc:40.9.1 a respec:StaticElement,
 doc:41.6 a respec:StaticElement,
         respec:Template,
         html:Table ;
-		html:class "numbered term-table";
-    rdfs:label "table element" ;
-	rdf:_1 doc:41.6.1;
-	rdf:_2 doc:41.6.2.
-	
+        html:class "def";
+        rdfs:label "table element" ;
+        rdf:_1 doc:41.6.1;
+        rdf:_2 doc:41.6.2.
+
 doc:41.6.1 a respec:StaticElement,
         respec:Template,
         html:Caption ;
