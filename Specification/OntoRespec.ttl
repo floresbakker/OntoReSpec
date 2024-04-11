@@ -839,106 +839,105 @@ prefix vann: <http://purl.org/vocab/vann/>
 
 construct {
 
-      ?divDefinitionObjectProperty1Instance   rdf:type html:Div;
-                                              ?memberObjectPropertyString ?divDefinitionObjectProperty2Instance;
-                                              html:fragment ?absenceOfObjectPropertyDefinitions.
-      ?divDefinitionObjectProperty2Instance            rdf:type html:Section;
-                                              rdf:_1 ?objectproperty_title_instance_h2;
-                                              rdf:_2 ?objectproperty_IRI_p;
-                                              rdf:_3 ?objectproperty_linebreak_instance1; 
-                                              rdf:_4 ?objectproperty_definition_instance;
-                                              rdf:_5 ?objectproperty_linebreak_instance2;  
-                                              rdf:_6 ?objectproperty_linebreak_instance3;
-                                              rdf:_7 ?manchester_syntax_instance.
-      ?objectproperty_title_instance_h2                rdf:type html:H2;
-                                              rdf:_1 ?objectproperty_dfn_instance.
-      ?objectproperty_dfn_instance                     rdf:type html:Dfn;
-                                              rdf:_1 ?objectproperty_title_text_instance.
-      ?objectproperty_title_text_instance              rdf:type html:TextElement;
-                                              html:fragment ?cleanedManchesterLabel.
-      ?objectproperty_IRI_p                            rdf:type html:P;
-                                              rdf:_1 ?objectproperty_IRI_strong;
-                                              rdf:_2 ?objectproperty_IRI_a.
-      ?objectproperty_IRI_strong                       rdf:type html:Strong;
-                                              rdf:_1 ?objectproperty_IRI_text.
-      ?objectproperty_IRI_text                         rdf:type html:TextElement;
-                                              html:fragment 'IRI: '.
-      ?objectproperty_IRI_a                            rdf:type html:A;
-                                              html:href ?IRI_value_text;
-                                              rdf:_1 ?IRI_value.
-      ?IRI_value                              rdf:type html:TextElement;
-                                              html:fragment ?IRI_value_text.
-      ?objectproperty_definition_instance              rdf:type html:TextElement;
-                                              html:fragment ?objectPropertyDefinition_text.
-      ?manchester_syntax_instance                   rdf:type html:Aside;
-                                                      html:objectproperty "note" ;
-                                                      html:title "Manchester Syntax (Extended)";
-                                                      rdf:_1 ?manchester_syntax_code_instance.
-      ?manchester_syntax_code_instance              rdf:type html:Code;
-                                                      rdf:_1 ?manchester_table_instance.
-      ?manchester_table_instance                    rdf:type html:Table;
-                                                      rdf:_1 ?manchester_table_body_instance_objectproperty.
+      ?divDefinitionObjectProperty1Instance                   rdf:type html:Div;
+                                                              ?rdf_member ?divDefinitionObjectProperty2Instance;
+                                                              html:fragment ?absenceOfObjectPropertyDefinitions.
+      ?divDefinitionObjectProperty2Instance                   rdf:type html:Section;
+                                                              rdf:_1 ?objectproperty_title_instance_h2;
+                                                              rdf:_2 ?objectproperty_IRI_p;
+                                                              rdf:_3 ?objectproperty_linebreak_instance1; 
+                                                              rdf:_4 ?objectproperty_definition_instance;
+                                                              rdf:_5 ?objectproperty_linebreak_instance2;  
+                                                              rdf:_6 ?objectproperty_linebreak_instance3;
+                                                              rdf:_7 ?manchester_syntax_instance.
+      ?objectproperty_title_instance_h2                       rdf:type html:H2;
+                                                              rdf:_1 ?objectproperty_dfn_instance.
+      ?objectproperty_dfn_instance                            rdf:type html:Dfn;
+                                                              rdf:_1 ?objectproperty_title_text_instance.
+      ?objectproperty_title_text_instance                     rdf:type html:TextElement;
+                                                              html:fragment ?cleanedManchesterLabel.
+      ?objectproperty_IRI_p                                   rdf:type html:P;
+                                                              rdf:_1 ?objectproperty_IRI_strong;
+                                                              rdf:_2 ?objectproperty_IRI_a.
+      ?objectproperty_IRI_strong                              rdf:type html:Strong;
+                                                              rdf:_1 ?objectproperty_IRI_text.
+      ?objectproperty_IRI_text                                rdf:type html:TextElement;
+                                                              html:fragment 'IRI: '.
+      ?objectproperty_IRI_a                                   rdf:type html:A;
+                                                              html:href ?IRI_value_text;
+                                                              rdf:_1 ?IRI_value.
+      ?IRI_value                                              rdf:type html:TextElement;
+                                                              html:fragment ?IRI_value_text.
+      ?objectproperty_definition_instance                     rdf:type html:TextElement;
+                                                              html:fragment ?objectPropertyDefinition_text.
+      ?manchester_syntax_instance                             rdf:type html:Aside;
+                                                              html:objectproperty "note" ;
+                                                              html:title "Manchester Syntax (Extended)";
+                                                              rdf:_1 ?manchester_syntax_code_instance.
+      ?manchester_syntax_code_instance                        rdf:type html:Code;
+                                                              rdf:_1 ?manchester_table_instance.
+      ?manchester_table_instance                              rdf:type html:Table;
+                                                              rdf:_1 ?manchester_table_body_instance_objectproperty.
       ?manchester_table_body_instance_objectproperty          rdf:type html:TableBody;
-                                                      rdf:_1  ?manchester_definition_tr_objectproperty;
-                                                      rdf:_2  ?manchester_definition_tr_objectproperty_empty_row;
-                                                      rdf:_3  ?manchester_domain_tr_objectproperty;
-                                                      rdf:_4  ?manchester_range_tr_objectproperty;
-                                                      rdf:_5  ?manchester_subproperty_tr_objectproperty.
-      ?manchester_definition_tr_objectproperty               rdf:type html:Row;
-                                                      rdf:_1 ?manchester_definition_objectproperty_type_td;
-                                                      rdf:_2 ?manchester_definition_objectproperty_value_td.
-      ?manchester_definition_objectproperty_type_td          rdf:type html:DataCell;
-                                                      rdf:_1 ?manchester_definition_objectproperty_type_text. 
-      ?manchester_definition_objectproperty_type_text        rdf:type html:TextElement;
-                                                      html:fragment 'ObjectProperty:'.
-      ?manchester_definition_objectproperty_value_td         rdf:type html:DataCell;
-                                                      rdf:_1 ?manchester_definition_objectproperty_value_text.
-      ?manchester_definition_objectproperty_value_text       rdf:type html:TextElement;
-                                                      html:fragment ?objectPropertyManchesterLabel.
+                                                              rdf:_1 ?manchester_definition_tr_objectproperty;
+                                                              rdf:_2 ?manchester_definition_tr_objectproperty_empty_row;
+                                                              rdf:_3 ?manchester_domain_tr_objectproperty;
+                                                              rdf:_4 ?manchester_range_tr_objectproperty;
+                                                              rdf:_5 ?manchester_subproperty_tr_objectproperty.
+      ?manchester_definition_tr_objectproperty                rdf:type html:Row;
+                                                              rdf:_1 ?manchester_definition_objectproperty_type_td;
+                                                              rdf:_2 ?manchester_definition_objectproperty_value_td.
+      ?manchester_definition_objectproperty_type_td           rdf:type html:DataCell;
+                                                              rdf:_1 ?manchester_definition_objectproperty_type_text. 
+      ?manchester_definition_objectproperty_type_text         rdf:type html:TextElement;
+                                                              html:fragment 'ObjectProperty:'.
+      ?manchester_definition_objectproperty_value_td          rdf:type html:DataCell;
+                                                              rdf:_1 ?manchester_definition_objectproperty_value_text.
+      ?manchester_definition_objectproperty_value_text        rdf:type html:TextElement;
+                                                              html:fragment ?objectPropertyManchesterLabel.
 
-      ?manchester_definition_tr_objectproperty_empty_row     rdf:type html:Row;
-                                                      rdf:_1 ?manchester_definition_objectproperty_empty_td1;
-                                                      rdf:_2 ?manchester_definition_objectproperty_empty_td2.
-      ?manchester_definition_objectproperty_empty_td1          rdf:type html:DataCell.
-      ?manchester_definition_objectproperty_empty_td2          rdf:type html:DataCell.
+      ?manchester_definition_tr_objectproperty_empty_row      rdf:type html:Row;
+                                                              rdf:_1 ?manchester_definition_objectproperty_empty_td1;
+                                                              rdf:_2 ?manchester_definition_objectproperty_empty_td2.
+      ?manchester_definition_objectproperty_empty_td1         rdf:type html:DataCell.
+      ?manchester_definition_objectproperty_empty_td2         rdf:type html:DataCell.
 
-      ?manchester_domain_tr_objectproperty              rdf:type html:Row;
-                                                      rdf:_1 ?manchester_domain_tr_objectproperty_type_td;
-                                                      rdf:_2 ?manchester_domain_tr_objectproperty_value_td.
-      ?manchester_domain_tr_objectproperty_type_td          rdf:type html:DataCell;
-                                                      rdf:_1 ?manchester_domain_tr_objectproperty_type_text. 
-      ?manchester_domain_tr_objectproperty_type_text        rdf:type html:TextElement;
-                                                      html:fragment 'Domain:'.
-      ?manchester_domain_tr_objectproperty_value_td         rdf:type html:DataCell;
-                                                      rdf:_1 ?manchester_domain_tr_objectproperty_value_text.
-      ?manchester_domain_tr_objectproperty_value_text       rdf:type html:TextElement;
-                                                      html:fragment ?objectPropertyManchesterDomain.
+      ?manchester_domain_tr_objectproperty                    rdf:type html:Row;
+                                                              rdf:_1 ?manchester_domain_tr_objectproperty_type_td;
+                                                              rdf:_2 ?manchester_domain_tr_objectproperty_value_td.
+      ?manchester_domain_tr_objectproperty_type_td            rdf:type html:DataCell;
+                                                              rdf:_1 ?manchester_domain_tr_objectproperty_type_text. 
+      ?manchester_domain_tr_objectproperty_type_text          rdf:type html:TextElement;
+                                                              html:fragment 'Domain:'.
+      ?manchester_domain_tr_objectproperty_value_td           rdf:type html:DataCell;
+                                                              rdf:_1 ?manchester_domain_tr_objectproperty_value_text.
+      ?manchester_domain_tr_objectproperty_value_text         rdf:type html:TextElement;
+                                                              html:fragment ?objectPropertyManchesterDomain.
 
-      ?manchester_range_tr_objectproperty              rdf:type html:Row;
-                                                      rdf:_1 ?manchester_range_tr_objectproperty_type_td;
-                                                      rdf:_2 ?manchester_range_tr_objectproperty_value_td.
-      ?manchester_range_tr_objectproperty_type_td          rdf:type html:DataCell;
-                                                      rdf:_1 ?manchester_range_tr_objectproperty_type_text. 
-      ?manchester_range_tr_objectproperty_type_text        rdf:type html:TextElement;
-                                                      html:fragment 'Range:'.
-      ?manchester_range_tr_objectproperty_value_td         rdf:type html:DataCell;
-                                                      rdf:_1 ?manchester_range_tr_objectproperty_value_text.
-      ?manchester_range_tr_objectproperty_value_text       rdf:type html:TextElement;
-                                                      html:fragment ?objectPropertyManchesterRange.
+      ?manchester_range_tr_objectproperty                    rdf:type html:Row;
+                                                             rdf:_1 ?manchester_range_tr_objectproperty_type_td;
+                                                             rdf:_2 ?manchester_range_tr_objectproperty_value_td.
+      ?manchester_range_tr_objectproperty_type_td            rdf:type html:DataCell;
+                                                             rdf:_1 ?manchester_range_tr_objectproperty_type_text. 
+      ?manchester_range_tr_objectproperty_type_text          rdf:type html:TextElement;
+                                                             html:fragment 'Range:'.
+      ?manchester_range_tr_objectproperty_value_td           rdf:type html:DataCell;
+                                                             rdf:_1 ?manchester_range_tr_objectproperty_value_text.
+      ?manchester_range_tr_objectproperty_value_text         rdf:type html:TextElement;
+                                                             html:fragment ?objectPropertyManchesterRange.
 
-      ?manchester_subproperty_tr_objectproperty
-                                                      rdf:_1 ?manchester_subproperty_tr_objectproperty_type_td;
-                                                      rdf:_2 ?manchester_subproperty_tr_objectproperty_value_td.
-      ?manchester_subproperty_tr_objectproperty_type_td          rdf:type html:DataCell;
-                                                      rdf:_1 ?manchester_subproperty_tr_objectproperty_type_text. 
-      ?manchester_subproperty_tr_objectproperty_type_text        rdf:type html:TextElement;
-                                                      html:fragment 'Range:'.
-      ?manchester_subproperty_tr_objectproperty_value_td         rdf:type html:DataCell;
-                                                      rdf:_1 ?manchester_subproperty_tr_objectproperty_value_text.
-      ?manchester_subproperty_tr_objectproperty_value_text       rdf:type html:TextElement;
-                                                      html:fragment ?objectPropertyManchesterSubPropertyOf.
+      ?manchester_subproperty_tr_objectproperty              rdf:type html:Row;
+                                                             rdf:_1 ?manchester_subproperty_tr_objectproperty_type_td;
+                                                             rdf:_2 ?manchester_subproperty_tr_objectproperty_value_td.
+      ?manchester_subproperty_tr_objectproperty_type_td      rdf:type html:DataCell;
+                                                             rdf:_1 ?manchester_subproperty_tr_objectproperty_type_text. 
+      ?manchester_subproperty_tr_objectproperty_type_text    rdf:type html:TextElement;
+                                                             html:fragment 'Subproperty:'.
+      ?manchester_subproperty_tr_objectproperty_value_td     rdf:type html:DataCell;
+                                                             rdf:_1 ?manchester_subproperty_tr_objectproperty_value_text.
+      ?manchester_subproperty_tr_objectproperty_value_text   rdf:type html:TextElement;
+                                                             html:fragment ?objectPropertyManchesterSubPropertyOf.
 
-    
       ?objectproperty_linebreak_instance1                          rdf:type html:Br.
       ?objectproperty_linebreak_instance2                          rdf:type html:Br.
       ?objectproperty_linebreak_instance3                          rdf:type html:Br.

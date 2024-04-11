@@ -230,7 +230,7 @@ def generateReSpec():
         generationGraph.add((doc[generation_iri], dct.subject, URIRef(result.ontology)))
     
     # Generating Mermaid diagram 
-    print("Step #1. Creating the Mermaid diagram...")
+    print("Step #1. Creating Mermaid diagram...")
     generateDiagram(mermaid_vocabulary, generationGraph)
     writeGraph(generationGraph, 'diagram')
     
@@ -240,7 +240,7 @@ def generateReSpec():
     writeGraph(generationGraph, 'manchestersyntax')
     
     # Build the ReSpec structure of the document in RDF
-    print("Step #3. Creating the ReSpec document structure...")
+    print("Step #3. Creating ReSpec document structure...")
     generationGraph.parse(data=html_vocabulary, format="turtle")
     generationGraph.parse(data=template_graph, format="turtle")
     generationGraph = generateReSpecRDF(respec_vocabulary, generationGraph)
