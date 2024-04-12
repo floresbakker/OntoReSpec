@@ -63,7 +63,39 @@
         <div class="input-section">
             <div class="form">
                 <div class="section-title">Input</div> <!-- Bold 'Input' text -->
+				<br>
                 <form action="http://localhost:5000/generateReSpec" method="post">
+                     <!-- Checkboxes for document options -->
+                    <div><i>Ontology components:</i></div> <!-- Title for checkboxes -->
+                    <br>
+                    <label for="conceptSchemeCheckbox">Concept Scheme</label>
+                    <input type="checkbox" id="conceptSchemeCheckbox" name="conceptScheme" value="true" checked><br>
+                    
+                    <label for="conceptCheckbox">Concept</label>
+                    <input type="checkbox" id="conceptCheckbox" name="concept" value="true" checked><br>
+                    
+                    <label for="classCheckbox">Class</label>
+                    <input type="checkbox" id="classCheckbox" name="owlClass" value="true" checked><br>
+                    
+                    <label for="objectPropertyCheckbox">Object Property</label>
+                    <input type="checkbox" id="objectPropertyCheckbox" name="objectProperty" value="true" checked><br>
+                    
+                    <label for="datatypePropertyCheckbox">Datatype Property</label>
+                    <input type="checkbox" id="datatypePropertyCheckbox" name="datatypeProperty" value="true" checked><br>
+                    
+                    <label for="rdfPropertyCheckbox">RDF Property</label>
+                    <input type="checkbox" id="rdfPropertyCheckbox" name="rdfProperty" value="true" checked><br>
+                    
+                    <label for="nodeshapeCheckbox">Nodeshape</label>
+                    <input type="checkbox" id="nodeshapeCheckbox" name="nodeshape" value="true" checked><br>
+					
+					<label for="namedIndividualCheckbox">Named individual</label>
+                    <input type="checkbox" id="namedIndividualCheckbox" name="namedIndividual" value="true" checked><br>
+					<br>
+					<!-- Input for the ontology itself -->
+					<i>Contents:</i>
+					<br>
+					<br>
                     <label for="textInput">Ontology</label><br>
                     <textarea id="rdfInput" name="ontology" rows="5" cols="100">{{ontology}}</textarea><br>
                      <label for="textInput">Introduction</label><br>
@@ -89,6 +121,7 @@
         <div class="output-section">
             <div class="output-box">
                 <div class="section-title">Output</div> <!-- Bold 'Output' text -->
+				<br>
                 <!-- HTML content -->
                 {% if htmlOutput %}
                 <div class="output-container">

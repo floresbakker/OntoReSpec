@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, url_for
-from rdflib import Graph, Namespace, Literal, RDF, URIRef
+from rdflib import Graph, Namespace, Literal, RDF, URIRef, XSD
 import pyshacl
 import datetime
 import os
@@ -194,6 +194,9 @@ def generateHTML(shaclgraph, serializable_graph):
 @app.route('/generateReSpec', methods=['POST'])
 def generateReSpec():
     print("Starting generation of the ReSpec document...")
+    
+    print("retrieve content")
+    #1 Retrieve content from user
     ontology = request.form['ontology']
     introduction = request.form['introduction']
     background = request.form['background']
@@ -203,8 +206,19 @@ def generateReSpec():
     documentLanguage = request.form['documentLanguage']
     documentNamespace = request.form['documentNamespace']
     
-    generation_iri = hash(ontology + str(datetime.datetime.now()))
+    print("retrieve options")
+    #2 Retrieve which components of the ontology need to be specified in the document
+    conceptScheme = request.form.get('conceptScheme', 'false')
+    concept = request.form.get('concept', 'false')
+    owlClass = request.form.get('owlClass', 'false')
+    objectProperty = request.form.get('objectProperty', 'false')
+    datatypeProperty = request.form.get('datatypeProperty', 'false')
+    rdfProperty = request.form.get('rdfProperty', 'false')
+    nodeshape = request.form.get('nodeshape', 'false')
+    namedIndividual = request.form.get('namedIndividual', 'false')
 
+    print("initiate graph")
+    generation_iri = hash(ontology + str(datetime.datetime.now()))
     generationGraph = Graph()
     generationGraph.bind("html", html)
     generationGraph.bind("respec", respec)    
@@ -212,6 +226,8 @@ def generateReSpec():
     generationGraph.bind("doc", doc)    
     
     # Add triples to be able to kickstart the SHACL engine later.
+    print("add content")
+    #1 Add content from user
     generationGraph.add((doc[generation_iri], RDF.type, respec.Generation))
     generationGraph.add((doc[generation_iri], respec.documentLanguage, Literal(documentLanguage)))
     generationGraph.add((doc[generation_iri], respec.documentNamespace, Literal(documentNamespace)))
@@ -221,9 +237,22 @@ def generateReSpec():
     generationGraph.add((doc[generation_iri], respec.objective, Literal(objective, lang=documentLanguage)))
     generationGraph.add((doc[generation_iri], respec.acknowledgements, Literal(acknowledgements, lang=documentLanguage)))
     
+    print("add options")
+    #2 Establish which components of the ontology need to be specified in the document
+    generationGraph.add((doc[generation_iri], respec.conceptScheme, Literal(conceptScheme, datatype=XSD.boolean)))
+    generationGraph.add((doc[generation_iri], respec.concept, Literal(concept, datatype=XSD.boolean)))
+    generationGraph.add((doc[generation_iri], respec.owlClass, Literal(owlClass, datatype=XSD.boolean)))
+    generationGraph.add((doc[generation_iri], respec.objectProperty, Literal(objectProperty, datatype=XSD.boolean)))
+    generationGraph.add((doc[generation_iri], respec.datatypeProperty, Literal(datatypeProperty, datatype=XSD.boolean)))
+    generationGraph.add((doc[generation_iri], respec.rdfProperty, Literal(rdfProperty, datatype=XSD.boolean)))
+    generationGraph.add((doc[generation_iri], respec.nodeshape, Literal(nodeshape, datatype=XSD.boolean)))
+    generationGraph.add((doc[generation_iri], respec.namedIndividual, Literal(namedIndividual, datatype=XSD.boolean)))
+
+    print("parse graph")
     # Let us establish which ontology needs to be documented in ReSpec
     generationGraph.parse(data=ontology , format="turtle")
     
+    print("query graph")
     ontologyQuery = generationGraph.query(ontology_query) 
 
     for result in ontologyQuery:
