@@ -208,14 +208,14 @@ def generateReSpec():
     
     print("retrieve options")
     #2 Retrieve which components of the ontology need to be specified in the document
-    conceptScheme = request.form.get('conceptScheme', 'false')
-    concept = request.form.get('concept', 'false')
-    owlClass = request.form.get('owlClass', 'false')
-    objectProperty = request.form.get('objectProperty', 'false')
-    datatypeProperty = request.form.get('datatypeProperty', 'false')
-    rdfProperty = request.form.get('rdfProperty', 'false')
-    nodeshape = request.form.get('nodeshape', 'false')
-    namedIndividual = request.form.get('namedIndividual', 'false')
+    conceptSchemes = request.form.get('conceptSchemes', 'false')
+    concepts = request.form.get('concepts', 'false')
+    classes = request.form.get('classes', 'false')
+    objectProperties = request.form.get('objectProperties', 'false')
+    datatypeProperties = request.form.get('datatypeProperties', 'false')
+    rdfProperties = request.form.get('rdfProperties', 'false')
+    nodeshapes = request.form.get('nodeshapes', 'false')
+    namedIndividuals = request.form.get('namedIndividuals', 'false')
 
     print("initiate graph")
     generation_iri = hash(ontology + str(datetime.datetime.now()))
@@ -239,14 +239,14 @@ def generateReSpec():
     
     print("add options")
     #2 Establish which components of the ontology need to be specified in the document
-    generationGraph.add((doc[generation_iri], respec.conceptScheme, Literal(conceptScheme, datatype=XSD.boolean)))
-    generationGraph.add((doc[generation_iri], respec.concept, Literal(concept, datatype=XSD.boolean)))
-    generationGraph.add((doc[generation_iri], respec.owlClass, Literal(owlClass, datatype=XSD.boolean)))
-    generationGraph.add((doc[generation_iri], respec.objectProperty, Literal(objectProperty, datatype=XSD.boolean)))
-    generationGraph.add((doc[generation_iri], respec.datatypeProperty, Literal(datatypeProperty, datatype=XSD.boolean)))
-    generationGraph.add((doc[generation_iri], respec.rdfProperty, Literal(rdfProperty, datatype=XSD.boolean)))
-    generationGraph.add((doc[generation_iri], respec.nodeshape, Literal(nodeshape, datatype=XSD.boolean)))
-    generationGraph.add((doc[generation_iri], respec.namedIndividual, Literal(namedIndividual, datatype=XSD.boolean)))
+    generationGraph.add((doc[generation_iri], respec.conceptSchemes, Literal(conceptSchemes, datatype=XSD.boolean)))
+    generationGraph.add((doc[generation_iri], respec.concepts, Literal(concepts, datatype=XSD.boolean)))
+    generationGraph.add((doc[generation_iri], respec.classes, Literal(classes, datatype=XSD.boolean)))
+    generationGraph.add((doc[generation_iri], respec.objectProperties, Literal(objectProperties, datatype=XSD.boolean)))
+    generationGraph.add((doc[generation_iri], respec.datatypeProperties, Literal(datatypeProperties, datatype=XSD.boolean)))
+    generationGraph.add((doc[generation_iri], respec.rdfProperties, Literal(rdfProperties, datatype=XSD.boolean)))
+    generationGraph.add((doc[generation_iri], respec.nodeshapes, Literal(nodeshapes, datatype=XSD.boolean)))
+    generationGraph.add((doc[generation_iri], respec.namedIndividuals, Literal(namedIndividuals, datatype=XSD.boolean)))
 
     print("parse graph")
     # Let us establish which ontology needs to be documented in ReSpec
