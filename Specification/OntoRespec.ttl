@@ -865,10 +865,10 @@ construct {
       ?objectproperty_IRI_text                                rdf:type html:TextElement;
                                                               html:fragment 'IRI: '.
       ?objectproperty_IRI_a                                   rdf:type html:A;
-                                                              html:href ?IRI_value_text;
+                                                              html:href ?fullIRI;
                                                               rdf:_1 ?IRI_value.
       ?IRI_value                                              rdf:type html:TextElement;
-                                                              html:fragment ?IRI_value_text.
+                                                              html:fragment ?fullIRI.
       ?objectproperty_definition_instance                     rdf:type html:TextElement;
                                                               html:fragment ?objectPropertyDefinition_text.
       ?manchester_syntax_instance                             rdf:type html:Aside;
@@ -993,7 +993,7 @@ WHERE {
 
   # Establishing the IRI of the objectproperty
 
-  BIND(STR(?objectProperty) as ?IRI_value_text)
+  BIND(STR(?objectProperty) as ?fullIRI)
   
   # Create identifiers - generic
   
@@ -1096,10 +1096,10 @@ construct {
       ?datatypeproperty_IRI_text                                rdf:type html:TextElement;
                                                               html:fragment 'IRI: '.
       ?datatypeproperty_IRI_a                                   rdf:type html:A;
-                                                              html:href ?IRI_value_text;
+                                                              html:href ?fullIRI;
                                                               rdf:_1 ?IRI_value.
       ?IRI_value                                              rdf:type html:TextElement;
-                                                              html:fragment ?IRI_value_text.
+                                                              html:fragment ?fullIRI.
       ?datatypeproperty_definition_instance                     rdf:type html:TextElement;
                                                               html:fragment ?datatypePropertyDefinition_text.
       ?manchester_syntax_instance                             rdf:type html:Aside;
@@ -1180,7 +1180,7 @@ where  {
 
   # Get the template
 
-  {?template rdf:type respec:ObjectProperty.}
+  {?template rdf:type respec:DatatypeProperty.}
 
   # Get the datatypeproperty from the ontology, the label and description, and the sequence order in which the datatypeproperty appears amidst other datatypepropertyes alphanumerically.
      {SELECT ?datatypeProperty ?datatypePropertyManchesterLabel_original ?datatypePropertyManchesterLabel ?datatypePropertyManchesterDomain ?datatypePropertyManchesterRange ?datatypePropertyManchesterSubPropertyOf ?datatypePropertyDefinition_text (COUNT(?prevDatatypeProperty) + 1 AS ?member)
@@ -1202,7 +1202,7 @@ WHERE {
   OPTIONAL{
   ?datatypeProperty manchester:subPropertyOf ?datatypePropertyManchesterSubPropertyOf.}
   
-  BIND(CONCAT("DatatypeProperty: ",function:escapeHTML(?datatypePropertyManchesterLabel_original)) as ?datatypePropertyManchesterLabel)
+  BIND(function:escapeHTML(?datatypePropertyManchesterLabel_original) as ?datatypePropertyManchesterLabel)
   BIND(IF(BOUND(?datatypePropertyDefinition_original), COALESCE(function:escapeHTML(?datatypePropertyDefinition_original)), "No definition provided by this ontology.") as ?datatypePropertyDefinition_text)
 
   
@@ -1299,7 +1299,7 @@ prefix skos: <http://www.w3.org/2004/02/skos/core#>
 construct {
 
       ?divDefinitionNodeShape1Instance rdf:type html:Div;
-	                                   html:fragment ?absenceOfNodeShapeDefinitions;
+                                       html:fragment ?absenceOfNodeShapeDefinitions;
                                        ?memberNodeShapeString ?divDefinitionNodeShape2Instance.
       ?divDefinitionNodeShape2Instance rdf:type html:Section;
                                    rdf:_1 ?nodeShape_title_instance_h2;
@@ -1660,7 +1660,7 @@ construct {
 }
 WHERE  {
   {
-    ?concept_template rdf:type respec:Concept.
+    ?template rdf:type respec:Concept.
   }
   ### Get the concepts per concept scheme as defined in the ontology and sort them alphabetically
   {
@@ -1669,7 +1669,7 @@ WHERE  {
 
       ?concept manchester:syntax 'CONCEPT';
                manchester:label ?conceptLabel ;
-               rdfs:isDefinedBy $this.
+               rdfs:isDefinedBy ?ontology.
       $this dct:subject ?ontology;
             respec:documentLanguage ?language.
       ?concept skos:inScheme ?conceptScheme.
@@ -1700,7 +1700,7 @@ WHERE  {
     WHERE {
       ?conceptScheme manchester:syntax 'CONCEPTSCHEME';
                      manchester:label ?conceptSchemeLabel;
-                     rdfs:isDefinedBy $this.
+                     rdfs:isDefinedBy ?ontology.
       $this dct:subject ?ontology;
             respec:documentLanguage ?language.
 
@@ -1729,7 +1729,7 @@ WHERE  {
     WHERE {
       ?concept manchester:syntax 'CONCEPT';
                manchester:label ?conceptLabel;
-               rdfs:isDefinedBy $this.
+               rdfs:isDefinedBy ?ontology.
      
       $this dct:subject ?ontology;
             respec:documentLanguage ?language.
@@ -1767,7 +1767,7 @@ WHERE  {
   
   # Create identifiers - ConceptScheme
   
-  BIND(IRI(CONCAT(STR(?concept_template),'-instance'))                   as ?concept_chapter)
+  BIND(IRI(CONCAT(STR(?template),'-instance'))                   as ?concept_chapter)
   BIND(IRI(CONCAT(STR(?concept_chapter),'-', str(?memberScheme)))        as ?conceptScheme_div)
   BIND(IRI(CONCAT(STR(?conceptScheme_div), '-1'))                        as ?conceptScheme_section)
   BIND(IRI(CONCAT(STR(?conceptScheme_div), '-2'))                        as ?concept_div)
