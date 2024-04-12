@@ -1456,7 +1456,7 @@ construct {
       ?linebreak5                             rdf:type html:Br.
 }
 where  {
-   {?namedindividual_Template rdf:type respec:NamedIndividual.}
+   {?template rdf:type respec:NamedIndividual.}
    
    {SELECT ?namedIndividual ?namedIndividualLabel ?cleanedDefinition ?cleanedClass ?cleanedFact (COUNT(?prevNamedIndividual) + 1 AS ?member)
 WHERE {
@@ -1498,7 +1498,7 @@ WHERE {
 
   # Create identifiers
   
-  BIND(IRI(CONCAT(STR(?namedindividual_Template),'-instance'))                   as ?namedindividual_div)
+  BIND(IRI(CONCAT(STR(?template),'-instance'))                                   as ?namedindividual_div)
   BIND(IRI(CONCAT(STR(?namedindividual_div), '-', str(?member)))                 as ?namedindividual_section)
   BIND(IRI(CONCAT(STR(?namedindividual_section), '-1'))                          as ?namedindividual_H2_title) 
   BIND(IRI(CONCAT(STR(?namedindividual_H2_title), '-1'))                         as ?namedindividual_dfn)
