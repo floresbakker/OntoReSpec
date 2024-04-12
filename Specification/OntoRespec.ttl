@@ -1,3 +1,4 @@
+@prefix condition: <https://data.rijksfinancien.nl/html/model/condition/>.
 @prefix dct: <http://purl.org/dc/terms/>.
 @prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>.
 @prefix doc: <http://www.example.org/document/> .
@@ -525,10 +526,17 @@ construct {
   
 }""".  
 
+condition:Classes
+  a sh:PropertyShape;
+  skos:prefLabel 'The user has requested the specification of ontology classes in the document.'@en;
+  sh:path respec:classes;
+  sh:hasValue true.
+
 rule:Classes
   a sh:SPARQLRule;
   skos:prefLabel 'Classes rule'@en;
   rdfs:comment 'The Classes rule creates a section of classes for the ontology in the document.'@en ;
+  sh:condition condition:Classes;
   sh:construct """
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
@@ -819,10 +827,17 @@ where  {
 
 """.
 
+condition:ObjectProperties
+  a sh:PropertyShape;
+  skos:prefLabel 'The user has requested the specification of ontology object properties in the document.'@en;
+  sh:path respec:objectProperties;
+  sh:hasValue true.
+
 rule:ObjectProperties
   a sh:SPARQLRule;
   skos:prefLabel 'Object properties rule'@en;
   rdfs:comment 'The object properties rule creates a section of object properties for the ontology in the document.'@en ;
+  sh:condition condition:ObjectProperties;
   sh:construct """
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
@@ -1050,10 +1065,17 @@ WHERE {
 }
 """.
 
+condition:DatatypeProperties
+  a sh:PropertyShape;
+  skos:prefLabel 'The user has requested the specification of ontology datatype properties in the document.'@en;
+  sh:path respec:datatypeProperties;
+  sh:hasValue true.
+
 rule:DatatypeProperties
   a sh:SPARQLRule;
   skos:prefLabel 'Datatype properties rule'@en;
   rdfs:comment 'The datatype properties rule creates a section of datatype properties for the ontology in the document.'@en ;
+  sh:condition condition:DatatypeProperties;
   sh:construct """
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
@@ -1277,10 +1299,17 @@ WHERE {
 }
 """.
 
+condition:Nodeshapes
+  a sh:PropertyShape;
+  skos:prefLabel 'The user has requested the specification of ontology nodeshapes in the document.'@en;
+  sh:path respec:nodeshapes;
+  sh:hasValue true.
+
 rule:NodeShapes
   a sh:SPARQLRule;
   skos:prefLabel 'Node shapes rule'@en;
   rdfs:comment 'The node shapes rule creates a section of node shapes for the ontology in the document.'@en ;
+  sh:condition condition:Nodeshapes;
   sh:construct """
 
 prefix dct: <http://purl.org/dc/terms/>
@@ -1370,10 +1399,17 @@ WHERE {
 }
 """.
 
+condition:NamedIndividuals
+  a sh:PropertyShape;
+  skos:prefLabel 'The user has requested the specification of ontology named individuals in the document.'@en;
+  sh:path respec:namedIndividuals;
+  sh:hasValue true.
+
 rule:NamedIndividuals
   a sh:SPARQLRule;
   skos:prefLabel 'Named individuals rule'@en;
   rdfs:comment 'The named individuals rule creates a section of named individuals for the ontology in the document.'@en ;
+  sh:condition condition:NamedIndividuals;
   sh:construct """
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
@@ -1530,10 +1566,17 @@ WHERE {
 }
 """.
 
+condition:Concepts
+  a sh:PropertyShape;
+  skos:prefLabel 'The user has requested the specification of ontology concepts in the document.'@en;
+  sh:path respec:concepts;
+  sh:hasValue true.
+
 rule:Concepts
   a sh:SPARQLRule;
   skos:prefLabel 'Concept rule'@en;
   rdfs:comment 'The concept rule creates a document section for concept schemes and their concepts as defined in the ontology.'@en ;
+  sh:condition condition:Concepts;
   sh:construct """
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
