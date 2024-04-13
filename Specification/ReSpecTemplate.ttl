@@ -49,14 +49,14 @@ doc:23.2 a respec:StaticElement,
     rdf:_4 doc:37.4 ;
     rdf:_5 doc:54.4 ;
     rdf:_6 doc:71.4 ;
-	rdf:_7 doc:71.5 .
-	
+    rdf:_7 doc:71.5 .
+
 doc:24.4 a respec:StaticElement,
         respec:Template,
         html:Section ;
     rdfs:label "section" ;
     rdf:_1 doc:24.4.1 ;
-	rdf:_2 doc:25.7 ;
+    rdf:_2 doc:25.7 ;
     html:id "abstract" .
 
 doc:25.7 a respec:StaticElement,
@@ -112,13 +112,13 @@ doc:3.2 a respec:StaticElement,
     rdfs:label "head" ;
     rdf:_1 doc:4.4 ;
     rdf:_2 doc:5.4 ;
-	rdf:_3 doc:5.5 ;
+    rdf:_3 doc:5.5 ;
     rdf:_4 doc:6.4 ;
     rdf:_5 doc:11.4 .
 
 doc:30.4 a respec:Introduction,
         respec:Template, 
-		html:Section ;
+        html:Section ;
     rdf:_1 doc:30.4-1 ;
     rdf:_2 doc:30.4-2 ;
     rdf:_3 doc:30.4-3 ;
@@ -178,14 +178,14 @@ doc:37.4 a respec:StaticElement,
         html:Section ;
     rdfs:label "section" ;
     rdf:_1 doc:38.6 ;
-	rdf:_2 doc:38.7 ;
+    rdf:_2 doc:38.7 ;
     rdf:_3 doc:39.6 ;
-	rdf:_4 doc:40.4 ;
-	rdf:_5 doc:40.5 ;
-	rdf:_6 doc:40.6 ;
-	rdf:_7 doc:40.7 ;
-	rdf:_8 doc:40.9 ;
-	rdf:_9 doc:41.6 ;
+    rdf:_4 doc:40.4 ;
+    rdf:_5 doc:40.5 ;
+    rdf:_6 doc:40.6 ;
+    rdf:_7 doc:40.7 ;
+    rdf:_8 doc:40.9 ;
+    rdf:_9 doc:41.6 ;
     rdf:_10 doc:46.6 .
 
 doc:38.6 a respec:StaticElement,
@@ -199,7 +199,7 @@ doc:38.6.1 a respec:StaticElement,
         html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "Overview" .
-	
+
 doc:38.7 a respec:StaticElement,
         respec:Template,
         html:P ;
@@ -224,9 +224,9 @@ doc:40.4 a respec:StaticElement,
         respec:Template,
         html:H2 ;
     rdfs:label "h2" ;
-	html:class "informative";
+    html:class "informative";
     rdf:_1 doc:40.4.1 .
-	
+
 doc:40.4.1 a respec:StaticElement,
         respec:Template,
         html:TextElement ;
@@ -249,16 +249,16 @@ doc:40.6 a respec:StaticElement,
         respec:Template,
         html:Iframe ;
     rdfs:label "Iframe element" ;
-	html:src "diagram.html";
-	html:style "width: 900px; height: 400px; resize: both; overflow: auto;".
+    html:src "diagram.html";
+    html:style "width: 900px; height: 400px; resize: both; overflow: auto;".
 
 doc:40.7 a respec:StaticElement,
         respec:Template,
         html:H2 ;
     rdfs:label "h2" ;
-	html:class "informative";
+    html:class "informative";
     rdf:_1 doc:40.7.1 .
-	
+
 doc:40.7.1 a respec:StaticElement,
         respec:Template,
         html:TextElement ;
@@ -289,33 +289,33 @@ doc:41.6.1 a respec:StaticElement,
         respec:Template,
         html:Caption ;
     rdfs:label "caption element" ;
-	rdf:_1 doc:41.6.1.1.
+    rdf:_1 doc:41.6.1.1.
 
 doc:41.6.1.1 a respec:StaticElement,
         respec:Template,
         html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "Prefixes and namespaces used in this specification".
-	
+
 doc:41.6.2 a respec:StaticElement,
         respec:NameSpace,
         respec:Template,
         html:TableBody ;
     rdfs:label "table body element" ;
-	rdf:_1 doc:41.6.2.1.
+    rdf:_1 doc:41.6.2.1.
 
 doc:41.6.2.1 a respec:StaticElement,
         respec:Template,
         html:Row ;
     rdfs:label "table header row element" ;
-	rdf:_1 doc:41.6.2.1.1;
-	rdf:_2 doc:41.6.2.1.2.
+    rdf:_1 doc:41.6.2.1.1;
+    rdf:_2 doc:41.6.2.1.2.
 
 doc:41.6.2.1.1 a respec:StaticElement,
         respec:Template,
         html:DataCell ;
     rdfs:label "data cell element" ;
-	rdf:_1 doc:41.6.2.1.1.1.
+    rdf:_1 doc:41.6.2.1.1.1.
 
 doc:41.6.2.1.1.1 a respec:StaticElement,
         respec:Template,
@@ -327,7 +327,7 @@ doc:41.6.2.1.2 a respec:StaticElement,
         respec:Template,
         html:DataCell ;
     rdfs:label "data cell element" ;
-	rdf:_1 doc:41.6.2.1.2.1.
+    rdf:_1 doc:41.6.2.1.2.1.
 
 doc:41.6.2.1.2.1 a respec:StaticElement,
         respec:Template,
@@ -425,13 +425,13 @@ doc:5.5.1 a respec:StaticElement,
         html:TextElement ;
     rdfs:label "text element" ;
     html:fragment """ 
-	
-	.term-table {
+
+    .term-table {
             border-collapse: collapse;
             border-color: #000000;
             margin: 16px;
-			
-	.term-table td,
+
+    .term-table td,
         th {
             border-width: 1px;
             border-style: solid;
@@ -443,20 +443,20 @@ doc:54.4 a respec:StaticElement,
         respec:Template,
         html:Section ;
     rdfs:label "Section" ;
-	rdf:_1 doc:54.5;
-	rdf:_2 doc:54.3;
-	rdf:_3 doc:55.1;
-	rdf:_4 doc:56.1;
-	rdf:_5 doc:57.1;
-	rdf:_6 doc:58.1;
-	rdf:_7 doc:59.1.
+    rdf:_1 doc:54.5;
+    rdf:_2 doc:54.3;
+    rdf:_3 doc:55.1;
+    rdf:_4 doc:56.1;
+    rdf:_5 doc:57.1;
+    rdf:_6 doc:58.1;
+    rdf:_7 doc:59.1.
 
 doc:54.5 a respec:StaticElement,
         respec:Template,
         html:H2 ;
     rdfs:label "h2" ;
     rdf:_1 doc:54.5.1 .
-	
+
 doc:54.5.1 a respec:StaticElement,
         respec:Template,
         html:TextElement ;
@@ -467,8 +467,8 @@ doc:54.3 a respec:StaticElement,
         respec:Template,
         html:Section ;
     rdfs:label "Section" ;
-	rdf:_1 doc:54.6;
-	rdf:_2 doc:54.7.
+    rdf:_1 doc:54.6;
+    rdf:_2 doc:54.7.
 
 doc:54.6 a respec:StaticElement,
         respec:Template,
@@ -493,10 +493,10 @@ doc:54.8 a respec:ClassDefinitionInstance,
         html:Div ;
     rdfs:label "Div" ;
     rdf:_1 doc:54.9 ;
-	rdf:_2 doc:54.10 ;
-	rdf:_3 doc:54.12 ;
-	rdf:_4 doc:54.13.
-	
+    rdf:_2 doc:54.10 ;
+    rdf:_3 doc:54.12 ;
+    rdf:_4 doc:54.13.
+
 doc:54.9 a respec:Class,
         respec:Template,
         html:H2 ;
@@ -526,7 +526,7 @@ doc:54.10.1 a respec:ClassDefinitionText,
         html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "{{class definition}}" .
-	
+
 doc:54.12 a respec:ClassLineBreak,
         respec:Template,
         html:Br ;
@@ -542,8 +542,8 @@ doc:55.1 a respec:StaticElement,
         respec:Template,
         html:Section ;
     rdfs:label "Section" ;
-	rdf:_1 doc:55.2;
-	rdf:_2 doc:55.3.
+    rdf:_1 doc:55.2;
+    rdf:_2 doc:55.3.
 
 doc:55.2 a respec:StaticElement,
         respec:Template,
@@ -569,7 +569,7 @@ doc:55.4 a respec:ObjectPropertyDefinitionInstance,
     rdfs:label "Div" ;
     rdf:_1 doc:55.9 ;
     rdf:_2 doc:55.10 .
-	
+
 doc:55.9 a respec:ObjectPropertyH2,
         respec:Template,
         html:H2 ;
@@ -604,8 +604,8 @@ doc:56.1 a respec:StaticElement,
         respec:Template,
         html:Section ;
     rdfs:label "Section" ;
-	rdf:_1 doc:56.2;
-	rdf:_2 doc:56.3.
+    rdf:_1 doc:56.2;
+    rdf:_2 doc:56.3.
 
 doc:56.2 a respec:StaticElement,
         respec:Template,
@@ -631,7 +631,7 @@ doc:56.4 a respec:DatatypePropertyDefinitionInstance,
     rdfs:label "Div" ;
     rdf:_1 doc:56.9 ;
     rdf:_2 doc:56.10 .
-	
+
 doc:56.9 a respec:DatatypePropertyH2,
         respec:Template,
         html:H2 ;
@@ -666,8 +666,8 @@ doc:57.1 a respec:StaticElement,
         respec:Template,
         html:Section ;
     rdfs:label "Section" ;
-	rdf:_1 doc:57.2;
-	rdf:_2 doc:57.3.
+    rdf:_1 doc:57.2;
+    rdf:_2 doc:57.3.
 
 doc:57.2 a respec:StaticElement,
         respec:Template,
@@ -728,8 +728,8 @@ doc:58.1 a respec:StaticElement,
         respec:Template,
         html:Section ;
     rdfs:label "Section" ;
-	rdf:_1 doc:58.2;
-	rdf:_2 doc:58.3.
+    rdf:_1 doc:58.2;
+    rdf:_2 doc:58.3.
 
 doc:58.2 a respec:StaticElement,
         respec:Template,
@@ -755,7 +755,7 @@ doc:58.4 a respec:NamedIndividual,
     rdfs:label "Div" ;
     rdf:_1 doc:58.9 ;
     rdf:_2 doc:58.10 .
-	
+
 doc:58.9 a respec:NamedIndividualH2,
         respec:Template,
         html:H2 ;
@@ -785,13 +785,13 @@ doc:58.10.1 a respec:NamedIndividualDefinitionText,
         html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "{{named individual definition}}" .
-	
+
 doc:59.1 a respec:StaticElement,
         respec:Template,
         html:Section ;
     rdfs:label "Section" ;
-	rdf:_1 doc:59.2;
-	rdf:_2 doc:59.3.
+    rdf:_1 doc:59.2;
+    rdf:_2 doc:59.3.
 
 doc:59.2 a respec:StaticElement,
         respec:Template,
@@ -817,7 +817,7 @@ doc:59.4 a respec:Concept,
     rdfs:label "Div" ;
     rdf:_1 doc:59.9 ;
     rdf:_2 doc:59.10 .
-	
+
 doc:59.9 a respec:ConceptH2,
         respec:Template,
         html:H2 ;
@@ -994,7 +994,7 @@ doc:72.6.1 a respec:StaticElement,
     html:fragment """
         This is required for specifications that contain normative material.
       """ .
-	  
+
 doc:71.5 a respec:StaticElement,
         respec:Template,
         html:Section ;
@@ -1002,5 +1002,5 @@ doc:71.5 a respec:StaticElement,
     rdf:_1 doc:71.4.1 ;
     rdf:_2 doc:72.6 ;
     rdf:_3 doc:71.4.3 ;
-	html:id "index";
+    html:id "index";
     html:class "appendix" .

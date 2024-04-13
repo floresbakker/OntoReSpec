@@ -1693,7 +1693,7 @@ construct {
   where  {
     # Get the template
 
-    {?template rdf:type respec:DatatypeProperty.}
+    {?template rdf:type respec:NamedIndividual.}
 
     # Get the sorted entities from the ontology including semantics
 
@@ -1834,8 +1834,8 @@ construct {
   ?title_scheme           rdf:type html:H2;
                           rdf:_1 ?dfn_Scheme.
   ?dfn_scheme                  rdf:type html:Dfn;
-                               rdf:_1 ?title_scheme_text.
-  ?title_text                     rdf:type html:TextElement;
+                               rdf:_1 ?title_text_scheme.
+  ?title_text_scheme                     rdf:type html:TextElement;
                                   html:fragment ?conceptSchemeLabel.
   ?IRI_scheme                                   rdf:type html:P;
                                                 rdf:_1 ?IRI_strong_scheme;

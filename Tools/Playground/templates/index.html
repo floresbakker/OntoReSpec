@@ -68,35 +68,44 @@
                      <!-- Checkboxes for document options -->
                     <div><i>Ontology components:</i></div> <!-- Title for checkboxes -->
                     <br>
-
-                    <label for="classCheckbox">Classes</label>
-                    <input type="checkbox" id="classCheckbox" name="classes" value="true" checked><br>
-                    
-
-                    <label for="conceptSchemeCheckbox">Concept schemes</label>
-                    <input type="checkbox" id="conceptSchemeCheckbox" name="conceptSchemes" value="true" checked><br>
-
-                    <label for="conceptCheckbox">Concepts</label>
-                    <input type="checkbox" id="conceptCheckbox" name="concepts" value="true" checked><br>
-
-                    <label for="datatypePropertyCheckbox">Datatype properties</label>
-                    <input type="checkbox" id="datatypePropertyCheckbox" name="datatypeProperties" value="true" checked><br>
-
-                    <label for="objectPropertyCheckbox">Object properties</label>
-                    <input type="checkbox" id="objectPropertyCheckbox" name="objectProperties" value="true" checked><br>
-
-                    <label for="namedIndividualCheckbox">Named individuals</label>
-                    <input type="checkbox" id="namedIndividualCheckbox" name="namedIndividuals" value="true" checked><br>
-
-                    <label for="nodeshapeCheckbox">Nodeshapes</label>
-                    <input type="checkbox" id="nodeshapeCheckbox" name="nodeshapes" value="true" checked><br>
-
-                    <label for="rdfPropertyCheckbox">RDF properties</label>
-                    <input type="checkbox" id="rdfPropertyCheckbox" name="rdfProperties" value="true" checked><br>
-
+                    <!-- Checkboxes for document options -->
+                    <table>
+                        <tr>
+                            <td><label for="classCheckbox">Classes</label></td>
+                            <td><input type="checkbox" id="classCheckbox" name="classes" value="true" checked></td>
+                        </tr>
+                        <tr>
+                            <td><label for="conceptSchemeCheckbox">Concept schemes</label></td>
+                            <td><input type="checkbox" id="conceptSchemeCheckbox" name="conceptSchemes" value="true" checked></td>
+                        </tr>
+                        <tr>
+                            <td><label for="conceptCheckbox">Concepts</label></td>
+                            <td><input type="checkbox" id="conceptCheckbox" name="concepts" value="true" checked></td>
+                        </tr>
+                        <tr>
+                            <td><label for="datatypePropertyCheckbox">Datatype properties</label></td>
+                            <td><input type="checkbox" id="datatypePropertyCheckbox" name="datatypeProperties" value="true" checked></td>
+                        </tr>
+                        <tr>
+                            <td><label for="objectPropertyCheckbox">Object properties</label></td>
+                            <td><input type="checkbox" id="objectPropertyCheckbox" name="objectProperties" value="true" checked></td>
+                        </tr>
+                        <tr>
+                            <td><label for="namedIndividualCheckbox">Named individuals</label></td>
+                            <td><input type="checkbox" id="namedIndividualCheckbox" name="namedIndividuals" value="true" checked></td>
+                        </tr>
+                        <tr>
+                            <td><label for="nodeshapeCheckbox">Nodeshapes</label></td>
+                            <td><input type="checkbox" id="nodeshapeCheckbox" name="nodeshapes" value="true" checked></td>
+                        </tr>
+                        <tr>
+                            <td><label for="rdfPropertyCheckbox">RDF properties</label></td>
+                            <td><input type="checkbox" id="rdfPropertyCheckbox" name="rdfProperties" value="true" checked></td>
+                        </tr>
+                    </table>
                     <br>
                     <!-- Input for the ontology itself -->
-                    <i>Contents:</i>
+                    <i>Ontology content:</i>
                     <br>
                     <br>
                     <label for="textInput">Ontology</label><br>
