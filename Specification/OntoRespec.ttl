@@ -951,7 +951,8 @@ where  {
 
   {?template rdf:type respec:ObjectProperty.}
 
-  # Get the objectproperty from the ontology, the label and description, and the sequence order in which the objectproperty appears amidst other objectpropertyes alphanumerically.
+  # Get the sorted entities from the ontology including semantics
+  
   {SELECT ?objectProperty ?objectPropertyManchesterLabel_original ?objectPropertyManchesterLabel ?objectPropertyManchesterDomain ?objectPropertyManchesterRange ?objectPropertyManchesterSubPropertyOf ?objectPropertyDefinition_text (COUNT(?prevObjectProperty) + 1 AS ?member)
 WHERE {
   ?objectProperty a owl:ObjectProperty .
@@ -1182,8 +1183,9 @@ where  {
 
   {?template rdf:type respec:DatatypeProperty.}
 
-  # Get the datatypeproperty from the ontology, the label and description, and the sequence order in which the datatypeproperty appears amidst other datatypepropertyes alphanumerically.
-     {SELECT ?datatypeProperty ?datatypePropertyManchesterLabel_original ?datatypePropertyManchesterLabel ?datatypePropertyManchesterDomain ?datatypePropertyManchesterRange ?datatypePropertyManchesterSubPropertyOf ?datatypePropertyDefinition_text (COUNT(?prevDatatypeProperty) + 1 AS ?member)
+  # Get the sorted entities from the ontology including semantics
+  
+  {SELECT ?datatypeProperty ?datatypePropertyManchesterLabel_original ?datatypePropertyManchesterLabel ?datatypePropertyManchesterDomain ?datatypePropertyManchesterRange ?datatypePropertyManchesterSubPropertyOf ?datatypePropertyDefinition_text (COUNT(?prevDatatypeProperty) + 1 AS ?member)
 WHERE {
   ?datatypeProperty a owl:DatatypeProperty .
   ?datatypeProperty manchester:label ?datatypePropertyManchesterLabel_original .
@@ -1287,87 +1289,256 @@ prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
 prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
 prefix function: <https://data.rijksfinancien.nl/html/model/function/>
-prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
+prefix html: <https://data.rijksfinancien.nl/html/model/def/>
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <https://respec.org/model/def/> 
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix respec: <https://respec.org/model/def/>
 prefix schema: <http://schema.org/>
 prefix sh: <http://www.w3.org/ns/shacl#>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix vann: <http://purl.org/vocab/vann/>
 
 construct {
 
-      ?divDefinitionNodeShape1Instance rdf:type html:Div;
-                                       html:fragment ?absenceOfNodeShapeDefinitions;
-                                       ?memberNodeShapeString ?divDefinitionNodeShape2Instance.
-      ?divDefinitionNodeShape2Instance rdf:type html:Section;
-                                   rdf:_1 ?nodeShape_title_instance_h2;
-                                   rdf:_2 ?nodeShape_definition_instance.
-      ?nodeShape_title_instance_h2     rdf:type html:H2;
-                                   ?memberTitle ?nodeShape_dfn_instance.
-      ?nodeShape_dfn_instance          rdf:type html:Dfn;
-                                   ?memberDfn ?nodeShape_title_text_instance.
-      ?nodeShape_title_text_instance   rdf:type html:TextElement;
-                                   html:fragment ?nodeShapeLabel2.
-      ?nodeShape_definition_instance   rdf:type html:TextElement;
-                                   html:fragment ?nodeShapeDefinition.
-    
-}
-where  {
-   {?sectionDefinition rdf:type html:Section;
-                       ?member ?divDefinitionNodeShape1.
-    ?divDefinitionNodeShape1 rdf:type respec:NodeShapeDefinitionDiv;
-                       ?memberDiv ?divDefinitionNodeShape2.				   				  
-    ?divDefinitionNodeShape2 rdf:type respec:NodeShapeDefinitionInstance;       
-                        rdf:_1 ?H2_class_title;
-                        rdf:_2 ?P_class_definition.
-    ?H2_class_title a respec:NodeShape;
-                        ?memberTitle ?nodeShape_dfn.
-    ?nodeShape_dfn rdf:type respec:NodeShapeDfn;
-                            ?memberDfn ?nodeShape_title.
-    ?nodeShape_title        rdf:type respec:NodeShapeTitle.
-    ?P_class_definition rdf:type respec:NodeShape;
-                        ?memberText ?nodeShape_definition_text.
-     ?nodeShape_definition_text a respec:NodeShapeDefinitionText.
-  }
-   
-   {SELECT ?nodeShape ?nodeShapeLabel ?nodeShapeDefinition (COUNT(?prevNodeShape) + 1 AS ?memberNodeShape)
-WHERE {
-  ?nodeShape a sh:NodeShape .
-  ?nodeShape skos:prefLabel ?nodeShapeLabel .
-  ?nodeShape rdfs:isDefinedBy ?ontology.
-  $this dct:subject ?ontology;
-        respec:documentLanguage ?language.
+  ?chapter                   rdf:type html:Div;
+                             ?rdf_member ?section;
+                             html:fragment ?absenceOfDefinitions.
+  ?section                   rdf:type html:Section;
+                             rdf:_1 ?title;
+                             rdf:_2 ?IRI;
+                             rdf:_3 ?linebreak1;
+                             rdf:_4 ?definition;
+                             rdf:_5 ?linebreak2;
+                             rdf:_6 ?linebreak3;
+                             rdf:_7 ?manchester_syntax.
+  ?title                       rdf:type html:H2;
+                               rdf:_1 ?dfn.
+  ?dfn                            rdf:type html:Dfn;
+                                  rdf:_1 ?title_text.
+  ?title_text                     rdf:type html:TextElement;
+                                  html:fragment ?entityManchesterLabel.
+  ?IRI                                   rdf:type html:P;
+                                         rdf:_1 ?IRI_strong;
+                                         rdf:_2 ?IRI_a.
+  ?IRI_strong                              rdf:type html:Strong;
+                                           rdf:_1 ?IRI_text.
+  ?IRI_text                                rdf:type html:TextElement;
+                                           html:fragment 'IRI: '.
+  ?IRI_a                                   rdf:type html:A;
+                                           html:href ?fullIRI;
+                                           rdf:_1 ?IRI_value_text.
+  ?IRI_value_text                                         rdf:type html:TextElement;
+                                                          html:fragment ?fullIRI.
+  ?definition                     rdf:type html:TextElement;
+                                  html:fragment ?entityDefinition.
+  ?manchester_syntax                             rdf:type html:Aside;
+                                                 html:class "note" ;
+                                                 html:title "Manchester Syntax (Extended)";
+                                                 rdf:_1 ?manchester_syntax_code.
+  ?manchester_syntax_code                        rdf:type html:Code;
+                                                 rdf:_1 ?manchester_syntax_table.
+  ?manchester_syntax_table                              rdf:type html:Table;
+                                                        rdf:_1 ?manchester_syntax_table_body_definition.
+  ?manchester_syntax_table_body_definition          rdf:type html:TableBody;
+                                                    rdf:_1 ?manchester_syntax_table_row_definition;
+                                                    rdf:_2 ?emptyrow1;
+                                                    rdf:_3 ?manchester_syntax_table_row_targetClass;
+                                                    rdf:_4 ?manchester_syntax_table_row_targetSPARQL;
+                                                    rdf:_5 ?manchester_syntax_table_row_targetSubject;
+													rdf:_6 ?manchester_syntax_table_row_targetObject.
+  ?manchester_syntax_table_row_definition                rdf:type html:Row;
+                                                         rdf:_1 ?manchester_syntax_definition_type;
+                                                         rdf:_2 ?manchester_syntax_definition_value.
+  ?manchester_syntax_definition_type           rdf:type html:DataCell;
+                                               rdf:_1 ?manchester_syntax_definition_type_text.
+  ?manchester_syntax_definition_type_text         rdf:type html:TextElement;
+                                                  html:fragment 'Nodeshape:'.
+  ?manchester_syntax_definition_value          rdf:type html:DataCell;
+                                               rdf:_1 ?manchester_syntax_definition_value_text.
+  ?manchester_syntax_definition_value_text        rdf:type html:TextElement;
+                                                  html:fragment ?entityManchesterLabel.
 
-  OPTIONAL{
-  ?nodeShape skos:definition ?nodeShapeDefinition_original.
-  FILTER (LANG(?nodeShapeDefinition_original) = ?language)
-  }
-  BIND(function:escapeHTML(COALESCE(?nodeShapeDefinition_original, "No description available")) as ?nodeShapeDefinition)
-  OPTIONAL {
-    ?prevNodeShape a sh:NodeShape .
-    ?prevNodeShape skos:prefLabel ?prevLabel .
-    FILTER(?prevLabel < ?nodeShapeLabel)
-  }
-}
-  GROUP BY ?nodeShapeLabel ?nodeShape ?nodeShapeDefinition
-  ORDER BY ?nodeShapeLabel
-}
-  BIND(IRI(CONCAT(str(rdf:),"_", str(?memberNodeShape))) as ?memberNodeShapeString)
-  BIND(IF(!BOUND(?nodeShape), "This ontology does not define any node shapes.", ?unboundDummy) as ?absenceOfNodeShapeDefinitions)
+  ?emptyrow1      rdf:type html:Row;
+                  rdf:_1 ?emptycell1;
+                  rdf:_2 ?emptycell2.
+  ?emptycell1         rdf:type html:DataCell.
+  ?emptycell2         rdf:type html:DataCell.
 
-  # Create identifiers
-  bind(COALESCE(?nodeShapeLabel, "Unknown label") as ?nodeShapeLabel2)
-  bind(IRI(CONCAT(STR(?sectionDefinition), '-instance')) as ?sectionDefinitionInstance)
-  bind(IRI(CONCAT(STR(?divDefinitionNodeShape1),'-instance')) as ?divDefinitionNodeShape1Instance)
-  bind(IRI(CONCAT(STR(?divDefinitionNodeShape2), '-', str(?memberNodeShape),'-instance')) as ?divDefinitionNodeShape2Instance)
-  bind(IRI(CONCAT(STR(?nodeShape_title), '-', str(?memberNodeShape), '-instance')) as ?nodeShape_title_text_instance)
-  bind(IRI(CONCAT(STR(?H2_class_title), '-', str(?memberNodeShape), '-instance')) as ?nodeShape_title_instance_h2)
-  bind(IRI(CONCAT(STR(?nodeShape_definition_text), '-', str(?memberNodeShape), '-instance')) as ?nodeShape_definition_instance)
-  bind(IRI(CONCAT(STR(?nodeShape_dfn), '-', str(?memberNodeShape), '-instance')) as ?nodeShape_dfn_instance)
-  
+  ?manchester_syntax_table_row_targetClass                    rdf:type html:Row;
+                                                         rdf:_1 ?manchester_syntax_definition_targetClass_type;
+                                                         rdf:_2 ?manchester_syntax_definition_targetClass_value.
+  ?manchester_syntax_definition_targetClass_type            rdf:type html:DataCell;
+                                                       rdf:_1 ?manchester_syntax_definition_targetClass_type_text.
+  ?manchester_syntax_definition_targetClass_type_text          rdf:type html:TextElement;
+                                                          html:fragment 'TargetClass:'.
+  ?manchester_syntax_definition_targetClass_value           rdf:type html:DataCell;
+                                                       rdf:_1 ?manchester_syntax_definition_targetClass_value_text.
+  ?manchester_syntax_definition_targetClass_value_text         rdf:type html:TextElement;
+                                                          html:fragment ?entityManchesterTargetClass.
+
+  ?manchester_syntax_table_row_targetSPARQL                    rdf:type html:Row;
+                                                        rdf:_1 ?manchester_syntax_definition_targetSPARQL_type;
+                                                        rdf:_2 ?manchester_syntax_definition_targetSPARQL_value.
+  ?manchester_syntax_definition_targetSPARQL_type            rdf:type html:DataCell;
+                                                      rdf:_1 ?manchester_syntax_definition_targetSPARQL_type_text.
+  ?manchester_syntax_definition_targetSPARQL_type_text          rdf:type html:TextElement;
+                                                         html:fragment 'SPARQLTarget:'.
+  ?manchester_syntax_definition_targetSPARQL_value           rdf:type html:DataCell;
+                                                      rdf:_1 ?manchester_syntax_definition_targetSPARQL_value_text.
+  ?manchester_syntax_definition_targetSPARQL_value_text         rdf:type html:TextElement;
+                                                         html:fragment ?entityManchesterTargetSPARQL.
+
+  ?manchester_syntax_table_row_targetSubject              rdf:type html:Row;
+                                                        rdf:_1 ?manchester_syntax_definition_targetSubject_type;
+                                                        rdf:_2 ?manchester_syntax_definition_targetSubject_value.
+  ?manchester_syntax_definition_targetSubject_type      rdf:type html:DataCell;
+                                                      rdf:_1 ?manchester_syntax_definition_targetSubject_type_text.
+  ?manchester_syntax_definition_targetSubject_type_text    rdf:type html:TextElement;
+                                                         html:fragment 'TargetSubjectOf:'.
+  ?manchester_syntax_definition_targetSubject_value     rdf:type html:DataCell;
+                                                      rdf:_1 ?manchester_syntax_definition_targetSubject_value_text.
+  ?manchester_syntax_definition_targetSubject_value_text   rdf:type html:TextElement;
+                                                         html:fragment ?entityManchesterTargetSubject.
+
+  ?manchester_syntax_table_row_targetObject              rdf:type html:Row;
+                                                        rdf:_1 ?manchester_syntax_definition_targetObject_type;
+                                                        rdf:_2 ?manchester_syntax_definition_targetObject_value.
+  ?manchester_syntax_definition_targetObject_type      rdf:type html:DataCell;
+                                                      rdf:_1 ?manchester_syntax_definition_targetObject_type_text.
+  ?manchester_syntax_definition_targetObject_type_text    rdf:type html:TextElement;
+                                                         html:fragment 'TargetObjectOf:'.
+  ?manchester_syntax_definition_targetObject_value     rdf:type html:DataCell;
+                                                      rdf:_1 ?manchester_syntax_definition_targetObject_value_text.
+  ?manchester_syntax_definition_targetObject_value_text   rdf:type html:TextElement;
+                                                         html:fragment ?entityManchesterTargetObject.
+
+
+  ?linebreak1                          rdf:type html:Br.
+  ?linebreak2                          rdf:type html:Br.
+  ?linebreak3                          rdf:type html:Br.
+
 }
+
+  where  {
+    # Get the template
+
+    {?template rdf:type respec:NodeShape.}
+
+    # Get the sorted entities from the ontology including semantics
+
+    {
+      select ?entity ?entityManchesterLabel_raw ?entityManchesterLabel ?entityManchesterTargetClass ?entityManchesterTargetSPARQL ?entityManchesterTargetSubject ?entityManchesterTargetObject ?entityDefinition (count(?prevEntity) + 1 as ?member)
+
+      where {
+
+        ?entity a sh:NodeShape .
+        ?entity manchester:label ?entityManchesterLabel_raw .
+        ?entity rdfs:isDefinedBy ?ontology.
+        $this dct:subject ?ontology;
+              respec:documentLanguage ?language.
+
+        optional{
+          ?entity skos:definition ?entityDefinition_raw.
+          filter (lang(?entityDefinition_raw) = ?language)
+        }
+
+        optional{
+          ?entity manchester:targetClass ?entityManchesterTargetClass.
+        }
+
+        optional{
+          ?entity manchester:targetSPARQL ?entityManchesterTargetSPARQL.
+        }
+
+        optional{
+          ?entity manchester:targetSubject ?entityManchesterTargetSubject.
+        }
+		
+		optional{
+          ?entity manchester:targetObject ?entityManchesterTargetObject.
+        }
+
+        bind(function:escapeHTML(?entityManchesterLabel_raw) as ?entityManchesterLabel)
+        bind(if(bound(?entityDefinition_raw), coalesce(function:escapeHTML(?entityDefinition_raw)), "No definition provided by this ontology.") as ?entityDefinition)
+
+        optional {
+          ?prevEntity a sh:NodeShape .
+          ?prevEntity manchester:label ?prevLabel .
+          filter(?prevLabel < ?entityManchesterLabel_raw)
+        }
+      }
+      group by ?entityManchesterLabel_raw ?entityManchesterLabel ?entity ?entityManchesterTargetClass ?entityManchesterTargetSPARQL ?entityManchesterTargetSubject ?entityManchesterTargetObject ?entityDefinition
+      order by ?entityManchesterLabel_raw
+    }
+
+    bind(if(!bound(?entity), "This ontology does not define any nodeshapes.", ?unboundDummy) as ?absenceOfDefinitions)
+    bind(iri(concat(str(rdf:),"_", str(?member))) as ?rdf_member)
+
+    # Establishing the prefixed IRI of the entity.
+
+    bind(str(?entity) as ?fullIRI)
+
+    # Create identifiers - generic
+
+    bind(iri(concat(str(?template),'-instance')) as ?chapter)
+    bind(iri(concat(str(?chapter), '-', str(?member),'-1')) as ?section)
+    bind(iri(concat(str(?section), '-1')) as ?title)
+    bind(iri(concat(str(?section), '-2')) as ?IRI)
+    bind(iri(concat(str(?section), '-3')) as ?linebreak1)
+    bind(iri(concat(str(?section), '-4')) as ?definition)
+    bind(iri(concat(str(?section), '-5')) as ?linebreak2)
+    bind(iri(concat(str(?section), '-6')) as ?linebreak3)
+    bind(iri(concat(str(?section), '-7')) as ?manchester_syntax)
+    bind(iri(concat(str(?IRI), '-1')) as ?IRI_strong)
+    bind(iri(concat(str(?IRI), '-2')) as ?IRI_a)
+    bind(iri(concat(str(?IRI_strong), '-1')) as ?IRI_text)
+    bind(iri(concat(str(?IRI_a), '-1')) as ?IRI_value_text)
+    bind(iri(concat(str(?title), '-1')) as ?dfn)
+    bind(iri(concat(str(?dfn), '-1')) as ?title_text)
+
+    # Create identifiers - Manchester Syntax
+
+    bind(iri(concat(str(?manchester_syntax), '-1')) as ?manchester_syntax_code)
+    bind(iri(concat(str(?manchester_syntax_code), '-1')) as ?manchester_syntax_table)
+    bind(iri(concat(str(?manchester_syntax_table), '-1')) as ?manchester_syntax_table_body_definition)
+
+    bind(iri(concat(str(?manchester_syntax_table_body_definition), '-1')) as ?manchester_syntax_table_row_definition)
+    bind(iri(concat(str(?manchester_syntax_table_body_definition), '-2')) as ?emptyrow1)
+    bind(if(bound(?entityManchesterTargetClass),iri(concat(str(?manchester_syntax_table_body_definition), '-3')), ?unboundDummy) as ?manchester_syntax_table_row_targetClass )
+    bind(if(bound(?entityManchesterTargetSPARQL),iri(concat(str(?manchester_syntax_table_body_definition), '-4')), ?unboundDummy) as ?manchester_syntax_table_row_targetSPARQL )
+    bind(if(bound(?entityManchesterTargetSubject),iri(concat(str(?manchester_syntax_table_body_definition), '-5')),?unboundDummy) as ?manchester_syntax_table_row_targetSubject )
+    bind(if(bound(?entityManchesterTargetObject),iri(concat(str(?manchester_syntax_table_body_definition), '-5')),?unboundDummy) as ?manchester_syntax_table_row_targetObject )
+
+    bind(iri(concat(str(?manchester_syntax_table_row_definition), '-1')) as ?manchester_syntax_definition_type)
+    bind(iri(concat(str(?manchester_syntax_table_row_definition), '-2')) as ?manchester_syntax_definition_value)
+    bind(iri(concat(str(?emptyrow1), '-1')) as ?emptycell1)
+    bind(iri(concat(str(?emptyrow1), '-2')) as ?emptycell2)
+    bind(iri(concat(str(?manchester_syntax_definition_type), '-1')) as ?manchester_syntax_definition_type_text)
+    bind(iri(concat(str(?manchester_syntax_definition_value), '-1')) as ?manchester_syntax_definition_value_text)
+
+    bind(iri(concat(str(?manchester_syntax_table_row_targetClass), '-1')) as ?manchester_syntax_definition_targetClass_type)
+    bind(iri(concat(str(?manchester_syntax_table_row_targetClass), '-2')) as ?manchester_syntax_definition_targetClass_value)
+    bind(iri(concat(str(?manchester_syntax_definition_targetClass_type), '-1')) as ?manchester_syntax_definition_targetClass_type_text)
+    bind(iri(concat(str(?manchester_syntax_definition_targetClass_value), '-1')) as ?manchester_syntax_definition_targetClass_value_text)
+
+    bind(iri(concat(str(?manchester_syntax_table_row_targetSPARQL), '-1')) as ?manchester_syntax_definition_targetSPARQL_type)
+    bind(iri(concat(str(?manchester_syntax_table_row_targetSPARQL), '-2')) as ?manchester_syntax_definition_targetSPARQL_value)
+    bind(iri(concat(str(?manchester_syntax_definition_targetSPARQL_type), '-1')) as ?manchester_syntax_definition_targetSPARQL_type_text)
+    bind(iri(concat(str(?manchester_syntax_definition_targetSPARQL_value), '-1')) as ?manchester_syntax_definition_targetSPARQL_value_text)
+
+    bind(iri(concat(str(?manchester_syntax_table_row_targetSubject), '-1')) as ?manchester_syntax_definition_targetSubject_type)
+    bind(iri(concat(str(?manchester_syntax_table_row_targetSubject), '-2')) as ?manchester_syntax_definition_targetSubject_value)
+    bind(iri(concat(str(?manchester_syntax_definition_targetSubject_type), '-1')) as ?manchester_syntax_definition_targetSubject_type_text)
+    bind(iri(concat(str(?manchester_syntax_definition_targetSubject_value), '-1')) as ?manchester_syntax_definition_targetSubject_value_text)
+
+    bind(iri(concat(str(?manchester_syntax_table_row_targetObject), '-1')) as ?manchester_syntax_definition_targetObject_type)
+    bind(iri(concat(str(?manchester_syntax_table_row_targetObject), '-2')) as ?manchester_syntax_definition_targetObject_value)
+    bind(iri(concat(str(?manchester_syntax_definition_targetObject_type), '-1')) as ?manchester_syntax_definition_targetObject_type_text)
+    bind(iri(concat(str(?manchester_syntax_definition_targetObject_value), '-1')) as ?manchester_syntax_definition_targetObject_value_text)
+
+  }
 """.
 
 rule:NamedIndividuals

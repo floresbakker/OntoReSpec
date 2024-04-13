@@ -1735,6 +1735,6 @@ SELECT ?result WHERE {
   BIND(CONCAT(STR(?prefix),":",?localName) as ?prefixedIRI)
   
   # Establish the prefixed IRI or return the full IRI as a string
-  BIND(COALESCE(?prefixedIRI, ?fullIRI) as ?result) # e.g. "ex:Person" when succesful or "http://example.org/Person" when prefix/namespace is unknown.
+  BIND(COALESCE(?prefixedIRI, ?fullIRI, 'Error establishing prefixed IRI') as ?result) # e.g. "ex:Person" when succesful or "http://example.org/Person" when prefix/namespace is unknown or an error message when something unexpected has occurred.
 }
   """ .
