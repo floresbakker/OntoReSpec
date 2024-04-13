@@ -693,7 +693,7 @@ doc:57.4 a respec:NodeShapeDefinitionInstance,
     rdfs:label "Div" ;
     rdf:_1 doc:57.9 ;
     rdf:_2 doc:57.10 .
-	
+
 doc:57.9 a respec:NodeShape,
         respec:Template,
         html:H2 ;
@@ -712,7 +712,7 @@ doc:57.9.1 a respec:NodeShapeTitle,
     rdfs:label "text element" ;
     html:fragment "{{node shape title}}" .
 
-doc:57.10 a respec:NodeShape,
+doc:57.10 a respec:NodeShapeP,
         respec:Template,
         html:P ;
     rdfs:label "p" ;
