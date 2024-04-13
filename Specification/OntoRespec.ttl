@@ -1817,12 +1817,10 @@ construct {
 
   ?chapter                rdf:type html:Div;
                           html:fragment ?absenceOfConceptSchemeDefinitions;
-                          ?rdf_memberScheme ?div.
-  ?div                    rdf:type html:Div;
-                          rdf:_1 ?chapter_scheme;
-                          rdf:_2 ?chapter_concept.
+                          ?rdf_memberScheme ?chapter_scheme.
   ?chapter_scheme         rdf:type html:Div;
-                          ?rdf_member ?section_scheme.
+                          rdf:_1 ?section_scheme;
+                          ?rdf_member ?chapter_concept.
   ?section_scheme         rdf:type html:Section;
                           rdf:_1 ?title_scheme;
                           rdf:_2 ?IRI_scheme;
@@ -1832,7 +1830,7 @@ construct {
                           rdf:_6 ?linebreak3;
                           rdf:_7 ?manchester_syntax_scheme.
   ?title_scheme           rdf:type html:H2;
-                          rdf:_1 ?dfn_Scheme.
+                          rdf:_1 ?dfn_scheme.
   ?dfn_scheme                  rdf:type html:Dfn;
                                rdf:_1 ?title_text_scheme.
   ?title_text_scheme                     rdf:type html:TextElement;
@@ -1872,7 +1870,6 @@ construct {
                                                       rdf:_1 ?manchester_syntax_definition_value_text_scheme.
   ?manchester_syntax_definition_value_text_scheme        rdf:type html:TextElement;
                                                          html:fragment ?conceptSchemeLabel.
-
 
   ?chapter_concept           rdf:type html:Div;
                              ?rdf_member ?section;
@@ -2035,9 +2032,8 @@ construct {
     # Create identifiers - conceptscheme
 
     bind(iri(concat(str(?template),'-instance')) as ?chapter)
-    bind(iri(concat(str(?chapter), '-', str(?memberScheme),'-1')) as ?div)
-    bind(iri(concat(str(?div),'-1')) as ?chapter_scheme)
-    bind(iri(concat(str(?div),'-2')) as ?chapter_concept)
+    bind(iri(concat(str(?chapter), '-', str(?memberScheme))) as ?chapter_scheme)
+    bind(iri(concat(str(?chapter_scheme),'-', str(?member))) as ?chapter_concept)
     bind(iri(concat(str(?chapter_scheme),'-1')) as ?section_scheme)
     bind(iri(concat(str(?section_scheme), '-1')) as ?title_scheme)
     bind(iri(concat(str(?section_scheme), '-2')) as ?IRI_scheme)
