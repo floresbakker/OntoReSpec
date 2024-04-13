@@ -195,7 +195,6 @@ def generateHTML(shaclgraph, serializable_graph):
 def generateReSpec():
     print("Starting generation of the ReSpec document...")
     
-    print("retrieve content")
     #1 Retrieve content from user
     ontology = request.form['ontology']
     introduction = request.form['introduction']

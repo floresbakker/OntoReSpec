@@ -1586,155 +1586,205 @@ prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
 prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
 prefix function: <https://data.rijksfinancien.nl/html/model/function/>
-prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
+prefix html: <https://data.rijksfinancien.nl/html/model/def/>
 prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <https://respec.org/model/def/> 
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix respec: <https://respec.org/model/def/>
 prefix schema: <http://schema.org/>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 prefix vann: <http://purl.org/vocab/vann/>
 
 construct {
 
-      ?namedindividual_div                    rdf:type html:Div;
-                                            html:fragment ?absenceOfNamedIndividualDefinitions;
-                                              ?rdf_member ?namedindividual_section.
-      ?namedindividual_section                rdf:type html:Section;
-                                              rdf:_1 ?namedindividual_H2_title;
-                                              rdf:_2 ?namedindividual_IRI_p;
-                                              rdf:_3 ?linebreak1;
-                                              rdf:_4 ?namedindividual_definition;
-                                              rdf:_5 ?linebreak2;  
-                                              rdf:_6 ?linebreak3;
-                                              rdf:_7 ?manchester_syntax.
-      ?namedindividual_H2_title               rdf:type html:H2;
-                                              rdf:_1 ?namedindividual_dfn.
-      ?namedindividual_dfn                    rdf:type html:Dfn;
-                                              rdf:_1 ?namedindividual_title.
-      ?namedindividual_title                  rdf:type html:TextElement;
-                                              html:fragment ?namedIndividualLabel.
-      ?namedindividual_IRI_p                  rdf:type html:P;
-                                              rdf:_1 ?namedindividual_IRI_strong;
-                                              rdf:_2 ?namedindividual_IRI_a.
-      ?namedindividual_IRI_strong             rdf:type html:Strong;
-                                              rdf:_1 ?namedindividual_IRI_text.
-      ?namedindividual_IRI_text               rdf:type html:TextElement;
-                                              html:fragment 'IRI: '.
-      ?namedindividual_IRI_a                  rdf:type html:A;
-                                              html:href ?fullIRI;
-                                              rdf:_1 ?IRI_value.
-      ?IRI_value                              rdf:type html:TextElement;
-                                              html:fragment ?fullIRI.   
-      ?namedindividual_definition             rdf:type html:TextElement;
-                                              html:fragment ?cleanedDefinition.
-      ?manchester_syntax                      rdf:type html:Aside;
-                                              html:class "note" ;
-                                              html:title "Manchester Syntax (Extended)";
-                                              rdf:_1 ?manchester_code_label;
-                                              rdf:_2 ?manchester_code_type;
-                                              rdf:_3 ?manchester_code_fact.
-      ?manchester_code_label                  rdf:type html:Code;
-                                              rdf:_1 ?manchester_individual;
-                                              rdf:_2 ?manchester_label.
-      ?manchester_code_type                   rdf:type html:Code;
-                                              rdf:_1  ?manchester_type_paragraph.
-      ?manchester_individual                  rdf:type html:TextElement;
-                                              html:fragment "Individual: ".
-      ?manchester_label                       rdf:type html:TextElement;
-                                              html:fragment ?namedIndividualLabel.
-      ?manchester_type_paragraph              rdf:type html:P;
-                                              rdf:_1 ?manchester_type;
-                                              rdf:_2 ?linebreak4.
-      ?manchester_type                        rdf:type html:TextElement;
-                                              html:fragment ?cleanedClass.
-      ?manchester_code_fact                   rdf:type html:Code;
-                                              rdf:_1  ?manchester_fact_paragraph.
-      ?manchester_fact_paragraph              rdf:type html:P;
-                                              rdf:_1 ?manchester_fact;
-                                              rdf:_2 ?linebreak5.
-      ?manchester_fact                        rdf:type html:TextElement;
-                                              html:fragment ?cleanedFact.
-      ?linebreak1                             rdf:type html:Br.
-      ?linebreak2                             rdf:type html:Br.
-      ?linebreak3                             rdf:type html:Br.
-      ?linebreak4                             rdf:type html:Br.
-      ?linebreak5                             rdf:type html:Br.
+  ?chapter                   rdf:type html:Div;
+                             ?rdf_member ?section;
+                             html:fragment ?absenceOfDefinitions.
+  ?section                   rdf:type html:Section;
+                             rdf:_1 ?title;
+                             rdf:_2 ?IRI;
+                             rdf:_3 ?linebreak1;
+                             rdf:_4 ?definition;
+                             rdf:_5 ?linebreak2;
+                             rdf:_6 ?linebreak3;
+                             rdf:_7 ?manchester_syntax.
+  ?title                       rdf:type html:H2;
+                               rdf:_1 ?dfn.
+  ?dfn                            rdf:type html:Dfn;
+                                  rdf:_1 ?title_text.
+  ?title_text                     rdf:type html:TextElement;
+                                  html:fragment ?entityManchesterLabel.
+  ?IRI                                   rdf:type html:P;
+                                         rdf:_1 ?IRI_strong;
+                                         rdf:_2 ?IRI_a.
+  ?IRI_strong                              rdf:type html:Strong;
+                                           rdf:_1 ?IRI_text.
+  ?IRI_text                                rdf:type html:TextElement;
+                                           html:fragment 'IRI: '.
+  ?IRI_a                                   rdf:type html:A;
+                                           html:href ?fullIRI;
+                                           rdf:_1 ?IRI_value_text.
+  ?IRI_value_text                                         rdf:type html:TextElement;
+                                                          html:fragment ?fullIRI.
+  ?definition                     rdf:type html:TextElement;
+                                  html:fragment ?entityDefinition.
+  ?manchester_syntax                             rdf:type html:Aside;
+                                                 html:class "note" ;
+                                                 html:title "Manchester Syntax (Extended)";
+                                                 rdf:_1 ?manchester_syntax_code.
+  ?manchester_syntax_code                        rdf:type html:Code;
+                                                 rdf:_1 ?manchester_syntax_table.
+  ?manchester_syntax_table                              rdf:type html:Table;
+                                                        rdf:_1 ?manchester_syntax_table_body_definition.
+  ?manchester_syntax_table_body_definition          rdf:type html:TableBody;
+                                                    rdf:_1 ?manchester_syntax_table_row_definition;
+                                                    rdf:_2 ?emptyrow1;
+                                                    rdf:_3 ?manchester_syntax_table_row_type;
+                                                    rdf:_4 ?manchester_syntax_table_row_fact.
+  ?manchester_syntax_table_row_definition                rdf:type html:Row;
+                                                         rdf:_1 ?manchester_syntax_definition_type;
+                                                         rdf:_2 ?manchester_syntax_definition_value.
+  ?manchester_syntax_definition_type           rdf:type html:DataCell;
+                                               rdf:_1 ?manchester_syntax_definition_type_text.
+  ?manchester_syntax_definition_type_text         rdf:type html:TextElement;
+                                                  html:fragment 'Named individual:'.
+  ?manchester_syntax_definition_value          rdf:type html:DataCell;
+                                               rdf:_1 ?manchester_syntax_definition_value_text.
+  ?manchester_syntax_definition_value_text        rdf:type html:TextElement;
+                                                  html:fragment ?entityManchesterLabel.
+
+  ?emptyrow1      rdf:type html:Row;
+                  rdf:_1 ?emptycell1;
+                  rdf:_2 ?emptycell2.
+  ?emptycell1         rdf:type html:DataCell.
+  ?emptycell2         rdf:type html:DataCell.
+
+  ?manchester_syntax_table_row_type                    rdf:type html:Row;
+                                                         rdf:_1 ?manchester_syntax_definition_type_type;
+                                                         rdf:_2 ?manchester_syntax_definition_type_value.
+  ?manchester_syntax_definition_type_type            rdf:type html:DataCell;
+                                                       rdf:_1 ?manchester_syntax_definition_type_type_text.
+  ?manchester_syntax_definition_type_type_text          rdf:type html:TextElement;
+                                                          html:fragment 'Types:'.
+  ?manchester_syntax_definition_type_value           rdf:type html:DataCell;
+                                                       rdf:_1 ?manchester_syntax_definition_type_value_text.
+  ?manchester_syntax_definition_type_value_text         rdf:type html:TextElement;
+                                                          html:fragment ?entityManchesterClass.
+
+  ?manchester_syntax_table_row_fact                    rdf:type html:Row;
+                                                        rdf:_1 ?manchester_syntax_definition_fact_type;
+                                                        rdf:_2 ?manchester_syntax_definition_fact_value.
+  ?manchester_syntax_definition_fact_type            rdf:type html:DataCell;
+                                                      rdf:_1 ?manchester_syntax_definition_fact_type_text.
+  ?manchester_syntax_definition_fact_type_text          rdf:type html:TextElement;
+                                                         html:fragment 'Facts:'.
+  ?manchester_syntax_definition_fact_value           rdf:type html:DataCell;
+                                                      rdf:_1 ?manchester_syntax_definition_fact_value_text.
+  ?manchester_syntax_definition_fact_value_text         rdf:type html:TextElement;
+                                                         html:fragment ?entityManchesterFact.
+
+  ?linebreak1                          rdf:type html:Br.
+  ?linebreak2                          rdf:type html:Br.
+  ?linebreak3                          rdf:type html:Br.
+
 }
-where  {
-   {?template rdf:type respec:NamedIndividual.}
-   
-   {SELECT ?namedIndividual ?namedIndividualLabel ?cleanedDefinition ?cleanedClass ?cleanedFact (COUNT(?prevNamedIndividual) + 1 AS ?member)
-WHERE {
-  ?namedIndividual manchester:syntax 'INDIVIDUAL';
-                   manchester:class ?class ;
-                   manchester:label ?namedIndividualLabel ;
-                   rdfs:isDefinedBy ?ontology.
-   
-   BIND(function:escapeHTML(?class) as ?cleanedClass)
-   
-   $this dct:subject ?ontology;
-         respec:documentLanguage ?language.
-   
-   OPTIONAL
-   {?namedIndividual skos:definition ?definitionIndividual
-   FILTER(LANG(?definitionIndividual) = ?language)}
 
-   BIND(IF(BOUND(?definitionIndividual), function:escapeHTML(?definitionIndividual), "No known definition") as ?cleanedDefinition)
+  where  {
+    # Get the template
 
-   OPTIONAL
-   {?namedIndividual manchester:fact ?fact.}
-   BIND(IF(BOUND(?fact), function:escapeHTML(?fact), "No known facts") as ?cleanedFact)
-  
-   OPTIONAL 
-   {?prevNamedIndividual manchester:syntax 'INDIVIDUAL';
-                          manchester:label ?prevLabel.
-     FILTER(?prevLabel < ?namedIndividualLabel)
-   }
+    {?template rdf:type respec:DatatypeProperty.}
+
+    # Get the sorted entities from the ontology including semantics
+
+    {
+      select ?entity ?entityManchesterLabel_raw ?entityManchesterLabel ?entityDefinition ?entityManchesterClass ?entityManchesterFact (count(?prevEntity) + 1 as ?member)
+
+      where {
+
+        ?entity manchester:syntax 'INDIVIDUAL' ;
+		        manchester:class ?entityManchesterClass ;
+                manchester:label ?entityManchesterLabel_raw ;
+                rdfs:isDefinedBy ?ontology.
+        $this dct:subject ?ontology;
+              respec:documentLanguage ?language.
+
+        optional{
+          ?entity skos:definition ?entityDefinition_raw.
+          filter (lang(?entityDefinition_raw) = ?language)
+        }
+
+        optional{
+          ?entity manchester:fact ?entityManchesterFact.
+        }
+
+        bind(function:escapeHTML(?entityManchesterLabel_raw) as ?entityManchesterLabel)
+        bind(if(bound(?entityDefinition_raw), coalesce(function:escapeHTML(?entityDefinition_raw)), "No definition provided by this ontology.") as ?entityDefinition)
+
+        optional {
+          ?prevEntity manchester:syntax 'INDIVIDUAL';
+                      manchester:label ?prevLabel .
+          filter(?prevLabel < ?entityManchesterLabel_raw)
+        }
+      }
+      group by ?entityManchesterLabel_raw ?entityManchesterLabel ?entity ?entityDefinition ?entityManchesterClass ?entityManchesterFact
+      order by ?entityManchesterLabel_raw
+    }
+
+    bind(if(!bound(?entity), "This ontology does not define any named individuals.", ?unboundDummy) as ?absenceOfDefinitions)
+    bind(iri(concat(str(rdf:),"_", str(?member))) as ?rdf_member)
+
+    # Establishing the prefixed IRI of the entity.
+
+    bind(str(?entity) as ?fullIRI)
+
+    # Create identifiers - generic
+
+    bind(iri(concat(str(?template),'-instance')) as ?chapter)
+    bind(iri(concat(str(?chapter), '-', str(?member),'-1')) as ?section)
+    bind(iri(concat(str(?section), '-1')) as ?title)
+    bind(iri(concat(str(?section), '-2')) as ?IRI)
+    bind(iri(concat(str(?section), '-3')) as ?linebreak1)
+    bind(iri(concat(str(?section), '-4')) as ?definition)
+    bind(iri(concat(str(?section), '-5')) as ?linebreak2)
+    bind(iri(concat(str(?section), '-6')) as ?linebreak3)
+    bind(iri(concat(str(?section), '-7')) as ?manchester_syntax)
+    bind(iri(concat(str(?IRI), '-1')) as ?IRI_strong)
+    bind(iri(concat(str(?IRI), '-2')) as ?IRI_a)
+    bind(iri(concat(str(?IRI_strong), '-1')) as ?IRI_text)
+    bind(iri(concat(str(?IRI_a), '-1')) as ?IRI_value_text)
+    bind(iri(concat(str(?title), '-1')) as ?dfn)
+    bind(iri(concat(str(?dfn), '-1')) as ?title_text)
+
+    # Create identifiers - Manchester Syntax
+
+    bind(iri(concat(str(?manchester_syntax), '-1')) as ?manchester_syntax_code)
+    bind(iri(concat(str(?manchester_syntax_code), '-1')) as ?manchester_syntax_table)
+    bind(iri(concat(str(?manchester_syntax_table), '-1')) as ?manchester_syntax_table_body_definition)
+
+    bind(iri(concat(str(?manchester_syntax_table_body_definition), '-1')) as ?manchester_syntax_table_row_definition)
+    bind(iri(concat(str(?manchester_syntax_table_body_definition), '-2')) as ?emptyrow1)
+    bind(if(bound(?entityManchesterClass),iri(concat(str(?manchester_syntax_table_body_definition), '-3')), ?unboundDummy) as ?manchester_syntax_table_row_type )
+    bind(if(bound(?entityManchesterFact),iri(concat(str(?manchester_syntax_table_body_definition), '-4')), ?unboundDummy) as ?manchester_syntax_table_row_fact )
+
+    bind(iri(concat(str(?manchester_syntax_table_row_definition), '-1')) as ?manchester_syntax_definition_type)
+    bind(iri(concat(str(?manchester_syntax_table_row_definition), '-2')) as ?manchester_syntax_definition_value)
+    bind(iri(concat(str(?emptyrow1), '-1')) as ?emptycell1)
+    bind(iri(concat(str(?emptyrow1), '-2')) as ?emptycell2)
+    bind(iri(concat(str(?manchester_syntax_definition_type), '-1')) as ?manchester_syntax_definition_type_text)
+    bind(iri(concat(str(?manchester_syntax_definition_value), '-1')) as ?manchester_syntax_definition_value_text)
+
+    bind(iri(concat(str(?manchester_syntax_table_row_type), '-1')) as ?manchester_syntax_definition_type_type)
+    bind(iri(concat(str(?manchester_syntax_table_row_type), '-2')) as ?manchester_syntax_definition_type_value)
+    bind(iri(concat(str(?manchester_syntax_definition_type_type), '-1')) as ?manchester_syntax_definition_type_type_text)
+    bind(iri(concat(str(?manchester_syntax_definition_type_value), '-1')) as ?manchester_syntax_definition_type_value_text)
+
+    bind(iri(concat(str(?manchester_syntax_table_row_fact), '-1')) as ?manchester_syntax_definition_fact_type)
+    bind(iri(concat(str(?manchester_syntax_table_row_fact), '-2')) as ?manchester_syntax_definition_fact_value)
+    bind(iri(concat(str(?manchester_syntax_definition_fact_type), '-1')) as ?manchester_syntax_definition_fact_type_text)
+    bind(iri(concat(str(?manchester_syntax_definition_fact_value), '-1')) as ?manchester_syntax_definition_fact_value_text)
+
   }
-  GROUP BY ?namedIndividualLabel ?namedIndividual ?cleanedDefinition ?cleanedClass ?cleanedFact 
-  ORDER BY ?namedIndividualLabel
-}
-  BIND(IRI(CONCAT(str(rdf:),"_", str(?member))) as ?rdf_member)  
-  BIND(IF(!BOUND(?namedIndividual), "This ontology does not define any named individuals.", ?unboundDummy) as ?absenceOfNamedIndividualDefinitions)
-
-  # Establishing the full IRI of the named individual.
-  
-  BIND(STR(?namedIndividual) as ?fullIRI)  
-
-  # Create identifiers
-  
-  BIND(IRI(CONCAT(STR(?template),'-instance'))                                   as ?namedindividual_div)
-  BIND(IRI(CONCAT(STR(?namedindividual_div), '-', str(?member)))                 as ?namedindividual_section)
-  BIND(IRI(CONCAT(STR(?namedindividual_section), '-1'))                          as ?namedindividual_H2_title) 
-  BIND(IRI(CONCAT(STR(?namedindividual_H2_title), '-1'))                         as ?namedindividual_dfn)
-  BIND(IRI(CONCAT(STR(?namedindividual_dfn), '-1'))                              as ?namedindividual_title)
-  BIND(IRI(CONCAT(STR(?namedindividual_section), '-2'))                          as ?namedindividual_IRI_p) 
-  BIND(IRI(CONCAT(STR(?namedindividual_section), '-3'))                          as ?linebreak1)
-  BIND(IRI(CONCAT(STR(?namedindividual_IRI_p), '-1'))                            as ?namedindividual_IRI_strong)
-  BIND(IRI(CONCAT(STR(?namedindividual_IRI_p), '-2'))                            as ?namedindividual_IRI_a)
-  BIND(IRI(CONCAT(STR(?namedindividual_IRI_strong), '-1'))                       as ?namedindividual_IRI_text)
-  BIND(IRI(CONCAT(STR(?namedindividual_IRI_a), '-1'))                            as ?IRI_value)
-  BIND(IRI(CONCAT(STR(?namedindividual_section), '-4'))                          as ?namedindividual_definition)
-  BIND(IRI(CONCAT(STR(?namedindividual_section), '-5'))                          as ?linebreak2)
-  BIND(IRI(CONCAT(STR(?namedindividual_section), '-6'))                          as ?linebreak3)
-  BIND(IRI(CONCAT(STR(?namedindividual_section), '-7'))                          as ?manchester_syntax)
-
-  # Create identifiers - Manchester Syntax 
-
-  BIND(IRI(CONCAT(STR(?manchester_syntax), '-1'))                                           as ?manchester_code_label)  
-  BIND(IRI(CONCAT(STR(?manchester_syntax), '-2'))                                           as ?manchester_code_type)  
-  BIND(IF(BOUND(?fact),IRI(CONCAT(STR(?manchester_syntax), '-3')), ?unboundDummy)           as ?manchester_code_fact)
-  BIND(IRI(CONCAT(STR(?manchester_code_label), '-1'))                                       as ?manchester_individual)
-  BIND(IRI(CONCAT(STR(?manchester_code_label), '-2'))                                       as ?manchester_label)
-  BIND(IRI(CONCAT(STR(?manchester_code_type), '-1'))                                        as ?manchester_type_paragraph)
-  BIND(IRI(CONCAT(STR(?manchester_type_paragraph), '-1'))                                   as ?manchester_type)
-  BIND(IRI(CONCAT(STR(?manchester_type_paragraph), '-2'))                                   as ?linebreak4)
-  BIND(IRI(CONCAT(STR(?manchester_code_fact), '-1'))                                        as ?manchester_fact_paragraph)
-  BIND(IRI(CONCAT(STR(?manchester_fact_paragraph), '-1'))                                   as ?manchester_fact)
-  BIND(IRI(CONCAT(STR(?manchester_fact_paragraph), '-2'))                                   as ?linebreak5)
-}
 """.
 
 condition:Concepts
@@ -1795,7 +1845,7 @@ construct {
                                               html:href ?conceptScheme_IRI;
                                               rdf:_1 ?IRIScheme_value.
       ?IRIScheme_value              rdf:type html:TextElement;
-                                              html:fragment ?concept_IRI.
+                                              html:fragment ?conceptScheme_IRI.
       ?conceptScheme_definition     rdf:type html:TextElement;
                                               html:fragment ?cleanedSchemeDefinition.
       ?manchester_syntax_scheme     rdf:type html:Aside;
