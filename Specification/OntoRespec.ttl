@@ -1814,270 +1814,297 @@ prefix skos: <http://www.w3.org/2004/02/skos/core#>
 prefix vann: <http://purl.org/vocab/vann/>
 
 construct {
-      ?concept_chapter                rdf:type html:Div;
-                                               html:fragment ?absenceOfConceptSchemeDefinitions;
-                                               ?rdf_memberScheme ?conceptScheme_div.
-      ?conceptScheme_div             rdf:type html:Div;
-                                              rdf:_1 ?conceptScheme_section;
-                                              rdf:_2 ?concept_div.
-      ?conceptScheme_section         rdf:type html:Section;
-                                              rdf:_1 ?conceptScheme_H2_title;
-                                              rdf:_2 ?conceptScheme_IRI_p;
-                                              rdf:_3 ?linebreak1;
-                                              rdf:_4 ?conceptScheme_definition;
-                                              rdf:_5 ?linebreak2;  
-                                              rdf:_6 ?linebreak3;
-                                              rdf:_7 ?manchester_syntax_scheme.
-      ?conceptScheme_H2_title       rdf:type html:H2;
-                                              rdf:_1 ?conceptScheme_dfn.
-      ?conceptScheme_dfn            rdf:type html:Dfn;
-                                              rdf:_1 ?conceptScheme_title.
-      ?conceptScheme_title          rdf:type html:TextElement;
-                                              html:fragment ?conceptSchemeLabel_text.
-      ?conceptScheme_IRI_p          rdf:type html:P;
-                                              rdf:_1 ?conceptScheme_IRI_strong;
-                                              rdf:_2 ?conceptScheme_IRI_a.
-      ?conceptScheme_IRI_strong     rdf:type html:Strong;
-                                              rdf:_1 ?conceptScheme_IRI_text.
-      ?conceptScheme_IRI_text       rdf:type html:TextElement;
-                                              html:fragment 'IRI: '.
-      ?conceptScheme_IRI_a          rdf:type html:A;
-                                              html:href ?conceptScheme_IRI;
-                                              rdf:_1 ?IRIScheme_value.
-      ?IRIScheme_value              rdf:type html:TextElement;
-                                              html:fragment ?conceptScheme_IRI.
-      ?conceptScheme_definition     rdf:type html:TextElement;
-                                              html:fragment ?cleanedSchemeDefinition.
-      ?manchester_syntax_scheme     rdf:type html:Aside;
-                                              html:class "note" ;
-                                              html:title "Manchester Syntax (Extended)";
-                                              rdf:_1 ?manchester_code_Schemelabel;
-                                              rdf:_2 ?manchester_code_Schemetype.
-      ?manchester_code_Schemelabel            rdf:type html:Code;
-                                              rdf:_1 ?manchester_conceptScheme;
-                                              rdf:_2 ?manchester_labelScheme.
-      ?manchester_code_Schemetype             rdf:type html:Code;
-                                              rdf:_1  ?manchester_type_paragraph_scheme.
-      ?manchester_conceptScheme               rdf:type html:TextElement;
-                                              html:fragment "ConceptScheme: ".
-      ?manchester_labelScheme                 rdf:type html:TextElement;
-                                              html:fragment ?conceptSchemeLabel.
-      ?manchester_type_paragraph_scheme       rdf:type html:P;
-                                              rdf:_1 ?manchester_type_scheme;
-                                              rdf:_2 ?linebreak4.
-      ?manchester_type_scheme                 rdf:type html:TextElement;
-                                              html:fragment ?conceptSchemeManchesterType.
-      ?concept_div                   rdf:type html:Div;
-                                              html:fragment ?absenceOfConceptDefinitions;
-                                              ?rdf_member ?concept_section.
-      ?concept_section               rdf:type html:Section;
-                                              rdf:_1 ?concept_H2_title;
-                                              rdf:_2 ?concept_IRI_p;
-                                              rdf:_3 ?linebreak4;
-                                              rdf:_4 ?concept_definition;
-                                              rdf:_5 ?linebreak5;  
-                                              rdf:_6 ?linebreak6;
-                                              rdf:_7 ?manchester_syntax.
-      ?concept_H2_title              rdf:type html:H2;
-                                              rdf:_1 ?concept_dfn.
-      ?concept_dfn                   rdf:type html:Dfn;
-                                              rdf:_1 ?concept_title.
-      ?concept_title                 rdf:type html:TextElement;
-                                              html:fragment ?conceptLabel_text.
-      ?concept_IRI_p                 rdf:type html:P;
-                                              rdf:_1 ?concept_IRI_strong;
-                                              rdf:_2 ?concept_IRI_a.
-      ?concept_IRI_strong            rdf:type html:Strong;
-                                              rdf:_1 ?concept_IRI_text.
-      ?concept_IRI_text              rdf:type html:TextElement;
-                                              html:fragment 'IRI: '.
-      ?concept_IRI_a                 rdf:type html:A;
-                                              html:href ?concept_IRI;
-                                              rdf:_1 ?IRI_value.
-      ?IRI_value                              rdf:type html:TextElement;
-                                              html:fragment ?concept_IRI.
-      ?concept_definition                     rdf:type html:TextElement;
-                                              html:fragment ?cleanedDefinition.
-      ?manchester_syntax                      rdf:type html:Aside;
-                                              html:class "note" ;
-                                              html:title "Manchester Syntax (Extended)";
-                                              rdf:_1 ?manchester_code_label.
-      ?manchester_code_label                  rdf:type html:Code;
-                                              rdf:_1 ?manchester_concept;
-                                              rdf:_2 ?manchester_label;
-                                              rdf:_3 ?linebreak7;
-                                              rdf:_4 ?manchester_inScheme.
-      ?manchester_concept                     rdf:type html:TextElement;
-                                              html:fragment "Concept: ".
-      ?manchester_label                       rdf:type html:TextElement;
-                                              html:fragment ?conceptLabel.
-      ?manchester_inScheme                    rdf:type html:TextElement;
-                                              html:fragment ?inSchemeLabel.
-      ?linebreak1                             rdf:type html:Br.
-      ?linebreak2                             rdf:type html:Br.
-      ?linebreak3                             rdf:type html:Br.
-      ?linebreak4                             rdf:type html:Br.
-      ?linebreak5                             rdf:type html:Br.
-      ?linebreak6                             rdf:type html:Br.
-      ?linebreak7                             rdf:type html:Br.
+
+  ?chapter                rdf:type html:Div;
+                          html:fragment ?absenceOfConceptSchemeDefinitions;
+                          ?rdf_memberScheme ?div.
+  ?div                    rdf:type html:Div;
+                          rdf:_1 ?chapter_scheme;
+                          rdf:_2 ?chapter_concept.
+  ?chapter_scheme         rdf:type html:Div;
+                          ?rdf_member ?section_scheme.
+  ?section_scheme         rdf:type html:Section;
+                          rdf:_1 ?title_scheme;
+                          rdf:_2 ?IRI_scheme;
+                          rdf:_3 ?linebreak1;
+                          rdf:_4 ?definition_scheme;
+                          rdf:_5 ?linebreak2;
+                          rdf:_6 ?linebreak3;
+                          rdf:_7 ?manchester_syntax_scheme.
+  ?title_scheme           rdf:type html:H2;
+                          rdf:_1 ?dfn_Scheme.
+  ?dfn_scheme                  rdf:type html:Dfn;
+                               rdf:_1 ?title_scheme_text.
+  ?title_text                     rdf:type html:TextElement;
+                                  html:fragment ?conceptSchemeLabel.
+  ?IRI_scheme                                   rdf:type html:P;
+                                                rdf:_1 ?IRI_strong_scheme;
+                                                rdf:_2 ?IRI_a_scheme.
+  ?IRI_strong_scheme                              rdf:type html:Strong;
+                                                  rdf:_1 ?IRI_text_scheme.
+  ?IRI_text_scheme                                rdf:type html:TextElement;
+                                                  html:fragment 'IRI: '.
+  ?IRI_a_scheme                                   rdf:type html:A;
+                                                  html:href ?conceptScheme_IRI;
+                                                  rdf:_1 ?IRI_value_text_scheme.
+  ?IRI_value_text_scheme                                         rdf:type html:TextElement;
+                                                                 html:fragment ?conceptScheme_IRI.
+  ?definition_scheme                     rdf:type html:TextElement;
+                                         html:fragment ?cleanedSchemeDefinition.
+  ?manchester_syntax_scheme                             rdf:type html:Aside;
+                                                        html:class "note" ;
+                                                        html:title "Manchester Syntax (Extended)";
+                                                        rdf:_1 ?manchester_syntax_code_scheme.
+  ?manchester_syntax_code_scheme                        rdf:type html:Code;
+                                                        rdf:_1 ?manchester_syntax_table_scheme.
+  ?manchester_syntax_table_scheme                              rdf:type html:Table;
+                                                               rdf:_1 ?manchester_syntax_table_body_definition_scheme.
+  ?manchester_syntax_table_body_definition_scheme          rdf:type html:TableBody;
+                                                           rdf:_1 ?manchester_syntax_table_row_definition_scheme.
+  ?manchester_syntax_table_row_definition_scheme                rdf:type html:Row;
+                                                                rdf:_1 ?manchester_syntax_definition_type_scheme;
+                                                                rdf:_2 ?manchester_syntax_definition_value_scheme.
+  ?manchester_syntax_definition_type_scheme           rdf:type html:DataCell;
+                                                      rdf:_1 ?manchester_syntax_definition_type_text_scheme.
+  ?manchester_syntax_definition_type_text_scheme         rdf:type html:TextElement;
+                                                         html:fragment 'Concept scheme:'.
+  ?manchester_syntax_definition_value_scheme          rdf:type html:DataCell;
+                                                      rdf:_1 ?manchester_syntax_definition_value_text_scheme.
+  ?manchester_syntax_definition_value_text_scheme        rdf:type html:TextElement;
+                                                         html:fragment ?conceptSchemeLabel.
+
+
+  ?chapter_concept           rdf:type html:Div;
+                             ?rdf_member ?section;
+                             html:fragment ?absenceOfDefinitions.
+  ?section                   rdf:type html:Section;
+                             rdf:_1 ?title;
+                             rdf:_2 ?IRI;
+                             rdf:_3 ?linebreak4;
+                             rdf:_4 ?definition;
+                             rdf:_5 ?linebreak5;
+                             rdf:_6 ?linebreak6;
+                             rdf:_7 ?manchester_syntax.
+  ?title                       rdf:type html:H2;
+                               rdf:_1 ?dfn.
+  ?dfn                            rdf:type html:Dfn;
+                                  rdf:_1 ?title_text.
+  ?title_text                     rdf:type html:TextElement;
+                                  html:fragment ?entityManchesterLabel.
+  ?IRI                                   rdf:type html:P;
+                                         rdf:_1 ?IRI_strong;
+                                         rdf:_2 ?IRI_a.
+  ?IRI_strong                              rdf:type html:Strong;
+                                           rdf:_1 ?IRI_text.
+  ?IRI_text                                rdf:type html:TextElement;
+                                           html:fragment 'IRI: '.
+  ?IRI_a                                   rdf:type html:A;
+                                           html:href ?fullIRI;
+                                           rdf:_1 ?IRI_value_text.
+  ?IRI_value_text                                         rdf:type html:TextElement;
+                                                          html:fragment ?fullIRI.
+  ?definition                     rdf:type html:TextElement;
+                                  html:fragment ?entityDefinition.
+  ?manchester_syntax                             rdf:type html:Aside;
+                                                 html:class "note" ;
+                                                 html:title "Manchester Syntax (Extended)";
+                                                 rdf:_1 ?manchester_syntax_code.
+  ?manchester_syntax_code                        rdf:type html:Code;
+                                                 rdf:_1 ?manchester_syntax_table.
+  ?manchester_syntax_table                              rdf:type html:Table;
+                                                        rdf:_1 ?manchester_syntax_table_body_definition.
+  ?manchester_syntax_table_body_definition          rdf:type html:TableBody;
+                                                    rdf:_1 ?manchester_syntax_table_row_definition;
+                                                    rdf:_2 ?emptyrow1;
+                                                    rdf:_3 ?manchester_syntax_table_row_inscheme.
+  ?manchester_syntax_table_row_definition                rdf:type html:Row;
+                                                         rdf:_1 ?manchester_syntax_definition_type;
+                                                         rdf:_2 ?manchester_syntax_definition_value.
+  ?manchester_syntax_definition_type           rdf:type html:DataCell;
+                                               rdf:_1 ?manchester_syntax_definition_type_text.
+  ?manchester_syntax_definition_type_text         rdf:type html:TextElement;
+                                                  html:fragment 'Concept:'.
+  ?manchester_syntax_definition_value          rdf:type html:DataCell;
+                                               rdf:_1 ?manchester_syntax_definition_value_text.
+  ?manchester_syntax_definition_value_text        rdf:type html:TextElement;
+                                                  html:fragment ?entityManchesterLabel.
+
+  ?emptyrow1      rdf:type html:Row;
+                  rdf:_1 ?emptycell1;
+                  rdf:_2 ?emptycell2.
+  ?emptycell1         rdf:type html:DataCell.
+  ?emptycell2         rdf:type html:DataCell.
+
+  ?manchester_syntax_table_row_inscheme                    rdf:type html:Row;
+                                                           rdf:_1 ?manchester_syntax_definition_inscheme_type;
+                                                           rdf:_2 ?manchester_syntax_definition_inscheme_value.
+  ?manchester_syntax_definition_inscheme_type            rdf:type html:DataCell;
+                                                         rdf:_1 ?manchester_syntax_definition_inscheme_type_text.
+  ?manchester_syntax_definition_inscheme_type_text          rdf:type html:TextElement;
+                                                            html:fragment 'In scheme:'.
+  ?manchester_syntax_definition_inscheme_value           rdf:type html:DataCell;
+                                                         rdf:_1 ?manchester_syntax_definition_inscheme_value_text.
+  ?manchester_syntax_definition_inscheme_value_text         rdf:type html:TextElement;
+                                                            html:fragment ?entityManchesterInScheme.
+
+
+  ?linebreak4                          rdf:type html:Br.
+  ?linebreak5                          rdf:type html:Br.
+  ?linebreak6                          rdf:type html:Br.
 
 }
-WHERE  {
-  {
-    ?template rdf:type respec:Concept.
-  }
-  ### Get the concepts per concept scheme as defined in the ontology and sort them alphabetically
-  {
-    SELECT ?conceptScheme ?concept ?conceptLabel ?inScheme ?cleanedDefinition (COUNT(?prevConcept) + 1 AS ?member)
-    WHERE {
 
-      ?concept manchester:syntax 'CONCEPT';
-               manchester:label ?conceptLabel ;
-               rdfs:isDefinedBy ?ontology.
-      $this dct:subject ?ontology;
-            respec:documentLanguage ?language.
-      ?concept skos:inScheme ?conceptScheme.
-      ?conceptScheme manchester:label ?inScheme.
+  where  {
+    # Get the template
 
-      OPTIONAL
-      {
-        ?concept skos:definition ?definition.
-        FILTER (LANG(?definition) = ?language)
+    {?template rdf:type respec:Concept.}
+
+    # Get the sorted concepts from the ontology including semantics
+
+    {
+      select ?entity ?entityManchesterLabel_raw ?entityManchesterLabel ?entityManchesterInScheme ?entityDefinition (count(?prevEntity) + 1 as ?member)
+
+      where {
+
+        ?entity manchester:syntax 'CONCEPT';
+                manchester:label ?entityManchesterLabel_raw ;
+                skos:inScheme ?conceptScheme;
+                rdfs:isDefinedBy ?ontology.
+        ?conceptScheme manchester:label ?entityManchesterInScheme.
+        $this dct:subject ?ontology;
+              respec:documentLanguage ?language.
+
+        optional{
+          ?entity skos:definition ?entityDefinition_raw.
+          filter (lang(?entityDefinition_raw) = ?language)
+        }
+
+
+        bind(function:escapeHTML(?entityManchesterLabel_raw) as ?entityManchesterLabel)
+        bind(if(bound(?entityDefinition_raw), coalesce(function:escapeHTML(?entityDefinition_raw)), "No definition provided by this ontology.") as ?entityDefinition)
+
+        optional {
+          ?prevEntity manchester:syntax 'CONCEPT';
+                      manchester:label ?prevLabel .
+          filter(?prevLabel < ?entityManchesterLabel_raw)
+        }
       }
-
-      BIND(IF(BOUND(?definition), COALESCE(Str(?definition)), "No definition provided by this ontology.") as ?cleanedDefinition)
-
-      OPTIONAL
-      {
-        ?prevConcept manchester:syntax 'CONCEPT';
-                     manchester:label ?prevLabel.
-        ?prevConcept skos:inScheme ?conceptScheme
-        FILTER(?prevLabel < ?conceptLabel)
-      }
+      group by ?entityManchesterLabel_raw ?entityManchesterLabel ?entity ?entityManchesterInScheme ?entityDefinition
+      order by ?entityManchesterLabel_raw
     }
-    GROUP BY ?conceptScheme ?conceptLabel ?inScheme ?concept ?cleanedDefinition
-    ORDER BY  ?conceptLabel
-  }
-  ### Get the concept schemes as defined in the ontology and sort them alphabetically
-  {
-    SELECT ?conceptScheme ?conceptSchemeLabel ?cleanedSchemeDefinition (COUNT(?prevConceptScheme) + 1 AS ?memberScheme)
-    WHERE {
-      ?conceptScheme manchester:syntax 'CONCEPTSCHEME';
-                     manchester:label ?conceptSchemeLabel;
-                     rdfs:isDefinedBy ?ontology.
-      $this dct:subject ?ontology;
-            respec:documentLanguage ?language.
 
-      OPTIONAL
-      {
-        ?conceptScheme skos:definition ?schemeDefinition.
-        FILTER (LANG(?schemeDefinition) = ?language)
+    # Get the sorted concept schemes from the ontology including semantics
+    {
+      select ?conceptScheme ?conceptSchemeLabel ?cleanedSchemeDefinition (count(?prevConceptScheme) + 1 as ?memberScheme)
+      where {
+        ?conceptScheme manchester:syntax 'CONCEPTSCHEME';
+                       manchester:label ?conceptSchemeLabel;
+                       rdfs:isDefinedBy ?ontology.
+        $this dct:subject ?ontology;
+              respec:documentLanguage ?language.
+
+        optional
+        {
+          ?conceptScheme skos:definition ?schemeDefinition.
+          filter (lang(?schemeDefinition) = ?language)
+        }
+
+        bind(if(bound(?schemeDefinition), coalesce(function:escapeHTML(?schemeDefinition)), "No definition provided by this ontology.") as ?cleanedSchemeDefinition)
+
+        optional
+        {
+          ?prevConceptScheme manchester:syntax 'CONCEPTSCHEME';
+                             manchester:label ?prevSchemeLabel.
+          filter(?prevSchemeLabel < ?conceptSchemeLabel)
+        }
       }
-      
-      BIND(IF(BOUND(?schemeDefinition), COALESCE(function:escapeHTML(?schemeDefinition)), "No definition provided by this ontology.") as ?cleanedSchemeDefinition)
-      
-      OPTIONAL
-      {
-        ?prevConceptScheme manchester:syntax 'CONCEPTSCHEME';
-                           manchester:label ?prevSchemeLabel.
-        FILTER(?prevSchemeLabel < ?conceptSchemeLabel)
-      }
+      group by ?conceptSchemeLabel ?conceptScheme ?cleanedSchemeDefinition
+      order by ?conceptSchemeLabel
     }
-    GROUP BY ?conceptSchemeLabel ?conceptScheme ?cleanedSchemeDefinition
-    ORDER BY ?conceptSchemeLabel
+
+    bind(if(!bound(?entity), "This ontology does not define any concepts.", ?unboundDummy) as ?absenceOfDefinitions)
+    bind(if(!bound(?conceptScheme), "This ontology does not define any concept schemes.", ?unboundDummy) as ?absenceOfConceptSchemeDefinitions)
+    bind(iri(concat(str(rdf:),"_", str(?memberScheme))) as ?rdf_memberScheme)
+    bind(iri(concat(str(rdf:),"_", str(?member))) as ?rdf_member)
+
+    # Establishing the prefixed IRI of the entity.
+
+    bind(str(?entity) as ?fullIRI)
+    bind(str(?conceptScheme) as ?conceptScheme_IRI)
+
+    # Create identifiers - conceptscheme
+
+    bind(iri(concat(str(?template),'-instance')) as ?chapter)
+    bind(iri(concat(str(?chapter), '-', str(?memberScheme),'-1')) as ?div)
+    bind(iri(concat(str(?div),'-1')) as ?chapter_scheme)
+    bind(iri(concat(str(?div),'-2')) as ?chapter_concept)
+    bind(iri(concat(str(?chapter_scheme),'-1')) as ?section_scheme)
+    bind(iri(concat(str(?section_scheme), '-1')) as ?title_scheme)
+    bind(iri(concat(str(?section_scheme), '-2')) as ?IRI_scheme)
+    bind(iri(concat(str(?section_scheme), '-3')) as ?linebreak1)
+    bind(iri(concat(str(?section_scheme), '-4')) as ?definition_scheme)
+    bind(iri(concat(str(?section_scheme), '-5')) as ?linebreak2)
+    bind(iri(concat(str(?section_scheme), '-6')) as ?linebreak3)
+    bind(iri(concat(str(?section_scheme), '-7')) as ?manchester_syntax_scheme)
+    bind(iri(concat(str(?IRI_scheme), '-1')) as ?IRI_strong_scheme)
+    bind(iri(concat(str(?IRI_scheme), '-2')) as ?IRI_a_scheme)
+    bind(iri(concat(str(?IRI_strong_scheme), '-1')) as ?IRI_text_scheme)
+    bind(iri(concat(str(?IRI_a_scheme), '-1')) as ?IRI_value_text_scheme)
+    bind(iri(concat(str(?title_scheme), '-1')) as ?dfn_scheme)
+    bind(iri(concat(str(?dfn_scheme), '-1')) as ?title_text_scheme)
+
+    # Create identifiers - Manchester Syntax - conceptscheme
+
+    bind(iri(concat(str(?manchester_syntax_scheme), '-1')) as ?manchester_syntax_code_scheme)
+    bind(iri(concat(str(?manchester_syntax_code_scheme), '-1')) as ?manchester_syntax_table_scheme)
+    bind(iri(concat(str(?manchester_syntax_table_scheme), '-1')) as ?manchester_syntax_table_body_definition_scheme)
+    bind(iri(concat(str(?manchester_syntax_table_body_definition_scheme), '-1')) as ?manchester_syntax_table_row_definition_scheme)
+
+    bind(iri(concat(str(?manchester_syntax_table_row_definition_scheme), '-1')) as ?manchester_syntax_definition_type_scheme)
+    bind(iri(concat(str(?manchester_syntax_table_row_definition_scheme), '-2')) as ?manchester_syntax_definition_value_scheme)
+    bind(iri(concat(str(?manchester_syntax_definition_type_scheme), '-1')) as ?manchester_syntax_definition_type_text_scheme)
+    bind(iri(concat(str(?manchester_syntax_definition_value_scheme), '-1')) as ?manchester_syntax_definition_value_text_scheme)
+
+    # Create identifiers - concept
+
+    bind(iri(concat(str(?chapter_concept), '-', str(?member),'-1')) as ?section)
+    bind(iri(concat(str(?section), '-1')) as ?title)
+    bind(iri(concat(str(?section), '-2')) as ?IRI)
+    bind(iri(concat(str(?section), '-3')) as ?linebreak4)
+    bind(iri(concat(str(?section), '-4')) as ?definition)
+    bind(iri(concat(str(?section), '-5')) as ?linebreak5)
+    bind(iri(concat(str(?section), '-6')) as ?linebreak6)
+    bind(iri(concat(str(?section), '-7')) as ?manchester_syntax)
+    bind(iri(concat(str(?IRI), '-1')) as ?IRI_strong)
+    bind(iri(concat(str(?IRI), '-2')) as ?IRI_a)
+    bind(iri(concat(str(?IRI_strong), '-1')) as ?IRI_text)
+    bind(iri(concat(str(?IRI_a), '-1')) as ?IRI_value_text)
+    bind(iri(concat(str(?title), '-1')) as ?dfn)
+    bind(iri(concat(str(?dfn), '-1')) as ?title_text)
+
+    # Create identifiers - Manchester Syntax - concept
+
+    bind(iri(concat(str(?manchester_syntax), '-1')) as ?manchester_syntax_code)
+    bind(iri(concat(str(?manchester_syntax_code), '-1')) as ?manchester_syntax_table)
+    bind(iri(concat(str(?manchester_syntax_table), '-1')) as ?manchester_syntax_table_body_definition)
+
+    bind(iri(concat(str(?manchester_syntax_table_body_definition), '-1')) as ?manchester_syntax_table_row_definition)
+    bind(iri(concat(str(?manchester_syntax_table_body_definition), '-2')) as ?emptyrow1)
+    bind(if(bound(?entityManchesterInScheme),iri(concat(str(?manchester_syntax_table_body_definition), '-3')), ?unboundDummy) as ?manchester_syntax_table_row_inscheme )
+
+    bind(iri(concat(str(?manchester_syntax_table_row_definition), '-1')) as ?manchester_syntax_definition_type)
+    bind(iri(concat(str(?manchester_syntax_table_row_definition), '-2')) as ?manchester_syntax_definition_value)
+    bind(iri(concat(str(?emptyrow1), '-1')) as ?emptycell1)
+    bind(iri(concat(str(?emptyrow1), '-2')) as ?emptycell2)
+    bind(iri(concat(str(?manchester_syntax_definition_type), '-1')) as ?manchester_syntax_definition_type_text)
+    bind(iri(concat(str(?manchester_syntax_definition_value), '-1')) as ?manchester_syntax_definition_value_text)
+
+    bind(iri(concat(str(?manchester_syntax_table_row_inscheme), '-1')) as ?manchester_syntax_definition_inscheme_type)
+    bind(iri(concat(str(?manchester_syntax_table_row_inscheme), '-2')) as ?manchester_syntax_definition_inscheme_value)
+    bind(iri(concat(str(?manchester_syntax_definition_inscheme_type), '-1')) as ?manchester_syntax_definition_inscheme_type_text)
+    bind(iri(concat(str(?manchester_syntax_definition_inscheme_value), '-1')) as ?manchester_syntax_definition_inscheme_value_text)
+
   }
-  UNION
-  # Add also concepts that are not within a skos:Scheme
-  {
-    SELECT ?concept ?conceptLabel ?cleanedDefinition (COUNT(?prevConcept) + 1 AS ?member)
-    WHERE {
-      ?concept manchester:syntax 'CONCEPT';
-               manchester:label ?conceptLabel;
-               rdfs:isDefinedBy ?ontology.
-     
-      $this dct:subject ?ontology;
-            respec:documentLanguage ?language.
-      FILTER NOT EXISTS
-      {?concept skos:inScheme ?conceptScheme.}
-      
-      OPTIONAL
-      {
-        ?concept skos:definition ?definition.
-        FILTER (LANG(?definition) = ?language)
-      }
-      
-      BIND(IF(BOUND(?definition), COALESCE(function:escapeHTML(?definition)), "No definition provided by this ontology.") as ?cleanedDefinition)
-      
-      OPTIONAL
-      {
-        ?prevConcept manchester:syntax 'CONCEPT';
-                     manchester:label ?prevLabel.
-        FILTER(?prevLabel < ?conceptLabel)
-      }
-    }
-    GROUP BY ?conceptLabel ?concept ?cleanedDefinition
-    ORDER BY ?conceptLabel
-  }
-  BIND(IRI(CONCAT(str(rdf:),"_", str(?memberScheme))) as ?rdf_memberScheme)  
-  BIND(IRI(CONCAT(str(rdf:),"_", str(?member))) as ?rdf_member)  
-  BIND(COALESCE(?conceptSchemeLabel, "Unknown label") as ?conceptSchemeLabel_text)
-  BIND(COALESCE(?conceptLabel, "Unknown label") as ?conceptLabel_text)
-  BIND(COALESCE(concat("In scheme: ",?inScheme), "in scheme: Unknown scheme") as ?inSchemeLabel)
-  BIND(IF(!BOUND(?concept), "This ontology does not define any concepts.", ?unboundDummy) as ?absenceOfConceptDefinitions)
-  BIND(IF(!BOUND(?conceptScheme), "This ontology does not define any concept scheme.", ?unboundDummy) as ?absenceOfConceptSchemeDefinitions)
-  # Establishing the full IRI of the concept.
-  BIND(STR(?concept) as ?concept_IRI)
-  BIND(STR(?conceptScheme) as ?conceptScheme_IRI)
-  
-  # Create identifiers - ConceptScheme
-  
-  BIND(IRI(CONCAT(STR(?template),'-instance'))                   as ?concept_chapter)
-  BIND(IRI(CONCAT(STR(?concept_chapter),'-', str(?memberScheme)))        as ?conceptScheme_div)
-  BIND(IRI(CONCAT(STR(?conceptScheme_div), '-1'))                        as ?conceptScheme_section)
-  BIND(IRI(CONCAT(STR(?conceptScheme_div), '-2'))                        as ?concept_div)
-  BIND(IRI(CONCAT(STR(?conceptScheme_section), '-1'))                    as ?conceptScheme_H2_title)
-  BIND(IRI(CONCAT(STR(?conceptScheme_H2_title), '-1'))                   as ?conceptScheme_dfn)
-  BIND(IRI(CONCAT(STR(?conceptScheme_dfn), '-1'))                        as ?conceptScheme_title)
-  BIND(IRI(CONCAT(STR(?conceptScheme_section), '-2'))                    as ?conceptScheme_IRI_p)
-  BIND(IRI(CONCAT(STR(?conceptScheme_section), '-3'))                    as ?linebreak1)
-  BIND(IRI(CONCAT(STR(?conceptScheme_IRI_p), '-1'))                      as ?conceptScheme_IRI_strong)
-  BIND(IRI(CONCAT(STR(?conceptScheme_IRI_p), '-2'))                      as ?conceptScheme_IRI_a)
-  BIND(IRI(CONCAT(STR(?conceptScheme_IRI_strong), '-1'))                 as ?conceptScheme_IRI_text)
-  BIND(IRI(CONCAT(STR(?conceptScheme_IRI_a), '-1'))                      as ?IRIScheme_value)
-  BIND(IRI(CONCAT(STR(?conceptScheme_section), '-4'))                    as ?conceptScheme_definition)
-  BIND(IRI(CONCAT(STR(?conceptScheme_section), '-5'))                    as ?linebreak2)
-  BIND(IRI(CONCAT(STR(?conceptScheme_section), '-6'))                    as ?linebreak3)
-  BIND(IRI(CONCAT(STR(?conceptScheme_section), '-7'))                    as ?manchester_syntax_scheme)
-  
-  # Create identifiers - Concept
-  
-  BIND(IRI(CONCAT(STR(?concept_div), '-', str(?member)))                 as ?concept_section)
-  BIND(IRI(CONCAT(STR(?concept_section), '-1'))                          as ?concept_H2_title)
-  BIND(IRI(CONCAT(STR(?concept_H2_title), '-1'))                         as ?concept_dfn)
-  BIND(IRI(CONCAT(STR(?concept_dfn), '-1'))                              as ?concept_title)
-  BIND(IRI(CONCAT(STR(?concept_section), '-2'))                          as ?concept_IRI_p)
-  BIND(IRI(CONCAT(STR(?concept_section), '-3'))                          as ?linebreak4)
-  BIND(IRI(CONCAT(STR(?concept_IRI_p), '-1'))                            as ?concept_IRI_strong)
-  BIND(IRI(CONCAT(STR(?concept_IRI_p), '-2'))                            as ?concept_IRI_a)
-  BIND(IRI(CONCAT(STR(?concept_IRI_strong), '-1'))                       as ?concept_IRI_text)
-  BIND(IRI(CONCAT(STR(?concept_IRI_a), '-1'))                            as ?IRI_value)
-  BIND(IRI(CONCAT(STR(?concept_section), '-4'))                          as ?concept_definition)
-  BIND(IRI(CONCAT(STR(?concept_section), '-5'))                          as ?linebreak5)
-  BIND(IRI(CONCAT(STR(?concept_section), '-6'))                          as ?linebreak6)
-  BIND(IRI(CONCAT(STR(?concept_section), '-7'))                          as ?manchester_syntax)
-  
-  # Create identifiers - Manchester Syntax - ConceptScheme
-  BIND(IRI(CONCAT(STR(?manchester_syntax_scheme), '-1'))                 as ?manchester_code_schemelabel)  
-  BIND(IRI(CONCAT(STR(?manchester_code_schemelabel), '-1'))              as ?manchester_conceptscheme)
-  BIND(IRI(CONCAT(STR(?manchester_code_schemelabel), '-2'))              as ?manchester_labelscheme)
-  
-  # Create identifiers - Manchester Syntax - Concept
-  BIND(IRI(CONCAT(STR(?manchester_syntax), '-1'))                        as ?manchester_code_label)  
-  BIND(IRI(CONCAT(STR(?manchester_code_label), '-1'))                    as ?manchester_concept)
-  BIND(IRI(CONCAT(STR(?manchester_code_label), '-2'))                    as ?manchester_label)
-  BIND(IRI(CONCAT(STR(?manchester_code_label), '-3'))                    as ?linebreak7)
-  BIND(IRI(CONCAT(STR(?manchester_code_label), '-4'))                    as ?manchester_inScheme)
-}
 """.
 
 function:escapeHTML
