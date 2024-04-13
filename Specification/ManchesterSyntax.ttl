@@ -1706,10 +1706,9 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX sh: <http://www.w3.org/ns/shacl#>
 PREFIX vann: <http://purl.org/vocab/vann/>
 
-
 SELECT ?result WHERE {
 
-  # Establish the full IRI of the resource, e.g. ex:Person would lead to http://example.org/Person.
+  # Establish the default full IRI of the resource, e.g. ex:Person would lead to http://example.org/Person.
   bind(str($IRI) as ?defaultFullIRI)
 
   # Establish possible namespaces
