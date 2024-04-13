@@ -1872,8 +1872,7 @@ construct {
                                                          html:fragment ?conceptSchemeLabel.
 
   ?chapter_concept           rdf:type html:Div;
-                             ?rdf_member ?section;
-                             html:fragment ?absenceOfDefinitions.
+                             ?rdf_member ?section.
   ?section                   rdf:type html:Section;
                              rdf:_1 ?title;
                              rdf:_2 ?IRI;
@@ -1887,7 +1886,7 @@ construct {
   ?dfn                            rdf:type html:Dfn;
                                   rdf:_1 ?title_text.
   ?title_text                     rdf:type html:TextElement;
-                                  html:fragment ?entityManchesterLabel.
+                                  html:fragment ?conceptLabel.
   ?IRI                                   rdf:type html:P;
                                          rdf:_1 ?IRI_strong;
                                          rdf:_2 ?IRI_a.
@@ -1896,12 +1895,12 @@ construct {
   ?IRI_text                                rdf:type html:TextElement;
                                            html:fragment 'IRI: '.
   ?IRI_a                                   rdf:type html:A;
-                                           html:href ?fullIRI;
+                                           html:href ?concept_IRI;
                                            rdf:_1 ?IRI_value_text.
   ?IRI_value_text                                         rdf:type html:TextElement;
-                                                          html:fragment ?fullIRI.
+                                                          html:fragment ?concept_IRI.
   ?definition                     rdf:type html:TextElement;
-                                  html:fragment ?entityDefinition.
+                                  html:fragment ?conceptDefinition.
   ?manchester_syntax                             rdf:type html:Aside;
                                                  html:class "note" ;
                                                  html:title "Manchester Syntax (Extended)";
@@ -1924,7 +1923,7 @@ construct {
   ?manchester_syntax_definition_value          rdf:type html:DataCell;
                                                rdf:_1 ?manchester_syntax_definition_value_text.
   ?manchester_syntax_definition_value_text        rdf:type html:TextElement;
-                                                  html:fragment ?entityManchesterLabel.
+                                                  html:fragment ?conceptLabel.
 
   ?emptyrow1      rdf:type html:Row;
                   rdf:_1 ?emptycell1;
@@ -1942,7 +1941,7 @@ construct {
   ?manchester_syntax_definition_inscheme_value           rdf:type html:DataCell;
                                                          rdf:_1 ?manchester_syntax_definition_inscheme_value_text.
   ?manchester_syntax_definition_inscheme_value_text         rdf:type html:TextElement;
-                                                            html:fragment ?entityManchesterInScheme.
+                                                            html:fragment ?inSchemeLabel.
 
 
   ?linebreak4                          rdf:type html:Br.
@@ -1959,35 +1958,34 @@ construct {
     # Get the sorted concepts from the ontology including semantics
 
     {
-      select ?entity ?entityManchesterLabel_raw ?entityManchesterLabel ?entityManchesterInScheme ?entityDefinition (count(?prevEntity) + 1 as ?member)
+      select ?conceptScheme ?concept ?conceptLabel_raw ?conceptLabel ?inSchemeLabel ?conceptDefinition (count(?prevConcept) + 1 as ?member)
 
       where {
 
-        ?entity manchester:syntax 'CONCEPT';
-                manchester:label ?entityManchesterLabel_raw ;
-                skos:inScheme ?conceptScheme;
-                rdfs:isDefinedBy ?ontology.
-        ?conceptScheme manchester:label ?entityManchesterInScheme.
+        ?concept manchester:syntax 'CONCEPT';
+                 manchester:label ?conceptLabel_raw ;
+                 skos:inScheme ?conceptScheme;
+                 rdfs:isDefinedBy ?ontology.
+        ?conceptScheme manchester:label ?inSchemeLabel.
         $this dct:subject ?ontology;
               respec:documentLanguage ?language.
 
         optional{
-          ?entity skos:definition ?entityDefinition_raw.
-          filter (lang(?entityDefinition_raw) = ?language)
+          ?concept skos:definition ?conceptDefinition_raw.
+          filter (lang(?conceptDefinition_raw) = ?language)
         }
 
-
-        bind(function:escapeHTML(?entityManchesterLabel_raw) as ?entityManchesterLabel)
-        bind(if(bound(?entityDefinition_raw), coalesce(function:escapeHTML(?entityDefinition_raw)), "No definition provided by this ontology.") as ?entityDefinition)
+        bind(function:escapeHTML(?conceptLabel_raw) as ?conceptLabel)
+        bind(if(bound(?conceptDefinition_raw), coalesce(function:escapeHTML(?conceptDefinition_raw)), "No definition provided by this ontology.") as ?conceptDefinition)
 
         optional {
-          ?prevEntity manchester:syntax 'CONCEPT';
+          ?prevConcept manchester:syntax 'CONCEPT';
                       manchester:label ?prevLabel .
-          filter(?prevLabel < ?entityManchesterLabel_raw)
+          filter(?prevLabel < ?conceptLabel_raw)
         }
       }
-      group by ?entityManchesterLabel_raw ?entityManchesterLabel ?entity ?entityManchesterInScheme ?entityDefinition
-      order by ?entityManchesterLabel_raw
+      group by ?conceptScheme ?concept ?conceptLabel_raw ?conceptLabel ?inSchemeLabel ?conceptDefinition
+      order by ?conceptScheme ?conceptLabel_raw
     }
 
     # Get the sorted concept schemes from the ontology including semantics
@@ -2019,14 +2017,14 @@ construct {
       order by ?conceptSchemeLabel
     }
 
-    bind(if(!bound(?entity), "This ontology does not define any concepts.", ?unboundDummy) as ?absenceOfDefinitions)
+    bind(if(!bound(?concept), "This ontology does not define any concepts.", ?unboundDummy) as ?absenceOfDefinitions)
     bind(if(!bound(?conceptScheme), "This ontology does not define any concept schemes.", ?unboundDummy) as ?absenceOfConceptSchemeDefinitions)
     bind(iri(concat(str(rdf:),"_", str(?memberScheme))) as ?rdf_memberScheme)
     bind(iri(concat(str(rdf:),"_", str(?member))) as ?rdf_member)
 
-    # Establishing the prefixed IRI of the entity.
+    # Establishing the prefixed IRI of the concept and conceptscheme.
 
-    bind(str(?entity) as ?fullIRI)
+    bind(str(?concept) as ?concept_IRI)
     bind(str(?conceptScheme) as ?conceptScheme_IRI)
 
     # Create identifiers - conceptscheme
@@ -2086,7 +2084,7 @@ construct {
 
     bind(iri(concat(str(?manchester_syntax_table_body_definition), '-1')) as ?manchester_syntax_table_row_definition)
     bind(iri(concat(str(?manchester_syntax_table_body_definition), '-2')) as ?emptyrow1)
-    bind(if(bound(?entityManchesterInScheme),iri(concat(str(?manchester_syntax_table_body_definition), '-3')), ?unboundDummy) as ?manchester_syntax_table_row_inscheme )
+    bind(if(bound(?inSchemeLabel),iri(concat(str(?manchester_syntax_table_body_definition), '-3')), ?unboundDummy) as ?manchester_syntax_table_row_inscheme )
 
     bind(iri(concat(str(?manchester_syntax_table_row_definition), '-1')) as ?manchester_syntax_definition_type)
     bind(iri(concat(str(?manchester_syntax_table_row_definition), '-2')) as ?manchester_syntax_definition_value)
