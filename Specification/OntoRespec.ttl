@@ -1958,7 +1958,7 @@ construct {
     # Get the sorted concepts from the ontology including semantics
 
     {
-      select ?conceptScheme ?concept ?conceptLabel_raw ?conceptLabel ?inSchemeLabel ?conceptDefinition (count(?prevConcept) + 1 as ?member)
+      select ?conceptScheme ?concept ?conceptLabel_raw ?conceptLabel ?inSchemeLabel ?conceptDefinition (count(?prevConcept) + 2 as ?member)
 
       where {
 
@@ -2015,7 +2015,7 @@ construct {
         }
       }
       group by ?conceptSchemeLabel ?conceptScheme ?cleanedSchemeDefinition
-      order by ?conceptSchemeLabel
+      order by ?conceptScheme
     }
 
     bind(if(!bound(?concept), "This ontology does not define any concepts.", ?unboundDummy) as ?absenceOfDefinitions)
