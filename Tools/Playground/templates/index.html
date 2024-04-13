@@ -31,15 +31,15 @@
             /* Optionally limit max-height to prevent excessive stretching */
             max-height: 150%; /* Adjust as needed */
         }
-		
-		/* Style for download buttons */
-		.download-button {
+
+        /* Style for download buttons */
+       .download-button {
             width: 100%; /* Make buttons equally wide */
             margin-bottom: 10px; /* Add margin between buttons */
         }
-		
-		/* Style for the input/output sections */
-		.input-section, .output-section {
+
+        /* Style for the input/output sections */
+        .input-section, .output-section {
             flex: 1;
         }
 
@@ -63,39 +63,42 @@
         <div class="input-section">
             <div class="form">
                 <div class="section-title">Input</div> <!-- Bold 'Input' text -->
-				<br>
+                <br>
                 <form action="http://localhost:5000/generateReSpec" method="post">
                      <!-- Checkboxes for document options -->
                     <div><i>Ontology components:</i></div> <!-- Title for checkboxes -->
                     <br>
-                    <label for="conceptSchemeCheckbox">Concept schemes</label>
-                    <input type="checkbox" id="conceptSchemeCheckbox" name="conceptSchemes" value="true" checked><br>
-                    
-                    <label for="conceptCheckbox">Concepts</label>
-                    <input type="checkbox" id="conceptCheckbox" name="concepts" value="true" checked><br>
-                    
+
                     <label for="classCheckbox">Classes</label>
                     <input type="checkbox" id="classCheckbox" name="classes" value="true" checked><br>
                     
-                    <label for="objectPropertyCheckbox">Object properties</label>
-                    <input type="checkbox" id="objectPropertyCheckbox" name="objectProperties" value="true" checked><br>
-                    
+
+                    <label for="conceptSchemeCheckbox">Concept schemes</label>
+                    <input type="checkbox" id="conceptSchemeCheckbox" name="conceptSchemes" value="true" checked><br>
+
+                    <label for="conceptCheckbox">Concepts</label>
+                    <input type="checkbox" id="conceptCheckbox" name="concepts" value="true" checked><br>
+
                     <label for="datatypePropertyCheckbox">Datatype properties</label>
                     <input type="checkbox" id="datatypePropertyCheckbox" name="datatypeProperties" value="true" checked><br>
-                    
-                    <label for="rdfPropertyCheckbox">RDF properties</label>
-                    <input type="checkbox" id="rdfPropertyCheckbox" name="rdfProperties" value="true" checked><br>
-                    
+
+                    <label for="objectPropertyCheckbox">Object properties</label>
+                    <input type="checkbox" id="objectPropertyCheckbox" name="objectProperties" value="true" checked><br>
+
+                    <label for="namedIndividualCheckbox">Named individuals</label>
+                    <input type="checkbox" id="namedIndividualCheckbox" name="namedIndividuals" value="true" checked><br>
+
                     <label for="nodeshapeCheckbox">Nodeshapes</label>
                     <input type="checkbox" id="nodeshapeCheckbox" name="nodeshapes" value="true" checked><br>
-					
-					<label for="namedIndividualCheckbox">Named individuals</label>
-                    <input type="checkbox" id="namedIndividualCheckbox" name="namedIndividuals" value="true" checked><br>
-					<br>
-					<!-- Input for the ontology itself -->
-					<i>Contents:</i>
-					<br>
-					<br>
+
+                    <label for="rdfPropertyCheckbox">RDF properties</label>
+                    <input type="checkbox" id="rdfPropertyCheckbox" name="rdfProperties" value="true" checked><br>
+
+                    <br>
+                    <!-- Input for the ontology itself -->
+                    <i>Contents:</i>
+                    <br>
+                    <br>
                     <label for="textInput">Ontology</label><br>
                     <textarea id="rdfInput" name="ontology" rows="5" cols="100">{{ontology}}</textarea><br>
                      <label for="textInput">Introduction</label><br>
@@ -121,7 +124,7 @@
         <div class="output-section">
             <div class="output-box">
                 <div class="section-title">Output</div> <!-- Bold 'Output' text -->
-				<br>
+                <br>
                 <!-- HTML content -->
                 {% if htmlOutput %}
                 <div class="output-container">
@@ -139,7 +142,7 @@
                 <a href="/static/output.html" download="output.html"><button class="download-button">Download Output HTML</button></a><br>
                 <a href="/static/diagram.html" download="diagram.html"><button class="download-button">Download Diagram HTML</button></a><br>
                 <a href="/static/html.ttl" download="html.ttl"><button class="download-button">Download Output RDF</button></a>
-				<a href="/static/diagram.ttl" download="html.ttl"><button class="download-button">Download Diagram RDF</button></a>
+                <a href="/static/diagram.ttl" download="html.ttl"><button class="download-button">Download Diagram RDF</button></a>
             </div>
         </div>
     </div>

@@ -1376,7 +1376,7 @@ construct {
                                                     rdf:_3 ?manchester_syntax_table_row_targetClass;
                                                     rdf:_4 ?manchester_syntax_table_row_targetSPARQL;
                                                     rdf:_5 ?manchester_syntax_table_row_targetSubject;
-													rdf:_6 ?manchester_syntax_table_row_targetObject.
+                                                    rdf:_6 ?manchester_syntax_table_row_targetObject.
   ?manchester_syntax_table_row_definition                rdf:type html:Row;
                                                          rdf:_1 ?manchester_syntax_definition_type;
                                                          rdf:_2 ?manchester_syntax_definition_value.
@@ -1484,8 +1484,8 @@ construct {
         optional{
           ?entity manchester:targetSubject ?entityManchesterTargetSubject.
         }
-		
-		optional{
+
+        optional{
           ?entity manchester:targetObject ?entityManchesterTargetObject.
         }
 
@@ -1703,7 +1703,7 @@ construct {
       where {
 
         ?entity manchester:syntax 'INDIVIDUAL' ;
-		        manchester:class ?entityManchesterClass ;
+                manchester:class ?entityManchesterClass ;
                 manchester:label ?entityManchesterLabel_raw ;
                 rdfs:isDefinedBy ?ontology.
         $this dct:subject ?ontology;
@@ -2173,7 +2173,7 @@ SELECT ?result WHERE {
                 # e.g. "http://example.org/"
                 vann:preferredNamespacePrefix ?prefix.  # e.g. "ex"
     }
-	# Establish the full IRI of the resource, e.g. ex:Person would lead to http://example.org/Person.
+    # Establish the full IRI of the resource, e.g. ex:Person would lead to http://example.org/Person.
     bind(str($IRI) as ?fullIRI)  
     
     # Select one of the namespaces that match with the namespace of the resource
