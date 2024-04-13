@@ -1709,32 +1709,40 @@ PREFIX vann: <http://purl.org/vocab/vann/>
 
 SELECT ?result WHERE {
 
-  # Get the namespace declarations for the ontology
-  {
-    ?ontology sh:declare ?prefixDeclaration.
-    ?prefixDeclaration sh:namespace ?namespace; # e.g. "http://example.org/"
-                       sh:prefix ?prefix.       # e.g. "ex"
-  }
-  UNION 
-  # Get the namespace declaration for the ontology itself
-  {
-    ?ontology vann:preferredNamespaceUri ?namespace;  # e.g. "http://example.org/"
-              vann:preferredNamespacePrefix ?prefix.  # e.g. "ex"
-  }
-  
   # Establish the full IRI of the resource, e.g. ex:Person would lead to http://example.org/Person.
-  BIND(STR($IRI) as ?fullIRI)
-  
-  # Select one of the namespaces that match with the namespace of the resource
-  FILTER(STRSTARTS(?fullIRI, STR(?namespace))) # e.g. "http://example.org/"
-  
-  # Establish the local name
-  BIND(STRAFTER(?fullIRI, STR(?namespace)) as ?localName) # e.g. "Person"
-  
-  # Establish the prefixed IRI if possible
-  BIND(CONCAT(STR(?prefix),":",?localName) as ?prefixedIRI)
-  
-  # Establish the prefixed IRI or return the full IRI as a string
-  BIND(COALESCE(?prefixedIRI, ?fullIRI, 'Error establishing prefixed IRI') as ?result) # e.g. "ex:Person" when succesful or "http://example.org/Person" when prefix/namespace is unknown or an error message when something unexpected has occurred.
+  bind(str($IRI) as ?defaultFullIRI)
+
+  # Establish possible namespaces
+  optional
+  {
+    # Get the namespace declarations of the ontology
+    {
+      ?ontology sh:declare ?prefixDeclaration.
+      ?prefixDeclaration sh:namespace ?namespace;
+                         # e.g. "http://example.org/"
+                         sh:prefix ?prefix.       # e.g. "ex"
+    }
+    union
+    {
+    # Get the namespace of the ontology itself
+   
+      ?ontology vann:preferredNamespaceUri ?namespace;
+                # e.g. "http://example.org/"
+                vann:preferredNamespacePrefix ?prefix.  # e.g. "ex"
+    }
+	# Establish the full IRI of the resource, e.g. ex:Person would lead to http://example.org/Person.
+    bind(str($IRI) as ?fullIRI)  
+    
+    # Select one of the namespaces that match with the namespace of the resource
+    filter(strstarts(?fullIRI, str(?namespace))) # e.g. "http://example.org/"
+
+    # Establish the local name
+    bind(strafter(?fullIRI, str(?namespace)) as ?localName) # e.g. "Person"
+
+    # Establish the prefixed IRI if possible
+    bind(concat(str(?prefix),":",?localName) as ?prefixedIRI)
+  }
+  # Establish result, either a prefixed IRI or the full IRI
+  bind(coalesce(?prefixedIRI, ?defaultFullIRI) as ?result)
 }
-  """ .
+""" .
