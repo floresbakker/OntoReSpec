@@ -6,7 +6,81 @@
 
 doc:1 a respec:Document,
         respec:TemplateDocument ;
-    rdf:_1 doc:2.0 .
+    rdf:_1 doc:1.1 ;
+    rdf:_2 doc:1.2 .
+
+doc:1.1 a respec:StaticElement,
+        respec:Template,
+        html:DocumentTypeDeclaration ;
+    rdfs:label "DOCTYPE html" .
+
+doc:1.2 a respec:StaticElement,
+        respec:Template,
+        html:Html ;
+    rdfs:label "html" ;
+    rdf:_1 doc:3.2 ;
+    rdf:_2 doc:23.2 .
+
+doc:3.2 a respec:StaticElement,
+        respec:Template,
+        html:Head ;
+    rdfs:label "head" ;
+    rdf:_1 doc:4.4 ;
+    rdf:_2 doc:5.4 ;
+    rdf:_3 doc:5.5 ;
+    rdf:_4 doc:6.4 ;
+    rdf:_5 doc:11.4 .
+
+doc:4.4 a respec:StaticElement,
+        respec:Template,
+        html:Meta ;
+    rdfs:label "meta" ;
+    html:charset "utf-8" .
+
+doc:5.4 a respec:StaticElement,
+        respec:Template,
+        html:Title ;
+    rdfs:label "title" ;
+    rdf:_1 doc:5.4.1 .
+
+doc:5.4.1 a respec:TitleTextElement,
+        respec:Template,
+        html:Text ;
+    rdfs:label "text element" ;
+    html:fragment "{{title}}" .
+
+doc:5.5 a respec:StaticElement,
+        respec:Template,
+        html:StyleSheet ;
+    rdfs:label "style" ;
+    rdf:_1 doc:5.5.1 .
+
+doc:5.5.1 a respec:StaticElement,
+        respec:Template,
+        html:Text ;
+    rdfs:label "text element" ;
+    html:fragment """ 
+
+    .term-table {
+            border-collapse: collapse;
+            border-color: #000000;
+            margin: 16px;
+
+    .term-table td,
+        th {
+            border-width: 1px;
+            border-style: solid;
+            padding: 5px;
+        }
+    }""" .
+
+doc:6.4 a respec:StaticElement,
+        respec:Template,
+        html:Script ;
+    rdfs:label "script" ;
+    html:class "remove" ;
+    html:defer "" ;
+    html:src "https://www.w3.org/Tools/respec/respec-w3c" .
 
 doc:11.4 a respec:StaticElement,
         respec:Template,
@@ -17,7 +91,7 @@ doc:11.4 a respec:StaticElement,
 
 doc:11.4.1 a respec:Configuration,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment """
       // All config options at https://respec.org/docs/
@@ -31,13 +105,6 @@ doc:11.4.1 a respec:Configuration,
         group: "working-group",
       };
     """ .
-
-doc:2.0 a respec:StaticElement,
-        respec:Template,
-        html:Html ;
-    rdfs:label "html" ;
-    rdf:_1 doc:3.2 ;
-    rdf:_2 doc:23.2 .
 
 doc:23.2 a respec:StaticElement,
         respec:Template,
@@ -55,8 +122,7 @@ doc:24.4 a respec:StaticElement,
         respec:Template,
         html:Section ;
     rdfs:label "section" ;
-    rdf:_1 doc:24.4.1 ;
-    rdf:_2 doc:25.7 ;
+    rdf:_1 doc:25.7 ;
     html:id "abstract" .
 
 doc:25.7 a respec:StaticElement,
@@ -67,7 +133,7 @@ doc:25.7 a respec:StaticElement,
 
 doc:25.7.1 a respec:Abstract,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment "{{abstract}}" .
 
@@ -75,24 +141,8 @@ doc:27.4 a respec:StaticElement,
         respec:Template,
         html:Section ;
     rdfs:label "section" ;
-    rdf:_1 doc:27.4.1 ;
-    rdf:_2 doc:28.6 ;
-    rdf:_3 doc:27.4.3 ;
+    rdf:_1 doc:28.6 ;
     html:id "sotd" .
-
-doc:27.4.1 a respec:StaticElement,
-        respec:Template,
-        html:TextElement ;
-    rdfs:label "text element" ;
-    html:fragment """
-""" .
-
-doc:27.4.3 a respec:StaticElement,
-        respec:Template,
-        html:TextElement ;
-    rdfs:label "text element" ;
-    html:fragment """
-""" .
 
 doc:28.6 a respec:StaticElement,
         respec:Template,
@@ -102,19 +152,9 @@ doc:28.6 a respec:StaticElement,
 
 doc:28.6.1 a respec:StatusOfThisDocument,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment "{{status of this document}}" .
-
-doc:3.2 a respec:StaticElement,
-        respec:Template,
-        html:Head ;
-    rdfs:label "head" ;
-    rdf:_1 doc:4.4 ;
-    rdf:_2 doc:5.4 ;
-    rdf:_3 doc:5.5 ;
-    rdf:_4 doc:6.4 ;
-    rdf:_5 doc:11.4 .
 
 doc:30.4 a respec:Introduction,
         respec:Template, 
@@ -129,10 +169,10 @@ doc:30.4 a respec:Introduction,
 doc:30.4-1 a html:H2 ;
     rdf:_1 doc:30.4-1-1 .
 
-doc:30.4-1-1 a html:TextElement ;
+doc:30.4-1-1 a html:Text ;
     html:fragment "Introduction" .
 
-doc:30.4-2 a html:TextElement ;
+doc:30.4-2 a html:Text ;
     html:fragment "General introductory text"@en .
 
 doc:30.4-3 a html:Section ;
@@ -142,10 +182,10 @@ doc:30.4-3 a html:Section ;
 doc:30.4-3-1 a html:H2 ;
     rdf:_1 doc:30.4-3-1-1 .
 
-doc:30.4-3-1-1 a html:TextElement ;
+doc:30.4-3-1-1 a html:Text ;
     html:fragment "Background" .
 
-doc:30.4-3-1-2 a html:TextElement ;
+doc:30.4-3-1-2 a html:Text ;
     html:fragment "Background text" .
 
 doc:30.4-4 a html:Section ;
@@ -155,10 +195,10 @@ doc:30.4-4 a html:Section ;
 doc:30.4-4-1 a html:H2 ;
     rdf:_1 doc:30.4-4-1-1 .
 
-doc:30.4-4-1-1 a html:TextElement ;
+doc:30.4-4-1-1 a html:Text ;
     html:fragment "Ontology title"@en .
 
-doc:30.4-4-1-2 a html:TextElement .
+doc:30.4-4-1-2 a html:Text .
 
 doc:30.4-5 a html:Section ;
     rdf:_1 doc:30.4-5-1 ;
@@ -167,10 +207,10 @@ doc:30.4-5 a html:Section ;
 doc:30.4-5-1 a html:H2 ;
     rdf:_1 doc:30.4-5-1-1 .
 
-doc:30.4-5-1-1 a html:TextElement ;
+doc:30.4-5-1-1 a html:Text ;
     html:fragment "Audience" .
 
-doc:30.4-5-1-2 a html:TextElement ;
+doc:30.4-5-1-2 a html:Text ;
     html:fragment "Text in which is explained for which audience this technical specification document is intended."@en .
 
 doc:37.4 a respec:StaticElement,
@@ -196,7 +236,7 @@ doc:38.6 a respec:StaticElement,
 
 doc:38.6.1 a respec:StaticElement,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment "Overview" .
 
@@ -208,7 +248,7 @@ doc:38.7 a respec:StaticElement,
 
 doc:38.7.1 a respec:Overview,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment "An overview of the ontology" .
 
@@ -229,7 +269,7 @@ doc:40.4 a respec:StaticElement,
 
 doc:40.4.1 a respec:StaticElement,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment "Datamodel" .
 
@@ -241,7 +281,7 @@ doc:40.5 a respec:StaticElement,
 
 doc:40.5.1 a respec:StaticElement,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment "A visualisation of the ontology" .
 
@@ -261,7 +301,7 @@ doc:40.7 a respec:StaticElement,
 
 doc:40.7.1 a respec:StaticElement,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment "Namespace" .
 
@@ -273,7 +313,7 @@ doc:40.9 a respec:StaticElement,
 
 doc:40.9.1 a respec:StaticElement,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment "The following namespace prefixes are used throughout this document." .
 
@@ -293,7 +333,7 @@ doc:41.6.1 a respec:StaticElement,
 
 doc:41.6.1.1 a respec:StaticElement,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment "Prefixes and namespaces used in this specification".
 
@@ -319,7 +359,7 @@ doc:41.6.2.1.1 a respec:StaticElement,
 
 doc:41.6.2.1.1.1 a respec:StaticElement,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment "Prefix".
 
@@ -331,15 +371,9 @@ doc:41.6.2.1.2 a respec:StaticElement,
 
 doc:41.6.2.1.2.1 a respec:StaticElement,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment "Namespace".
-
-doc:4.4 a respec:StaticElement,
-        respec:Template,
-        html:Meta ;
-    rdfs:label "meta" ;
-    html:charset "utf-8" .
 
 doc:40.8 a respec:ExampleItem,
         respec:Template,
@@ -349,7 +383,7 @@ doc:40.8 a respec:ExampleItem,
 
 doc:40.8.1 a respec:ExampleItem,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment "This is an example." .
 
@@ -362,7 +396,7 @@ doc:41.8 a respec:ExampleItem,
 
 doc:41.8.1 a respec:ExampleItem,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment """
         // Automatic syntax highlighting
@@ -384,7 +418,7 @@ doc:47.8 a respec:StaticElement,
 
 doc:47.8.1 a respec:StaticElement,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment "Current issues" .
 
@@ -398,46 +432,9 @@ doc:48.8 a respec:StaticElement,
 
 doc:48.8.2 a respec:StaticElement,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment " Issue can automatically be populated from GitHub " .
-
-doc:5.4 a respec:StaticElement,
-        respec:Template,
-        html:Title ;
-    rdfs:label "title" ;
-    rdf:_1 doc:5.4.1 .
-
-doc:5.4.1 a respec:TitleTextElement,
-        respec:Template,
-        html:TextElement ;
-    rdfs:label "text element" ;
-    html:fragment "{{title}}" .
-
-doc:5.5 a respec:StaticElement,
-        respec:Template,
-        html:StyleSheet ;
-    rdfs:label "style" ;
-    rdf:_1 doc:5.5.1 .
-
-doc:5.5.1 a respec:StaticElement,
-        respec:Template,
-        html:TextElement ;
-    rdfs:label "text element" ;
-    html:fragment """ 
-
-    .term-table {
-            border-collapse: collapse;
-            border-color: #000000;
-            margin: 16px;
-
-    .term-table td,
-        th {
-            border-width: 1px;
-            border-style: solid;
-            padding: 5px;
-        }
-    }""" .
 
 doc:54.4 a respec:StaticElement,
         respec:Template,
@@ -459,7 +456,7 @@ doc:54.5 a respec:StaticElement,
 
 doc:54.5.1 a respec:StaticElement,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment "Definition" .
 
@@ -478,7 +475,7 @@ doc:54.6 a respec:StaticElement,
 
 doc:54.6.1 a respec:StaticElement,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment "Classes" .
 
@@ -511,7 +508,7 @@ doc:54.11 a respec:ClassDfn,
 
 doc:54.9.1 a respec:ClassTitle,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment "{{class title}}" .
 
@@ -523,7 +520,7 @@ doc:54.10 a respec:Class,
 
 doc:54.10.1 a respec:ClassDefinitionText,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment "{{class definition}}" .
 
@@ -534,7 +531,7 @@ doc:54.12 a respec:ClassLineBreak,
 
 doc:54.13 a respec:ManchesterDefinition,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment "{{manchester definition}}" .
 
@@ -553,7 +550,7 @@ doc:55.2 a respec:StaticElement,
 
 doc:55.2.1 a respec:StaticElement,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment "Object Properties" .
 
@@ -584,7 +581,7 @@ doc:55.11 a respec:ObjectPropertyDfn,
 
 doc:55.9.1 a respec:ObjectPropertyTitle,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment "{{object property title}}" .
 
@@ -596,7 +593,7 @@ doc:55.10 a respec:ObjectPropertyP,
 
 doc:55.10.1 a respec:ObjectPropertyDefinitionText,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment "{{object property definition}}" .
 
@@ -615,7 +612,7 @@ doc:56.2 a respec:StaticElement,
 
 doc:56.2.1 a respec:StaticElement,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment "Datatype Properties" .
 
@@ -646,7 +643,7 @@ doc:56.11 a respec:DatatypePropertyDfn,
 
 doc:56.9.1 a respec:DatatypePropertyTitle,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment "{{datatype property title}}" .
 
@@ -658,7 +655,7 @@ doc:56.10 a respec:DatatypePropertyP,
 
 doc:56.10.1 a respec:DatatypePropertyDefinitionText,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment "{{datatype property definition}}" .
 
@@ -677,7 +674,7 @@ doc:57.2 a respec:StaticElement,
 
 doc:57.2.1 a respec:StaticElement,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment "Node Shapes" .
 
@@ -708,7 +705,7 @@ doc:57.11 a respec:NodeShapeDfn,
 
 doc:57.9.1 a respec:NodeShapeTitle,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment "{{node shape title}}" .
 
@@ -720,7 +717,7 @@ doc:57.10 a respec:NodeShapeP,
 
 doc:57.10.1 a respec:NodeShapeDefinitionText,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment "{{node shape definition}}" .
 
@@ -739,7 +736,7 @@ doc:58.2 a respec:StaticElement,
 
 doc:58.2.1 a respec:StaticElement,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment "Named Individuals" .
 
@@ -770,7 +767,7 @@ doc:58.11 a respec:NamedIndividualDfn,
 
 doc:58.9.1 a respec:NamedIndividualTitle,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment "{{named individual title}}" .
 
@@ -782,7 +779,7 @@ doc:58.10 a respec:NamedIndividualParagraph,
 
 doc:58.10.1 a respec:NamedIndividualDefinitionText,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment "{{named individual definition}}" .
 
@@ -801,7 +798,7 @@ doc:59.2 a respec:StaticElement,
 
 doc:59.2.1 a respec:StaticElement,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment "Concepts" .
 
@@ -832,7 +829,7 @@ doc:59.11 a respec:ConceptDfn,
 
 doc:59.9.1 a respec:ConceptTitle,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment "{{concept title}}" .
 
@@ -844,142 +841,16 @@ doc:59.10 a respec:ConceptParagraph,
 
 doc:59.10.1 a respec:ConceptDefinitionText,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment "{{concept definition}}" .
-
-doc:6.4 a respec:StaticElement,
-        respec:Template,
-        html:Script ;
-    rdfs:label "script" ;
-    html:class "remove" ;
-    html:defer "" ;
-    html:src "https://www.w3.org/Tools/respec/respec-w3c" .
-
-doc:62.13 a respec:StaticElement,
-        respec:Template,
-        html:Dfn ;
-    rdfs:label "dfn" ;
-    rdf:_1 doc:62.13.1 .
-
-doc:62.13.1 a respec:StaticElement,
-        respec:Template,
-        html:TextElement ;
-    rdfs:label "text element" ;
-    html:fragment "Foo" .
-
-doc:62.6 a respec:StaticElement,
-        respec:Template,
-        html:P ;
-    rdfs:label "p" ;
-    rdf:_1 doc:62.6.1 ;
-    rdf:_2 doc:62.13 ;
-    rdf:_3 doc:62.6.3 .
-
-doc:62.6.1 a respec:StaticElement,
-        respec:Template,
-        html:TextElement ;
-    rdfs:label "text element" ;
-    html:fragment "The " .
-
-doc:62.6.3 a respec:StaticElement,
-        respec:Template,
-        html:TextElement ;
-    rdfs:label "text element" ;
-    html:fragment " interface represents a {{Foo}}." .
-
-doc:63.6 a respec:StaticElement,
-        respec:Template,
-        html:P ;
-    rdfs:label "p" ;
-    rdf:_1 doc:63.6.1 ;
-    rdf:_2 doc:64.12 ;
-    rdf:_3 doc:63.6.3 .
-
-doc:63.6.1 a respec:StaticElement,
-        respec:Template,
-        html:TextElement ;
-    rdfs:label "text element" ;
-    html:fragment """
-        The """ .
-
-doc:63.6.3 a respec:StaticElement,
-        respec:Template,
-        html:TextElement ;
-    rdfs:label "text element" ;
-    html:fragment """ method does the foo. Call it by running
-        {{Foo/doTheFoo()}}.
-      """ .
-
-doc:64.12 a respec:StaticElement,
-        respec:Template,
-        html:Dfn ;
-    rdfs:label "dfn" ;
-    rdf:_1 doc:64.12.1 .
-
-doc:64.12.1 a respec:StaticElement,
-        respec:Template,
-        html:TextElement ;
-    rdfs:label "text element" ;
-    html:fragment "doTheFoo()" .
-
-doc:67.6 a respec:StaticElement,
-        respec:Template,
-        html:Ol ;
-    rdfs:label "ol" ;
-    rdf:_1 doc:67.6.1 ;
-    rdf:_2 doc:68.8 ;
-    rdf:_3 doc:67.6.3 ;
-    html:class "algorithm" .
-
-doc:67.6.1 a respec:StaticElement,
-        respec:Template,
-        html:TextElement ;
-    rdfs:label "text element" ;
-    html:fragment """
-""" .
-
-doc:67.6.3 a respec:StaticElement,
-        respec:Template,
-        html:TextElement ;
-    rdfs:label "text element" ;
-    html:fragment """
-""" .
-
-doc:68.8 a respec:StaticElement,
-        respec:Template,
-        html:Li ;
-    rdfs:label "li" ;
-    rdf:_1 doc:68.8.1 .
-
-doc:68.8.1 a respec:StaticElement,
-        respec:Template,
-        html:TextElement ;
-    rdfs:label "text element" ;
-    html:fragment "A |variable:DOMString| can be declared like this." .
 
 doc:71.4 a respec:StaticElement,
         respec:Template,
         html:Section ;
     rdfs:label "section" ;
-    rdf:_1 doc:71.4.1 ;
     rdf:_2 doc:72.6 ;
-    rdf:_3 doc:71.4.3 ;
     html:id "conformance" .
-
-doc:71.4.1 a respec:StaticElement,
-        respec:Template,
-        html:TextElement ;
-    rdfs:label "text element" ;
-    html:fragment """
-""" .
-
-doc:71.4.3 a respec:StaticElement,
-        respec:Template,
-        html:TextElement ;
-    rdfs:label "text element" ;
-    html:fragment """
-""" .
 
 doc:72.6 a respec:StaticElement,
         respec:Template,
@@ -989,7 +860,7 @@ doc:72.6 a respec:StaticElement,
 
 doc:72.6.1 a respec:StaticElement,
         respec:Template,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment """
         This is required for specifications that contain normative material.
