@@ -186,6 +186,7 @@ def generateHTML(shaclgraph, serializable_graph):
                 return generateHTML(shaclgraph, serializable_graph)
          
             else:
+                writeGraph(serializable_graph, 'html')
                 htmlQuery = serializable_graph.query(html_result_query)
                 for html in htmlQuery:
                     return html.fragment

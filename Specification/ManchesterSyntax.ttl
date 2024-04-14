@@ -1559,9 +1559,8 @@ construct {
     
   # Class description   
   OPTIONAL {?class manchester:label ?explicitClassName.}
-  BIND(COALESCE(?explicitClassName, IF(isIRI(?class), function:getPrefixedIRI(?class), 'Anonymous class')) as ?className)
-  BIND(CONCAT("Types: ", ?className) as ?manchesterClass)
-  
+  BIND(COALESCE(?explicitClassName, IF(isIRI(?class), function:getPrefixedIRI(?class), 'Anonymous class')) as ?manchesterClass)
+    
   # Fact description - datatype property
   OPTIONAL
   {$this ?property ?literal.
@@ -1576,7 +1575,7 @@ construct {
   OPTIONAL{?object manchester:label ?explicitObjectLabel.}
   BIND(COALESCE(?explicitObjectLabel, IF(isIRI(?object), function:getPrefixedIRI(?object), 'Anonymous object')) as ?objectLabel)
   }
-  BIND(CONCAT("Facts:  ", function:getPrefixedIRI(?propertyLabel), " ", COALESCE(str(?literal), ?objectLabel)) as ?manchesterFact)
+  BIND(CONCAT(function:getPrefixedIRI(?propertyLabel), " ", COALESCE(str(?literal), ?objectLabel)) as ?manchesterFact)
 }
   
 """.
