@@ -1,9 +1,10 @@
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX html: <https://data.rijksfinancien.nl/html/model/def/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX respec: <https://respec.org/model/def/> 
 
        ASK 
        WHERE {
-         ?document a html:Document ;
+         ?document a respec:Document ;
                  html:fragment ?fragment.
        }

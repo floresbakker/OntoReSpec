@@ -4,54 +4,47 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix respec: <https://respec.org/model/def/> .
 
-doc:1 a respec:Document,
-        respec:TemplateDocument ;
-    rdf:_1 doc:2.0 .
+doc:1 a respec:Template,
+        html:Document ;
+    rdf:_1 doc:2 .
 
-doc:2.0 a respec:StaticElement,
-        respec:Template,
+doc:2 a respec:StaticElement,
         html:Html ;
     rdfs:label "html" ;
-    rdf:_1 doc:3.2 ;
-    rdf:_2 doc:23.2 .
+    rdf:_1 doc:head ;
+    rdf:_2 doc:body .
 
-doc:3.2 a respec:StaticElement,
-        respec:Template,
+doc:head a respec:StaticElement,
         html:Head ;
     rdfs:label "head" ;
-    rdf:_1 doc:4.4 ;
-    rdf:_2 doc:5.4 ;
-    rdf:_3 doc:5.5 ;
-    rdf:_4 doc:6.4 ;
-    rdf:_5 doc:11.4 .
+    rdf:_1 doc:meta ;
+    rdf:_2 doc:title ;
+    rdf:_3 doc:style ;
+    rdf:_4 doc:script_respec ;
+    rdf:_5 doc:script_configuration.
 
-doc:4.4 a respec:StaticElement,
-        respec:Template,
+doc:meta a respec:StaticElement,
         html:Meta ;
     rdfs:label "meta" ;
     html:charset "utf-8" .
 
-doc:5.4 a respec:StaticElement,
-        respec:Template,
+doc:title a respec:StaticElement,
         html:Title ;
     rdfs:label "title" ;
     rdf:_1 doc:5.4.1 .
 
-doc:5.4.1 a respec:TitleTextElement,
-        respec:Template,
-        html:Text ;
+doc:5.4.1 a respec:Title,
+        html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "{{title}}" .
 
-doc:5.5 a respec:StaticElement,
-        respec:Template,
+doc:style a respec:StaticElement,
         html:StyleSheet ;
     rdfs:label "style" ;
     rdf:_1 doc:5.5.1 .
 
 doc:5.5.1 a respec:StaticElement,
-        respec:Template,
-        html:Text ;
+        html:TextElement ;
     rdfs:label "text element" ;
     html:fragment """ 
 
@@ -68,24 +61,21 @@ doc:5.5.1 a respec:StaticElement,
         }
     }""" .
 
-doc:6.4 a respec:StaticElement,
-        respec:Template,
+doc:script_respec a respec:StaticElement,
         html:Script ;
     rdfs:label "script" ;
     html:class "remove" ;
     html:defer "" ;
     html:src "https://www.w3.org/Tools/respec/respec-w3c" .
 
-doc:11.4 a respec:StaticElement,
-        respec:Template,
+doc:script_configuration a respec:StaticElement,
         html:Script ;
     rdfs:label "script" ;
     rdf:_1 doc:11.4.1 ;
     html:class "remove" .
 
 doc:11.4.1 a respec:Configuration,
-        respec:Template,
-        html:Text ;
+        html:TextElement ;
     rdfs:label "text element" ;
     html:fragment """
       // All config options at https://respec.org/docs/
@@ -100,58 +90,49 @@ doc:11.4.1 a respec:Configuration,
       };
     """ .
 
-doc:23.2 a respec:StaticElement,
-        respec:Template,
+doc:body a respec:StaticElement,
         html:Body ;
     rdfs:label "body" ;
-    rdf:_1 doc:24.4 ;
-    rdf:_2 doc:27.4 ;
-    rdf:_3 doc:30.4 ;
-    rdf:_4 doc:37.4 ;
-    rdf:_5 doc:54.4 ;
-    rdf:_6 doc:71.4 ;
-    rdf:_7 doc:71.5 .
+    rdf:_1 doc:abstract ;
+    rdf:_2 doc:sotd ;
+    rdf:_3 doc:introduction ;
+    rdf:_4 doc:generalInformation ;
+    rdf:_5 doc:definition ;
+    rdf:_6 doc:conformance ;
+    rdf:_7 doc:appendix .
 
-doc:24.4 a respec:StaticElement,
-        respec:Template,
+doc:abstract a respec:StaticElement,
         html:Section ;
-    rdfs:label "section" ;
+    rdfs:label "section abstract" ;
     rdf:_1 doc:25.7 ;
     html:id "abstract" .
 
 doc:25.7 a respec:StaticElement,
-        respec:Template,
         html:P ;
     rdfs:label "p" ;
     rdf:_1 doc:25.7.1 .
 
 doc:25.7.1 a respec:Abstract,
-        respec:Template,
-        html:Text ;
+        html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "{{abstract}}" .
 
-doc:27.4 a respec:StaticElement,
-        respec:Template,
+doc:sotd a respec:StaticElement,
         html:Section ;
-    rdfs:label "section" ;
+    rdfs:label "section status of this document" ;
     rdf:_1 doc:28.6 ;
     html:id "sotd" .
 
 doc:28.6 a respec:StaticElement,
-        respec:Template,
         html:P ;
     rdfs:label "p" ;
     rdf:_1 doc:28.6.1 .
 
-doc:28.6.1 a respec:StatusOfThisDocument,
-        respec:Template,
-        html:Text ;
+doc:28.6.1 a html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "{{status of this document}}" .
 
-doc:30.4 a respec:Introduction,
-        respec:Template, 
+doc:introduction a respec:Introduction, 
         html:Section ;
     rdf:_1 doc:30.4-1 ;
     rdf:_2 doc:30.4-2 ;
@@ -163,10 +144,10 @@ doc:30.4 a respec:Introduction,
 doc:30.4-1 a html:H2 ;
     rdf:_1 doc:30.4-1-1 .
 
-doc:30.4-1-1 a html:Text ;
+doc:30.4-1-1 a html:TextElement ;
     html:fragment "Introduction" .
 
-doc:30.4-2 a html:Text ;
+doc:30.4-2 a html:TextElement ;
     html:fragment "General introductory text"@en .
 
 doc:30.4-3 a html:Section ;
@@ -176,10 +157,10 @@ doc:30.4-3 a html:Section ;
 doc:30.4-3-1 a html:H2 ;
     rdf:_1 doc:30.4-3-1-1 .
 
-doc:30.4-3-1-1 a html:Text ;
+doc:30.4-3-1-1 a html:TextElement ;
     html:fragment "Background" .
 
-doc:30.4-3-1-2 a html:Text ;
+doc:30.4-3-1-2 a html:TextElement ;
     html:fragment "Background text" .
 
 doc:30.4-4 a html:Section ;
@@ -189,10 +170,10 @@ doc:30.4-4 a html:Section ;
 doc:30.4-4-1 a html:H2 ;
     rdf:_1 doc:30.4-4-1-1 .
 
-doc:30.4-4-1-1 a html:Text ;
+doc:30.4-4-1-1 a html:TextElement ;
     html:fragment "Ontology title"@en .
 
-doc:30.4-4-1-2 a html:Text .
+doc:30.4-4-1-2 a html:TextElement .
 
 doc:30.4-5 a html:Section ;
     rdf:_1 doc:30.4-5-1 ;
@@ -201,118 +182,102 @@ doc:30.4-5 a html:Section ;
 doc:30.4-5-1 a html:H2 ;
     rdf:_1 doc:30.4-5-1-1 .
 
-doc:30.4-5-1-1 a html:Text ;
+doc:30.4-5-1-1 a html:TextElement ;
     html:fragment "Audience" .
 
-doc:30.4-5-1-2 a html:Text ;
+doc:30.4-5-1-2 a html:TextElement ;
     html:fragment "Text in which is explained for which audience this technical specification document is intended."@en .
 
-doc:37.4 a respec:StaticElement,
-        respec:Template,
+doc:generalInformation a respec:StaticElement,
         html:Section ;
     rdfs:label "section" ;
-    rdf:_1 doc:38.6 ;
-    rdf:_2 doc:38.7 ;
-    rdf:_3 doc:39.6 ;
-    rdf:_4 doc:40.4 ;
-    rdf:_5 doc:40.5 ;
-    rdf:_6 doc:40.6 ;
-    rdf:_7 doc:40.7 ;
-    rdf:_8 doc:40.9 ;
-    rdf:_9 doc:41.6 ;
-    rdf:_10 doc:46.6 .
+    rdf:_1 doc:overview_title ;
+    rdf:_2 doc:overview ;
+    rdf:_3 doc:example ;
+    rdf:_4 doc:datamodel_title ;
+    rdf:_5 doc:datamodel_paragraph ;
+    rdf:_6 doc:datamodel ;
+    rdf:_7 doc:namespace_title ;
+    rdf:_8 doc:namespace_paragraph ;
+    rdf:_9 doc:namespace_table ;
+    rdf:_10 doc:currentIssues .
 
-doc:38.6 a respec:StaticElement,
-        respec:Template,
+doc:overview_title a respec:StaticElement,
         html:H2 ;
     rdfs:label "h2" ;
     rdf:_1 doc:38.6.1 .
 
 doc:38.6.1 a respec:StaticElement,
-        respec:Template,
-        html:Text ;
+        html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "Overview" .
 
-doc:38.7 a respec:StaticElement,
-        respec:Template,
+doc:overview a respec:StaticElement,
         html:P ;
     rdfs:label "p" ;
     rdf:_1 doc:38.7.1 .
 
 doc:38.7.1 a respec:Overview,
-        respec:Template,
-        html:Text ;
+        html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "An overview of the ontology" .
 
-doc:39.6 a respec:Example,
-        respec:Template,
+doc:example a respec:Example,
         html:Aside ;
     rdfs:label "aside" ;
     rdf:_1 doc:40.8 ;
     rdf:_2 doc:41.8 ;
     html:class "example" .
 
-doc:40.4 a respec:StaticElement,
-        respec:Template,
+doc:datamodel_title a respec:StaticElement,
         html:H2 ;
     rdfs:label "h2" ;
     html:class "informative";
     rdf:_1 doc:40.4.1 .
 
 doc:40.4.1 a respec:StaticElement,
-        respec:Template,
-        html:Text ;
+        html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "Datamodel" .
 
-doc:40.5 a respec:StaticElement,
-        respec:Template,
+doc:datamodel_paragraph a respec:StaticElement,
         html:P ;
     rdfs:label "P" ;
     rdf:_1 doc:40.5.1 .
 
 doc:40.5.1 a respec:StaticElement,
-        respec:Template,
-        html:Text ;
+        html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "A visualisation of the ontology" .
 
-doc:40.6 a respec:StaticElement,
-        respec:Template,
+doc:datamodel a respec:StaticElement,
         html:Iframe ;
     rdfs:label "Iframe element" ;
     html:src "diagram.html";
     html:style "width: 900px; height: 400px; resize: both; overflow: auto;".
 
-doc:40.7 a respec:StaticElement,
-        respec:Template,
+doc:namespace_title a respec:StaticElement,
         html:H2 ;
     rdfs:label "h2" ;
     html:class "informative";
     rdf:_1 doc:40.7.1 .
 
 doc:40.7.1 a respec:StaticElement,
-        respec:Template,
-        html:Text ;
+        html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "Namespace" .
 
-doc:40.9 a respec:StaticElement,
-        respec:Template,
+doc:namespace_paragraph a respec:StaticElement,
         html:P ;
     rdfs:label "P" ;
     rdf:_1 doc:40.9.1 .
 
 doc:40.9.1 a respec:StaticElement,
-        respec:Template,
-        html:Text ;
+        html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "The following namespace prefixes are used throughout this document." .
 
-doc:41.6 a respec:StaticElement,
-        respec:Template,
+doc:namespace_table a respec:StaticElement,
         html:Table ;
         html:class "def";
         rdfs:label "table element" ;
@@ -320,104 +285,84 @@ doc:41.6 a respec:StaticElement,
         rdf:_2 doc:41.6.2.
 
 doc:41.6.1 a respec:StaticElement,
-        respec:Template,
         html:Caption ;
     rdfs:label "caption element" ;
     rdf:_1 doc:41.6.1.1.
 
 doc:41.6.1.1 a respec:StaticElement,
-        respec:Template,
-        html:Text ;
+        html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "Prefixes and namespaces used in this specification".
 
 doc:41.6.2 a respec:StaticElement,
-        respec:NameSpace,
-        respec:Template,
+             respec:NameSpace,
         html:TableBody ;
     rdfs:label "table body element" ;
     rdf:_1 doc:41.6.2.1.
 
 doc:41.6.2.1 a respec:StaticElement,
-        respec:Template,
         html:Row ;
     rdfs:label "table header row element" ;
     rdf:_1 doc:41.6.2.1.1;
     rdf:_2 doc:41.6.2.1.2.
 
 doc:41.6.2.1.1 a respec:StaticElement,
-        respec:Template,
         html:DataCell ;
     rdfs:label "data cell element" ;
     rdf:_1 doc:41.6.2.1.1.1.
 
 doc:41.6.2.1.1.1 a respec:StaticElement,
-        respec:Template,
-        html:Text ;
+        html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "Prefix".
 
 doc:41.6.2.1.2 a respec:StaticElement,
-        respec:Template,
         html:DataCell ;
     rdfs:label "data cell element" ;
     rdf:_1 doc:41.6.2.1.2.1.
 
 doc:41.6.2.1.2.1 a respec:StaticElement,
-        respec:Template,
-        html:Text ;
+        html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "Namespace".
 
-doc:40.8 a respec:ExampleItem,
-        respec:Template,
-        html:P ;
+doc:40.8 a html:P ;
     rdfs:label "p" ;
     rdf:_1 doc:40.8.1 .
 
-doc:40.8.1 a respec:ExampleItem,
-        respec:Template,
-        html:Text ;
+doc:40.8.1 a html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "This is an example." .
 
-doc:41.8 a respec:ExampleItem,
-        respec:Template,
-        html:Pre ;
+doc:41.8 a html:Pre ;
     rdfs:label "pre" ;
     rdf:_1 doc:41.8.1 ;
     html:class "js" .
 
-doc:41.8.1 a respec:ExampleItem,
-        respec:Template,
-        html:Text ;
+doc:41.8.1 a html:TextElement ;
     rdfs:label "text element" ;
     html:fragment """
         // Automatic syntax highlighting
         function someJavaScript(){}
         """ .
 
-doc:46.6 a respec:StaticElement,
-        respec:Template,
+doc:currentIssues a respec:StaticElement,
         html:Section ;
     rdfs:label "section" ;
     rdf:_1 doc:47.8 ;
     rdf:_2 doc:48.8 .
 
 doc:47.8 a respec:StaticElement,
-        respec:Template,
         html:H2 ;
     rdfs:label "h2" ;
     rdf:_1 doc:47.8.1 .
 
 doc:47.8.1 a respec:StaticElement,
-        respec:Template,
-        html:Text ;
+        html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "Current issues" .
 
 doc:48.8 a respec:StaticElement,
-        respec:Template,
         html:P ;
     rdfs:label "p" ;
     rdf:_1 doc:48.8.2 ;
@@ -425,443 +370,384 @@ doc:48.8 a respec:StaticElement,
     html:data-number "121" .
 
 doc:48.8.2 a respec:StaticElement,
-        respec:Template,
-        html:Text ;
+        html:TextElement ;
     rdfs:label "text element" ;
     html:fragment " Issue can automatically be populated from GitHub " .
 
-doc:54.4 a respec:StaticElement,
-        respec:Template,
+doc:definition a respec:StaticElement,
         html:Section ;
     rdfs:label "Section" ;
-    rdf:_1 doc:54.5;
-    rdf:_2 doc:54.3;
-    rdf:_3 doc:55.1;
-    rdf:_4 doc:56.1;
-    rdf:_5 doc:57.1;
-    rdf:_6 doc:58.1;
-    rdf:_7 doc:59.1.
+    rdf:_1 doc:definitionTitle;
+    rdf:_2 doc:definitionConcepts;
+    rdf:_3 doc:definitionClasses;
+    rdf:_4 doc:definitionObjectProperties;
+    rdf:_5 doc:definitionDatatypeProperties;
+    rdf:_6 doc:definitionRDF_Properties;
+    rdf:_7 doc:definitionNodeshapes;
+    rdf:_8 doc:definitionNamedIndividuals.
 
-doc:54.5 a respec:StaticElement,
-        respec:Template,
+doc:definitionTitle a respec:StaticElement,
         html:H2 ;
     rdfs:label "h2" ;
     rdf:_1 doc:54.5.1 .
 
 doc:54.5.1 a respec:StaticElement,
-        respec:Template,
-        html:Text ;
+        html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "Definition" .
 
-doc:54.3 a respec:StaticElement,
-        respec:Template,
+doc:definitionClasses a respec:StaticElement,
         html:Section ;
     rdfs:label "Section" ;
     rdf:_1 doc:54.6;
     rdf:_2 doc:54.7.
 
 doc:54.6 a respec:StaticElement,
-        respec:Template,
         html:H2 ;
     rdfs:label "h2" ;
     rdf:_1 doc:54.6.1 .
 
 doc:54.6.1 a respec:StaticElement,
-        respec:Template,
-        html:Text ;
+        html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "Classes" .
 
 doc:54.7 a respec:ClassDefinition,
-        respec:Template,
         html:Div ;
     rdfs:label "Div" ;
     rdf:_1 doc:54.8 .
 
-doc:54.8 a respec:ClassDefinitionInstance,
-        respec:Template,
-        html:Div ;
+doc:54.8 a html:Div ;
     rdfs:label "Div" ;
     rdf:_1 doc:54.9 ;
     rdf:_2 doc:54.10 ;
     rdf:_3 doc:54.12 ;
     rdf:_4 doc:54.13.
 
-doc:54.9 a respec:Class,
-        respec:Template,
-        html:H2 ;
+doc:54.9 a html:H2 ;
     rdfs:label "h2" ;
     rdf:_1 doc:54.11 .
 
-doc:54.11 a respec:ClassDfn,
-        respec:Template,
-        html:Dfn ;
+doc:54.11 a html:Dfn ;
     rdfs:label "Dfn" ;
     rdf:_1 doc:54.9.1 .
 
-doc:54.9.1 a respec:ClassTitle,
-        respec:Template,
-        html:Text ;
+doc:54.9.1 a html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "{{class title}}" .
 
-doc:54.10 a respec:Class,
-        respec:Template,
-        html:P ;
+doc:54.10 a html:P ;
     rdfs:label "p" ;
     rdf:_1 doc:54.10.1 .
 
-doc:54.10.1 a respec:ClassDefinitionText,
-        respec:Template,
-        html:Text ;
+doc:54.10.1 a html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "{{class definition}}" .
 
-doc:54.12 a respec:ClassLineBreak,
-        respec:Template,
-        html:Br ;
+doc:54.12 a html:Br ;
     rdfs:label "Br" .
 
-doc:54.13 a respec:ManchesterDefinition,
-        respec:Template,
-        html:Text ;
+doc:54.13 a html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "{{manchester definition}}" .
 
-doc:55.1 a respec:StaticElement,
-        respec:Template,
+doc:definitionObjectProperties a respec:StaticElement,
         html:Section ;
     rdfs:label "Section" ;
     rdf:_1 doc:55.2;
     rdf:_2 doc:55.3.
 
 doc:55.2 a respec:StaticElement,
-        respec:Template,
         html:H2 ;
     rdfs:label "h2" ;
     rdf:_1 doc:55.2.1 .
 
 doc:55.2.1 a respec:StaticElement,
-        respec:Template,
-        html:Text ;
+        html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "Object Properties" .
 
 doc:55.3 a respec:ObjectProperty,
-        respec:Template,
         html:Div ;
     rdfs:label "Div" ;
     rdf:_1 doc:55.4 .
 
-doc:55.4 a respec:ObjectPropertyDefinitionInstance,
-        respec:Template,
-        html:Div ;
+doc:55.4 a html:Div ;
     rdfs:label "Div" ;
     rdf:_1 doc:55.9 ;
     rdf:_2 doc:55.10 .
 
-doc:55.9 a respec:ObjectPropertyH2,
-        respec:Template,
-        html:H2 ;
+doc:55.9 a html:H2 ;
     rdfs:label "h2" ;
     rdf:_1 doc:55.11 .
 
-doc:55.11 a respec:ObjectPropertyDfn,
-        respec:Template,
-        html:Dfn ;
+doc:55.11 a html:Dfn ;
     rdfs:label "Dfn" ;
     rdf:_1 doc:55.9.1 .
 
-doc:55.9.1 a respec:ObjectPropertyTitle,
-        respec:Template,
-        html:Text ;
+doc:55.9.1 a html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "{{object property title}}" .
 
-doc:55.10 a respec:ObjectPropertyP,
-        respec:Template,
-        html:P ;
+doc:55.10 a html:P ;
     rdfs:label "p" ;
     rdf:_1 doc:55.10.1 .
 
-doc:55.10.1 a respec:ObjectPropertyDefinitionText,
-        respec:Template,
-        html:Text ;
+doc:55.10.1 a html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "{{object property definition}}" .
 
-doc:56.1 a respec:StaticElement,
-        respec:Template,
+doc:definitionDatatypeProperties a respec:StaticElement,
         html:Section ;
     rdfs:label "Section" ;
     rdf:_1 doc:56.2;
     rdf:_2 doc:56.3.
 
 doc:56.2 a respec:StaticElement,
-        respec:Template,
         html:H2 ;
     rdfs:label "h2" ;
     rdf:_1 doc:56.2.1 .
 
 doc:56.2.1 a respec:StaticElement,
-        respec:Template,
-        html:Text ;
+        html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "Datatype Properties" .
 
 doc:56.3 a respec:DatatypeProperty,
-        respec:Template,
         html:Div ;
     rdfs:label "Div" ;
     rdf:_1 doc:56.4 .
 
-doc:56.4 a respec:DatatypePropertyDefinitionInstance,
-        respec:Template,
-        html:Div ;
+doc:56.4 a html:Div ;
     rdfs:label "Div" ;
     rdf:_1 doc:56.9 ;
     rdf:_2 doc:56.10 .
 
-doc:56.9 a respec:DatatypePropertyH2,
-        respec:Template,
-        html:H2 ;
+doc:56.9 a html:H2 ;
     rdfs:label "h2" ;
     rdf:_1 doc:56.11 .
 
-doc:56.11 a respec:DatatypePropertyDfn,
-        respec:Template,
-        html:Dfn ;
+doc:56.11 a html:Dfn ;
     rdfs:label "Dfn" ;
     rdf:_1 doc:56.9.1 .
 
-doc:56.9.1 a respec:DatatypePropertyTitle,
-        respec:Template,
-        html:Text ;
+doc:56.9.1 a html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "{{datatype property title}}" .
 
-doc:56.10 a respec:DatatypePropertyP,
-        respec:Template,
-        html:P ;
+doc:56.10 a html:P ;
     rdfs:label "p" ;
     rdf:_1 doc:56.10.1 .
 
-doc:56.10.1 a respec:DatatypePropertyDefinitionText,
-        respec:Template,
-        html:Text ;
+doc:56.10.1 a html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "{{datatype property definition}}" .
 
-doc:57.1 a respec:StaticElement,
-        respec:Template,
+doc:definitionRDF_Properties a respec:StaticElement,
+        html:Section ;
+    rdfs:label "Section" ;
+    rdf:_1 doc:53.2;
+    rdf:_2 doc:53.3.
+
+doc:53.2 a respec:StaticElement,
+        html:H2 ;
+    rdfs:label "h2" ;
+    rdf:_1 doc:53.2.1 .
+
+doc:53.2.1 a respec:StaticElement,
+        html:TextElement ;
+    rdfs:label "text element" ;
+    html:fragment "RDF Properties" .
+
+doc:53.3 a respec:RDF_Property,
+        html:Div ;
+    rdfs:label "Div" ;
+    rdf:_1 doc:53.4 .
+
+doc:53.4 a html:Div ;
+    rdfs:label "Div" ;
+    rdf:_1 doc:53.9 ;
+    rdf:_2 doc:53.10 .
+
+doc:53.9 a html:H2 ;
+    rdfs:label "h2" ;
+    rdf:_1 doc:53.11 .
+
+doc:53.11 a html:Dfn ;
+    rdfs:label "Dfn" ;
+    rdf:_1 doc:53.9.1 .
+
+doc:53.9.1 a html:TextElement ;
+    rdfs:label "text element" ;
+    html:fragment "{{RDF property title}}" .
+
+doc:53.10 a html:P ;
+    rdfs:label "p" ;
+    rdf:_1 doc:53.10.1 .
+
+doc:53.10.1 a html:TextElement ;
+    rdfs:label "text element" ;
+    html:fragment "{{RDF property definition}}" .
+
+doc:definitionNodeshapes a respec:StaticElement,
         html:Section ;
     rdfs:label "Section" ;
     rdf:_1 doc:57.2;
     rdf:_2 doc:57.3.
 
 doc:57.2 a respec:StaticElement,
-        respec:Template,
         html:H2 ;
     rdfs:label "h2" ;
     rdf:_1 doc:57.2.1 .
 
 doc:57.2.1 a respec:StaticElement,
-        respec:Template,
-        html:Text ;
+        html:TextElement ;
     rdfs:label "text element" ;
-    html:fragment "Node Shapes" .
+    html:fragment "Nodeshapes" .
 
-doc:57.3 a respec:NodeShapeDefinitionDiv,
-        respec:Template,
+doc:57.3 a respec:NodeShape,
         html:Div ;
     rdfs:label "Div" ;
     rdf:_1 doc:57.4 .
 
-doc:57.4 a respec:NodeShapeDefinitionInstance,
-        respec:Template,
-        html:Div ;
+doc:57.4 a html:Div ;
     rdfs:label "Div" ;
     rdf:_1 doc:57.9 ;
     rdf:_2 doc:57.10 .
 
-doc:57.9 a respec:NodeShape,
-        respec:Template,
-        html:H2 ;
+doc:57.9 a html:H2 ;
     rdfs:label "h2" ;
     rdf:_1 doc:57.11 .
 
-doc:57.11 a respec:NodeShapeDfn,
-        respec:Template,
-        html:Dfn ;
+doc:57.11 a html:Dfn ;
     rdfs:label "Dfn" ;
     rdf:_1 doc:57.9.1 .
 
-doc:57.9.1 a respec:NodeShapeTitle,
-        respec:Template,
-        html:Text ;
+doc:57.9.1 a html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "{{node shape title}}" .
 
-doc:57.10 a respec:NodeShapeP,
-        respec:Template,
-        html:P ;
+doc:57.10 a html:P ;
     rdfs:label "p" ;
     rdf:_1 doc:57.10.1 .
 
-doc:57.10.1 a respec:NodeShapeDefinitionText,
-        respec:Template,
-        html:Text ;
+doc:57.10.1 a html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "{{node shape definition}}" .
 
-doc:58.1 a respec:StaticElement,
-        respec:Template,
+doc:definitionNamedIndividuals a respec:StaticElement,
         html:Section ;
     rdfs:label "Section" ;
     rdf:_1 doc:58.2;
     rdf:_2 doc:58.3.
 
 doc:58.2 a respec:StaticElement,
-        respec:Template,
         html:H2 ;
     rdfs:label "h2" ;
     rdf:_1 doc:58.2.1 .
 
 doc:58.2.1 a respec:StaticElement,
-        respec:Template,
-        html:Text ;
+        html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "Named Individuals" .
 
 doc:58.3 a respec:StaticElement,
-        respec:Template,
         html:Div ;
     rdfs:label "Div" ;
     rdf:_1 doc:58.4 .
 
 doc:58.4 a respec:NamedIndividual,
-        respec:Template,
         html:Div ;
     rdfs:label "Div" ;
     rdf:_1 doc:58.9 ;
     rdf:_2 doc:58.10 .
 
-doc:58.9 a respec:NamedIndividualH2,
-        respec:Template,
-        html:H2 ;
+doc:58.9 a html:H2 ;
     rdfs:label "h2" ;
     rdf:_1 doc:58.11 .
 
-doc:58.11 a respec:NamedIndividualDfn,
-        respec:Template,
-        html:Dfn ;
+doc:58.11 a html:Dfn ;
     rdfs:label "Dfn" ;
     rdf:_1 doc:58.9.1 .
 
-doc:58.9.1 a respec:NamedIndividualTitle,
-        respec:Template,
-        html:Text ;
+doc:58.9.1 a html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "{{named individual title}}" .
 
-doc:58.10 a respec:NamedIndividualParagraph,
-        respec:Template,
-        html:P ;
+doc:58.10 a html:P ;
     rdfs:label "p" ;
     rdf:_1 doc:58.10.1 .
 
-doc:58.10.1 a respec:NamedIndividualDefinitionText,
-        respec:Template,
-        html:Text ;
+doc:58.10.1 a html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "{{named individual definition}}" .
 
-doc:59.1 a respec:StaticElement,
-        respec:Template,
+doc:definitionConcepts a respec:StaticElement,
         html:Section ;
     rdfs:label "Section" ;
     rdf:_1 doc:59.2;
     rdf:_2 doc:59.3.
 
 doc:59.2 a respec:StaticElement,
-        respec:Template,
         html:H2 ;
     rdfs:label "h2" ;
     rdf:_1 doc:59.2.1 .
 
 doc:59.2.1 a respec:StaticElement,
-        respec:Template,
-        html:Text ;
+        html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "Concepts" .
 
 doc:59.3 a respec:StaticElement,
-        respec:Template,
         html:Div ;
     rdfs:label "Div" ;
     rdf:_1 doc:59.4 .
 
 doc:59.4 a respec:Concept,
-        respec:Template,
         html:Div ;
     rdfs:label "Div" ;
     rdf:_1 doc:59.9 ;
     rdf:_2 doc:59.10 .
 
-doc:59.9 a respec:ConceptH2,
-        respec:Template,
-        html:H2 ;
+doc:59.9 a html:H2 ;
     rdfs:label "h2" ;
     rdf:_1 doc:59.11 .
 
-doc:59.11 a respec:ConceptDfn,
-        respec:Template,
-        html:Dfn ;
+doc:59.11 a html:Dfn ;
     rdfs:label "Dfn" ;
     rdf:_1 doc:59.9.1 .
 
-doc:59.9.1 a respec:ConceptTitle,
-        respec:Template,
-        html:Text ;
+doc:59.9.1 a html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "{{concept title}}" .
 
-doc:59.10 a respec:ConceptParagraph,
-        respec:Template,
-        html:P ;
+doc:59.10 a html:P ;
     rdfs:label "p" ;
     rdf:_1 doc:59.10.1 .
 
-doc:59.10.1 a respec:ConceptDefinitionText,
-        respec:Template,
-        html:Text ;
+doc:59.10.1 a html:TextElement ;
     rdfs:label "text element" ;
     html:fragment "{{concept definition}}" .
 
-doc:71.4 a respec:StaticElement,
-        respec:Template,
+doc:conformance a respec:StaticElement,
         html:Section ;
     rdfs:label "section" ;
     rdf:_2 doc:72.6 ;
     html:id "conformance" .
 
 doc:72.6 a respec:StaticElement,
-        respec:Template,
         html:P ;
     rdfs:label "p" ;
     rdf:_1 doc:72.6.1 .
 
 doc:72.6.1 a respec:StaticElement,
-        respec:Template,
-        html:Text ;
+        html:TextElement ;
     rdfs:label "text element" ;
     html:fragment """
         This is required for specifications that contain normative material.
       """ .
 
-doc:71.5 a respec:StaticElement,
-        respec:Template,
+doc:appendix a respec:StaticElement,
         html:Section ;
     rdfs:label "section" ;
     rdf:_1 doc:71.4.1 ;
