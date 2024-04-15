@@ -131,7 +131,7 @@ construct {
         manchester:label ?manchesterLabel.
 } where {
   
-  BIND(IF(isBlank($this), "Anonymous class"@en,CONCAT("[=",function:getPrefixedIRI($this),"=]")) as ?manchesterLabel)
+  BIND(IF(isBlank($this), "Anonymous class",CONCAT("[=",function:getPrefixedIRI($this),"=]")) as ?manchesterLabel)
   
 } 
 '''.
@@ -1744,3 +1744,430 @@ SELECT ?result WHERE {
   bind(coalesce(?prefixedIRI, ?defaultFullIRI) as ?result)
 }
 """ .
+
+shp:SerializableNodeShape
+    a sh:NodeShape;
+    sh:rule rule:SerializeNodeShape;
+    sh:target target:SerializableNodeShape;
+    skos:prefLabel 'Serializable NodeShape shape'@en.
+
+  target:SerializableNodeShape
+    a sh:SPARQLTarget;
+    sh:select '''
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix sh: <http://www.w3.org/ns/shacl#>
+
+select $this {
+  
+  # Any NodeShape
+  
+  $this a sh:NodeShape.
+  
+  # The NodeShape must not have an Manchester Syntax string yet
+  
+  filter not exists {
+    $this manchester:label [].
+  }
+}
+  '''.
+
+  rule:SerializeNodeShape
+    a sh:SPARQLRule;
+    rdfs:comment 'A rule that creates a manchester syntax label and definition for a NodeShape.'@en;
+    skos:prefLabel 'Manchester Syntax serialisation rule for a NodeShape'@en;
+    sh:construct '''
+prefix function: <https://data.rijksfinancien.nl/manchester/model/function/>
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix sh: <http://www.w3.org/ns/shacl#>
+
+construct {
+
+  # create the manchester syntax for the NodeShape to be serialized.
+  
+  $this manchester:syntax 'NODESHAPE';
+        manchester:label ?manchesterLabel.
+} where {
+  
+  BIND(IF(isBlank($this), "Anonymous NodeShape",CONCAT("[=",function:getPrefixedIRI($this),"=]")) as ?manchesterLabel)
+ 
+} 
+'''.
+
+
+shp:SerializablePropertyShape
+    a sh:NodeShape;
+    sh:rule rule:SerializePropertyShape;
+    sh:target target:SerializablePropertyShape;
+    skos:prefLabel 'Serializable PropertyShape shape'@en.
+
+  target:SerializablePropertyShape
+    a sh:SPARQLTarget;
+    sh:select '''
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix sh: <http://www.w3.org/ns/shacl#>
+
+select $this {
+  
+  # Any PropertyShape
+  
+  $this sh:path [].
+  
+  # The PropertyShape must not have an Manchester Syntax string yet
+  
+  filter not exists {
+    $this manchester:label [].
+  }
+}
+  '''.
+
+  rule:SerializePropertyShape
+    a sh:SPARQLRule;
+    rdfs:comment 'A rule that creates a manchester syntax label and definition for a PropertyShape.'@en;
+    skos:prefLabel 'Manchester Syntax serialisation rule for a PropertyShape'@en;
+    sh:construct '''
+prefix function: <https://data.rijksfinancien.nl/manchester/model/function/>
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix sh: <http://www.w3.org/ns/shacl#>
+
+construct {
+
+  # create the manchester syntax for the PropertyShape to be serialized.
+  
+  $this manchester:syntax 'PROPERTYSHAPE';
+        manchester:label ?manchesterLabel.
+} where {
+  
+  BIND(IF(isBlank($this), "Anonymous PropertyShape",CONCAT("[=",function:getPrefixedIRI($this),"=]")) as ?manchesterLabel)
+ 
+} 
+
+  '''.
+
+shp:SerializableSPARQLConstraint
+    a sh:NodeShape;
+    sh:rule rule:SerializeSPARQLConstraint;
+    sh:target target:SerializableSPARQLConstraint;
+    skos:prefLabel 'Serializable SPARQLConstraint shape'@en.
+
+  target:SerializableSPARQLConstraint
+    a sh:SPARQLTarget;
+    sh:select '''
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix sh: <http://www.w3.org/ns/shacl#>
+
+select $this {
+  
+  # Any SPARQLConstraint
+  
+  $this rdf:type sh:SPARQLConstraint.
+  
+  # The SPARQLConstraint must not have an Manchester Syntax string yet
+  
+  filter not exists {
+    $this manchester:label [].
+  }
+}
+  '''.
+
+  rule:SerializeSPARQLConstraint
+    a sh:SPARQLRule;
+    rdfs:comment 'A rule that creates a manchester syntax label and definition for a SPARQLConstraint.'@en;
+    skos:prefLabel 'Manchester Syntax serialisation rule for a SPARQLConstraint'@en;
+    sh:construct '''
+prefix function: <https://data.rijksfinancien.nl/manchester/model/function/>
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix sh: <http://www.w3.org/ns/shacl#>
+
+construct {
+
+  # create the manchester syntax for the SPARQLConstraint to be serialized.
+  
+  $this manchester:syntax 'SPARQLCONSTRAINT';
+        manchester:label ?manchesterLabel.
+} where {
+  
+  BIND(IF(isBlank($this), "Anonymous SPARQLConstraint",CONCAT("[=",function:getPrefixedIRI($this),"=]")) as ?manchesterLabel)
+ 
+} 
+
+  '''.
+
+shp:SerializableSPARQLFunction
+    a sh:NodeShape;
+    sh:rule rule:SerializeSPARQLFunction;
+    sh:target target:SerializableSPARQLFunction;
+    skos:prefLabel 'Serializable SPARQLFunction shape'@en.
+
+  target:SerializableSPARQLFunction
+    a sh:SPARQLTarget;
+    sh:select '''
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix sh: <http://www.w3.org/ns/shacl#>
+
+select $this {
+  
+  # Any SPARQLFunction
+  
+  $this rdf:type sh:SPARQLFunction.
+  
+  # The SPARQLFunction must not have an Manchester Syntax string yet
+  
+  filter not exists {
+    $this manchester:label [].
+  }
+}
+  '''.
+
+  rule:SerializeSPARQLFunction
+    a sh:SPARQLRule;
+    rdfs:comment 'A rule that creates a manchester syntax label and definition for a SPARQLFunction.'@en;
+    skos:prefLabel 'Manchester Syntax serialisation rule for a SPARQLFunction'@en;
+    sh:construct '''
+prefix function: <https://data.rijksfinancien.nl/manchester/model/function/>
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix sh: <http://www.w3.org/ns/shacl#>
+
+construct {
+
+  # create the manchester syntax for the SPARQLFunction to be serialized.
+  
+  $this manchester:syntax 'SPARQLFUNCTION';
+        manchester:label ?manchesterLabel.
+} where {
+  
+  BIND(IF(isBlank($this), "Anonymous SPARQLFunction",CONCAT("[=",function:getPrefixedIRI($this),"=]")) as ?manchesterLabel)
+ 
+}   
+'''.
+
+shp:SerializableSPARQLRule
+    a sh:NodeShape;
+    sh:rule rule:SerializeSPARQLRule;
+    sh:target target:SerializableSPARQLRule;
+    skos:prefLabel 'Serializable SPARQLRule shape'@en.
+
+  target:SerializableSPARQLRule
+    a sh:SPARQLTarget;
+    sh:select '''
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix sh: <http://www.w3.org/ns/shacl#>
+
+select $this {
+  
+  # Any SPARQLRule
+  
+  $this rdf:type sh:SPARQLRule.
+  
+  # The SPARQLRule must not have an Manchester Syntax string yet
+  
+  filter not exists {
+    $this manchester:label [].
+  }
+}
+  '''.
+
+  rule:SerializeSPARQLRule
+    a sh:SPARQLRule;
+    rdfs:comment 'A rule that creates a manchester syntax label and definition for a SPARQLRule.'@en;
+    skos:prefLabel 'Manchester Syntax serialisation rule for a SPARQLRule'@en;
+    sh:construct '''
+prefix function: <https://data.rijksfinancien.nl/manchester/model/function/>
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix sh: <http://www.w3.org/ns/shacl#>
+
+construct {
+
+  # create the manchester syntax for the SPARQLRule to be serialized.
+  
+  $this manchester:syntax 'SPARQLRULE';
+        manchester:label ?manchesterLabel.
+} where {
+  
+  BIND(IF(isBlank($this), "Anonymous SPARQLRule",CONCAT("[=",function:getPrefixedIRI($this),"=]")) as ?manchesterLabel)
+ 
+}   
+'''.
+
+shp:SerializableTripleRule
+    a sh:NodeShape;
+    sh:rule rule:SerializeTripleRule;
+    sh:target target:SerializableTripleRule;
+    skos:prefLabel 'Serializable TripleRule shape'@en.
+
+  target:SerializableTripleRule
+    a sh:SPARQLTarget;
+    sh:select '''
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix sh: <http://www.w3.org/ns/shacl#>
+
+select $this {
+  
+  # Any TripleRule
+  
+  $this rdf:type sh:TripleRule.
+  
+  # The TripleRule must not have an Manchester Syntax string yet
+  
+  filter not exists {
+    $this manchester:label [].
+  }
+}
+  '''.
+
+  rule:SerializeTripleRule
+    a sh:SPARQLRule;
+    rdfs:comment 'A rule that creates a manchester syntax label and definition for a TripleRule.'@en;
+    skos:prefLabel 'Manchester Syntax serialisation rule for a TripleRule'@en;
+    sh:construct '''
+prefix function: <https://data.rijksfinancien.nl/manchester/model/function/>
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix sh: <http://www.w3.org/ns/shacl#>
+
+construct {
+
+  # create the manchester syntax for the TripleRule to be serialized.
+  
+  $this manchester:syntax 'TRIPLERULE';
+        manchester:label ?manchesterLabel.
+} where {
+  
+  BIND(IF(isBlank($this), "Anonymous TripleRule",CONCAT("[=",function:getPrefixedIRI($this),"=]")) as ?manchesterLabel)
+ 
+}   
+'''.
+
+shp:SerializableSPARQLTarget
+    a sh:NodeShape;
+    sh:rule rule:SerializeSPARQLTarget;
+    sh:target target:SerializableSPARQLTarget;
+    skos:prefLabel 'Serializable SPARQLTarget shape'@en.
+
+  target:SerializableSPARQLTarget
+    a sh:SPARQLTarget;
+    sh:select '''
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix sh: <http://www.w3.org/ns/shacl#>
+
+select $this {
+  
+  # Any SPARQLTarget
+  
+  $this rdf:type sh:SPARQLTarget.
+  
+  # The SPARQLTarget must not have an Manchester Syntax string yet
+  
+  filter not exists {
+    $this manchester:label [].
+  }
+}
+  '''.
+
+  rule:SerializeSPARQLTarget
+    a sh:SPARQLRule;
+    rdfs:comment 'A rule that creates a manchester syntax label and definition for a SPARQLTarget.'@en;
+    skos:prefLabel 'Manchester Syntax serialisation rule for a SPARQLTarget'@en;
+    sh:construct '''
+prefix function: <https://data.rijksfinancien.nl/manchester/model/function/>
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix sh: <http://www.w3.org/ns/shacl#>
+
+construct {
+
+  # create the manchester syntax for the SPARQLTarget to be serialized.
+  
+  $this manchester:syntax 'SPARQLTARGET';
+        manchester:label ?manchesterLabel.
+} where {
+  
+  BIND(IF(isBlank($this), "Anonymous SPARQLTarget",CONCAT("[=",function:getPrefixedIRI($this),"=]")) as ?manchesterLabel)
+ 
+}   
+'''.
+
+shp:SerializableSPARQLTargetType
+    a sh:NodeShape;
+    sh:rule rule:SerializeSPARQLTargetType;
+    sh:target target:SerializableSPARQLTargetType;
+    skos:prefLabel 'Serializable SPARQLTargetType shape'@en.
+
+  target:SerializableSPARQLTargetType
+    a sh:SPARQLTargetType;
+    sh:select '''
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix sh: <http://www.w3.org/ns/shacl#>
+
+select $this {
+  
+  # Any SPARQLTargetType
+  
+  $this rdf:type sh:SPARQLTargetType.
+  
+  # The SPARQLTargetType must not have an Manchester Syntax string yet
+  
+  filter not exists {
+    $this manchester:label [].
+  }
+}
+  '''.
+
+  rule:SerializeSPARQLTargetType
+    a sh:SPARQLRule;
+    rdfs:comment 'A rule that creates a manchester syntax label and definition for a SPARQLTargetType.'@en;
+    skos:prefLabel 'Manchester Syntax serialisation rule for a SPARQLTargetType'@en;
+    sh:construct '''
+prefix function: <https://data.rijksfinancien.nl/manchester/model/function/>
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix sh: <http://www.w3.org/ns/shacl#>
+
+construct {
+
+  # create the manchester syntax for the SPARQLTargetType to be serialized.
+  
+  $this manchester:syntax 'SPARQLTARGETTYPE';
+        manchester:label ?manchesterLabel.
+} where {
+  
+  BIND(IF(isBlank($this), "Anonymous SPARQLTargetType",CONCAT("[=",function:getPrefixedIRI($this),"=]")) as ?manchesterLabel)
+ 
+}   
+'''.
