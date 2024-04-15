@@ -406,7 +406,7 @@ doc:42.5.1 a respec:StaticElement,
         html:TextElement ;
     rdfs:label "text element" ;
     respec:label  "A serialisation of the ontology in Turtle-format (*.ttl) can be found "@en ,
-                  "Een serialisatie van de ontologie in Turtle-formaat (*.ttl) kan worden gevonden op de volgende "@nl ;
+                  "Een serialisatie van de ontologie in Turtle-formaat (*.ttl) kan "@nl ;
     html:fragment "A serialisation of the ontology in Turtle-format (*.ttl) can be found " .
      
 doc:42.5.2 a respec:StaticElement,
@@ -419,11 +419,13 @@ doc:42.5.2.1 a respec:StaticElement,
         html:TextElement ;
     rdfs:label "text element" ;
     respec:label "here"@en ,
-                 "plek"@nl ;
+                 "hier"@nl ;
     html:fragment "here" .
 
 doc:42.5.3 a respec:StaticElement,
         html:TextElement ;
+    respec:label "."@en, 
+                 "worden gevonden."@nl;
     rdfs:label "text element" ;
     html:fragment "." .
     
