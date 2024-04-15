@@ -215,6 +215,11 @@ def generateReSpec():
     rdfProperties = request.form.get('rdfProperties', 'false')
     nodeshapes = request.form.get('nodeshapes', 'false')
     namedIndividuals = request.form.get('namedIndividuals', 'false')
+    
+    # Write ontology to file
+    ontology_filepath = directory_path + "/OntoReSpec/Tools/Playground/static/ontology.ttl"
+    with open(ontology_filepath, 'w', encoding='utf-8') as file:
+       file.write(str(ontology))
 
     # Initialize graph
     generation_iri = hash(ontology + str(datetime.datetime.now()))

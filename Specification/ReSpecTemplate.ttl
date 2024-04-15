@@ -36,6 +36,8 @@ doc:title a respec:StaticElement,
 doc:5.4.1 a respec:Title,
         html:TextElement ;
     rdfs:label "text element" ;
+    respec:absenceLabel 'No title specified'@en,
+                        'Geen titel gespecificeerd'@nl;
     html:fragment "{{title}}" .
 
 doc:style a respec:StaticElement,
@@ -77,6 +79,8 @@ doc:script_configuration a respec:StaticElement,
 doc:11.4.1 a respec:Configuration,
         html:TextElement ;
     rdfs:label "text element" ;
+    respec:absenceLabel "Not available"@en,
+                        "Niet beschikbaar"@nl;
     html:fragment """
       // All config options at https://respec.org/docs/
       var respecConfig = {
@@ -96,7 +100,7 @@ doc:body a respec:StaticElement,
     rdf:_1 doc:abstract ;
     rdf:_2 doc:sotd ;
     rdf:_3 doc:introduction ;
-    rdf:_4 doc:generalInformation ;
+    rdf:_4 doc:overview ;
     rdf:_5 doc:definition ;
     rdf:_6 doc:conformance ;
     rdf:_7 doc:appendix .
@@ -115,6 +119,8 @@ doc:25.7 a respec:StaticElement,
 doc:25.7.1 a respec:Abstract,
         html:TextElement ;
     rdfs:label "text element" ;
+    respec:absenceLabel "Abstract not available"@en,
+                        "Samenvatting niet beschikbaar"@nl;
     html:fragment "{{abstract}}" .
 
 doc:sotd a respec:StaticElement,
@@ -134,73 +140,95 @@ doc:28.6.1 a html:TextElement ;
 
 doc:introduction a respec:Introduction, 
         html:Section ;
-    rdf:_1 doc:30.4-1 ;
-    rdf:_2 doc:30.4-2 ;
-    rdf:_3 doc:30.4-3 ;
-    rdf:_4 doc:30.4-4 ;
-    rdf:_5 doc:30.4-5 ;
+    rdf:_1 doc:introductionTitle ;
+    rdf:_2 doc:introductionText ;
+    rdf:_3 doc:background ;
+    rdf:_4 doc:objective ;
+    rdf:_5 doc:audience ;
     html:class "informative" .
 
-doc:30.4-1 a html:H2 ;
+doc:introductionTitle a html:H2 ;
     rdf:_1 doc:30.4-1-1 .
 
-doc:30.4-1-1 a html:TextElement ;
+doc:30.4-1-1 a respec:IntroductionTitle,
+    html:TextElement ;
+    respec:label "Introduction"@en,
+                 "Inleiding"@nl;
+    respec:absenceLabel "This specification document does not describe an introduction to the ontology."@en,
+                        "Deze specificatie beschrijft geen inleiding op de ontologie."@nl;
     html:fragment "Introduction" .
 
-doc:30.4-2 a html:TextElement ;
-    html:fragment "General introductory text"@en .
+doc:introductionText a html:TextElement ;
+    html:fragment "Introductory text of the ontology.".
 
-doc:30.4-3 a html:Section ;
+doc:background a html:Section ;
     rdf:_1 doc:30.4-3-1 ;
     rdf:_2 doc:30.4-3-1-2 .
 
 doc:30.4-3-1 a html:H2 ;
     rdf:_1 doc:30.4-3-1-1 .
 
-doc:30.4-3-1-1 a html:TextElement ;
+doc:30.4-3-1-1 a respec:BackgroundTitle,
+    html:TextElement ;
+    respec:label "Background"@en, 
+                 "Achtergrond"@nl ;
+    respec:absenceLabel "This specification document does not describe the background of the ontology."@en,
+                        "Deze specificatie beschrijft geen achtergrond van de ontologie."@nl;
     html:fragment "Background" .
 
 doc:30.4-3-1-2 a html:TextElement ;
     html:fragment "Background text" .
 
-doc:30.4-4 a html:Section ;
+doc:objective a html:Section ;
     rdf:_1 doc:30.4-4-1 ;
     rdf:_2 doc:30.4-4-1-2 .
 
 doc:30.4-4-1 a html:H2 ;
     rdf:_1 doc:30.4-4-1-1 .
 
-doc:30.4-4-1-1 a html:TextElement ;
-    html:fragment "Ontology title"@en .
+doc:30.4-4-1-1 a respec:ObjectiveTitle,
+                 html:TextElement ;
+    respec:label "Objective"@en, 
+                 "Doel"@nl ;     
+    respec:absenceLabel "This specification document does not define the objective of the ontology."@en,
+                        "Dit specificatiedocument definieert geen doel van de ontologie."@nl ;     
+    html:fragment "Objective" .
 
-doc:30.4-4-1-2 a html:TextElement .
+doc:30.4-4-1-2 a html:TextElement ;
+    html:fragment "Objective text" .
 
-doc:30.4-5 a html:Section ;
+doc:audience a html:Section ;
     rdf:_1 doc:30.4-5-1 ;
     rdf:_2 doc:30.4-5-1-2 .
 
 doc:30.4-5-1 a html:H2 ;
     rdf:_1 doc:30.4-5-1-1 .
 
-doc:30.4-5-1-1 a html:TextElement ;
+doc:30.4-5-1-1 a respec:AudienceTitle,
+               html:TextElement ;
+    respec:label "Audience"@en, 
+                 "Doelgroep"@nl ;
+    respec:absenceLabel "This specification document does not describe the intended audience of the ontology."@en ,
+                        "Dit specificatiedocument beschrijft geen beoogde doelgroep van de ontologie."@nl ;
     html:fragment "Audience" .
 
 doc:30.4-5-1-2 a html:TextElement ;
-    html:fragment "Text in which is explained for which audience this technical specification document is intended."@en .
+    html:fragment "Text in which is explained for which audience this technical specification document is intended." .
 
-doc:generalInformation a respec:StaticElement,
+doc:overview a respec:StaticElement,
         html:Section ;
     rdfs:label "section" ;
     rdf:_1 doc:overview_title ;
-    rdf:_2 doc:overview ;
+    rdf:_2 doc:overview_paragraph ;
     rdf:_3 doc:example ;
     rdf:_4 doc:datamodel_title ;
     rdf:_5 doc:datamodel_paragraph ;
     rdf:_6 doc:datamodel ;
     rdf:_7 doc:namespace_title ;
-    rdf:_8 doc:namespace_paragraph ;
-    rdf:_9 doc:namespace_table ;
-    rdf:_10 doc:currentIssues .
+    rdf:_8 doc:namespace ;
+    rdf:_9 doc:serialisation_title ;
+    rdf:_10 doc:serialisation_paragraph ;  
+    rdf:_11 doc:currentIssues .
 
 doc:overview_title a respec:StaticElement,
         html:H2 ;
@@ -210,9 +238,11 @@ doc:overview_title a respec:StaticElement,
 doc:38.6.1 a respec:StaticElement,
         html:TextElement ;
     rdfs:label "text element" ;
+    respec:label "Overview"@en ,
+                 "Overzicht"@nl ;
     html:fragment "Overview" .
 
-doc:overview a respec:StaticElement,
+doc:overview_paragraph a respec:StaticElement,
         html:P ;
     rdfs:label "p" ;
     rdf:_1 doc:38.7.1 .
@@ -220,11 +250,15 @@ doc:overview a respec:StaticElement,
 doc:38.7.1 a respec:Overview,
         html:TextElement ;
     rdfs:label "text element" ;
+    respec:absenceLabel "Description not available"@en,
+                        "Beschrijving niet beschikbaar"@nl;
     html:fragment "An overview of the ontology" .
 
 doc:example a respec:Example,
         html:Aside ;
     rdfs:label "aside" ;
+    respec:absenceLabel "Example not available"@en,
+                        "Voorbeeld niet beschikbaar"@nl;
     rdf:_1 doc:40.8 ;
     rdf:_2 doc:41.8 ;
     html:class "example" .
@@ -238,6 +272,8 @@ doc:datamodel_title a respec:StaticElement,
 doc:40.4.1 a respec:StaticElement,
         html:TextElement ;
     rdfs:label "text element" ;
+    respec:label "Datamodel"@en ,
+                 "Datamodel"@nl ;
     html:fragment "Datamodel" .
 
 doc:datamodel_paragraph a respec:StaticElement,
@@ -248,6 +284,8 @@ doc:datamodel_paragraph a respec:StaticElement,
 doc:40.5.1 a respec:StaticElement,
         html:TextElement ;
     rdfs:label "text element" ;
+    respec:label "A visualisation of the ontology"@en ,
+                 "Een visualisatie van de ontologie"@nl ;
     html:fragment "A visualisation of the ontology" .
 
 doc:datamodel a respec:StaticElement,
@@ -263,21 +301,14 @@ doc:namespace_title a respec:StaticElement,
     rdf:_1 doc:40.7.1 .
 
 doc:40.7.1 a respec:StaticElement,
+        respec:NamespaceTitle,
         html:TextElement ;
     rdfs:label "text element" ;
+    respec:label "Namespace"@en ,
+                 "Namespace"@nl ;
     html:fragment "Namespace" .
 
-doc:namespace_paragraph a respec:StaticElement,
-        html:P ;
-    rdfs:label "P" ;
-    rdf:_1 doc:40.9.1 .
-
-doc:40.9.1 a respec:StaticElement,
-        html:TextElement ;
-    rdfs:label "text element" ;
-    html:fragment "The following namespace prefixes are used throughout this document." .
-
-doc:namespace_table a respec:StaticElement,
+doc:namespace a respec:StaticElement,
         html:Table ;
         html:class "def";
         rdfs:label "table element" ;
@@ -292,7 +323,9 @@ doc:41.6.1 a respec:StaticElement,
 doc:41.6.1.1 a respec:StaticElement,
         html:TextElement ;
     rdfs:label "text element" ;
-    html:fragment "Prefixes and namespaces used in this specification".
+    respec:label "Prefixes and namespaces used in this specification"@en ,
+                 "Prefixen en namespaces gebruikt in deze specificatie"@nl ;
+    html:fragment "Prefixes and namespaces used in this specification" .
 
 doc:41.6.2 a respec:StaticElement,
              respec:NameSpace,
@@ -314,6 +347,8 @@ doc:41.6.2.1.1 a respec:StaticElement,
 doc:41.6.2.1.1.1 a respec:StaticElement,
         html:TextElement ;
     rdfs:label "text element" ;
+    respec:label "Prefix"@en ,
+                 "Prefix"@nl ;
     html:fragment "Prefix".
 
 doc:41.6.2.1.2 a respec:StaticElement,
@@ -324,6 +359,8 @@ doc:41.6.2.1.2 a respec:StaticElement,
 doc:41.6.2.1.2.1 a respec:StaticElement,
         html:TextElement ;
     rdfs:label "text element" ;
+    respec:label "Namespace"@en ,
+                 "Namespace"@nl ;
     html:fragment "Namespace".
 
 doc:40.8 a html:P ;
@@ -345,7 +382,51 @@ doc:41.8.1 a html:TextElement ;
         // Automatic syntax highlighting
         function someJavaScript(){}
         """ .
+doc:serialisation_title a respec:StaticElement,
+        html:H2 ;
+    rdfs:label "h2" ;
+    html:class "informative";
+    rdf:_1 doc:42.4.1 .
 
+doc:42.4.1 a respec:StaticElement,
+        html:TextElement ;
+    rdfs:label "text element" ;
+    respec:label "Serialisation"@en ,
+                 "Serialisatie"@nl ;
+    html:fragment "Serialisation" .
+
+doc:serialisation_paragraph a respec:StaticElement,
+        html:P ;
+    rdfs:label "P" ;
+    rdf:_1 doc:42.5.1 ;
+    rdf:_2 doc:42.5.2 ;
+    rdf:_3 doc:42.5.3 .
+
+doc:42.5.1 a respec:StaticElement,
+        html:TextElement ;
+    rdfs:label "text element" ;
+    respec:label  "A serialisation of the ontology in Turtle-format (*.ttl) can be found "@en ,
+                  "Een serialisatie van de ontologie in Turtle-formaat (*.ttl) kan worden gevonden op de volgende "@nl ;
+    html:fragment "A serialisation of the ontology in Turtle-format (*.ttl) can be found " .
+     
+doc:42.5.2 a respec:StaticElement,
+        html:A ;
+    rdfs:label "A element" ;
+    html:href "ontology.ttl";
+    rdf:_1 doc:42.5.2.1 .
+    
+doc:42.5.2.1 a respec:StaticElement,
+        html:TextElement ;
+    rdfs:label "text element" ;
+    respec:label "here"@en ,
+                 "plek"@nl ;
+    html:fragment "here" .
+
+doc:42.5.3 a respec:StaticElement,
+        html:TextElement ;
+    rdfs:label "text element" ;
+    html:fragment "." .
+    
 doc:currentIssues a respec:StaticElement,
         html:Section ;
     rdfs:label "section" ;
@@ -360,6 +441,8 @@ doc:47.8 a respec:StaticElement,
 doc:47.8.1 a respec:StaticElement,
         html:TextElement ;
     rdfs:label "text element" ;
+    respec:label "Current issues"@en ,
+                 "Huidige problemen"@nl ;
     html:fragment "Current issues" .
 
 doc:48.8 a respec:StaticElement,
@@ -372,11 +455,16 @@ doc:48.8 a respec:StaticElement,
 doc:48.8.2 a respec:StaticElement,
         html:TextElement ;
     rdfs:label "text element" ;
+    respec:label " Issue can automatically be populated from GitHub "@en ,
+                 " Probleembeschrijving kan automatisch worden gevuld vanuit GitHub "@nl ;
     html:fragment " Issue can automatically be populated from GitHub " .
 
 doc:definition a respec:StaticElement,
+                 respec:Definition,
         html:Section ;
     rdfs:label "Section" ;
+    respec:absenceLabel "The ontology does not provide a definition for this entity."@en, 
+                        "De ontologie biedt geen definitie voor deze entiteit."@nl ; 
     rdf:_1 doc:definitionTitle;
     rdf:_2 doc:definitionConcepts;
     rdf:_3 doc:definitionClasses;
@@ -394,6 +482,8 @@ doc:definitionTitle a respec:StaticElement,
 doc:54.5.1 a respec:StaticElement,
         html:TextElement ;
     rdfs:label "text element" ;
+    respec:label "Definition"@en ,
+                 "Definitie"@nl ;
     html:fragment "Definition" .
 
 doc:definitionClasses a respec:StaticElement,
@@ -410,11 +500,15 @@ doc:54.6 a respec:StaticElement,
 doc:54.6.1 a respec:StaticElement,
         html:TextElement ;
     rdfs:label "text element" ;
+    respec:label "Classes"@en ,
+                 "Klassen"@nl ;
     html:fragment "Classes" .
 
 doc:54.7 a respec:ClassDefinition,
         html:Div ;
     rdfs:label "Div" ;
+    respec:absenceLabel "This ontology does not define any classes."@en,
+                        "Deze ontologie definieert geen klassen."@nl;
     rdf:_1 doc:54.8 .
 
 doc:54.8 a html:Div ;
@@ -465,11 +559,15 @@ doc:55.2 a respec:StaticElement,
 doc:55.2.1 a respec:StaticElement,
         html:TextElement ;
     rdfs:label "text element" ;
+    respec:label "Object Properties"@en ,
+                 "Objecteigenschappen"@nl ;
     html:fragment "Object Properties" .
 
 doc:55.3 a respec:ObjectProperty,
         html:Div ;
     rdfs:label "Div" ;
+    respec:absenceLabel "This ontology does not define any object properties."@en,
+                        "Deze ontologie definieert geen objecteigenschappen."@nl;
     rdf:_1 doc:55.4 .
 
 doc:55.4 a html:Div ;
@@ -499,7 +597,7 @@ doc:55.10.1 a html:TextElement ;
 
 doc:definitionDatatypeProperties a respec:StaticElement,
         html:Section ;
-    rdfs:label "Section" ;
+    rdfs:label "Section" ;   
     rdf:_1 doc:56.2;
     rdf:_2 doc:56.3.
 
@@ -511,11 +609,15 @@ doc:56.2 a respec:StaticElement,
 doc:56.2.1 a respec:StaticElement,
         html:TextElement ;
     rdfs:label "text element" ;
+    respec:label "Datatype Properties"@en ,
+                 "Datatype-eigenschappen"@nl ;
     html:fragment "Datatype Properties" .
 
 doc:56.3 a respec:DatatypeProperty,
         html:Div ;
     rdfs:label "Div" ;
+    respec:absenceLabel "This ontology does not define any datatype properties."@en,
+                        "Deze ontologie definieert geen datatype eigenschappen."@nl; 
     rdf:_1 doc:56.4 .
 
 doc:56.4 a html:Div ;
@@ -557,11 +659,15 @@ doc:53.2 a respec:StaticElement,
 doc:53.2.1 a respec:StaticElement,
         html:TextElement ;
     rdfs:label "text element" ;
+    respec:label "RDF Properties"@en ,
+                 "RDF-eigenschappen"@nl ;
     html:fragment "RDF Properties" .
 
 doc:53.3 a respec:RDF_Property,
         html:Div ;
     rdfs:label "Div" ;
+    respec:absenceLabel "This ontology does not define any RDF properties."@en,
+                        "Deze ontologie definieert geen RDF-eigenschappen."@nl;
     rdf:_1 doc:53.4 .
 
 doc:53.4 a html:Div ;
@@ -603,11 +709,15 @@ doc:57.2 a respec:StaticElement,
 doc:57.2.1 a respec:StaticElement,
         html:TextElement ;
     rdfs:label "text element" ;
+    respec:label  "Nodeshapes"@en ,
+                  "Nodeshapes"@nl ;
     html:fragment "Nodeshapes" .
 
 doc:57.3 a respec:NodeShape,
         html:Div ;
     rdfs:label "Div" ;
+    respec:absenceLabel "This ontology does not define any nodeshapes."@en,
+                        "Deze ontologie definieert geen nodeshapes."@nl;    
     rdf:_1 doc:57.4 .
 
 doc:57.4 a html:Div ;
@@ -649,6 +759,8 @@ doc:58.2 a respec:StaticElement,
 doc:58.2.1 a respec:StaticElement,
         html:TextElement ;
     rdfs:label "text element" ;
+    respec:label "Named Individuals"@en ,
+                 "Exemplaren"@nl ;
     html:fragment "Named Individuals" .
 
 doc:58.3 a respec:StaticElement,
@@ -659,6 +771,8 @@ doc:58.3 a respec:StaticElement,
 doc:58.4 a respec:NamedIndividual,
         html:Div ;
     rdfs:label "Div" ;
+    respec:absenceLabel "This ontology does not define any named individuals."@en,
+                        "Deze ontologie definieert geen exemplaren."@nl;    
     rdf:_1 doc:58.9 ;
     rdf:_2 doc:58.10 .
 
@@ -696,6 +810,8 @@ doc:59.2 a respec:StaticElement,
 doc:59.2.1 a respec:StaticElement,
         html:TextElement ;
     rdfs:label "text element" ;
+    respec:label "Concepts"@en ,
+                 "Concepten"@nl ;
     html:fragment "Concepts" .
 
 doc:59.3 a respec:StaticElement,
@@ -706,6 +822,8 @@ doc:59.3 a respec:StaticElement,
 doc:59.4 a respec:Concept,
         html:Div ;
     rdfs:label "Div" ;
+    respec:absenceLabel "This ontology does not define any concept schemes or concepts."@en,
+                        "Deze ontologie definieert geen conceptenschema's of concepten."@nl;    
     rdf:_1 doc:59.9 ;
     rdf:_2 doc:59.10 .
 
