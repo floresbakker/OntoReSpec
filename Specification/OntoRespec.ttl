@@ -806,10 +806,10 @@ where  {
     ?template rdf:type respec:ClassDefinition;
               respec:absenceLabel ?absenceLabel_general.
     $this     dct:subject ?ontology;
-              respec:documentLanguage ?language.    
+              respec:documentLanguage ?language.
     []        rdf:type respec:Definition;
               respec:absenceLabel ?absenceLabel_entity. 
-    filter (LANG(?absenceLabel_entity)  = ?language)                 
+    filter (LANG(?absenceLabel_entity)  = ?language)
     filter (LANG(?absenceLabel_general) = ?language)
   }
 
@@ -825,12 +825,12 @@ where  {
           ?class manchester:label ?manchesterLabel.
           ?class rdfs:isDefinedBy ?ontology.
           $this  dct:subject ?ontology;
-                 respec:documentLanguage ?language.              
+                 respec:documentLanguage ?language2.
 
           optional
           {
             ?class skos:definition ?classDefinition_original.
-            filter (lang(?classDefinition_original) = ?language)
+            filter (lang(?classDefinition_original) = ?language2)
           }
           
           optional
@@ -1125,11 +1125,11 @@ WHERE {
   ?objectProperty manchester:label ?objectPropertyManchesterLabel_original .
   ?objectProperty rdfs:isDefinedBy ?ontology.
   $this dct:subject ?ontology;
-        respec:documentLanguage ?language.
+        respec:documentLanguage ?language2.
 
   OPTIONAL{
   ?objectProperty skos:definition ?objectPropertyDefinition_original.
-  FILTER (LANG(?objectPropertyDefinition_original) = ?language)
+  FILTER (LANG(?objectPropertyDefinition_original) = ?language2)
   } 
   OPTIONAL{
   ?objectProperty manchester:domain ?objectPropertyManchesterDomain.}
@@ -1368,11 +1368,11 @@ WHERE {
   ?datatypeProperty manchester:label ?datatypePropertyManchesterLabel_original .
   ?datatypeProperty rdfs:isDefinedBy ?ontology.
   $this dct:subject ?ontology;
-        respec:documentLanguage ?language.
+        respec:documentLanguage ?language2.
      
   OPTIONAL{
   ?datatypeProperty skos:definition ?datatypePropertyDefinition_original.
-  FILTER (LANG(?datatypePropertyDefinition_original) = ?language)
+  FILTER (LANG(?datatypePropertyDefinition_original) = ?language2)
   }
   
   OPTIONAL{
@@ -1614,11 +1614,11 @@ WHERE {
   ?RDF_Property manchester:label ?RDF_PropertyManchesterLabel_original .
   ?RDF_Property rdfs:isDefinedBy ?ontology.
   $this dct:subject ?ontology;
-        respec:documentLanguage ?language.
+        respec:documentLanguage ?language2.
 
   OPTIONAL{
   ?RDF_Property skos:definition ?RDF_PropertyDefinition_original.
-  FILTER (LANG(?RDF_PropertyDefinition_original) = ?language)
+  FILTER (LANG(?RDF_PropertyDefinition_original) = ?language2)
   } 
   OPTIONAL{
   ?RDF_Property manchester:domain ?RDF_PropertyManchesterDomain.}
@@ -1875,11 +1875,11 @@ construct {
         ?entity manchester:label ?entityManchesterLabel_raw .
         ?entity rdfs:isDefinedBy ?ontology.
         $this dct:subject ?ontology;
-              respec:documentLanguage ?language.
+              respec:documentLanguage ?language2.
 
         optional{
           ?entity skos:definition ?entityDefinition_raw.
-          filter (lang(?entityDefinition_raw) = ?language)
+          filter (lang(?entityDefinition_raw) = ?language2)
         }
 
         optional{
@@ -2124,11 +2124,11 @@ construct {
                 manchester:label ?entityManchesterLabel_raw ;
                 rdfs:isDefinedBy ?ontology.
         $this dct:subject ?ontology;
-              respec:documentLanguage ?language.
+              respec:documentLanguage ?language2.
         
         optional{
           ?entity skos:definition ?entityDefinition_raw.
-          filter (lang(?entityDefinition_raw) = ?language)
+          filter (lang(?entityDefinition_raw) = ?language2)
         }
 
         optional{
@@ -2393,11 +2393,11 @@ construct {
                  rdfs:isDefinedBy ?ontology.
         ?conceptScheme manchester:label ?inSchemeLabel.
         $this dct:subject ?ontology;
-              respec:documentLanguage ?language.
+              respec:documentLanguage ?language2.
 
         optional{
           ?concept skos:definition ?conceptDefinition_raw.
-          filter (lang(?conceptDefinition_raw) = ?language)
+          filter (lang(?conceptDefinition_raw) = ?language2)
         }
 
         bind(function:escapeHTML(?conceptLabel_raw) as ?conceptLabel)
@@ -2421,12 +2421,12 @@ construct {
                        manchester:label ?conceptSchemeLabel;
                        rdfs:isDefinedBy ?ontology.
         $this dct:subject ?ontology;
-              respec:documentLanguage ?language.
+              respec:documentLanguage ?language2.
 
         optional
         {
           ?conceptScheme skos:definition ?schemeDefinition.
-          filter (lang(?schemeDefinition) = ?language)
+          filter (lang(?schemeDefinition) = ?language2)
         }
 
         optional
@@ -2659,7 +2659,7 @@ construct {
                  rdfs:isDefinedBy ?ontology.
         
         $this dct:subject ?ontology;
-              respec:documentLanguage ?language.
+              respec:documentLanguage ?language2.
 
         optional{
           ?concept skos:inScheme ?conceptScheme.
@@ -2668,7 +2668,7 @@ construct {
           
         optional{
           ?concept skos:definition ?conceptDefinition_raw.
-          filter (lang(?conceptDefinition_raw) = ?language)
+          filter (lang(?conceptDefinition_raw) = ?language2)
         }
 
         bind(function:escapeHTML(?conceptLabel_raw) as ?conceptLabel)
