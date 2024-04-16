@@ -1,14 +1,14 @@
 @prefix condition: <https://data.rijksfinancien.nl/html/model/condition/>.
 @prefix dct: <http://purl.org/dc/terms/>.
 @prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>.
-@prefix doc: <http://www.example.org/document/> .
+@prefix template: <https://respec.org/ontorespec/id/> .
 @prefix function: <https://data.rijksfinancien.nl/html/model/function/>.
 @prefix html: <https://data.rijksfinancien.nl/html/model/def/> .
 @prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix respec: <https://respec.org/model/def/> .
+@prefix respec: <https://respec.org/ontorespec/model/def/> .
 @prefix rule: <https://data.rijksfinancien.nl/html/model/rule/>.
 @prefix shp: <https://data.rijksfinancien.nl/html/model/shp/>.
 @prefix target: <https://data.rijksfinancien.nl/html/model/target/>.
@@ -25,7 +25,7 @@ respec:introduction
 
 shp:Document
   a sh:NodeShape;
-  sh:rule rule:Document, rule:StaticElement, rule:Title, rule:Introduction, rule:Description, rule:Example, rule:NameSpace, rule:Abstract, rule:Configuration, rule:Classes, rule:ObjectProperties, rule:DatatypeProperties, rule:RDF_Properties, rule:NodeShapes, rule:NamedIndividuals, rule:Concepts, rule:ConceptSchemes;
+  sh:rule rule:Document, rule:StaticElement, rule:OptionalElement, rule:Title, rule:Introduction, rule:Description, rule:Example, rule:NameSpace, rule:Abstract, rule:Configuration, rule:Classes, rule:ObjectProperties, rule:DatatypeProperties, rule:RDF_Properties, rule:NodeShapes, rule:NamedIndividuals, rule:Concepts, rule:ConceptSchemes;
   sh:targetClass respec:Generation.
 
 rule:Document
@@ -39,7 +39,7 @@ prefix html: <https://data.rijksfinancien.nl/html/model/def/>
 prefix prov: <http://www.w3.org/ns/prov#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <https://respec.org/model/def/> 
+prefix respec: <https://respec.org/ontorespec/model/def/> 
 
 construct {
   ?documentID
@@ -74,7 +74,7 @@ prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <https://respec.org/model/def/> 
+prefix respec: <https://respec.org/ontorespec/model/def/> 
 
 construct {
   ?elementID
@@ -122,6 +122,68 @@ construct {
 }
 """.
 
+rule:OptionalElement
+  a sh:SPARQLRule;
+  skos:prefLabel 'Optional Element rule'@en;
+  rdfs:comment 'The Optional Element rule creates a unique element and attaches its structure for optional sections of the document.'@en ;
+  sh:construct """
+prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+prefix respec: <https://respec.org/ontorespec/model/def/> 
+
+construct {
+  ?elementID
+    a ?htmlClass ;
+    rdfs:label ?label;
+    html:fragment ?fragment;
+    ?element ?childID ;
+    ?attribute ?attributeValue.
+
+} where {
+
+  $this respec:documentLanguage ?language;
+        respec:documentNamespace ?namespace;
+        respec:include ?section.
+  ?template a respec:OptionalElement, ?htmlClass;
+            respec:section ?section.
+  
+  OPTIONAL {
+  ?template ?element ?child.
+  ?child  a/ rdfs:subClassOf* dom:Element.}
+  
+  OPTIONAL {
+  ?template respec:label ?languageFragment.
+  FILTER (LANG(?languageFragment) = ?language)
+  BIND(STR(?languageFragment) as ?respecFragment)}
+  
+  OPTIONAL {
+  ?template html:fragment ?htmlFragment.}
+  
+  OPTIONAL {
+  ?template rdfs:label ?label
+  FILTER (LANG(?label) = ?language)
+  }
+  
+  OPTIONAL {
+  ?template ?attribute ?attributeValue.
+  ?attribute rdfs:subPropertyOf html:attribute.
+  }
+  
+  ?htmlClass rdfs:subClassOf* dom:Element.
+  
+  bind(coalesce(?respecFragment, ?htmlFragment) as ?fragment)
+  
+  # Create identifiers
+  bind(iri(concat(str(?template),'-instance')) as ?elementID)
+  bind(iri(concat(str(?child),'-instance')) as ?childID)
+  
+}
+""".
+
+
+
 rule:Title
   a sh:SPARQLRule;
   skos:prefLabel 'Title rule'@en;
@@ -133,7 +195,7 @@ prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <https://respec.org/model/def/> 
+prefix respec: <https://respec.org/ontorespec/model/def/> 
 prefix schema: <http://schema.org/>
 
 construct {
@@ -187,7 +249,7 @@ prefix function: <https://data.rijksfinancien.nl/html/model/function/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <https://respec.org/model/def/> 
+prefix respec: <https://respec.org/ontorespec/model/def/> 
 prefix schema: <http://schema.org/>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
@@ -318,7 +380,7 @@ prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <https://respec.org/model/def/> 
+prefix respec: <https://respec.org/ontorespec/model/def/> 
 prefix schema: <http://schema.org/>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
@@ -373,7 +435,7 @@ prefix function: <https://data.rijksfinancien.nl/html/model/function/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <https://respec.org/model/def/> 
+prefix respec: <https://respec.org/ontorespec/model/def/> 
 prefix schema: <http://schema.org/>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
@@ -419,7 +481,7 @@ PREFIX dct: <http://purl.org/dc/terms/>
 PREFIX html: <https://data.rijksfinancien.nl/html/model/def/> 
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX respec: <https://respec.org/model/def/> 
+PREFIX respec: <https://respec.org/ontorespec/model/def/> 
 PREFIX sh: <http://www.w3.org/ns/shacl#>
 PREFIX vann: <http://purl.org/vocab/vann/>
 
@@ -506,7 +568,7 @@ prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <https://respec.org/model/def/> 
+prefix respec: <https://respec.org/ontorespec/model/def/> 
 
 construct {
   ?abstractTextElementID rdf:type html:TextElement;
@@ -546,7 +608,7 @@ prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix prov: <http://www.w3.org/ns/prov#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <https://respec.org/model/def/> 
+prefix respec: <https://respec.org/ontorespec/model/def/> 
 prefix schema: <http://schema.org/>
 
 construct {
@@ -604,8 +666,8 @@ construct {
 condition:Classes
   a sh:PropertyShape;
   skos:prefLabel 'The user has requested the specification of ontology classes in the document.'@en;
-  sh:path respec:classes;
-  sh:hasValue true.
+  sh:path respec:include;
+  sh:hasValue "classes".
 
 rule:Classes
   a sh:SPARQLRule;
@@ -622,7 +684,7 @@ prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix respec: <https://respec.org/model/def/>
+prefix respec: <https://respec.org/ontorespec/model/def/>
 prefix schema: <http://schema.org/>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 prefix vann: <http://purl.org/vocab/vann/>
@@ -911,8 +973,8 @@ where  {
 condition:ObjectProperties
   a sh:PropertyShape;
   skos:prefLabel 'The user has requested the specification of ontology object properties in the document.'@en;
-  sh:path respec:objectProperties;
-  sh:hasValue true.
+  sh:path respec:include;
+  sh:hasValue "objectproperties".
 
 rule:ObjectProperties
   a sh:SPARQLRule;
@@ -929,7 +991,7 @@ prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix respec: <https://respec.org/model/def/>
+prefix respec: <https://respec.org/ontorespec/model/def/>
 prefix schema: <http://schema.org/>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 prefix vann: <http://purl.org/vocab/vann/>
@@ -1155,8 +1217,8 @@ WHERE {
 condition:DatatypeProperties
   a sh:PropertyShape;
   skos:prefLabel 'The user has requested the specification of ontology datatype properties in the document.'@en;
-  sh:path respec:datatypeProperties;
-  sh:hasValue true.
+  sh:path respec:include;
+  sh:hasValue "datatypeproperties".
 
 rule:DatatypeProperties
   a sh:SPARQLRule;
@@ -1173,7 +1235,7 @@ prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix respec: <https://respec.org/model/def/>
+prefix respec: <https://respec.org/ontorespec/model/def/>
 prefix schema: <http://schema.org/>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 prefix vann: <http://purl.org/vocab/vann/>
@@ -1308,7 +1370,6 @@ WHERE {
   $this dct:subject ?ontology;
         respec:documentLanguage ?language.
      
-
   OPTIONAL{
   ?datatypeProperty skos:definition ?datatypePropertyDefinition_original.
   FILTER (LANG(?datatypePropertyDefinition_original) = ?language)
@@ -1325,7 +1386,6 @@ WHERE {
   
   BIND(function:escapeHTML(?datatypePropertyManchesterLabel_original) as ?datatypePropertyManchesterLabel)
   
-  
   OPTIONAL {
     ?prevDatatypeProperty a owl:DatatypeProperty .
     ?prevDatatypeProperty manchester:label ?prevLabel .
@@ -1336,7 +1396,7 @@ WHERE {
   ORDER BY ?datatypePropertyManchesterLabel_original
 }
   BIND(IRI(CONCAT(str(rdf:),"_", str(?member))) as ?rdf_member)  
-  BIND(IF(!BOUND(?datatypeProperty), ?absenceLabel_general, ?unboundDummy) as ?absenceOfDataTypePropertyDefinitions)
+  BIND(IF(!BOUND(?datatypeProperty), ?absenceLabel_general, ?unboundDummy) as ?absenceOfDatatypePropertyDefinitions)
   BIND(IF(BOUND(?datatypePropertyDefinition_original), COALESCE(function:escapeHTML(?datatypePropertyDefinition_original)), ?absenceLabel_entity) as ?datatypePropertyDefinition_text)
 
   # Establishing the full IRI of the datatype property.
@@ -1401,8 +1461,8 @@ WHERE {
 condition:RDF_Properties
   a sh:PropertyShape;
   skos:prefLabel 'The user has requested the specification of ontology RDF properties in the document.'@en;
-  sh:path respec:rdfProperties;
-  sh:hasValue true.
+  sh:path respec:include;
+  sh:hasValue "rdfproperties".
 
 rule:RDF_Properties
   a sh:SPARQLRule;
@@ -1419,7 +1479,7 @@ prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix respec: <https://respec.org/model/def/>
+prefix respec: <https://respec.org/ontorespec/model/def/>
 prefix schema: <http://schema.org/>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 prefix vann: <http://purl.org/vocab/vann/>
@@ -1642,17 +1702,17 @@ WHERE {
 }
 """.
 
-condition:Nodeshapes
+condition:NodeShapes
   a sh:PropertyShape;
   skos:prefLabel 'The user has requested the specification of ontology nodeshapes in the document.'@en;
-  sh:path respec:nodeshapes;
-  sh:hasValue true.
+  sh:path respec:include;
+  sh:hasValue "nodeshapes".
 
 rule:NodeShapes
   a sh:SPARQLRule;
-  skos:prefLabel 'Node shapes rule'@en;
-  rdfs:comment 'The node shapes rule creates a section of node shapes for the ontology in the document.'@en ;
-  sh:condition condition:Nodeshapes;
+  skos:prefLabel 'Node Shapes rule'@en;
+  rdfs:comment 'The Node Shapes rule creates a section of node shapes for the ontology in the document.'@en ;
+  sh:condition condition:NodeShapes;
   sh:construct """
 
 prefix dct: <http://purl.org/dc/terms/>
@@ -1664,7 +1724,7 @@ prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix respec: <https://respec.org/model/def/>
+prefix respec: <https://respec.org/ontorespec/model/def/>
 prefix schema: <http://schema.org/>
 prefix sh: <http://www.w3.org/ns/shacl#>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
@@ -1922,8 +1982,8 @@ construct {
 condition:NamedIndividuals
   a sh:PropertyShape;
   skos:prefLabel 'The user has requested the specification of ontology named individuals in the document.'@en;
-  sh:path respec:namedIndividuals;
-  sh:hasValue true.
+  sh:path respec:include;
+  sh:hasValue "namedindividuals".
 
 rule:NamedIndividuals
   a sh:SPARQLRule;
@@ -1940,7 +2000,7 @@ prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix respec: <https://respec.org/model/def/>
+prefix respec: <https://respec.org/ontorespec/model/def/>
 prefix schema: <http://schema.org/>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 prefix vann: <http://purl.org/vocab/vann/>
@@ -2147,26 +2207,14 @@ construct {
 condition:ConceptSchemes
   a sh:PropertyShape;
   skos:prefLabel 'The user has requested the specification of ontology concept schemes in the document.'@en;
-  sh:path respec:conceptSchemes;
-            sh:hasValue true.
-
-condition:ConceptSchemesFalse
-  a sh:PropertyShape;
-  skos:prefLabel 'The user has requested the specification of ontology concept schemes in the document.'@en;
-  sh:path respec:conceptSchemes;
-            sh:hasValue false.
-
-condition:Concepts
-  a sh:PropertyShape;
-  skos:prefLabel 'The user has requested the specification of ontology concepts in the document.'@en;
-  sh:path respec:concepts;
-            sh:hasValue true.
+  sh:path respec:include;
+  sh:hasValue "conceptschemes".
 
 rule:ConceptSchemes
   a sh:SPARQLRule;
   skos:prefLabel 'Concept schemes rule'@en;
   rdfs:comment 'The concept schemes rule creates a document section for concept schemes and their concepts as defined in the ontology.'@en ;
-  sh:condition condition:ConceptSchemes, condition:Concepts;
+  sh:condition condition:ConceptSchemes;
   sh:construct """
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
@@ -2177,7 +2225,7 @@ prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix respec: <https://respec.org/model/def/>
+prefix respec: <https://respec.org/ontorespec/model/def/>
 prefix schema: <http://schema.org/>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 prefix vann: <http://purl.org/vocab/vann/>
@@ -2477,11 +2525,17 @@ construct {
   }
 """.
 
+condition:Concepts
+  a sh:PropertyShape;
+  skos:prefLabel 'The user has requested the specification of ontology concepts in the document.'@en;
+  sh:path respec:include;
+  sh:hasValue "concepts".
+
 rule:Concepts
   a sh:SPARQLRule;
   skos:prefLabel 'Concepts rule'@en;
   rdfs:comment 'The concepts rule creates a document section for the concepts as defined in the ontology.'@en ;
-  sh:condition condition:ConceptSchemesFalse, condition:Concepts;
+  sh:condition condition:Concepts;
   sh:construct """
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
@@ -2492,7 +2546,7 @@ prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix respec: <https://respec.org/model/def/>
+prefix respec: <https://respec.org/ontorespec/model/def/>
 prefix schema: <http://schema.org/>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 prefix vann: <http://purl.org/vocab/vann/>

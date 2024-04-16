@@ -33,9 +33,23 @@
         }
 
         /* Style for download buttons */
-       .download-button {
+        .download-button {
             width: 100%; /* Make buttons equally wide */
             margin-bottom: 10px; /* Add margin between buttons */
+            background-color: #4CAF50; /* Green background */
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+        }
+
+        .download-button:hover {
+            background-color: #45a049; /* Darker green when hovering */
         }
 
         /* Style for the input/output sections */
@@ -52,6 +66,41 @@
         .section-title {
             font-weight: bold;
             margin-bottom: 5px;
+            color: #4CAF50; /* Green color for titles */
+        }
+
+        /* Style for the h1 */
+        h1 {
+            font-family: 'Arial', sans-serif;
+            color: #4CAF50; /* Green color for titles */
+            border-bottom: 2px solid #4CAF50; /* Green border under title */
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Style for textareas */
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+
+        /* Style for submit button */
+        button[type="submit"] {
+            background-color: #4CAF50; /* Green background */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049; /* Darker green when hovering */
         }
     </style>
 </head>
@@ -71,10 +120,6 @@
                     <!-- Checkboxes for document options -->
                     <table>
                         <tr>
-                            <td><label for="classCheckbox">Classes</label></td>
-                            <td><input type="checkbox" id="classCheckbox" name="classes" value="true" checked></td>
-                        </tr>
-                        <tr>
                             <td><label for="conceptSchemeCheckbox">Concept schemes</label></td>
                             <td><input type="checkbox" id="conceptSchemeCheckbox" name="conceptSchemes" value="true" checked></td>
                         </tr>
@@ -82,6 +127,10 @@
                             <td><label for="conceptCheckbox">Concepts</label></td>
                             <td><input type="checkbox" id="conceptCheckbox" name="concepts" value="true" checked></td>
                         </tr>
+                        <tr>
+                            <td><label for="classCheckbox">Classes</label></td>
+                            <td><input type="checkbox" id="classCheckbox" name="classes" value="true" checked></td>
+                        </tr>                        
                         <tr>
                             <td><label for="objectPropertyCheckbox">Object properties</label></td>
                             <td><input type="checkbox" id="objectPropertyCheckbox" name="objectProperties" value="true" checked></td>
@@ -108,22 +157,25 @@
                     <i>Ontology content:</i>
                     <br>
                     <br>
-                    <label for="textInput">Ontology</label><br>
-                    <textarea id="rdfInput" name="ontology" rows="5" cols="100">{{ontology}}</textarea><br>
-                     <label for="textInput">Introduction</label><br>
-                    <textarea id="rdfInput" name="introduction" rows="5" cols="100">{{introduction}}</textarea><br>
-                     <label for="textInput">Background</label><br>
-                    <textarea id="rdfInput" name="background" rows="5" cols="100">{{background}}</textarea><br>
-                     <label for="textInput">Audience</label><br>
-                    <textarea id="rdfInput" name="audience" rows="5" cols="100">{{audience}}</textarea><br>
-                     <label for="textInput">Objective</label><br>
-                    <textarea id="rdfInput" name="objective" rows="5" cols="100">{{objective}}</textarea><br>
-                     <label for="textInput">Acknowledgements</label><br>
-                    <textarea id="rdfInput" name="acknowledgements" rows="5" cols="100">{{acknowledgements}}</textarea><br>
-                     <label for="textInput">Document Language</label><br>
-                    <textarea id="rdfInput" name="documentLanguage" rows="1" cols="50">{{documentLanguage}}</textarea><br>
-                     <label for="textInput">Document Namespace</label><br>
-                    <textarea id="rdfInput" name="documentNamespace" rows="1" cols="50">{{documentNamespace}}</textarea><br>
+                    <label for="ontologyInput">Ontology</label><br>
+                    <textarea id="ontologyInput" name="ontology" rows="5" cols="100">{{ontology}}</textarea><br>
+                    <label for="introductionInput">Introduction</label><br>
+                    <textarea id="introductionInput" name="introduction" rows="5" cols="100">{{introduction}}</textarea><br>
+                    <label for="backgroundInput">Background</label><br>
+                    <textarea id="backgroundInput" name="background" rows="5" cols="100">{{background}}</textarea><br>
+                    <label for="audienceInput">Audience</label><br>
+                    <textarea id="audienceInput" name="audience" rows="5" cols="100">{{audience}}</textarea><br>
+                    <label for="objectiveInput">Objective</label><br>
+                    <textarea id="objectiveInput" name="objective" rows="5" cols="100">{{objective}}</textarea><br>
+                    <label for="acknowledgementsInput">Acknowledgements</label><br>
+                    <textarea id="acknowledgementsInput" name="acknowledgements" rows="5" cols="100">{{acknowledgements}}</textarea><br>
+                    <label for="documentLanguageSelect">Document Language</label><br>
+                    <select id="documentLanguageSelect" name="documentLanguage">
+                    <option value="en" selected>English</option>
+                    <option value="nl">Dutch</option>
+                    </select><br>
+                    <label for="documentNamespaceInput">Document Namespace</label><br>
+                    <textarea id="documentNamespaceInput" name="documentNamespace" rows="1" cols="50">https://example.org/doc/</textarea><br>
                     <button type="submit">Generate ReSpec Document</button>
                 </form>
             </div>

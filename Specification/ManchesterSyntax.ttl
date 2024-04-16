@@ -16,7 +16,7 @@ prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 prefix function: <https://data.rijksfinancien.nl/manchester/model/function/>
 prefix graph: <https://data.rijksfinancien.nl/manchester/graph/>
 prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
-prefix respec: <https://respec.org/model/def/> 
+prefix respec: <https://respec.org/ontorespec/model/def/> 
 prefix rule: <https://data.rijksfinancien.nl/manchester/model/rule/>
 prefix shp: <https://data.rijksfinancien.nl/manchester/model/shp/>
 prefix standard: <https://data.rijksfinancien.nl/manchester/id/standard/>
