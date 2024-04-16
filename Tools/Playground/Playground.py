@@ -237,11 +237,16 @@ def generateReSpec():
     generationGraph.add((doc[generation_iri], RDF.type, respec.Generation))
     generationGraph.add((doc[generation_iri], respec.documentLanguage, Literal(documentLanguage)))
     generationGraph.add((doc[generation_iri], respec.documentNamespace, Literal(documentNamespace)))
-    generationGraph.add((doc[generation_iri], respec.audience, Literal(audience, lang=documentLanguage)))
-    generationGraph.add((doc[generation_iri], respec.introduction, Literal(introduction, lang=documentLanguage)))
-    generationGraph.add((doc[generation_iri], respec.background, Literal(background, lang=documentLanguage)))
-    generationGraph.add((doc[generation_iri], respec.objective, Literal(objective, lang=documentLanguage)))
-    generationGraph.add((doc[generation_iri], respec.acknowledgements, Literal(acknowledgements, lang=documentLanguage)))
+    if audience != "":
+        generationGraph.add((doc[generation_iri], respec.audience, Literal(audience, lang=documentLanguage)))
+    if introduction != "":
+        generationGraph.add((doc[generation_iri], respec.introduction, Literal(introduction, lang=documentLanguage)))
+    if background != "":
+        generationGraph.add((doc[generation_iri], respec.background, Literal(background, lang=documentLanguage)))
+    if objective != "":
+        generationGraph.add((doc[generation_iri], respec.objective, Literal(objective, lang=documentLanguage)))
+    if acknowledgements != "":
+        generationGraph.add((doc[generation_iri], respec.acknowledgements, Literal(acknowledgements, lang=documentLanguage)))
 
     #2 Establish which components of the ontology need to be specified in the document
     if conceptSchemes.lower() == 'true':
