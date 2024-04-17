@@ -192,7 +192,6 @@ def generateHTML(shaclgraph, serializable_graph):
                 for html in htmlQuery:
                     return html.fragment
 
-
 @app.route('/generateReSpec', methods=['POST'])
 def generateReSpec():
     print("Starting generation of the ReSpec document...")
@@ -208,14 +207,14 @@ def generateReSpec():
     documentNamespace = request.form['documentNamespace']
 
     #2 Retrieve which components of the ontology need to be specified in the document
-    conceptSchemes = request.form.get('conceptSchemes', 'false')
-    concepts = request.form.get('concepts', 'false')
-    classes = request.form.get('classes', 'false')
-    objectProperties = request.form.get('objectProperties', 'false')
-    datatypeProperties = request.form.get('datatypeProperties', 'false')
-    rdfProperties = request.form.get('rdfProperties', 'false')
-    nodeshapes = request.form.get('nodeshapes', 'false')
-    namedIndividuals = request.form.get('namedIndividuals', 'false')
+    conceptSchemes = request.form.get('conceptSchemes') == 'true'
+    concepts = request.form.get('concepts') == 'true'
+    classes = request.form.get('classes') == 'true'
+    objectProperties = request.form.get('objectProperties') == 'true'
+    datatypeProperties = request.form.get('datatypeProperties') == 'true'
+    rdfProperties = request.form.get('rdfProperties') == 'true'
+    nodeshapes = request.form.get('nodeshapes') == 'true'
+    namedIndividuals = request.form.get('namedIndividuals') == 'true'
     
     # Write ontology to file
     ontology_filepath = directory_path + "/OntoReSpec/Tools/Playground/static/ontology.ttl"
@@ -249,28 +248,28 @@ def generateReSpec():
         generationGraph.add((doc[generation_iri], respec.acknowledgements, Literal(acknowledgements, lang=documentLanguage)))
 
     #2 Establish which components of the ontology need to be specified in the document
-    if conceptSchemes.lower() == 'true':
+    if conceptSchemes:
         generationGraph.add((doc[generation_iri], respec.include, Literal("conceptschemes")))
     
-    if concepts.lower() == 'true' and conceptSchemes.lower() == 'false':
+    if concepts and not conceptSchemes:
         generationGraph.add((doc[generation_iri], respec.include, Literal("concepts")))
     
-    if classes.lower() == 'true':
+    if classes:
         generationGraph.add((doc[generation_iri], respec.include, Literal("classes")))
     
-    if objectProperties.lower() == 'true':
+    if objectProperties:
         generationGraph.add((doc[generation_iri], respec.include, Literal("objectproperties")))
     
-    if datatypeProperties.lower() == 'true':
+    if datatypeProperties:
         generationGraph.add((doc[generation_iri], respec.include, Literal("datatypeproperties")))
     
-    if rdfProperties.lower() == 'true':
+    if rdfProperties:
         generationGraph.add((doc[generation_iri], respec.include, Literal("rdfproperties")))
     
-    if nodeshapes.lower() == 'true':
+    if nodeshapes:
         generationGraph.add((doc[generation_iri], respec.include, Literal("nodeshapes")))
     
-    if namedIndividuals.lower() == 'true':
+    if namedIndividuals:
         generationGraph.add((doc[generation_iri], respec.include, Literal("namedindividuals")))
 
     # Let us establish which ontology needs to be documented in ReSpec
@@ -306,11 +305,41 @@ def generateReSpec():
     src_filepath = url_for('static', filename='output.html')
     with open(filepath, 'w', encoding='utf-8') as file:
        file.write(html_fragment)
-    return render_template('index.html', htmlOutput='<iframe src='+ src_filepath + ' width="100%" height="600"></iframe>')
+    return render_template('index.html', htmlOutput='<iframe src='+ src_filepath + ' width="100%" height="600"></iframe>',
+                           ontology=ontology, 
+                           introduction=introduction,
+                           background=background,
+                           audience=audience,
+                           objective=objective,
+                           acknowledgements=acknowledgements,
+                           conceptSchemes = conceptSchemes,
+                           concepts = concepts,
+                           classes = classes,
+                           objectProperties = objectProperties,
+                           datatypeProperties = datatypeProperties,
+                           rdfProperties = rdfProperties,
+                           nodeshapes = nodeshapes,
+                           namedIndividuals = namedIndividuals,
+                           )
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', 
+                           ontology='Place your ontology in turtle code here', 
+                           introduction='Write here an introduction to your ontology.',
+                           background='Write here some background context for your ontology.',
+                           audience='Write here about the indended audience to your ontology.',
+                           objective='Write here about the objective of your ontology.',
+                           acknowledgements='Write here your acknowledgements in relation to your ontology.',
+                           conceptSchemes=True,
+                           concepts=True,
+                           classes=True,
+                           objectProperties=True,
+                           datatypeProperties=True,
+                           rdfProperties=True,
+                           nodeshapes=True,
+                           namedIndividuals=True,
+                           )
 
 if __name__ == '__main__':
     app.run()
