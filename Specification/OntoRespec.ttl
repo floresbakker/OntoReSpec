@@ -2765,7 +2765,7 @@ function:escapeHTML
 function:getPrefixedIRI
     a sh:SPARQLFunction ;
     rdfs:comment "Gets prefixed IRI from full IRI." ;
-    skos:example '''Assume an ontology with namespace "http://example.org/", prefix "ex" and a class "Person" as defined by this ontology. The function call will result in "ex:Person" for the IRI http://example.org/Person''';
+    skos:example '''Assume an ontology with namespace "http://example.org/", prefix "ex" and a class "Person" as defined by this ontology. The function call will result in "ex:Person" for the IRI "http://example.org/Person"''';
     sh:parameter [
         sh:path function:IRI ;
         sh:datatype xsd:anyURI ;
@@ -2811,10 +2811,10 @@ SELECT ?result WHERE {
     # Establish the local name
     bind(strafter(?fullIRI, str(?namespace)) as ?localName) # e.g. "Person"
 
-    # Establish the prefixed IRI if possible
+    # Establish the prefixed IRI if prefix and localName exist, e.g. "ex:Person" or None
     bind(concat(str(?prefix),":",?localName) as ?prefixedIRI)
   }
-  # Establish result, either a prefixed IRI or the full IRI
+  # Establish result, either a prefixed IRI or the full IRI, e.g. "ex:Person" or "http://example.org/Person"
   bind(coalesce(?prefixedIRI, ?defaultFullIRI) as ?result)
 }
   """ .
