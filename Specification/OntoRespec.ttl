@@ -1,17 +1,17 @@
-@prefix condition: <https://data.rijksfinancien.nl/html/model/condition/>.
+@prefix condition: <https://respec.org/ontorespec/model/condition/>.
 @prefix dct: <http://purl.org/dc/terms/>.
 @prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>.
 @prefix template: <https://respec.org/ontorespec/id/> .
-@prefix function: <https://data.rijksfinancien.nl/html/model/function/>.
+@prefix function: <https://respec.org/ontorespec/model/function/>.
 @prefix html: <https://data.rijksfinancien.nl/html/model/def/> .
 @prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix respec: <https://respec.org/ontorespec/model/def/> .
-@prefix rule: <https://data.rijksfinancien.nl/html/model/rule/>.
-@prefix shp: <https://data.rijksfinancien.nl/html/model/shp/>.
-@prefix target: <https://data.rijksfinancien.nl/html/model/target/>.
+@prefix rule: <https://respec.org/ontorespec/model/rule/>.
+@prefix shp: <https://respec.org/ontorespec/model/shp/>.
+@prefix target: <https://respec.org/ontorespec/model/target/>.
 @prefix sh: <http://www.w3.org/ns/shacl#>.
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
 @prefix skos: <http://www.w3.org/2004/02/skos/core#>.
@@ -35,6 +35,7 @@ rule:Document
   sh:construct """
 prefix dct: <http://purl.org/dc/terms/>
 prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix function: <https://respec.org/ontorespec/model/function/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
 prefix prov: <http://www.w3.org/ns/prov#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
@@ -56,11 +57,11 @@ construct {
         respec:documentNamespace ?namespace.
   ?template         rdf:type respec:Template;
                     rdf:_1 ?root.
-  ?root  a html:Html;
+  ?root  a html:Html.
   
   # Create identifiers
-  bind(iri(concat(str(?template),'-instance')) as ?documentID)
-  bind(iri(concat(str(?root),'-instance')) as ?rootID)
+  bind(function:getElementIRI(?template, ?namespace) as ?documentID)
+  bind(function:getElementIRI(?root, ?namespace) as ?rootID)
   
 }
 """.
@@ -71,6 +72,7 @@ rule:StaticElement
   rdfs:comment 'The Static Element rule creates a unique element and attaches its structure.'@en ;
   sh:construct """
 prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix function: <https://respec.org/ontorespec/model/function/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
@@ -116,8 +118,8 @@ construct {
   bind(coalesce(?respecFragment, ?htmlFragment) as ?fragment)
   
   # Create identifiers
-  bind(iri(concat(str(?template),'-instance')) as ?elementID)
-  bind(iri(concat(str(?child),'-instance')) as ?childID)
+  bind(function:getElementIRI(?template, ?namespace) as ?elementID)
+  bind(function:getElementIRI(?child, ?namespace) as ?childID)
   
 }
 """.
@@ -128,6 +130,7 @@ rule:OptionalElement
   rdfs:comment 'The Optional Element rule creates a unique element and attaches its structure for optional sections of the document.'@en ;
   sh:construct """
 prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix function: <https://respec.org/ontorespec/model/function/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
@@ -176,9 +179,9 @@ construct {
   bind(coalesce(?respecFragment, ?htmlFragment) as ?fragment)
   
   # Create identifiers
-  bind(iri(concat(str(?template),'-instance')) as ?elementID)
-  bind(iri(concat(str(?child),'-instance')) as ?childID)
-  
+  bind(function:getElementIRI(?template, ?namespace) as ?elementID)
+  bind(function:getElementIRI(?child, ?namespace) as ?childID)
+   
 }
 """.
 
@@ -192,6 +195,7 @@ rule:Title
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
 prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix function: <https://respec.org/ontorespec/model/function/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
@@ -199,12 +203,13 @@ prefix respec: <https://respec.org/ontorespec/model/def/>
 prefix schema: <http://schema.org/>
 
 construct {
-  ?titleID rdf:type html:TextElement;
+  ?elementID rdf:type html:TextElement;
   html:fragment ?ontologyTitle.
     
 } where {
    {$this dct:subject ?ontology;
-         respec:documentLanguage ?language.
+          respec:documentLanguage ?language;
+          respec:documentNamespace ?namespace.
    
    ?template a respec:Title; 
               respec:absenceLabel ?absenceTitle.
@@ -232,8 +237,8 @@ construct {
   BIND(COALESCE(?ontologyTitle1, ?ontologyTitle2, ?ontologyTitle3, ?absenceTitle) as ?ontologyTitle)
   
   # Create identifiers
-  bind(iri(concat(str(?template),'-instance')) as ?titleID)
-    
+  bind(function:getElementIRI(?template, ?namespace) as ?elementID)
+     
 }
 """.
 
@@ -245,7 +250,7 @@ rule:Introduction
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
 prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
-prefix function: <https://data.rijksfinancien.nl/html/model/function/>
+prefix function: <https://respec.org/ontorespec/model/function/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
@@ -254,7 +259,7 @@ prefix schema: <http://schema.org/>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
 construct {
-  ?introductionSectionInstance        rdf:type html:Section;
+  ?elementID                          rdf:type html:Section;
                                       rdf:_1 ?generalIntroductionH2;
                                       rdf:_2 ?generalIntroduction_text;
                                       rdf:_3 ?introductionBackgroundSection;
@@ -296,7 +301,8 @@ construct {
                                       html:fragment ?introductionAudience.
 } where {
 
-   {$this respec:documentLanguage ?language.
+   {$this respec:documentLanguage ?language;
+          respec:documentNamespace ?namespace.
    ?template a respec:Introduction.
    
    ?templateIntroductionTitle a respec:IntroductionTitle;
@@ -346,9 +352,9 @@ construct {
   BIND(COALESCE(?audience, ?absenceAudienceTitle) as ?introductionAudience)
   
   # Create identifiers
-  bind(iri(concat(str(?template),'-instance')) as ?introductionSectionInstance)
-  bind(iri(concat(str(?introductionSectionInstance),'-1')) as ?generalIntroductionH2 )
-  bind(iri(concat(str(?introductionSectionInstance),'-2')) as ?generalIntroduction_text)
+  bind(function:getElementIRI(?template, ?namespace) as ?elementID)
+  bind(iri(concat(str(?elementID),'-1')) as ?generalIntroductionH2 )
+  bind(iri(concat(str(?elementID),'-2')) as ?generalIntroduction_text)
   bind(iri(concat(str(?generalIntroductionH2 ),'-1')) as ?generalIntroduction_title )
     
   bind(iri(concat(str(?introductionSectionInstance),'-3')) as ?introductionBackgroundSection )
@@ -377,6 +383,7 @@ rule:Description
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
 prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix function: <https://respec.org/ontorespec/model/function/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
@@ -385,13 +392,14 @@ prefix schema: <http://schema.org/>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
 construct {
-  ?descriptionTextElementID rdf:type html:TextElement;
+  ?elementID rdf:type html:TextElement;
   html:fragment ?ontologyDescription.
     
 } where {
    {?template a respec:Overview;
               respec:absenceLabel ?absenceLabel.
    $this respec:documentLanguage ?language;
+         respec:documentNamespace ?namespace;
          dct:subject ?ontology.
    FILTER (LANG(?absenceLabel) = ?language)
    }
@@ -417,8 +425,9 @@ construct {
   FILTER (LANG(?ontologyDescription5) = ?language)}
 
   BIND(COALESCE(?ontologyDescription1, ?ontologyDescription2, ?ontologyDescription3, ?ontologyDescription4, ?ontologyDescription5, ?absenceLabel) as ?ontologyDescription)
+
   # Create identifiers
-  bind(iri(concat(str(?template),'-instance')) as ?descriptionTextElementID)
+  bind(function:getElementIRI(?template, ?namespace) as ?elementID)
     
 }
 """.
@@ -431,7 +440,7 @@ rule:Example
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
 prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
-prefix function: <https://data.rijksfinancien.nl/html/model/function/>
+prefix function: <https://respec.org/ontorespec/model/function/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
@@ -440,7 +449,7 @@ prefix schema: <http://schema.org/>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
 construct {
-  ?exampleElementAside   rdf:type html:Aside;
+  ?elementID             rdf:type html:Aside;
                          html:class 'example';
                          rdf:_1 ?exampleParagraph.
   ?exampleParagraph      rdf:type html:P;
@@ -464,8 +473,8 @@ construct {
   BIND(COALESCE(function:escapeHTML(?example), ?absenceLabel) as ?ontologyExample)
   
   # Create identifiers
-  BIND(IRI(CONCAT(STR(?template),'-instance')) as ?exampleElementAside)
-  BIND(IRI(CONCAT(STR(?exampleElementAside), '-1')) as ?exampleParagraph)
+  BIND(function:getElementIRI(?template, ?namespace) as ?elementID)
+  BIND(IRI(CONCAT(STR(?elementID), '-1')) as ?exampleParagraph)
   BIND(IRI(CONCAT(STR(?exampleParagraph),'-1')) as ?examplePre)
   BIND(IRI(CONCAT(STR(?examplePre),'-1')) as ?exampleTextElement)
     
@@ -478,6 +487,7 @@ rule:NameSpace
   rdfs:comment 'The Namespace rule creates a namespace declaration for the ontology in the document.'@en ;
   sh:construct """
 PREFIX dct: <http://purl.org/dc/terms/>
+prefix function: <https://respec.org/ontorespec/model/function/>
 PREFIX html: <https://data.rijksfinancien.nl/html/model/def/> 
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -486,7 +496,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 PREFIX vann: <http://purl.org/vocab/vann/>
 
 construct {
-  ?namespaceTableBodyInstance       ?rdf_member ?namespaceTableDataRow.
+  ?elementID                        ?rdf_member ?namespaceTableDataRow.
   ?namespaceTableDataRow            rdf:type html:Row;
                                     rdf:_1 ?namespacePrefixDataCell;
                                     rdf:_2 ?namespaceIRIDataCell.
@@ -501,6 +511,7 @@ construct {
 
 } where {
   ?template a respec:NameSpace.
+  $this respec:documentNamespace ?namespace.
   {
   SELECT ?prefix ?namespace (COUNT(?prevPrefix) + 2 AS ?member) WHERE {
 
@@ -547,9 +558,10 @@ GROUP BY ?prefix ?namespace
 ORDER BY ?prefix}
 
 BIND(IRI(CONCAT(str(rdf:),"_", str(?member))) as ?rdf_member)
+
 # Create identifiers
-BIND(IRI(CONCAT(STR(?template),'-instance'))                            as ?namespaceTableBodyInstance)
-BIND(IRI(CONCAT(STR(?namespaceTableBodyInstance), '-',STR(?member)))    as ?namespaceTableDataRow)
+BIND(function:getElementIRI(?template, ?namespace)                                as ?elementID)
+BIND(IRI(CONCAT(STR(?elementID), '-',STR(?member)))                     as ?namespaceTableDataRow)
 BIND(IRI(CONCAT(STR(?namespaceTableDataRow),'-1'))                      as ?namespacePrefixDataCell)
 BIND(IRI(CONCAT(STR(?namespaceTableDataRow),'-2'))                      as ?namespaceIRIDataCell)
 BIND(IRI(CONCAT(STR(?namespacePrefixDataCell),'-1'))                    as ?namespacePrefixDataCell_text)
@@ -565,19 +577,21 @@ rule:Abstract
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
 prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix function: <https://respec.org/ontorespec/model/function/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
 prefix respec: <https://respec.org/ontorespec/model/def/> 
 
 construct {
-  ?abstractTextElementID rdf:type html:TextElement;
+  ?elementID rdf:type html:TextElement;
   html:fragment ?ontologyAbstract.
     
 } where {
    {?template a respec:Abstract;
                 respec:absenceLabel ?absenceLabel.
     $this respec:documentLanguage ?language;
+          respec:documentNamespace ?namespace;
           dct:subject ?ontology.}
   FILTER(LANG(?absenceLabel) = ?language)
   
@@ -592,7 +606,7 @@ construct {
   BIND(COALESCE(?ontologyAbstract1, ?ontologyAbstract2, ?absenceLabel) as ?ontologyAbstract)
   
   # Create identifiers
-  bind(iri(concat(str(?template),'-instance')) as ?abstractTextElementID)
+  BIND(function:getElementIRI(?template, ?namespace) as ?elementID)
     
 }""".       
     
@@ -603,6 +617,7 @@ rule:Configuration
   sh:construct """
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
+prefix function: <https://respec.org/ontorespec/model/function/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix prov: <http://www.w3.org/ns/prov#>
@@ -613,7 +628,7 @@ prefix schema: <http://schema.org/>
 
 construct {
   
-  ?configurationElementID rdf:type html:TextElement;
+  ?elementID rdf:type html:TextElement;
   html:fragment ?fragment4.
     
 } where {
@@ -622,6 +637,7 @@ construct {
                respec:absenceLabel ?absenceLabel;
                html:fragment ?fragment.
   $this respec:documentLanguage ?language;
+        respec:documentNamespace ?namespace;
         dct:subject ?ontology.
   FILTER(LANG(?absenceLabel) = ?language)      
         
@@ -658,7 +674,7 @@ construct {
   BIND(REPLACE(?fragment3, 'name: "Your Name"', str(?ontologyAuthors)) as ?fragment4)
   
   # Create identifiers
-  bind(iri(concat(str(?template),'-instance')) as ?configurationElementID)
+  BIND(function:getElementIRI(?template, ?namespace) as ?elementID)
   
 }
 """.  
@@ -678,7 +694,7 @@ rule:Classes
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
 prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
-prefix function: <https://data.rijksfinancien.nl/html/model/function/>
+prefix function: <https://respec.org/ontorespec/model/function/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/>
 prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
@@ -691,7 +707,7 @@ prefix vann: <http://purl.org/vocab/vann/>
 
 construct {
 
-      ?divDefinitionClass1Instance            rdf:type html:Div;
+      ?elementID                              rdf:type html:Div;
                                               ?memberClassString ?divDefinitionClass2Instance;
                                               html:fragment ?absenceOfClassDefinitions.
       ?divDefinitionClass2Instance            rdf:type html:Section;
@@ -806,7 +822,8 @@ where  {
     ?template rdf:type respec:ClassDefinition;
               respec:absenceLabel ?absenceLabel_general.
     $this     dct:subject ?ontology;
-              respec:documentLanguage ?language.
+              respec:documentLanguage ?language;
+              respec:documentNamespace ?namespace.
     []        rdf:type respec:Definition;
               respec:absenceLabel ?absenceLabel_entity. 
     filter (LANG(?absenceLabel_entity)  = ?language)
@@ -914,8 +931,8 @@ where  {
   
   # Create identifiers - generic
   
-  bind(IRI(CONCAT(STR(?template),'-instance')) as ?divDefinitionClass1Instance)
-  bind(IRI(CONCAT(STR(?divDefinitionClass1Instance), '-', str(?memberClass),'-1')) as ?divDefinitionClass2Instance)
+  bind(function:getElementIRI(?template, ?namespace) as ?elementID)
+  bind(IRI(CONCAT(STR(?elementID), '-', str(?memberClass),'-1')) as ?divDefinitionClass2Instance)
   bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-1')) as ?class_title_instance_h2)
   bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-2')) as ?class_IRI_p)
   bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-3')) as ?class_linebreak_instance1)
@@ -985,7 +1002,7 @@ rule:ObjectProperties
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
 prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
-prefix function: <https://data.rijksfinancien.nl/html/model/function/>
+prefix function: <https://respec.org/ontorespec/model/function/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/>
 prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
@@ -998,7 +1015,7 @@ prefix vann: <http://purl.org/vocab/vann/>
 
 construct {
 
-      ?divDefinitionObjectProperty1Instance                   rdf:type html:Div;
+      ?elementID                                              rdf:type html:Div;
                                                               ?rdf_member ?divDefinitionObjectProperty2Instance;
                                                               html:fragment ?absenceOfObjectPropertyDefinitions.
       ?divDefinitionObjectProperty2Instance                   rdf:type html:Section;
@@ -1110,7 +1127,8 @@ where  {
   {?template rdf:type respec:ObjectProperty;
              respec:absenceLabel ?absenceLabel_general. 
     $this     dct:subject ?ontology;
-              respec:documentLanguage ?language.    
+              respec:documentLanguage ?language;
+              respec:documentNamespace ?namespace.              
     []        rdf:type respec:Definition;
               respec:absenceLabel ?absenceLabel_entity. 
     filter (LANG(?absenceLabel_entity)  = ?language)                    
@@ -1161,8 +1179,8 @@ WHERE {
   
   # Create identifiers - generic
   
-  bind(IRI(CONCAT(STR(?template),'-instance')) as ?divDefinitionObjectProperty1Instance)
-  bind(IRI(CONCAT(STR(?divDefinitionObjectProperty1Instance), '-', str(?member),'-1')) as ?divDefinitionObjectProperty2Instance)
+  bind(function:getElementIRI(?template, ?namespace) as ?elementID)
+  bind(IRI(CONCAT(STR(?elementID), '-', str(?member),'-1')) as ?divDefinitionObjectProperty2Instance)
   bind(IRI(CONCAT(STR(?divDefinitionObjectProperty2Instance), '-1')) as ?objectproperty_title_instance_h2)
   bind(IRI(CONCAT(STR(?divDefinitionObjectProperty2Instance), '-2')) as ?objectproperty_IRI_p)
   bind(IRI(CONCAT(STR(?divDefinitionObjectProperty2Instance), '-3')) as ?objectproperty_linebreak_instance1)
@@ -1229,7 +1247,7 @@ rule:DatatypeProperties
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
 prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
-prefix function: <https://data.rijksfinancien.nl/html/model/function/>
+prefix function: <https://respec.org/ontorespec/model/function/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/>
 prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
@@ -1242,7 +1260,7 @@ prefix vann: <http://purl.org/vocab/vann/>
 
 construct {
 
-      ?divDefinitionDatatypeProperty1Instance                   rdf:type html:Div;
+      ?elementID                                              rdf:type html:Div;
                                                               ?rdf_member ?divDefinitionDatatypeProperty2Instance;
                                                               html:fragment ?absenceOfDatatypePropertyDefinitions.
       ?divDefinitionDatatypeProperty2Instance                   rdf:type html:Section;
@@ -1353,7 +1371,8 @@ where  {
   {?template rdf:type respec:DatatypeProperty;
                respec:absenceLabel ?absenceLabel_general. 
    $this     dct:subject ?ontology;
-              respec:documentLanguage ?language.                
+              respec:documentLanguage ?language;
+              respec:documentNamespace ?namespace.
    []        rdf:type respec:Definition;
               respec:absenceLabel ?absenceLabel_entity.
    filter (LANG(?absenceLabel_entity)  = ?language)  
@@ -1405,8 +1424,8 @@ WHERE {
   
   # Create identifiers - generic
   
-  bind(IRI(CONCAT(STR(?template),'-instance')) as ?divDefinitionDatatypeProperty1Instance)
-  bind(IRI(CONCAT(STR(?divDefinitionDatatypeProperty1Instance), '-', str(?member),'-1')) as ?divDefinitionDatatypeProperty2Instance)
+  bind(function:getElementIRI(?template, ?namespace) as ?elementID)
+  bind(IRI(CONCAT(STR(?elementID), '-', str(?member),'-1')) as ?divDefinitionDatatypeProperty2Instance)
   bind(IRI(CONCAT(STR(?divDefinitionDatatypeProperty2Instance), '-1')) as ?datatypeproperty_title_instance_h2)
   bind(IRI(CONCAT(STR(?divDefinitionDatatypeProperty2Instance), '-2')) as ?datatypeproperty_IRI_p)
   bind(IRI(CONCAT(STR(?divDefinitionDatatypeProperty2Instance), '-3')) as ?datatypeproperty_linebreak_instance1)
@@ -1473,7 +1492,7 @@ rule:RDF_Properties
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
 prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
-prefix function: <https://data.rijksfinancien.nl/html/model/function/>
+prefix function: <https://respec.org/ontorespec/model/function/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/>
 prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
@@ -1486,7 +1505,7 @@ prefix vann: <http://purl.org/vocab/vann/>
 
 construct {
 
-      ?divDefinitionRDF_Property1Instance                   rdf:type html:Div;
+      ?elementID                                            rdf:type html:Div;
                                                               ?rdf_member ?divDefinitionRDF_Property2Instance;
                                                               html:fragment ?absenceOfRDF_PropertyDefinitions.
       ?divDefinitionRDF_Property2Instance                   rdf:type html:Section;
@@ -1598,7 +1617,8 @@ where  {
   {?template  rdf:type respec:RDF_Property;
               respec:absenceLabel ?absenceLabel_general.  
     $this     dct:subject ?ontology;
-              respec:documentLanguage ?language. 
+              respec:documentLanguage ?language;
+              respec:documentNamespace ?namespace.
     []        rdf:type respec:Definition;
               respec:absenceLabel ?absenceLabel_entity.
     filter (LANG(?absenceLabel_entity)  = ?language)              
@@ -1649,8 +1669,8 @@ WHERE {
   
   # Create identifiers - generic
   
-  bind(IRI(CONCAT(STR(?template),'-instance')) as ?divDefinitionRDF_Property1Instance)
-  bind(IRI(CONCAT(STR(?divDefinitionRDF_Property1Instance), '-', str(?member),'-1')) as ?divDefinitionRDF_Property2Instance)
+  bind(function:getElementIRI(?template, ?namespace) as ?elementID)
+  bind(IRI(CONCAT(STR(?elementID), '-', str(?member),'-1')) as ?divDefinitionRDF_Property2Instance)
   bind(IRI(CONCAT(STR(?divDefinitionRDF_Property2Instance), '-1')) as ?RDF_Property_title_instance_h2)
   bind(IRI(CONCAT(STR(?divDefinitionRDF_Property2Instance), '-2')) as ?RDF_Property_IRI_p)
   bind(IRI(CONCAT(STR(?divDefinitionRDF_Property2Instance), '-3')) as ?RDF_Property_linebreak_instance1)
@@ -1718,7 +1738,7 @@ rule:NodeShapes
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
 prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
-prefix function: <https://data.rijksfinancien.nl/html/model/function/>
+prefix function: <https://respec.org/ontorespec/model/function/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/>
 prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
@@ -1732,7 +1752,7 @@ prefix vann: <http://purl.org/vocab/vann/>
 
 construct {
 
-  ?chapter                   rdf:type html:Div;
+  ?elementID                 rdf:type html:Div;
                              ?rdf_member ?section;
                              html:fragment ?absenceOfDefinitions.
   ?section                   rdf:type html:Section;
@@ -1856,7 +1876,8 @@ construct {
     {?template rdf:type respec:NodeShape;
               respec:absenceLabel ?absenceLabel_general.
     $this     dct:subject ?ontology;
-              respec:documentLanguage ?language.    
+              respec:documentLanguage ?language;
+              respec:documentNamespace ?namespace.
     []        rdf:type respec:Definition;
               respec:absenceLabel ?absenceLabel_entity.  
     filter (LANG(?absenceLabel_entity)  = ?language)              
@@ -1920,8 +1941,8 @@ construct {
 
     # Create identifiers - generic
 
-    bind(iri(concat(str(?template),'-instance')) as ?chapter)
-    bind(iri(concat(str(?chapter), '-', str(?member),'-1')) as ?section)
+    bind(function:getElementIRI(?template, ?namespace) as ?elementID)
+    bind(iri(concat(str(?elementID), '-', str(?member),'-1')) as ?section)
     bind(iri(concat(str(?section), '-1')) as ?title)
     bind(iri(concat(str(?section), '-2')) as ?IRI)
     bind(iri(concat(str(?section), '-3')) as ?linebreak1)
@@ -1994,7 +2015,7 @@ rule:NamedIndividuals
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
 prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
-prefix function: <https://data.rijksfinancien.nl/html/model/function/>
+prefix function: <https://respec.org/ontorespec/model/function/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/>
 prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
@@ -2007,7 +2028,7 @@ prefix vann: <http://purl.org/vocab/vann/>
 
 construct {
 
-  ?chapter                   rdf:type html:Div;
+  ?elementID                 rdf:type html:Div;
                              ?rdf_member ?section;
                              html:fragment ?absenceOfDefinitions.
   ?section                   rdf:type html:Section;
@@ -2105,7 +2126,8 @@ construct {
     {?template rdf:type respec:NamedIndividual;
               respec:absenceLabel ?absenceLabel_general.  
     $this     dct:subject ?ontology;
-              respec:documentLanguage ?language.              
+              respec:documentLanguage ?language;
+              respec:documentNamespace ?namespace.              
     []        rdf:type respec:Definition;
               respec:absenceLabel ?absenceLabel_entity.  
     filter (LANG(?absenceLabel_entity)  = ?language)
@@ -2157,8 +2179,8 @@ construct {
 
     # Create identifiers - generic
 
-    bind(iri(concat(str(?template),'-instance')) as ?chapter)
-    bind(iri(concat(str(?chapter), '-', str(?member),'-1')) as ?section)
+    bind(function:getElementIRI(?template, ?namespace) as ?elementID)
+    bind(iri(concat(str(?elementID), '-', str(?member),'-1')) as ?section)
     bind(iri(concat(str(?section), '-1')) as ?title)
     bind(iri(concat(str(?section), '-2')) as ?IRI)
     bind(iri(concat(str(?section), '-3')) as ?linebreak1)
@@ -2219,7 +2241,7 @@ rule:ConceptSchemes
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
 prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
-prefix function: <https://data.rijksfinancien.nl/html/model/function/>
+prefix function: <https://respec.org/ontorespec/model/function/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/>
 prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
@@ -2232,7 +2254,7 @@ prefix vann: <http://purl.org/vocab/vann/>
 
 construct {
 
-  ?chapter                rdf:type html:Div;
+  ?elementID              rdf:type html:Div;
                           html:fragment ?absenceOfConceptSchemeDefinitions;
                           ?rdf_memberScheme ?chapter_scheme.
   ?chapter_scheme         rdf:type html:Div;
@@ -2375,7 +2397,8 @@ construct {
     []        rdf:type respec:Definition;
               respec:absenceLabel ?absenceLabel_entity.    
     $this     dct:subject ?ontology;
-              respec:documentLanguage ?language.              
+              respec:documentLanguage ?language;
+              respec:documentNamespace ?namespace.
     filter (LANG(?absenceLabel_general) = ?language)
     filter (LANG(?absenceLabel_entity)  = ?language)
     }
@@ -2453,8 +2476,8 @@ construct {
 
     # Create identifiers - conceptscheme
 
-    bind(iri(concat(str(?template),'-instance')) as ?chapter)
-    bind(iri(concat(str(?chapter), '-', str(?memberScheme))) as ?chapter_scheme)
+    bind(function:getElementIRI(?template, ?namespace) as ?elementID)
+    bind(iri(concat(str(?elementID), '-', str(?memberScheme))) as ?chapter_scheme)
     bind(iri(concat(str(?chapter_scheme),'-', str(?member))) as ?chapter_concept)
     bind(iri(concat(str(?chapter_scheme),'-1')) as ?section_scheme)
     bind(iri(concat(str(?section_scheme), '-1')) as ?title_scheme)
@@ -2540,7 +2563,7 @@ rule:Concepts
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
 prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
-prefix function: <https://data.rijksfinancien.nl/html/model/function/>
+prefix function: <https://respec.org/ontorespec/model/function/>
 prefix html: <https://data.rijksfinancien.nl/html/model/def/>
 prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
@@ -2553,7 +2576,7 @@ prefix vann: <http://purl.org/vocab/vann/>
 
 construct {
 
-  ?chapter_concept           rdf:type html:Div;
+  ?elementID                 rdf:type html:Div;
                              html:fragment ?absenceOfDefinitions;
                              ?rdf_member ?section.
   ?section                   rdf:type html:Section;
@@ -2641,7 +2664,8 @@ construct {
     []        rdf:type respec:Definition;
               respec:absenceLabel ?absenceLabel_entity.    
     $this     dct:subject ?ontology;
-              respec:documentLanguage ?language.              
+              respec:documentLanguage ?language;
+              respec:documentNamespace ?namespace.
     filter (LANG(?absenceLabel_general) = ?language)
     filter (LANG(?absenceLabel_entity)  = ?language)
     }
@@ -2695,8 +2719,8 @@ construct {
 
     # Create identifiers - concept
 
-    bind(iri(concat(str(?template),'-instance')) as ?chapter_concept)
-    bind(iri(concat(str(?chapter_concept), '-', str(?member))) as ?section)
+    bind(function:getElementIRI(?template, ?namespace) as ?elementID)
+    bind(iri(concat(str(?elementID), '-', str(?member))) as ?section)
     bind(iri(concat(str(?section), '-1')) as ?title)
     bind(iri(concat(str(?section), '-2')) as ?IRI)
     bind(iri(concat(str(?section), '-3')) as ?linebreak4)
@@ -2816,5 +2840,40 @@ SELECT ?result WHERE {
   }
   # Establish result, either a prefixed IRI or the full IRI, e.g. "ex:Person" or "http://example.org/Person"
   bind(coalesce(?prefixedIRI, ?defaultFullIRI) as ?result)
+}
+  """ .
+
+function:getElementIRI
+    a sh:SPARQLFunction ;
+    rdfs:comment "Gets the IRI of a ReSpec document element in the requested namespace." ;
+    sh:parameter [
+        sh:path function:element ;
+        sh:datatype xsd:anyURI ;
+        sh:description "The ReSpec template document element." ;
+    ] ;
+    sh:parameter [
+        sh:path function:namespace ;
+        sh:datatype xsd:anyURI ;
+        sh:description "A requested namespace to express the document element in." ;
+    ] ;
+    sh:returnType xsd:anyURI ;
+    sh:select """
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?result WHERE {
+
+  # Establish the local name of the template element
+  bind(strafter(str(?element), "https://respec.org/ontorespec/id/") as ?localName) # e.g. "introduction" in "https://respec.org/ontorespec/id/introduction"
+
+  # Establish the new full IRI, e.g. "https://example.org/doc/introduction-instance"^^xsd:anyUri
+  bind(iri(concat(str(?namespace),?localName, '-instance')) as ?fullIRI)
+
+  # Establish error message to be able to always return a value
+  bind(iri("https://example.com/error") as ?errorMessage)
+  
+  # Establish result, either a new full IRI or an error message in case of failure, e.g. "https:/example.org/doc/introduction-instance"^^xsd:anyUri or "https://example.com/error"^^xsd:anyUri
+  bind(coalesce(?fullIRI, ?errorMessage) as ?result)
 }
   """ .
