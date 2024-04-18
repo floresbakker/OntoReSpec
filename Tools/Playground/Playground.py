@@ -192,6 +192,8 @@ def generateHTML(shaclgraph, serializable_graph):
                 for html in htmlQuery:
                     return html.fragment
 
+
+
 @app.route('/generateReSpec', methods=['POST'])
 def generateReSpec():
     print("Starting generation of the ReSpec document...")
@@ -273,7 +275,26 @@ def generateReSpec():
         generationGraph.add((doc[generation_iri], respec.include, Literal("namedindividuals")))
 
     # Let us establish which ontology needs to be documented in ReSpec
-    generationGraph.parse(data=ontology , format="turtle")
+    try:
+       generationGraph.parse(data=ontology , format="turtle")
+    except Exception as e:
+        error_message = str(e)
+        return render_template('index.html', 
+                               ontology=ontology, 
+                               introduction=introduction,
+                               background=background,
+                               audience=audience,
+                               objective=objective,
+                               acknowledgements=acknowledgements,
+                               conceptSchemes = conceptSchemes,
+                               concepts = concepts,
+                               classes = classes,
+                               objectProperties = objectProperties,
+                               datatypeProperties = datatypeProperties,
+                               rdfProperties = rdfProperties,
+                               nodeshapes = nodeshapes,
+                               namedIndividuals = namedIndividuals,
+                               status='Error: Unable to parse the ontology {}'.format(error_message))
     
     ontologyQuery = generationGraph.query(ontology_query) 
 
@@ -282,16 +303,19 @@ def generateReSpec():
     
     # Generating Mermaid diagram 
     print("Step #1. Creating Mermaid diagram...")
+
     generateDiagram(mermaid_vocabulary, generationGraph)
     writeGraph(generationGraph, 'diagram')
     
     # Enriching the ontology with manchester metadata
     print("Step #2. Creating Manchester Syntax labels...")
+   
     generationGraph = generateManchester(manchester_vocabulary, generationGraph)
     writeGraph(generationGraph, 'manchestersyntax')
     
     # Build the ReSpec structure of the document in RDF
     print("Step #3. Creating ReSpec document structure...")
+
     generationGraph.parse(data=html_vocabulary, format="turtle")
     generationGraph.parse(data=template_graph, format="turtle")
     generationGraph = generateReSpecRDF(respec_vocabulary, generationGraph)
@@ -299,6 +323,7 @@ def generateReSpec():
     
     # Serialize the document to HTML
     print("Step #4. Creating HTML code...")
+
     html_fragment = generateHTML(html_vocabulary, generationGraph)
     print("...Done")
     filepath = directory_path+"/OntoRespec/Tools/Playground/static/output.html"
@@ -320,6 +345,7 @@ def generateReSpec():
                            rdfProperties = rdfProperties,
                            nodeshapes = nodeshapes,
                            namedIndividuals = namedIndividuals,
+                           status ='Ready'
                            )
 
 @app.route('/')
@@ -339,6 +365,7 @@ def index():
                            rdfProperties=True,
                            nodeshapes=True,
                            namedIndividuals=True,
+                           status='Ready'
                            )
 
 if __name__ == '__main__':
