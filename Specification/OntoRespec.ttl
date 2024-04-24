@@ -357,17 +357,17 @@ construct {
   bind(iri(concat(str(?elementID),'-2')) as ?generalIntroduction_text)
   bind(iri(concat(str(?generalIntroductionH2 ),'-1')) as ?generalIntroduction_title )
     
-  bind(iri(concat(str(?introductionSectionInstance),'-3')) as ?introductionBackgroundSection )
+  bind(iri(concat(str(?elementID),'-3')) as ?introductionBackgroundSection )
   bind(iri(concat(str(?introductionBackgroundSection),'-1')) as ?introductionBackgroundH2)
   bind(iri(concat(str(?introductionBackgroundSection),'-2')) as ?introductionBackground_text)
   bind(iri(concat(str(?introductionBackgroundH2),'-1')) as ?introductionBackground_title)
   
-  bind(iri(concat(str(?introductionSectionInstance),'-4')) as ?introductionOntologySection )
+  bind(iri(concat(str(?elementID),'-4')) as ?introductionOntologySection )
   bind(iri(concat(str(?introductionOntologySection),'-1')) as ?introductionOntologyH2)
   bind(iri(concat(str(?introductionOntologySection),'-2')) as ?introductionOntology_text)
   bind(iri(concat(str(?introductionOntologyH2),'-1')) as ?introductionOntology_title)
   
-  bind(iri(concat(str(?introductionSectionInstance),'-5')) as ?introductionAudienceSection )
+  bind(iri(concat(str(?elementID),'-5')) as ?introductionAudienceSection )
   bind(iri(concat(str(?introductionAudienceSection),'-1')) as ?introductionAudienceH2)
   bind(iri(concat(str(?introductionAudienceSection),'-2')) as ?introductionAudience_text)
   bind(iri(concat(str(?introductionAudienceH2),'-1')) as ?introductionAudience_title)
