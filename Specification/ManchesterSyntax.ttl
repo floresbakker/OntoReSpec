@@ -37,8 +37,8 @@ prefix target: <https://data.rijksfinancien.nl/manchester/model/target/>
     dct:license 'http://creativecommons.org/licenses/by/4.0'^^xsd:anyURI;
     dct:publisher <https://www.w3.org/community/manchestersyntax/>;
     dct:source <https://github.com/floresbakker/manchestersyntax/>;
-    dct:subject 'HTML'@en;
-    dct:title 'HTML Ontology'@en;
+    dct:subject 'Manchester Syntax'@en;
+    dct:title 'Manchester Syntax Vocabulary'@en;
     foaf:homepage 'https://www.w3.org/community/manchestersyntax/'^^xsd:anyURI;
     owl:imports
       dct:,

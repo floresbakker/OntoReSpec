@@ -513,13 +513,13 @@ construct {
   ?template a respec:NameSpace.
   $this respec:documentNamespace ?namespace.
   {
-  SELECT ?prefix ?namespace (COUNT(?prevPrefix) + 2 AS ?member) WHERE {
+  SELECT ?prefix ?namespaceDeclaration (COUNT(?prevPrefix) + 2 AS ?member) WHERE {
 
   # Get the namespace declarations for the ontology ordered by prefix
   
      {$this dct:subject ?ontology.
       ?ontology sh:declare ?prefixDeclaration.
-      ?prefixDeclaration sh:namespace ?namespace;
+      ?prefixDeclaration sh:namespace ?namespaceDeclaration;
                          # e.g. "http://example.org/"
                          sh:prefix ?prefix.
       # e.g. "ex"
@@ -529,7 +529,7 @@ construct {
     # Get the namespace declaration for the ontology itself
     {
       $this dct:subject ?ontology.
-      ?ontology vann:preferredNamespaceUri ?namespace;
+      ?ontology vann:preferredNamespaceUri ?namespaceDeclaration;
                 # e.g. "http://example.org/"
                 vann:preferredNamespacePrefix ?prefix.
       # e.g. "ex"
@@ -554,7 +554,7 @@ construct {
     FILTER (?prevPrefix < ?prefix)
   }
 }
-GROUP BY ?prefix ?namespace
+GROUP BY ?prefix ?namespaceDeclaration
 ORDER BY ?prefix}
 
 BIND(IRI(CONCAT(str(rdf:),"_", str(?member))) as ?rdf_member)
