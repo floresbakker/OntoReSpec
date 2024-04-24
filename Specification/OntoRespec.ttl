@@ -461,8 +461,9 @@ construct {
 } where {
   
   ?template a respec:Example;
-                  respec:absenceLabel ?absenceLabel.
+            respec:absenceLabel ?absenceLabel.
   $this respec:documentLanguage ?language;
+        respec:documentNamespace ?namespace;
         dct:subject ?ontology.
   FILTER (LANG(?absenceLabel) = ?language)
   
