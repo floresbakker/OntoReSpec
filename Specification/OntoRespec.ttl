@@ -508,7 +508,7 @@ construct {
   ?namespaceIRIDataCell             rdf:type html:DataCell;
                                     rdf:_1 ?namespaceIRIDataCell_text.
   ?namespaceIRIDataCell_text        rdf:type html:TextElement;
-                                    html:fragment ?namespace.
+                                    html:fragment ?namespaceDeclaration.
 
 } where {
   ?template a respec:NameSpace.
