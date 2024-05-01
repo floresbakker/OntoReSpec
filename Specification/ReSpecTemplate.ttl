@@ -425,7 +425,7 @@ template:42.5.2.1 a respec:StaticElement,
 template:42.5.3 a respec:StaticElement,
         html:TextElement ;
     respec:label "."@en, 
-                 "worden gevonden."@nl;
+                 " worden gevonden."@nl;
     rdfs:label "text element" ;
     html:fragment "." .
     

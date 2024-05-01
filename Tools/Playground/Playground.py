@@ -38,16 +38,17 @@ def writeGraph(graph, name):
 # Get the ReSpec vocabulary and place it in a string
 respec_vocabulary     = readStringFromFile(directory_path + "/OntoReSpec/Specification/OntoRespec.ttl")
 template_graph        = readStringFromFile(directory_path + "/OntoReSpec/Specification/ReSpecTemplate.ttl" )
-html_serialisation    = readStringFromFile(directory_path + "/htmlvoc/Specification/html - core.ttl")
-html_vocabulary       = readStringFromFile(directory_path + "/htmlvoc/Specification/html - core.ttl")
+html_serialisation    = readStringFromFile(directory_path + "/OntoReSpec/Specification/html - core.ttl")
+html_vocabulary       = readStringFromFile(directory_path + "/OntoReSpec/Specification/html - core.ttl")
 manchester_vocabulary = readStringFromFile(directory_path + "/OntoReSpec/Specification/manchestersyntax.ttl")
-mermaid_vocabulary    = readStringFromFile(directory_path + "/OntoMermaid/Specification/mermaid.ttl")
+mermaid_vocabulary    = readStringFromFile(directory_path + "/OntoReSpec/Specification/mermaid.ttl")
 manchester_query      = readStringFromFile(directory_path + "/OntoReSpec/Tools/Playground/static/manchesterQuery.rq")
 mermaid_status_query  = readStringFromFile(directory_path + "/OntoReSpec/Tools/Playground/static/mermaidStatusQuery.rq")
 mermaid_result_query  = readStringFromFile(directory_path + "/OntoReSpec/Tools/Playground/static/mermaidResultQuery.rq")
 html_status_query     = readStringFromFile(directory_path + "/OntoReSpec/Tools/Playground/static/htmlStatusQuery.rq")
 html_result_query     = readStringFromFile(directory_path + "/OntoReSpec/Tools/Playground/static/htmlResultQuery.rq")
 ontology_query        = readStringFromFile(directory_path + "/OntoReSpec/Tools/Playground/static/ontologyQuery.rq")
+
 
 def generateManchester(manchester_generator, serializable_graph):
         
@@ -224,7 +225,7 @@ def generateReSpec():
        file.write(str(ontology))
 
     # Initialize graph
-    generation_iri = hash(ontology + str(datetime.datetime.now()))
+    generation_iri = hash(str(ontology) + str(datetime.datetime.now()))
     generationGraph = Graph()
     doc = Namespace(documentNamespace)
     generationGraph.bind("html", html)
@@ -303,7 +304,6 @@ def generateReSpec():
     
     # Generating Mermaid diagram 
     print("Step #1. Creating Mermaid diagram...")
-
     generateDiagram(mermaid_vocabulary, generationGraph)
     writeGraph(generationGraph, 'diagram')
     
