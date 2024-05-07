@@ -123,7 +123,8 @@ BIND("Hello world" as ?message)
 }''';
     rdfs:isDefinedBy helloworld:.
 
-
-
-
-
+  helloworld:FloresIndividual
+    a helloworld:LinkedDataEnthusiast;
+    skos:definition 'Flores Bakker - an individual'@en;
+    skos:prefLabel 'Flores'@nl, 'Florensio'@pt, 'Floress'@en;
+    rdfs:isDefinedBy helloworld:.    

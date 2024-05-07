@@ -713,23 +713,37 @@ construct {
                                               html:fragment ?absenceOfClassDefinitions.
       ?divDefinitionClass2Instance            rdf:type html:Section;
                                               rdf:_1 ?class_title_instance_h2;
-                                              rdf:_2 ?class_IRI_p;
-                                              rdf:_3 ?class_linebreak_instance1; 
-                                              rdf:_4 ?class_definition_instance;
-                                              rdf:_5 ?class_linebreak_instance2;  
-                                              rdf:_6 ?class_linebreak_instance3;
-                                              rdf:_7 ?manchester_syntax_instance.
+                                              rdf:_2 ?class_label_div;
+                                              rdf:_3 ?class_IRI_div;
+                                              rdf:_4 ?class_linebreak_instance1; 
+                                              rdf:_5 ?class_definition_instance;
+                                              rdf:_6 ?class_linebreak_instance2;  
+                                              rdf:_7 ?class_linebreak_instance3;
+                                              rdf:_8 ?manchester_syntax_instance.
       ?class_title_instance_h2                rdf:type html:H2;
                                               rdf:_1 ?class_dfn_instance.
       ?class_dfn_instance                     rdf:type html:Dfn;
                                               rdf:_1 ?class_title_text_instance.
       ?class_title_text_instance              rdf:type html:TextElement;
                                               html:fragment ?cleanedManchesterLabel.
-      ?class_IRI_p                            rdf:type html:P;
+      ?class_label_div                        rdf:type html:Div;
+                                              rdf:_1 ?class_label_strong;
+                                              rdf:_2 ?class_label_value;
+                                              html:class "container".
+      ?class_label_strong                     rdf:type html:Strong;
+                                              rdf:_1 ?class_label_text;
+                                              html:class "label".
+      ?class_label_text                       rdf:type html:TextElement;
+                                              html:fragment 'Label: '.   
+      ?class_label_value                      rdf:type html:TextElement;
+                                              html:fragment ?label_value_text.                                                
+      ?class_IRI_div                          rdf:type html:Div;
                                               rdf:_1 ?class_IRI_strong;
-                                              rdf:_2 ?class_IRI_a.
+                                              rdf:_2 ?class_IRI_a;
+                                              html:class "container".
       ?class_IRI_strong                       rdf:type html:Strong;
-                                              rdf:_1 ?class_IRI_text.
+                                              rdf:_1 ?class_IRI_text;
+                                              html:class "label".
       ?class_IRI_text                         rdf:type html:TextElement;
                                               html:fragment 'IRI: '.
       ?class_IRI_a                            rdf:type html:A;
@@ -830,20 +844,23 @@ where  {
     filter (LANG(?absenceLabel_entity)  = ?language)
     filter (LANG(?absenceLabel_general) = ?language)
   }
+  
+  
 
   # Get the class from the ontology, the label and description, and the sequence order in which the class appears amidst other classes alphanumerically.
   {
-    select ?class ?manchesterLabel ?classDefinition_original ?seeAlsoLabel ?memberClass ?manchesterDefinition ?manchesterDefinitionS ?memberManchesterEquivalentTo ?memberManchesterSubClassOf
+    select ?class ?manchesterLabel ?classDefinition_original ?seeAlsoLabel ?memberClass ?manchesterDefinition ?manchesterDefinitionS ?memberManchesterEquivalentTo ?memberManchesterSubClassOf ?label_value_text
     where {
       # Get the class ordered alphabetically on its label
       {
-        select ?class ?manchesterLabel ?classDefinition_original ?seeAlsoLabel (count(?prevClass) + 1 as ?memberClass)
+        select ?class ?manchesterLabel ?classDefinition_original ?seeAlsoLabel ?label_value_text (count(?prevClass) + 1 as ?memberClass)
         where {
           ?class manchester:type 'CLASS'.
           ?class manchester:label ?manchesterLabel.
           ?class rdfs:isDefinedBy ?ontology.
           $this  dct:subject ?ontology;
                  respec:documentLanguage ?language2.
+          BIND(function:getLabel(?class, ?language2) as ?label_value_text)
 
           optional
           {
@@ -864,7 +881,7 @@ where  {
             filter(?prevLabel < ?manchesterLabel)
           }
         }
-        group by ?class ?manchesterLabel ?classDefinition_original ?seeAlsoLabel
+        group by ?class ?manchesterLabel ?classDefinition_original ?seeAlsoLabel ?label_value_text
         order by ?manchesterLabel
       }
       optional # EquivalentTo
@@ -935,14 +952,20 @@ where  {
   bind(function:getElementIRI(?template, ?namespace) as ?elementID)
   bind(IRI(CONCAT(STR(?elementID), '-', str(?memberClass),'-1')) as ?divDefinitionClass2Instance)
   bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-1')) as ?class_title_instance_h2)
-  bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-2')) as ?class_IRI_p)
-  bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-3')) as ?class_linebreak_instance1)
-  bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-4')) as ?class_definition_instance)
-  bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-5')) as ?class_linebreak_instance2)
-  bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-6')) as ?class_linebreak_instance3)
-  bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-7')) as ?manchester_syntax_instance)
-  bind(IRI(CONCAT(STR(?class_IRI_p), '-1')) as ?class_IRI_strong)
-  bind(IRI(CONCAT(STR(?class_IRI_p), '-2')) as ?class_IRI_a)
+  bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-2')) as ?class_label_div)
+  bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-3')) as ?class_IRI_div)
+  bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-4')) as ?class_linebreak_instance1)
+  bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-5')) as ?class_definition_instance)
+  bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-6')) as ?class_linebreak_instance2)
+  bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-7')) as ?class_linebreak_instance3)
+  bind(IRI(CONCAT(STR(?divDefinitionClass2Instance), '-8')) as ?manchester_syntax_instance)
+
+  bind(IRI(CONCAT(STR(?class_label_div), '-1')) as ?class_label_strong)
+  bind(IRI(CONCAT(STR(?class_label_div), '-2')) as ?class_label_value)
+  bind(IRI(CONCAT(STR(?class_label_strong), '-1')) as ?class_label_text)
+
+  bind(IRI(CONCAT(STR(?class_IRI_div), '-1')) as ?class_IRI_strong)
+  bind(IRI(CONCAT(STR(?class_IRI_div), '-2')) as ?class_IRI_a)
   bind(IRI(CONCAT(STR(?class_IRI_strong), '-1')) as ?class_IRI_text)
   bind(IRI(CONCAT(STR(?class_IRI_a), '-1')) as ?IRI_value)
   bind(IRI(CONCAT(STR(?class_title_instance_h2), '-1')) as ?class_dfn_instance)
@@ -1021,23 +1044,37 @@ construct {
                                                               html:fragment ?absenceOfObjectPropertyDefinitions.
       ?divDefinitionObjectProperty2Instance                   rdf:type html:Section;
                                                               rdf:_1 ?objectproperty_title_instance_h2;
-                                                              rdf:_2 ?objectproperty_IRI_p;
-                                                              rdf:_3 ?objectproperty_linebreak_instance1; 
-                                                              rdf:_4 ?objectproperty_definition_instance;
-                                                              rdf:_5 ?objectproperty_linebreak_instance2;  
-                                                              rdf:_6 ?objectproperty_linebreak_instance3;
-                                                              rdf:_7 ?manchester_syntax_instance.
+                                                              rdf:_2 ?objectproperty_label_div;
+                                                              rdf:_3 ?objectproperty_IRI_div;
+                                                              rdf:_4 ?objectproperty_linebreak_instance1; 
+                                                              rdf:_5 ?objectproperty_definition_instance;
+                                                              rdf:_6 ?objectproperty_linebreak_instance2;  
+                                                              rdf:_7 ?objectproperty_linebreak_instance3;
+                                                              rdf:_8 ?manchester_syntax_instance.
       ?objectproperty_title_instance_h2                       rdf:type html:H2;
                                                               rdf:_1 ?objectproperty_dfn_instance.
       ?objectproperty_dfn_instance                            rdf:type html:Dfn;
                                                               rdf:_1 ?objectproperty_title_text_instance.
       ?objectproperty_title_text_instance                     rdf:type html:TextElement;
                                                               html:fragment ?objectPropertyManchesterLabel.
-      ?objectproperty_IRI_p                                   rdf:type html:P;
+      ?objectproperty_label_div                               rdf:type html:Div;
+                                                              rdf:_1 ?objectproperty_label_strong;
+                                                              rdf:_2 ?objectproperty_label_value;
+                                                              html:class "container".
+      ?objectproperty_label_strong                            rdf:type html:Strong;
+                                                              rdf:_1 ?objectproperty_label_text;
+                                                              html:class "label".
+      ?objectproperty_label_text                              rdf:type html:TextElement;
+                                                              html:fragment 'Label: '.
+      ?objectproperty_label_value                             rdf:type html:TextElement;
+                                                              html:fragment ?objectproperty_value_text.                                                                   
+      ?objectproperty_IRI_div                                 rdf:type html:Div;
                                                               rdf:_1 ?objectproperty_IRI_strong;
-                                                              rdf:_2 ?objectproperty_IRI_a.
+                                                              rdf:_2 ?objectproperty_IRI_a;
+                                                              html:class "container".
       ?objectproperty_IRI_strong                              rdf:type html:Strong;
-                                                              rdf:_1 ?objectproperty_IRI_text.
+                                                              rdf:_1 ?objectproperty_IRI_text;
+                                                              html:class "label".
       ?objectproperty_IRI_text                                rdf:type html:TextElement;
                                                               html:fragment 'IRI: '.
       ?objectproperty_IRI_a                                   rdf:type html:A;
@@ -1118,8 +1155,7 @@ construct {
       ?objectproperty_linebreak_instance1                          rdf:type html:Br.
       ?objectproperty_linebreak_instance2                          rdf:type html:Br.
       ?objectproperty_linebreak_instance3                          rdf:type html:Br.
-      ?objectproperty_linebreak_instance5                          rdf:type html:Br.
-      ?objectproperty_linebreak_instance6                          rdf:type html:Br.
+
 }
 where  {
 
@@ -1138,13 +1174,14 @@ where  {
   
   # Get the sorted entities from the ontology including semantics
   
-  {SELECT ?objectProperty ?objectPropertyManchesterLabel_original ?objectPropertyManchesterLabel ?objectPropertyDefinition_original ?objectPropertyManchesterDomain ?objectPropertyManchesterRange ?objectPropertyManchesterSubPropertyOf (COUNT(?prevObjectProperty) + 1 AS ?member)
+  {SELECT ?objectProperty ?objectPropertyManchesterLabel_original ?objectPropertyManchesterLabel ?objectPropertyDefinition_original ?objectPropertyManchesterDomain ?objectPropertyManchesterRange ?objectPropertyManchesterSubPropertyOf ?objectproperty_value_text (COUNT(?prevObjectProperty) + 1 AS ?member)
 WHERE {
   ?objectProperty a owl:ObjectProperty .
   ?objectProperty manchester:label ?objectPropertyManchesterLabel_original .
   ?objectProperty rdfs:isDefinedBy ?ontology.
   $this dct:subject ?ontology;
         respec:documentLanguage ?language2.
+  BIND(function:getLabel(?objectProperty, ?language2) as ?objectproperty_value_text)
 
   OPTIONAL{
   ?objectProperty skos:definition ?objectPropertyDefinition_original.
@@ -1166,7 +1203,7 @@ WHERE {
     FILTER(?prevLabel < ?objectPropertyManchesterLabel_original)
   }
 }
-  GROUP BY ?objectPropertyManchesterLabel_original ?objectPropertyManchesterLabel ?objectPropertyDefinition_original ?objectProperty ?objectPropertyManchesterDomain ?objectPropertyManchesterRange ?objectPropertyManchesterSubPropertyOf 
+  GROUP BY ?objectPropertyManchesterLabel_original ?objectPropertyManchesterLabel ?objectPropertyDefinition_original ?objectProperty ?objectPropertyManchesterDomain ?objectPropertyManchesterRange ?objectPropertyManchesterSubPropertyOf ?objectproperty_value_text
   ORDER BY ?objectPropertyManchesterLabel_original
 }
 
@@ -1183,16 +1220,23 @@ WHERE {
   bind(function:getElementIRI(?template, ?namespace) as ?elementID)
   bind(IRI(CONCAT(STR(?elementID), '-', str(?member),'-1')) as ?divDefinitionObjectProperty2Instance)
   bind(IRI(CONCAT(STR(?divDefinitionObjectProperty2Instance), '-1')) as ?objectproperty_title_instance_h2)
-  bind(IRI(CONCAT(STR(?divDefinitionObjectProperty2Instance), '-2')) as ?objectproperty_IRI_p)
-  bind(IRI(CONCAT(STR(?divDefinitionObjectProperty2Instance), '-3')) as ?objectproperty_linebreak_instance1)
-  bind(IRI(CONCAT(STR(?divDefinitionObjectProperty2Instance), '-4')) as ?objectproperty_definition_instance)
-  bind(IRI(CONCAT(STR(?divDefinitionObjectProperty2Instance), '-5')) as ?objectproperty_linebreak_instance2)
-  bind(IRI(CONCAT(STR(?divDefinitionObjectProperty2Instance), '-6')) as ?objectproperty_linebreak_instance3)
-  bind(IRI(CONCAT(STR(?divDefinitionObjectProperty2Instance), '-7')) as ?manchester_syntax_instance)
-  bind(IRI(CONCAT(STR(?objectproperty_IRI_p), '-1')) as ?objectproperty_IRI_strong)
-  bind(IRI(CONCAT(STR(?objectproperty_IRI_p), '-2')) as ?objectproperty_IRI_a)
+  bind(IRI(CONCAT(STR(?divDefinitionObjectProperty2Instance), '-2')) as ?objectproperty_label_div)
+  bind(IRI(CONCAT(STR(?divDefinitionObjectProperty2Instance), '-3')) as ?objectproperty_IRI_div)
+  bind(IRI(CONCAT(STR(?divDefinitionObjectProperty2Instance), '-4')) as ?objectproperty_linebreak_instance1)
+  bind(IRI(CONCAT(STR(?divDefinitionObjectProperty2Instance), '-5')) as ?objectproperty_definition_instance)
+  bind(IRI(CONCAT(STR(?divDefinitionObjectProperty2Instance), '-6')) as ?objectproperty_linebreak_instance2)
+  bind(IRI(CONCAT(STR(?divDefinitionObjectProperty2Instance), '-7')) as ?objectproperty_linebreak_instance3)
+  bind(IRI(CONCAT(STR(?divDefinitionObjectProperty2Instance), '-8')) as ?manchester_syntax_instance)
+
+  bind(IRI(CONCAT(STR(?objectproperty_label_div), '-1')) as ?objectproperty_label_strong)
+  bind(IRI(CONCAT(STR(?objectproperty_label_div), '-2')) as ?objectproperty_label_value)
+  bind(IRI(CONCAT(STR(?objectproperty_label_strong), '-1')) as ?objectproperty_label_text)  
+
+  bind(IRI(CONCAT(STR(?objectproperty_IRI_div), '-1')) as ?objectproperty_IRI_strong)
+  bind(IRI(CONCAT(STR(?objectproperty_IRI_div), '-2')) as ?objectproperty_IRI_a)
   bind(IRI(CONCAT(STR(?objectproperty_IRI_strong), '-1')) as ?objectproperty_IRI_text)
   bind(IRI(CONCAT(STR(?objectproperty_IRI_a), '-1')) as ?IRI_value)
+  
   bind(IRI(CONCAT(STR(?objectproperty_title_instance_h2), '-1')) as ?objectproperty_dfn_instance)
   bind(IRI(CONCAT(STR(?objectproperty_dfn_instance), '-1')) as ?objectproperty_title_text_instance)
     
@@ -1266,23 +1310,37 @@ construct {
                                                               html:fragment ?absenceOfDatatypePropertyDefinitions.
       ?divDefinitionDatatypeProperty2Instance                   rdf:type html:Section;
                                                               rdf:_1 ?datatypeproperty_title_instance_h2;
-                                                              rdf:_2 ?datatypeproperty_IRI_p;
-                                                              rdf:_3 ?datatypeproperty_linebreak_instance1; 
-                                                              rdf:_4 ?datatypeproperty_definition_instance;
-                                                              rdf:_5 ?datatypeproperty_linebreak_instance2;  
-                                                              rdf:_6 ?datatypeproperty_linebreak_instance3;
-                                                              rdf:_7 ?manchester_syntax_instance.
+                                                              rdf:_2 ?datatypeproperty_label_div;
+                                                              rdf:_3 ?datatypeproperty_IRI_div;
+                                                              rdf:_4 ?datatypeproperty_linebreak_instance1; 
+                                                              rdf:_5 ?datatypeproperty_definition_instance;
+                                                              rdf:_6 ?datatypeproperty_linebreak_instance2;  
+                                                              rdf:_7 ?datatypeproperty_linebreak_instance3;
+                                                              rdf:_8 ?manchester_syntax_instance.
       ?datatypeproperty_title_instance_h2                       rdf:type html:H2;
                                                               rdf:_1 ?datatypeproperty_dfn_instance.
       ?datatypeproperty_dfn_instance                            rdf:type html:Dfn;
                                                               rdf:_1 ?datatypeproperty_title_text_instance.
       ?datatypeproperty_title_text_instance                     rdf:type html:TextElement;
                                                               html:fragment ?datatypePropertyManchesterLabel.
-      ?datatypeproperty_IRI_p                                   rdf:type html:P;
+      ?datatypeproperty_label_div                                   rdf:type html:Div;
+                                                              rdf:_1 ?datatypeproperty_label_strong;
+                                                              rdf:_2 ?datatypeproperty_label_value;
+                                                              html:class "container".
+      ?datatypeproperty_label_strong                              rdf:type html:Strong;
+                                                              rdf:_1 ?datatypeproperty_label_text;
+                                                              html:class "label".
+      ?datatypeproperty_label_text                                rdf:type html:TextElement;
+                                                              html:fragment 'Label: '.
+      ?datatypeproperty_label_value                                rdf:type html:TextElement;
+                                                              html:fragment ?datatypeproperty_value_text.                                                                    
+      ?datatypeproperty_IRI_div                                   rdf:type html:Div;
                                                               rdf:_1 ?datatypeproperty_IRI_strong;
-                                                              rdf:_2 ?datatypeproperty_IRI_a.
+                                                              rdf:_2 ?datatypeproperty_IRI_a;
+                                                              html:class "container".
       ?datatypeproperty_IRI_strong                              rdf:type html:Strong;
-                                                              rdf:_1 ?datatypeproperty_IRI_text.
+                                                              rdf:_1 ?datatypeproperty_IRI_text;
+                                                              html:class "label".
       ?datatypeproperty_IRI_text                                rdf:type html:TextElement;
                                                               html:fragment 'IRI: '.
       ?datatypeproperty_IRI_a                                   rdf:type html:A;
@@ -1363,8 +1421,7 @@ construct {
       ?datatypeproperty_linebreak_instance1                          rdf:type html:Br.
       ?datatypeproperty_linebreak_instance2                          rdf:type html:Br.
       ?datatypeproperty_linebreak_instance3                          rdf:type html:Br.
-      ?datatypeproperty_linebreak_instance5                          rdf:type html:Br.
-      ?datatypeproperty_linebreak_instance6                          rdf:type html:Br.
+
 }
 where  {
 
@@ -1382,13 +1439,14 @@ where  {
 
   # Get the sorted entities from the ontology including semantics
   
-  {SELECT ?datatypeProperty ?datatypePropertyManchesterLabel_original ?datatypePropertyManchesterLabel ?datatypePropertyDefinition_original ?datatypePropertyManchesterDomain ?datatypePropertyManchesterRange ?datatypePropertyManchesterSubPropertyOf (COUNT(?prevDatatypeProperty) + 1 AS ?member)
+  {SELECT ?datatypeProperty ?datatypePropertyManchesterLabel_original ?datatypePropertyManchesterLabel ?datatypePropertyDefinition_original ?datatypePropertyManchesterDomain ?datatypePropertyManchesterRange ?datatypePropertyManchesterSubPropertyOf ?datatypeproperty_value_text (COUNT(?prevDatatypeProperty) + 1 AS ?member)
 WHERE {
   ?datatypeProperty a owl:DatatypeProperty .
   ?datatypeProperty manchester:label ?datatypePropertyManchesterLabel_original .
   ?datatypeProperty rdfs:isDefinedBy ?ontology.
   $this dct:subject ?ontology;
         respec:documentLanguage ?language2.
+  BIND(function:getLabel(?datatypeProperty, ?language2) as ?datatypeproperty_value_text)        
      
   OPTIONAL{
   ?datatypeProperty skos:definition ?datatypePropertyDefinition_original.
@@ -1412,7 +1470,7 @@ WHERE {
     FILTER(?prevLabel < ?datatypePropertyManchesterLabel_original)
    }
   }
-  GROUP BY ?datatypePropertyManchesterLabel_original ?datatypePropertyManchesterLabel ?datatypePropertyDefinition_original ?datatypeProperty ?datatypePropertyManchesterDomain ?datatypePropertyManchesterRange ?datatypePropertyManchesterSubPropertyOf 
+  GROUP BY ?datatypePropertyManchesterLabel_original ?datatypePropertyManchesterLabel ?datatypePropertyDefinition_original ?datatypeProperty ?datatypePropertyManchesterDomain ?datatypePropertyManchesterRange ?datatypePropertyManchesterSubPropertyOf ?datatypeproperty_value_text
   ORDER BY ?datatypePropertyManchesterLabel_original
 }
   BIND(IRI(CONCAT(str(rdf:),"_", str(?member))) as ?rdf_member)  
@@ -1428,16 +1486,23 @@ WHERE {
   bind(function:getElementIRI(?template, ?namespace) as ?elementID)
   bind(IRI(CONCAT(STR(?elementID), '-', str(?member),'-1')) as ?divDefinitionDatatypeProperty2Instance)
   bind(IRI(CONCAT(STR(?divDefinitionDatatypeProperty2Instance), '-1')) as ?datatypeproperty_title_instance_h2)
-  bind(IRI(CONCAT(STR(?divDefinitionDatatypeProperty2Instance), '-2')) as ?datatypeproperty_IRI_p)
-  bind(IRI(CONCAT(STR(?divDefinitionDatatypeProperty2Instance), '-3')) as ?datatypeproperty_linebreak_instance1)
-  bind(IRI(CONCAT(STR(?divDefinitionDatatypeProperty2Instance), '-4')) as ?datatypeproperty_definition_instance)
-  bind(IRI(CONCAT(STR(?divDefinitionDatatypeProperty2Instance), '-5')) as ?datatypeproperty_linebreak_instance2)
-  bind(IRI(CONCAT(STR(?divDefinitionDatatypeProperty2Instance), '-6')) as ?datatypeproperty_linebreak_instance3)
-  bind(IRI(CONCAT(STR(?divDefinitionDatatypeProperty2Instance), '-7')) as ?manchester_syntax_instance)
-  bind(IRI(CONCAT(STR(?datatypeproperty_IRI_p), '-1')) as ?datatypeproperty_IRI_strong)
-  bind(IRI(CONCAT(STR(?datatypeproperty_IRI_p), '-2')) as ?datatypeproperty_IRI_a)
+  bind(IRI(CONCAT(STR(?divDefinitionDatatypeProperty2Instance), '-2')) as ?datatypeproperty_label_div)
+  bind(IRI(CONCAT(STR(?divDefinitionDatatypeProperty2Instance), '-3')) as ?datatypeproperty_IRI_div)
+  bind(IRI(CONCAT(STR(?divDefinitionDatatypeProperty2Instance), '-4')) as ?datatypeproperty_linebreak_instance1)
+  bind(IRI(CONCAT(STR(?divDefinitionDatatypeProperty2Instance), '-5')) as ?datatypeproperty_definition_instance)
+  bind(IRI(CONCAT(STR(?divDefinitionDatatypeProperty2Instance), '-6')) as ?datatypeproperty_linebreak_instance2)
+  bind(IRI(CONCAT(STR(?divDefinitionDatatypeProperty2Instance), '-7')) as ?datatypeproperty_linebreak_instance3)
+  bind(IRI(CONCAT(STR(?divDefinitionDatatypeProperty2Instance), '-8')) as ?manchester_syntax_instance)
+
+  bind(IRI(CONCAT(STR(?datatypeproperty_label_div), '-1')) as ?datatypeproperty_label_strong)
+  bind(IRI(CONCAT(STR(?datatypeproperty_label_div), '-2')) as ?datatypeproperty_label_value)
+  bind(IRI(CONCAT(STR(?datatypeproperty_label_strong), '-1')) as ?datatypeproperty_label_text)  
+
+  bind(IRI(CONCAT(STR(?datatypeproperty_IRI_div), '-1')) as ?datatypeproperty_IRI_strong)
+  bind(IRI(CONCAT(STR(?datatypeproperty_IRI_div), '-2')) as ?datatypeproperty_IRI_a)
   bind(IRI(CONCAT(STR(?datatypeproperty_IRI_strong), '-1')) as ?datatypeproperty_IRI_text)
   bind(IRI(CONCAT(STR(?datatypeproperty_IRI_a), '-1')) as ?IRI_value)
+  
   bind(IRI(CONCAT(STR(?datatypeproperty_title_instance_h2), '-1')) as ?datatypeproperty_dfn_instance)
   bind(IRI(CONCAT(STR(?datatypeproperty_dfn_instance), '-1')) as ?datatypeproperty_title_text_instance)
     
@@ -1511,23 +1576,37 @@ construct {
                                                               html:fragment ?absenceOfRDF_PropertyDefinitions.
       ?divDefinitionRDF_Property2Instance                   rdf:type html:Section;
                                                               rdf:_1 ?RDF_Property_title_instance_h2;
-                                                              rdf:_2 ?RDF_Property_IRI_p;
-                                                              rdf:_3 ?RDF_Property_linebreak_instance1; 
-                                                              rdf:_4 ?RDF_Property_definition_instance;
-                                                              rdf:_5 ?RDF_Property_linebreak_instance2;  
-                                                              rdf:_6 ?RDF_Property_linebreak_instance3;
-                                                              rdf:_7 ?manchester_syntax_instance.
+                                                              rdf:_2 ?RDF_Property_label_div;
+                                                              rdf:_3 ?RDF_Property_IRI_div;
+                                                              rdf:_4 ?RDF_Property_linebreak_instance1; 
+                                                              rdf:_5 ?RDF_Property_definition_instance;
+                                                              rdf:_6 ?RDF_Property_linebreak_instance2;  
+                                                              rdf:_7 ?RDF_Property_linebreak_instance3;
+                                                              rdf:_8 ?manchester_syntax_instance.
       ?RDF_Property_title_instance_h2                       rdf:type html:H2;
                                                               rdf:_1 ?RDF_Property_dfn_instance.
       ?RDF_Property_dfn_instance                            rdf:type html:Dfn;
                                                               rdf:_1 ?RDF_Property_title_text_instance.
       ?RDF_Property_title_text_instance                     rdf:type html:TextElement;
                                                               html:fragment ?RDF_PropertyManchesterLabel.
-      ?RDF_Property_IRI_p                                   rdf:type html:P;
+      ?RDF_Property_label_div                                   rdf:type html:Div;
+                                                              rdf:_1 ?RDF_Property_label_strong;
+                                                              rdf:_2 ?RDF_Property_label_value;
+                                                              html:class "container".
+      ?RDF_Property_label_strong                              rdf:type html:Strong;
+                                                              rdf:_1 ?RDF_Property_label_text;
+                                                              html:class "label".
+      ?RDF_Property_label_text                                rdf:type html:TextElement;
+                                                              html:fragment 'Label: '.
+      ?RDF_Property_label_value                                rdf:type html:TextElement;
+                                                              html:fragment ?RDF_Property_value_text.                                                                          
+      ?RDF_Property_IRI_div                                   rdf:type html:Div;
                                                               rdf:_1 ?RDF_Property_IRI_strong;
-                                                              rdf:_2 ?RDF_Property_IRI_a.
+                                                              rdf:_2 ?RDF_Property_IRI_a;
+                                                              html:class "container".
       ?RDF_Property_IRI_strong                              rdf:type html:Strong;
-                                                              rdf:_1 ?RDF_Property_IRI_text.
+                                                              rdf:_1 ?RDF_Property_IRI_text;
+                                                              html:class "label".
       ?RDF_Property_IRI_text                                rdf:type html:TextElement;
                                                               html:fragment 'IRI: '.
       ?RDF_Property_IRI_a                                   rdf:type html:A;
@@ -1608,8 +1687,7 @@ construct {
       ?RDF_Property_linebreak_instance1                          rdf:type html:Br.
       ?RDF_Property_linebreak_instance2                          rdf:type html:Br.
       ?RDF_Property_linebreak_instance3                          rdf:type html:Br.
-      ?RDF_Property_linebreak_instance5                          rdf:type html:Br.
-      ?RDF_Property_linebreak_instance6                          rdf:type html:Br.
+
 }
 where  {
 
@@ -1629,13 +1707,14 @@ where  {
 
   # Get the sorted entities from the ontology including semantics
   
-  {SELECT ?RDF_Property ?RDF_PropertyManchesterLabel_original ?RDF_PropertyManchesterLabel ?RDF_PropertyDefinition_original ?RDF_PropertyManchesterDomain ?RDF_PropertyManchesterRange ?RDF_PropertyManchesterSubPropertyOf (COUNT(?prevRDF_Property) + 1 AS ?member)
+  {SELECT ?RDF_Property ?RDF_PropertyManchesterLabel_original ?RDF_PropertyManchesterLabel ?RDF_PropertyDefinition_original ?RDF_PropertyManchesterDomain ?RDF_PropertyManchesterRange ?RDF_PropertyManchesterSubPropertyOf ?RDF_Property_value_text (COUNT(?prevRDF_Property) + 1 AS ?member)
 WHERE {
   ?RDF_Property a rdf:Property .
   ?RDF_Property manchester:label ?RDF_PropertyManchesterLabel_original .
   ?RDF_Property rdfs:isDefinedBy ?ontology.
   $this dct:subject ?ontology;
         respec:documentLanguage ?language2.
+  BIND(function:getLabel(?RDF_Property, ?language2) as ?RDF_Property_value_text)        
 
   OPTIONAL{
   ?RDF_Property skos:definition ?RDF_PropertyDefinition_original.
@@ -1656,7 +1735,7 @@ WHERE {
     FILTER(?prevLabel < ?RDF_PropertyManchesterLabel_original)
   }
 }
-  GROUP BY ?RDF_PropertyManchesterLabel_original ?RDF_PropertyManchesterLabel ?RDF_PropertyDefinition_original ?RDF_Property ?RDF_PropertyManchesterDomain ?RDF_PropertyManchesterRange ?RDF_PropertyManchesterSubPropertyOf
+  GROUP BY ?RDF_PropertyManchesterLabel_original ?RDF_PropertyManchesterLabel ?RDF_PropertyDefinition_original ?RDF_Property ?RDF_PropertyManchesterDomain ?RDF_PropertyManchesterRange ?RDF_PropertyManchesterSubPropertyOf ?RDF_Property_value_text
   ORDER BY ?RDF_PropertyManchesterLabel_original
 }
 
@@ -1673,16 +1752,23 @@ WHERE {
   bind(function:getElementIRI(?template, ?namespace) as ?elementID)
   bind(IRI(CONCAT(STR(?elementID), '-', str(?member),'-1')) as ?divDefinitionRDF_Property2Instance)
   bind(IRI(CONCAT(STR(?divDefinitionRDF_Property2Instance), '-1')) as ?RDF_Property_title_instance_h2)
-  bind(IRI(CONCAT(STR(?divDefinitionRDF_Property2Instance), '-2')) as ?RDF_Property_IRI_p)
-  bind(IRI(CONCAT(STR(?divDefinitionRDF_Property2Instance), '-3')) as ?RDF_Property_linebreak_instance1)
-  bind(IRI(CONCAT(STR(?divDefinitionRDF_Property2Instance), '-4')) as ?RDF_Property_definition_instance)
-  bind(IRI(CONCAT(STR(?divDefinitionRDF_Property2Instance), '-5')) as ?RDF_Property_linebreak_instance2)
-  bind(IRI(CONCAT(STR(?divDefinitionRDF_Property2Instance), '-6')) as ?RDF_Property_linebreak_instance3)
-  bind(IRI(CONCAT(STR(?divDefinitionRDF_Property2Instance), '-7')) as ?manchester_syntax_instance)
-  bind(IRI(CONCAT(STR(?RDF_Property_IRI_p), '-1')) as ?RDF_Property_IRI_strong)
-  bind(IRI(CONCAT(STR(?RDF_Property_IRI_p), '-2')) as ?RDF_Property_IRI_a)
+  bind(IRI(CONCAT(STR(?divDefinitionRDF_Property2Instance), '-2')) as ?RDF_Property_label_div)  
+  bind(IRI(CONCAT(STR(?divDefinitionRDF_Property2Instance), '-3')) as ?RDF_Property_IRI_div)
+  bind(IRI(CONCAT(STR(?divDefinitionRDF_Property2Instance), '-4')) as ?RDF_Property_linebreak_instance1)
+  bind(IRI(CONCAT(STR(?divDefinitionRDF_Property2Instance), '-5')) as ?RDF_Property_definition_instance)
+  bind(IRI(CONCAT(STR(?divDefinitionRDF_Property2Instance), '-6')) as ?RDF_Property_linebreak_instance2)
+  bind(IRI(CONCAT(STR(?divDefinitionRDF_Property2Instance), '-7')) as ?RDF_Property_linebreak_instance3)
+  bind(IRI(CONCAT(STR(?divDefinitionRDF_Property2Instance), '-8')) as ?manchester_syntax_instance)
+
+  bind(IRI(CONCAT(STR(?RDF_Property_label_div), '-1')) as ?RDF_Property_label_strong)
+  bind(IRI(CONCAT(STR(?RDF_Property_label_div), '-2')) as ?RDF_Property_label_value)
+  bind(IRI(CONCAT(STR(?RDF_Property_label_strong), '-1')) as ?RDF_Property_label_text)  
+  
+  bind(IRI(CONCAT(STR(?RDF_Property_IRI_div), '-1')) as ?RDF_Property_IRI_strong)
+  bind(IRI(CONCAT(STR(?RDF_Property_IRI_div), '-2')) as ?RDF_Property_IRI_a)
   bind(IRI(CONCAT(STR(?RDF_Property_IRI_strong), '-1')) as ?RDF_Property_IRI_text)
   bind(IRI(CONCAT(STR(?RDF_Property_IRI_a), '-1')) as ?IRI_value)
+
   bind(IRI(CONCAT(STR(?RDF_Property_title_instance_h2), '-1')) as ?RDF_Property_dfn_instance)
   bind(IRI(CONCAT(STR(?RDF_Property_dfn_instance), '-1')) as ?RDF_Property_title_text_instance)
     
@@ -1758,23 +1844,37 @@ construct {
                              html:fragment ?absenceOfDefinitions.
   ?section                   rdf:type html:Section;
                              rdf:_1 ?title;
-                             rdf:_2 ?IRI;
-                             rdf:_3 ?linebreak1;
-                             rdf:_4 ?definition;
-                             rdf:_5 ?linebreak2;
-                             rdf:_6 ?linebreak3;
-                             rdf:_7 ?manchester_syntax.
+                             rdf:_2 ?label;
+                             rdf:_3 ?IRI;
+                             rdf:_4 ?linebreak1;
+                             rdf:_5 ?definition;
+                             rdf:_6 ?linebreak2;
+                             rdf:_7 ?linebreak3;
+                             rdf:_8 ?manchester_syntax.
   ?title                       rdf:type html:H2;
                                rdf:_1 ?dfn.
   ?dfn                            rdf:type html:Dfn;
                                   rdf:_1 ?title_text.
   ?title_text                     rdf:type html:TextElement;
                                   html:fragment ?entityManchesterLabel.
-  ?IRI                                   rdf:type html:P;
+  ?label                                   rdf:type html:Div;
+                                         rdf:_1 ?label_strong;
+                                         rdf:_2 ?label_value;
+                                         html:class "container".
+  ?label_strong                              rdf:type html:Strong;
+                                           rdf:_1 ?label_text;
+                                           html:class "label".
+  ?label_text                                rdf:type html:TextElement;
+                                           html:fragment 'Label: '.  
+  ?label_value                                rdf:type html:TextElement;
+                                           html:fragment ?label_value_text.                                    
+  ?IRI                                   rdf:type html:Div;
                                          rdf:_1 ?IRI_strong;
-                                         rdf:_2 ?IRI_a.
+                                         rdf:_2 ?IRI_a;
+                                         html:class "container".
   ?IRI_strong                              rdf:type html:Strong;
-                                           rdf:_1 ?IRI_text.
+                                           rdf:_1 ?IRI_text;
+                                           html:class "label".
   ?IRI_text                                rdf:type html:TextElement;
                                            html:fragment 'IRI: '.
   ?IRI_a                                   rdf:type html:A;
@@ -1889,7 +1989,7 @@ construct {
     # Get the sorted entities from the ontology including semantics
 
     {
-      select ?entity ?entityManchesterLabel_raw ?entityManchesterLabel ?entityDefinition_raw ?entityManchesterTargetClass ?entityManchesterTargetSPARQL ?entityManchesterTargetSubject ?entityManchesterTargetObject (count(?prevEntity) + 1 as ?member)
+      select ?entity ?entityManchesterLabel_raw ?entityManchesterLabel ?entityDefinition_raw ?entityManchesterTargetClass ?entityManchesterTargetSPARQL ?entityManchesterTargetSubject ?entityManchesterTargetObject ?label_value_text (count(?prevEntity) + 1 as ?member)
 
       where {
 
@@ -1898,6 +1998,7 @@ construct {
         ?entity rdfs:isDefinedBy ?ontology.
         $this dct:subject ?ontology;
               respec:documentLanguage ?language2.
+        BIND(function:getLabel(?entity, ?language2) as ?label_value_text)              
 
         optional{
           ?entity skos:definition ?entityDefinition_raw.
@@ -1928,7 +2029,7 @@ construct {
           filter(?prevLabel < ?entityManchesterLabel_raw)
         }
       }
-      group by ?entityManchesterLabel_raw ?entityManchesterLabel ?entityDefinition_raw ?entity ?entityManchesterTargetClass ?entityManchesterTargetSPARQL ?entityManchesterTargetSubject ?entityManchesterTargetObject
+      group by ?entityManchesterLabel_raw ?entityManchesterLabel ?entityDefinition_raw ?entity ?entityManchesterTargetClass ?entityManchesterTargetSPARQL ?entityManchesterTargetSubject ?entityManchesterTargetObject ?label_value_text
       order by ?entityManchesterLabel_raw
     }
 
@@ -1945,16 +2046,23 @@ construct {
     bind(function:getElementIRI(?template, ?namespace) as ?elementID)
     bind(iri(concat(str(?elementID), '-', str(?member),'-1')) as ?section)
     bind(iri(concat(str(?section), '-1')) as ?title)
-    bind(iri(concat(str(?section), '-2')) as ?IRI)
-    bind(iri(concat(str(?section), '-3')) as ?linebreak1)
-    bind(iri(concat(str(?section), '-4')) as ?definition)
-    bind(iri(concat(str(?section), '-5')) as ?linebreak2)
-    bind(iri(concat(str(?section), '-6')) as ?linebreak3)
-    bind(iri(concat(str(?section), '-7')) as ?manchester_syntax)
+    bind(iri(concat(str(?section), '-2')) as ?label)
+    bind(iri(concat(str(?section), '-3')) as ?IRI)
+    bind(iri(concat(str(?section), '-4')) as ?linebreak1)
+    bind(iri(concat(str(?section), '-5')) as ?definition)
+    bind(iri(concat(str(?section), '-6')) as ?linebreak2)
+    bind(iri(concat(str(?section), '-7')) as ?linebreak3)
+    bind(iri(concat(str(?section), '-8')) as ?manchester_syntax)
+
+    bind(iri(concat(str(?label), '-1')) as ?label_strong)
+    bind(iri(concat(str(?label), '-2')) as ?label_value)
+    bind(iri(concat(str(?label_strong), '-1')) as ?label_text)
+    
     bind(iri(concat(str(?IRI), '-1')) as ?IRI_strong)
     bind(iri(concat(str(?IRI), '-2')) as ?IRI_a)
     bind(iri(concat(str(?IRI_strong), '-1')) as ?IRI_text)
     bind(iri(concat(str(?IRI_a), '-1')) as ?IRI_value_text)
+
     bind(iri(concat(str(?title), '-1')) as ?dfn)
     bind(iri(concat(str(?dfn), '-1')) as ?title_text)
 
@@ -2034,23 +2142,37 @@ construct {
                              html:fragment ?absenceOfDefinitions.
   ?section                   rdf:type html:Section;
                              rdf:_1 ?title;
-                             rdf:_2 ?IRI;
-                             rdf:_3 ?linebreak1;
-                             rdf:_4 ?definition;
-                             rdf:_5 ?linebreak2;
-                             rdf:_6 ?linebreak3;
-                             rdf:_7 ?manchester_syntax.
+                             rdf:_2 ?label;
+                             rdf:_3 ?IRI;
+                             rdf:_4 ?linebreak1;
+                             rdf:_5 ?definition;
+                             rdf:_6 ?linebreak2;
+                             rdf:_7 ?linebreak3;
+                             rdf:_8 ?manchester_syntax.
+  ?label                                   rdf:type html:Div;
+                                         rdf:_1 ?label_strong;
+                                         rdf:_2 ?label_value;
+                                         html:class "container".
+  ?label_strong                              rdf:type html:Strong;
+                                           rdf:_1 ?label_text;
+                                           html:class "label".
+  ?label_text                                rdf:type html:TextElement;
+                                           html:fragment 'Label: '.  
+  ?label_value                                rdf:type html:TextElement;
+                                           html:fragment ?label_value_text.                                  
   ?title                       rdf:type html:H2;
                                rdf:_1 ?dfn.
   ?dfn                            rdf:type html:Dfn;
                                   rdf:_1 ?title_text.
   ?title_text                     rdf:type html:TextElement;
                                   html:fragment ?entityManchesterLabel.
-  ?IRI                                   rdf:type html:P;
+  ?IRI                                   rdf:type html:Div;
                                          rdf:_1 ?IRI_strong;
-                                         rdf:_2 ?IRI_a.
+                                         rdf:_2 ?IRI_a;
+                                         html:class "container".
   ?IRI_strong                              rdf:type html:Strong;
-                                           rdf:_1 ?IRI_text.
+                                           rdf:_1 ?IRI_text;
+                                           html:class "label".
   ?IRI_text                                rdf:type html:TextElement;
                                            html:fragment 'IRI: '.
   ?IRI_a                                   rdf:type html:A;
@@ -2138,7 +2260,7 @@ construct {
     # Get the sorted entities from the ontology including semantics
 
     {
-      select ?entity ?entityManchesterLabel_raw ?entityManchesterLabel ?entityDefinition_raw ?entityManchesterClass ?entityManchesterFact (count(?prevEntity) + 1 as ?member)
+      select ?entity ?entityManchesterLabel_raw ?entityManchesterLabel ?entityDefinition_raw ?entityManchesterClass ?entityManchesterFact ?label_value_text (count(?prevEntity) + 1 as ?member)
 
       where {
 
@@ -2148,6 +2270,7 @@ construct {
                 rdfs:isDefinedBy ?ontology.
         $this dct:subject ?ontology;
               respec:documentLanguage ?language2.
+        BIND(function:getLabel(?entity, ?language2) as ?label_value_text)                
         
         optional{
           ?entity skos:definition ?entityDefinition_raw.
@@ -2166,7 +2289,7 @@ construct {
           filter(?prevLabel < ?entityManchesterLabel_raw)
         }
       }
-      group by ?entityManchesterLabel_raw ?entityManchesterLabel ?entityDefinition_raw ?entity ?entityManchesterClass ?entityManchesterFact
+      group by ?entityManchesterLabel_raw ?entityManchesterLabel ?entityDefinition_raw ?entity ?entityManchesterClass ?entityManchesterFact ?label_value_text
       order by ?entityManchesterLabel_raw
     }
 
@@ -2183,16 +2306,23 @@ construct {
     bind(function:getElementIRI(?template, ?namespace) as ?elementID)
     bind(iri(concat(str(?elementID), '-', str(?member),'-1')) as ?section)
     bind(iri(concat(str(?section), '-1')) as ?title)
-    bind(iri(concat(str(?section), '-2')) as ?IRI)
-    bind(iri(concat(str(?section), '-3')) as ?linebreak1)
-    bind(iri(concat(str(?section), '-4')) as ?definition)
-    bind(iri(concat(str(?section), '-5')) as ?linebreak2)
-    bind(iri(concat(str(?section), '-6')) as ?linebreak3)
-    bind(iri(concat(str(?section), '-7')) as ?manchester_syntax)
+    bind(iri(concat(str(?section), '-2')) as ?label)
+    bind(iri(concat(str(?section), '-3')) as ?IRI)
+    bind(iri(concat(str(?section), '-4')) as ?linebreak1)
+    bind(iri(concat(str(?section), '-5')) as ?definition)
+    bind(iri(concat(str(?section), '-6')) as ?linebreak2)
+    bind(iri(concat(str(?section), '-7')) as ?linebreak3)
+    bind(iri(concat(str(?section), '-8')) as ?manchester_syntax)
+
+    bind(iri(concat(str(?label), '-1')) as ?label_strong)
+    bind(iri(concat(str(?label), '-2')) as ?label_value)
+    bind(iri(concat(str(?label_strong), '-1')) as ?label_text)
+    
     bind(iri(concat(str(?IRI), '-1')) as ?IRI_strong)
     bind(iri(concat(str(?IRI), '-2')) as ?IRI_a)
     bind(iri(concat(str(?IRI_strong), '-1')) as ?IRI_text)
     bind(iri(concat(str(?IRI_a), '-1')) as ?IRI_value_text)
+    
     bind(iri(concat(str(?title), '-1')) as ?dfn)
     bind(iri(concat(str(?dfn), '-1')) as ?title_text)
 
@@ -2263,23 +2393,37 @@ construct {
                           ?rdf_member ?chapter_concept.
   ?section_scheme         rdf:type html:Section;
                           rdf:_1 ?title_scheme;
-                          rdf:_2 ?IRI_scheme;
-                          rdf:_3 ?linebreak1;
-                          rdf:_4 ?definition_scheme;
-                          rdf:_5 ?linebreak2;
-                          rdf:_6 ?linebreak3;
-                          rdf:_7 ?manchester_syntax_scheme.
+                          rdf:_2 ?label_scheme;
+                          rdf:_3 ?IRI_scheme;
+                          rdf:_4 ?linebreak1;
+                          rdf:_5 ?definition_scheme;
+                          rdf:_6 ?linebreak2;
+                          rdf:_7 ?linebreak3;
+                          rdf:_8 ?manchester_syntax_scheme.
   ?title_scheme           rdf:type html:H2;
                           rdf:_1 ?dfn_scheme.
   ?dfn_scheme                  rdf:type html:Dfn;
                                rdf:_1 ?title_text_scheme.
   ?title_text_scheme                     rdf:type html:TextElement;
                                   html:fragment ?conceptSchemeLabel.
-  ?IRI_scheme                                   rdf:type html:P;
+  ?label_scheme                                   rdf:type html:Div;
+                                                rdf:_1 ?label_strong_scheme;
+                                                rdf:_2 ?label_value_scheme;
+                                                html:class "container".
+  ?label_strong_scheme                            rdf:type html:Strong;
+                                                  rdf:_1 ?label_text_scheme;
+                                                  html:class "label".
+  ?label_text_scheme                              rdf:type html:TextElement;
+                                                  html:fragment 'Label: '.   
+  ?label_value_scheme                              rdf:type html:TextElement;
+                                                  html:fragment ?scheme_label_text.                                                  
+  ?IRI_scheme                                   rdf:type html:Div;
                                                 rdf:_1 ?IRI_strong_scheme;
-                                                rdf:_2 ?IRI_a_scheme.
+                                                rdf:_2 ?IRI_a_scheme;
+                                                html:class "container".                                               
   ?IRI_strong_scheme                              rdf:type html:Strong;
-                                                  rdf:_1 ?IRI_text_scheme.
+                                                  rdf:_1 ?IRI_text_scheme;
+                                                  html:class "label".
   ?IRI_text_scheme                                rdf:type html:TextElement;
                                                   html:fragment 'IRI: '.
   ?IRI_a_scheme                                   rdf:type html:A;
@@ -2315,23 +2459,37 @@ construct {
                              ?rdf_member ?section.
   ?section                   rdf:type html:Section;
                              rdf:_1 ?title;
-                             rdf:_2 ?IRI;
-                             rdf:_3 ?linebreak4;
-                             rdf:_4 ?definition;
-                             rdf:_5 ?linebreak5;
-                             rdf:_6 ?linebreak6;
-                             rdf:_7 ?manchester_syntax.
+                             rdf:_2 ?label;
+                             rdf:_3 ?IRI;
+                             rdf:_4 ?linebreak4;
+                             rdf:_5 ?definition;
+                             rdf:_6 ?linebreak5;
+                             rdf:_7 ?linebreak6;
+                             rdf:_8 ?manchester_syntax.
   ?title                       rdf:type html:H2;
                                rdf:_1 ?dfn.
   ?dfn                            rdf:type html:Dfn;
                                   rdf:_1 ?title_text.
   ?title_text                     rdf:type html:TextElement;
                                   html:fragment ?conceptLabel.
-  ?IRI                                   rdf:type html:P;
+  ?label                                   rdf:type html:Div;
+                                         rdf:_1 ?label_strong;
+                                         rdf:_2 ?label_value;
+                                         html:class "container".
+  ?label_strong                              rdf:type html:Strong;
+                                           rdf:_1 ?label_text;
+                                           html:class "label".
+  ?label_text                                rdf:type html:TextElement;
+                                           html:fragment 'Label: '.
+  ?label_value                                rdf:type html:TextElement;
+                                           html:fragment ?label_value_text.
+  ?IRI                                   rdf:type html:Div;
                                          rdf:_1 ?IRI_strong;
-                                         rdf:_2 ?IRI_a.
+                                         rdf:_2 ?IRI_a;
+                                         html:class "container".
   ?IRI_strong                              rdf:type html:Strong;
-                                           rdf:_1 ?IRI_text.
+                                           rdf:_1 ?IRI_text;
+                                           html:class "label".
   ?IRI_text                                rdf:type html:TextElement;
                                            html:fragment 'IRI: '.
   ?IRI_a                                   rdf:type html:A;
@@ -2383,7 +2541,9 @@ construct {
   ?manchester_syntax_definition_inscheme_value_text         rdf:type html:TextElement;
                                                             html:fragment ?inSchemeLabel.
 
-
+  ?linebreak1                          rdf:type html:Br.
+  ?linebreak2                          rdf:type html:Br.
+  ?linebreak3                          rdf:type html:Br.
   ?linebreak4                          rdf:type html:Br.
   ?linebreak5                          rdf:type html:Br.
   ?linebreak6                          rdf:type html:Br.
@@ -2407,7 +2567,7 @@ construct {
     # Get the sorted concepts from the ontology including semantics
 
     {
-      select ?conceptScheme ?concept ?conceptLabel_raw ?conceptLabel ?inSchemeLabel ?conceptDefinition_raw (count(?prevConcept) + 2 as ?member)
+      select ?conceptScheme ?concept ?conceptLabel_raw ?conceptLabel ?inSchemeLabel ?conceptDefinition_raw ?label_value_text (count(?prevConcept) + 2 as ?member)
 
       where {
 
@@ -2418,6 +2578,7 @@ construct {
         ?conceptScheme manchester:label ?inSchemeLabel.
         $this dct:subject ?ontology;
               respec:documentLanguage ?language2.
+        BIND(function:getLabel(?concept, ?language2) as ?label_value_text)    
 
         optional{
           ?concept skos:definition ?conceptDefinition_raw.
@@ -2433,19 +2594,20 @@ construct {
           filter(?prevLabel < ?conceptLabel_raw)
         }
       }
-      group by ?conceptScheme ?concept ?conceptLabel_raw ?conceptLabel ?inSchemeLabel ?conceptDefinition_raw
+      group by ?conceptScheme ?concept ?conceptLabel_raw ?conceptLabel ?inSchemeLabel ?conceptDefinition_raw ?label_value_text
       order by ?conceptScheme ?conceptLabel_raw
     }
 
     # Get the sorted concept schemes from the ontology including semantics
     {
-      select ?conceptScheme ?conceptSchemeLabel ?schemeDefinition (count(?prevConceptScheme) + 1 as ?memberScheme)
+      select ?conceptScheme ?conceptSchemeLabel ?schemeDefinition ?scheme_label_text (count(?prevConceptScheme) + 1 as ?memberScheme)
       where {
         ?conceptScheme manchester:syntax 'CONCEPTSCHEME';
                        manchester:label ?conceptSchemeLabel;
                        rdfs:isDefinedBy ?ontology.
         $this dct:subject ?ontology;
               respec:documentLanguage ?language2.
+        BIND(function:getLabel(?conceptScheme, ?language2) as ?scheme_label_text)              
 
         optional
         {
@@ -2460,7 +2622,7 @@ construct {
           filter(?prevSchemeLabel < ?conceptSchemeLabel)
         }
       }
-      group by ?conceptSchemeLabel ?conceptScheme ?schemeDefinition
+      group by ?conceptSchemeLabel ?conceptScheme ?schemeDefinition ?scheme_label_text
       order by ?conceptScheme
     }
 
@@ -2482,12 +2644,18 @@ construct {
     bind(iri(concat(str(?chapter_scheme),'-', str(?member))) as ?chapter_concept)
     bind(iri(concat(str(?chapter_scheme),'-1')) as ?section_scheme)
     bind(iri(concat(str(?section_scheme), '-1')) as ?title_scheme)
-    bind(iri(concat(str(?section_scheme), '-2')) as ?IRI_scheme)
-    bind(iri(concat(str(?section_scheme), '-3')) as ?linebreak1)
-    bind(iri(concat(str(?section_scheme), '-4')) as ?definition_scheme)
-    bind(iri(concat(str(?section_scheme), '-5')) as ?linebreak2)
-    bind(iri(concat(str(?section_scheme), '-6')) as ?linebreak3)
-    bind(iri(concat(str(?section_scheme), '-7')) as ?manchester_syntax_scheme)
+    bind(iri(concat(str(?section_scheme), '-2')) as ?label_scheme)
+    bind(iri(concat(str(?section_scheme), '-3')) as ?IRI_scheme)
+    bind(iri(concat(str(?section_scheme), '-4')) as ?linebreak1)
+    bind(iri(concat(str(?section_scheme), '-5')) as ?definition_scheme)
+    bind(iri(concat(str(?section_scheme), '-6')) as ?linebreak2)
+    bind(iri(concat(str(?section_scheme), '-7')) as ?linebreak3)
+    bind(iri(concat(str(?section_scheme), '-8')) as ?manchester_syntax_scheme)
+
+    bind(iri(concat(str(?label_scheme), '-1')) as ?label_strong_scheme)
+    bind(iri(concat(str(?label_scheme), '-2')) as ?label_value_scheme)
+    bind(iri(concat(str(?label_strong_scheme), '-1')) as ?label_text_scheme)
+    
     bind(iri(concat(str(?IRI_scheme), '-1')) as ?IRI_strong_scheme)
     bind(iri(concat(str(?IRI_scheme), '-2')) as ?IRI_a_scheme)
     bind(iri(concat(str(?IRI_strong_scheme), '-1')) as ?IRI_text_scheme)
@@ -2511,16 +2679,23 @@ construct {
 
     bind(iri(concat(str(?chapter_concept), '-', str(?member),'-1')) as ?section)
     bind(iri(concat(str(?section), '-1')) as ?title)
-    bind(iri(concat(str(?section), '-2')) as ?IRI)
-    bind(iri(concat(str(?section), '-3')) as ?linebreak4)
-    bind(iri(concat(str(?section), '-4')) as ?definition)
-    bind(iri(concat(str(?section), '-5')) as ?linebreak5)
-    bind(iri(concat(str(?section), '-6')) as ?linebreak6)
-    bind(iri(concat(str(?section), '-7')) as ?manchester_syntax)
+    bind(iri(concat(str(?section), '-2')) as ?label)
+    bind(iri(concat(str(?section), '-3')) as ?IRI)
+    bind(iri(concat(str(?section), '-4')) as ?linebreak4)
+    bind(iri(concat(str(?section), '-5')) as ?definition)
+    bind(iri(concat(str(?section), '-6')) as ?linebreak5)
+    bind(iri(concat(str(?section), '-7')) as ?linebreak6)
+    bind(iri(concat(str(?section), '-8')) as ?manchester_syntax)
+    
+    bind(iri(concat(str(?label), '-1')) as ?label_strong)
+    bind(iri(concat(str(?label), '-2')) as ?label_value)
+    bind(iri(concat(str(?label_strong), '-1')) as ?label_text)
+    
     bind(iri(concat(str(?IRI), '-1')) as ?IRI_strong)
     bind(iri(concat(str(?IRI), '-2')) as ?IRI_a)
     bind(iri(concat(str(?IRI_strong), '-1')) as ?IRI_text)
     bind(iri(concat(str(?IRI_a), '-1')) as ?IRI_value_text)
+    
     bind(iri(concat(str(?title), '-1')) as ?dfn)
     bind(iri(concat(str(?dfn), '-1')) as ?title_text)
 
@@ -2582,23 +2757,37 @@ construct {
                              ?rdf_member ?section.
   ?section                   rdf:type html:Section;
                              rdf:_1 ?title;
-                             rdf:_2 ?IRI;
-                             rdf:_3 ?linebreak4;
-                             rdf:_4 ?definition;
-                             rdf:_5 ?linebreak5;
-                             rdf:_6 ?linebreak6;
-                             rdf:_7 ?manchester_syntax.
+                             rdf:_2 ?label;
+                             rdf:_3 ?IRI;
+                             rdf:_4 ?linebreak4;
+                             rdf:_5 ?definition;
+                             rdf:_6 ?linebreak5;
+                             rdf:_7 ?linebreak6;
+                             rdf:_8 ?manchester_syntax.
   ?title                       rdf:type html:H2;
                                rdf:_1 ?dfn.
   ?dfn                            rdf:type html:Dfn;
                                   rdf:_1 ?title_text.
   ?title_text                     rdf:type html:TextElement;
                                   html:fragment ?conceptLabel.
-  ?IRI                                   rdf:type html:P;
+  ?label                                   rdf:type html:Div;
+                                         rdf:_1 ?label_strong;
+                                         rdf:_2 ?label_value;
+                                         html:class "container".
+  ?label_strong                              rdf:type html:Strong;
+                                           rdf:_1 ?label_text;
+                                           html:class "label".
+  ?label_text                                rdf:type html:TextElement;
+                                           html:fragment 'Label: '.
+  ?label_value                                rdf:type html:TextElement;
+                                           html:fragment ?label_value_text.                                  
+  ?IRI                                   rdf:type html:Div;
                                          rdf:_1 ?IRI_strong;
-                                         rdf:_2 ?IRI_a.
+                                         rdf:_2 ?IRI_a;
+                                         html:class "container".
   ?IRI_strong                              rdf:type html:Strong;
-                                           rdf:_1 ?IRI_text.
+                                           rdf:_1 ?IRI_text;
+                                           html:class "label".
   ?IRI_text                                rdf:type html:TextElement;
                                            html:fragment 'IRI: '.
   ?IRI_a                                   rdf:type html:A;
@@ -2674,7 +2863,7 @@ construct {
     # Get the sorted concepts from the ontology including semantics
 
     {
-      select ?conceptScheme ?concept ?conceptLabel_raw ?conceptLabel ?inSchemeLabel ?conceptDefinition_raw (count(?prevConcept) + 2 as ?member)
+      select ?conceptScheme ?concept ?conceptLabel_raw ?conceptLabel ?inSchemeLabel ?conceptDefinition_raw ?label_value_text (count(?prevConcept) + 2 as ?member)
 
       where {
 
@@ -2685,6 +2874,7 @@ construct {
         
         $this dct:subject ?ontology;
               respec:documentLanguage ?language2.
+        BIND(function:getLabel(?concept, ?language2) as ?label_value_text)              
 
         optional{
           ?concept skos:inScheme ?conceptScheme.
@@ -2705,7 +2895,7 @@ construct {
           filter(?prevLabel < ?conceptLabel_raw)
         }
       }
-      group by ?conceptScheme ?concept ?conceptLabel_raw ?conceptLabel ?inSchemeLabel ?conceptDefinition_raw
+      group by ?conceptScheme ?concept ?conceptLabel_raw ?conceptLabel ?inSchemeLabel ?conceptDefinition_raw ?label_value_text
       order by ?conceptScheme ?conceptLabel_raw
     }
 
@@ -2723,16 +2913,23 @@ construct {
     bind(function:getElementIRI(?template, ?namespace) as ?elementID)
     bind(iri(concat(str(?elementID), '-', str(?member))) as ?section)
     bind(iri(concat(str(?section), '-1')) as ?title)
-    bind(iri(concat(str(?section), '-2')) as ?IRI)
-    bind(iri(concat(str(?section), '-3')) as ?linebreak4)
-    bind(iri(concat(str(?section), '-4')) as ?definition)
-    bind(iri(concat(str(?section), '-5')) as ?linebreak5)
-    bind(iri(concat(str(?section), '-6')) as ?linebreak6)
-    bind(iri(concat(str(?section), '-7')) as ?manchester_syntax)
+    bind(iri(concat(str(?section), '-2')) as ?label)
+    bind(iri(concat(str(?section), '-3')) as ?IRI)
+    bind(iri(concat(str(?section), '-4')) as ?linebreak4)
+    bind(iri(concat(str(?section), '-5')) as ?definition)
+    bind(iri(concat(str(?section), '-6')) as ?linebreak5)
+    bind(iri(concat(str(?section), '-7')) as ?linebreak6)
+    bind(iri(concat(str(?section), '-8')) as ?manchester_syntax)
+    
+    bind(iri(concat(str(?label), '-1')) as ?label_strong)
+    bind(iri(concat(str(?label), '-2')) as ?label_value)
+    bind(iri(concat(str(?label_strong), '-1')) as ?label_text)
+    
     bind(iri(concat(str(?IRI), '-1')) as ?IRI_strong)
     bind(iri(concat(str(?IRI), '-2')) as ?IRI_a)
     bind(iri(concat(str(?IRI_strong), '-1')) as ?IRI_text)
     bind(iri(concat(str(?IRI_a), '-1')) as ?IRI_value_text)
+    
     bind(iri(concat(str(?title), '-1')) as ?dfn)
     bind(iri(concat(str(?dfn), '-1')) as ?title_text)
 
@@ -2878,3 +3075,41 @@ SELECT ?result WHERE {
   bind(coalesce(?fullIRI, ?errorMessage) as ?result)
 }
   """ .
+
+function:getLabel
+    a sh:SPARQLFunction ;
+    rdfs:comment "Gets a label for a RDF resource." ;
+    sh:parameter [
+        sh:path function:resource ;
+        sh:datatype xsd:anyURI ;
+        sh:description "The full IRI of a RDF resource as defined in an ontology." ;
+    ] ;
+    sh:parameter [
+        sh:path function:someLanguage ;
+        sh:datatype xsd:string ;
+        sh:description "The language tag of a RDF resource as defined in an ontology." ;
+    ] ;    
+    sh:returnType xsd:string ;
+    sh:select """
+  
+  PREFIX function: <https://respec.org/ontorespec/model/function/>
+    
+  SELECT ?result WHERE {
+  
+  # Establish default value
+  BIND(STRLANG(REPLACE(STR($resource),'.*[/#]',''),$someLanguage) as ?implicitLabel)
+  
+  # Establish preferred label
+  OPTIONAL
+  {$resource skos:prefLabel ?preferredLabel.
+  FILTER (LANG(?preferredLabel) = $someLanguage)}
+  
+  # Establish alternative label
+  OPTIONAL 
+  {$resource rdfs:label ?alternativeLabel.
+  FILTER (LANG(?alternativeLabel) = $someLanguage)}
+      
+  # Establish clean label
+  BIND(function:escapeHTML(COALESCE(?preferredLabel, ?alternativeLabel, ?implicitLabel)) as ?result)
+}
+""" .

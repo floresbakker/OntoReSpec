@@ -61,7 +61,17 @@ template:style_text a respec:StaticElement,
             border-style: solid;
             padding: 5px;
         }
-    }""" .
+    }
+        
+    .container {
+        display: flex;
+    }
+
+    .label {
+        flex: 0 0 100px; /* Adjust the width as needed */
+    }
+    
+    """ .
 
 template:script_respec a respec:StaticElement,
         html:Script ;
