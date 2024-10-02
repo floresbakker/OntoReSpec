@@ -71,6 +71,10 @@ WHERE {
   }
   UNION
   {
+    $this rdf:type rdf:Property.
+  }  
+  UNION
+  {
     $this rdfs:subPropertyOf [].
   }
   UNION
@@ -125,6 +129,9 @@ WHERE {
   filter not exists {
     $this manchester:syntax 'OBJECTPROPERTY'.
   }
+  filter not exists {
+    $this manchester:syntax 'RDF_PROPERTY'.
+  }  
   filter not exists {
     $this manchester:syntax 'SUBPROPERTY'.
   }

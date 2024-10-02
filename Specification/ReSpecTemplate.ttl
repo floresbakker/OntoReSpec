@@ -1,12 +1,19 @@
-@prefix template: <https://respec.org/ontorespec/id/> .
-@prefix html: <https://data.rijksfinancien.nl/html/model/def/> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix respec: <https://respec.org/ontorespec/model/def/> .
+prefix template: <https://respec.org/ontorespec/id/> 
+prefix html: <https://www.w3.org/html/model/def/> 
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+prefix respec: <https://respec.org/ontorespec/model/def/> 
+
+template: {
 
 template:document a respec:Template,
         html:Document ;
-    rdf:_1 template:root .
+    rdf:_1 template:docType;
+    rdf:_2 template:root .
+
+template:docType a respec:StaticElement,
+        html:DocumentType;
+    html:documentTypeName 'html'.
 
 template:root a respec:StaticElement,
         html:Html ;
@@ -34,7 +41,7 @@ template:title a respec:StaticElement,
     rdf:_1 template:title_text .
 
 template:title_text a respec:Title,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     respec:absenceLabel 'No title specified'@en,
                         'Geen titel gespecificeerd'@nl;
@@ -46,7 +53,7 @@ template:style a respec:StaticElement,
     rdf:_1 template:style_text .
 
 template:style_text a respec:StaticElement,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment """ 
 
@@ -87,12 +94,11 @@ template:script_configuration a respec:StaticElement,
     html:class "remove" .
 
 template:configuration_text a respec:Configuration,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     respec:absenceLabel "Not available"@en,
                         "Niet beschikbaar"@nl;
-    html:fragment """
-      // All config options at https://respec.org/docs/
+    html:fragment """   
       var respecConfig = {
         specStatus: "ED",
         latestVersion: "VersionURL",
@@ -102,6 +108,7 @@ template:configuration_text a respec:Configuration,
         xref: "web-platform",
         group: "working-group",
       };
+      // All config options at https://respec.org/docs/ 
     """ .
 
 template:body a respec:StaticElement,
@@ -127,7 +134,7 @@ template:25.7 a respec:StaticElement,
     rdf:_1 template:25.7.1 .
 
 template:25.7.1 a respec:Abstract,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     respec:absenceLabel "Abstract not available"@en,
                         "Samenvatting niet beschikbaar"@nl;
@@ -144,7 +151,7 @@ template:28.6 a respec:StaticElement,
     rdfs:label "p" ;
     rdf:_1 template:28.6.1 .
 
-template:28.6.1 a html:TextElement ;
+template:28.6.1 a html:Text ;
     rdfs:label "text element" ;
     html:fragment "{{status of this document}}" .
 
@@ -161,14 +168,14 @@ template:introductionTitle a html:H2 ;
     rdf:_1 template:introduction_title_text .
 
 template:introduction_title_text a respec:IntroductionTitle,
-    html:TextElement ;
+    html:Text ;
     respec:label "Introduction"@en,
                  "Inleiding"@nl;
     respec:absenceLabel "This specification document does not describe an introduction to the ontology."@en,
                         "Deze specificatie beschrijft geen inleiding op de ontologie."@nl;
     html:fragment "Introduction" .
 
-template:introductionText a html:TextElement ;
+template:introductionText a html:Text ;
     html:fragment "Introductory text of the ontology.".
 
 template:background a html:Section ;
@@ -179,14 +186,14 @@ template:background_title a html:H2 ;
     rdf:_1 template:background_title_text .
 
 template:background_title_text a respec:BackgroundTitle,
-    html:TextElement ;
+    html:Text ;
     respec:label "Background"@en, 
                  "Achtergrond"@nl ;
     respec:absenceLabel "This specification document does not describe the background of the ontology."@en,
                         "Deze specificatie beschrijft geen achtergrond van de ontologie."@nl;
     html:fragment "Background" .
 
-template:background_text a html:TextElement ;
+template:background_text a html:Text ;
     html:fragment "Background text" .
 
 template:objective a html:Section ;
@@ -197,14 +204,14 @@ template:30.4-4-1 a html:H2 ;
     rdf:_1 template:30.4-4-1-1 .
 
 template:30.4-4-1-1 a respec:ObjectiveTitle,
-                 html:TextElement ;
+                 html:Text ;
     respec:label "Objective"@en, 
                  "Doel"@nl ;     
     respec:absenceLabel "This specification document does not define the objective of the ontology."@en,
                         "Dit specificatiedocument definieert geen doel van de ontologie."@nl ;     
     html:fragment "Objective" .
 
-template:30.4-4-1-2 a html:TextElement ;
+template:30.4-4-1-2 a html:Text ;
     html:fragment "Objective text" .
 
 template:audience a html:Section ;
@@ -215,14 +222,14 @@ template:30.4-5-1 a html:H2 ;
     rdf:_1 template:30.4-5-1-1 .
 
 template:30.4-5-1-1 a respec:AudienceTitle,
-               html:TextElement ;
+               html:Text ;
     respec:label "Audience"@en, 
                  "Doelgroep"@nl ;
     respec:absenceLabel "This specification document does not describe the intended audience of the ontology."@en ,
                         "Dit specificatiedocument beschrijft geen beoogde doelgroep van de ontologie."@nl ;
     html:fragment "Audience" .
 
-template:30.4-5-1-2 a html:TextElement ;
+template:30.4-5-1-2 a html:Text ;
     html:fragment "Text in which is explained for which audience this technical specification document is intended." .
 
 template:overview a respec:StaticElement,
@@ -246,7 +253,7 @@ template:overview_title a respec:StaticElement,
     rdf:_1 template:38.6.1 .
 
 template:38.6.1 a respec:StaticElement,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     respec:label "Overview"@en ,
                  "Overzicht"@nl ;
@@ -258,7 +265,7 @@ template:overview_paragraph a respec:StaticElement,
     rdf:_1 template:38.7.1 .
 
 template:38.7.1 a respec:Overview,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     respec:absenceLabel "Description not available"@en,
                         "Beschrijving niet beschikbaar"@nl;
@@ -280,7 +287,7 @@ template:datamodel_title a respec:StaticElement,
     rdf:_1 template:40.4.1 .
 
 template:40.4.1 a respec:StaticElement,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     respec:label "Datamodel"@en ,
                  "Datamodel"@nl ;
@@ -292,7 +299,7 @@ template:datamodel_paragraph a respec:StaticElement,
     rdf:_1 template:40.5.1 .
 
 template:40.5.1 a respec:StaticElement,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     respec:label "A visualisation of the ontology"@en ,
                  "Een visualisatie van de ontologie"@nl ;
@@ -312,7 +319,7 @@ template:namespace_title a respec:StaticElement,
 
 template:40.7.1 a respec:StaticElement,
         respec:NamespaceTitle,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     respec:label "Namespace"@en ,
                  "Namespace"@nl ;
@@ -331,7 +338,7 @@ template:41.6.1 a respec:StaticElement,
     rdf:_1 template:41.6.1.1.
 
 template:41.6.1.1 a respec:StaticElement,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     respec:label "Prefixes and namespaces used in this specification"@en ,
                  "Prefixen en namespaces gebruikt in deze specificatie"@nl ;
@@ -355,7 +362,7 @@ template:41.6.2.1.1 a respec:StaticElement,
     rdf:_1 template:41.6.2.1.1.1.
 
 template:41.6.2.1.1.1 a respec:StaticElement,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     respec:label "Prefix"@en ,
                  "Prefix"@nl ;
@@ -367,7 +374,7 @@ template:41.6.2.1.2 a respec:StaticElement,
     rdf:_1 template:41.6.2.1.2.1.
 
 template:41.6.2.1.2.1 a respec:StaticElement,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     respec:label "Namespace"@en ,
                  "Namespace"@nl ;
@@ -377,7 +384,7 @@ template:40.8 a html:P ;
     rdfs:label "p" ;
     rdf:_1 template:40.8.1 .
 
-template:40.8.1 a html:TextElement ;
+template:40.8.1 a html:Text ;
     rdfs:label "text element" ;
     html:fragment "This is an example." .
 
@@ -386,7 +393,7 @@ template:41.8 a html:Pre ;
     rdf:_1 template:41.8.1 ;
     html:class "js" .
 
-template:41.8.1 a html:TextElement ;
+template:41.8.1 a html:Text ;
     rdfs:label "text element" ;
     html:fragment """
         // Automatic syntax highlighting
@@ -399,7 +406,7 @@ template:serialisation_title a respec:StaticElement,
     rdf:_1 template:42.4.1 .
 
 template:42.4.1 a respec:StaticElement,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     respec:label "Serialisation"@en ,
                  "Serialisatie"@nl ;
@@ -413,7 +420,7 @@ template:serialisation_paragraph a respec:StaticElement,
     rdf:_3 template:42.5.3 .
 
 template:42.5.1 a respec:StaticElement,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     respec:label  "A serialisation of the ontology in Turtle-format (*.ttl) can be found "@en ,
                   "Een serialisatie van de ontologie in Turtle-formaat (*.ttl) kan "@nl ;
@@ -426,14 +433,14 @@ template:42.5.2 a respec:StaticElement,
     rdf:_1 template:42.5.2.1 .
     
 template:42.5.2.1 a respec:StaticElement,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     respec:label "here"@en ,
                  "hier"@nl ;
     html:fragment "here" .
 
 template:42.5.3 a respec:StaticElement,
-        html:TextElement ;
+        html:Text ;
     respec:label "."@en, 
                  " worden gevonden."@nl;
     rdfs:label "text element" ;
@@ -451,7 +458,7 @@ template:47.8 a respec:StaticElement,
     rdf:_1 template:47.8.1 .
 
 template:47.8.1 a respec:StaticElement,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     respec:label "Current issues"@en ,
                  "Huidige problemen"@nl ;
@@ -465,7 +472,7 @@ template:48.8 a respec:StaticElement,
     html:data-number "121" .
 
 template:48.8.2 a respec:StaticElement,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     respec:label " Issue can automatically be populated from GitHub "@en ,
                  " Probleembeschrijving kan automatisch worden gevuld vanuit GitHub "@nl ;
@@ -492,7 +499,7 @@ template:definitionTitle a respec:StaticElement,
     rdf:_1 template:54.5.1 .
 
 template:54.5.1 a respec:StaticElement,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     respec:label "Definition"@en ,
                  "Definitie"@nl ;
@@ -512,7 +519,7 @@ template:54.6 a respec:OptionalElement,
     rdf:_1 template:54.6.1 .
 
 template:54.6.1 a respec:OptionalElement,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     respec:section "classes";
     respec:label "Classes"@en ,
@@ -541,7 +548,7 @@ template:54.11 a html:Dfn ;
     rdfs:label "Dfn" ;
     rdf:_1 template:54.9.1 .
 
-template:54.9.1 a html:TextElement ;
+template:54.9.1 a html:Text ;
     rdfs:label "text element" ;
     html:fragment "{{class title}}" .
 
@@ -549,14 +556,14 @@ template:54.10 a html:P ;
     rdfs:label "p" ;
     rdf:_1 template:54.10.1 .
 
-template:54.10.1 a html:TextElement ;
+template:54.10.1 a html:Text ;
     rdfs:label "text element" ;
     html:fragment "{{class definition}}" .
 
 template:54.12 a html:Br ;
     rdfs:label "Br" .
 
-template:54.13 a html:TextElement ;
+template:54.13 a html:Text ;
     rdfs:label "text element" ;
     html:fragment "{{manchester definition}}" .
 
@@ -574,7 +581,7 @@ template:55.2 a respec:OptionalElement,
     rdf:_1 template:55.2.1 .
 
 template:55.2.1 a respec:OptionalElement,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     respec:section "objectproperties";         
     respec:label "Object Properties"@en ,
@@ -601,7 +608,7 @@ template:55.11 a html:Dfn ;
     rdfs:label "Dfn" ;
     rdf:_1 template:55.9.1 .
 
-template:55.9.1 a html:TextElement ;
+template:55.9.1 a html:Text ;
     rdfs:label "text element" ;
     html:fragment "{{object property title}}" .
 
@@ -609,7 +616,7 @@ template:55.10 a html:P ;
     rdfs:label "p" ;
     rdf:_1 template:55.10.1 .
 
-template:55.10.1 a html:TextElement ;
+template:55.10.1 a html:Text ;
     rdfs:label "text element" ;
     html:fragment "{{object property definition}}" .
 
@@ -627,7 +634,7 @@ template:56.2 a respec:OptionalElement,
     rdf:_1 template:56.2.1 .
 
 template:56.2.1 a respec:OptionalElement,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     respec:section "datatypeproperties";
     respec:label "Datatype Properties"@en ,
@@ -654,7 +661,7 @@ template:56.11 a html:Dfn ;
     rdfs:label "Dfn" ;
     rdf:_1 template:56.9.1 .
 
-template:56.9.1 a html:TextElement ;
+template:56.9.1 a html:Text ;
     rdfs:label "text element" ;
     html:fragment "{{datatype property title}}" .
 
@@ -662,7 +669,7 @@ template:56.10 a html:P ;
     rdfs:label "p" ;
     rdf:_1 template:56.10.1 .
 
-template:56.10.1 a html:TextElement ;
+template:56.10.1 a html:Text ;
     rdfs:label "text element" ;
     html:fragment "{{datatype property definition}}" .
 
@@ -680,7 +687,7 @@ template:53.2 a respec:OptionalElement,
     rdf:_1 template:53.2.1 .
 
 template:53.2.1 a respec:OptionalElement,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     respec:section "rdfproperties";
     respec:label "RDF Properties"@en ,
@@ -707,7 +714,7 @@ template:53.11 a html:Dfn ;
     rdfs:label "Dfn" ;
     rdf:_1 template:53.9.1 .
 
-template:53.9.1 a html:TextElement ;
+template:53.9.1 a html:Text ;
     rdfs:label "text element" ;
     html:fragment "{{RDF property title}}" .
 
@@ -715,7 +722,7 @@ template:53.10 a html:P ;
     rdfs:label "p" ;
     rdf:_1 template:53.10.1 .
 
-template:53.10.1 a html:TextElement ;
+template:53.10.1 a html:Text ;
     rdfs:label "text element" ;
     html:fragment "{{RDF property definition}}" .
 
@@ -733,7 +740,7 @@ template:57.2 a respec:OptionalElement,
     rdf:_1 template:57.2.1 .
 
 template:57.2.1 a respec:OptionalElement,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     respec:section "nodeshapes";
     respec:label  "Nodeshapes"@en ,
@@ -760,7 +767,7 @@ template:57.11 a html:Dfn ;
     rdfs:label "Dfn" ;
     rdf:_1 template:57.9.1 .
 
-template:57.9.1 a html:TextElement ;
+template:57.9.1 a html:Text ;
     rdfs:label "text element" ;
     html:fragment "{{node shape title}}" .
 
@@ -768,7 +775,7 @@ template:57.10 a html:P ;
     rdfs:label "p" ;
     rdf:_1 template:57.10.1 .
 
-template:57.10.1 a html:TextElement ;
+template:57.10.1 a html:Text ;
     rdfs:label "text element" ;
     html:fragment "{{node shape definition}}" .
 
@@ -786,7 +793,7 @@ template:58.2 a respec:OptionalElement,
     rdf:_1 template:58.2.1 .
 
 template:58.2.1 a respec:OptionalElement,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     respec:section "namedindividuals";
     respec:label "Named Individuals"@en ,
@@ -815,7 +822,7 @@ template:58.11 a html:Dfn ;
     rdfs:label "Dfn" ;
     rdf:_1 template:58.9.1 .
 
-template:58.9.1 a html:TextElement ;
+template:58.9.1 a html:Text ;
     rdfs:label "text element" ;
     html:fragment "{{named individual title}}" .
 
@@ -823,7 +830,7 @@ template:58.10 a html:P ;
     rdfs:label "p" ;
     rdf:_1 template:58.10.1 .
 
-template:58.10.1 a html:TextElement ;
+template:58.10.1 a html:Text ;
     rdfs:label "text element" ;
     html:fragment "{{named individual definition}}" .
 
@@ -841,7 +848,7 @@ template:59.2 a respec:OptionalElement,
     rdf:_1 template:59.2.1 .
 
 template:59.2.1 a respec:OptionalElement,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     respec:section "concepts", "conceptschemes";
     respec:label "Concepts"@en ,
@@ -870,7 +877,7 @@ template:59.11 a html:Dfn ;
     rdfs:label "Dfn" ;
     rdf:_1 template:59.9.1 .
 
-template:59.9.1 a html:TextElement ;
+template:59.9.1 a html:Text ;
     rdfs:label "text element" ;
     html:fragment "{{concept title}}" .
 
@@ -878,7 +885,7 @@ template:59.10 a html:P ;
     rdfs:label "p" ;
     rdf:_1 template:59.10.1 .
 
-template:59.10.1 a html:TextElement ;
+template:59.10.1 a html:Text ;
     rdfs:label "text element" ;
     html:fragment "{{concept definition}}" .
 
@@ -894,7 +901,7 @@ template:72.6 a respec:StaticElement,
     rdf:_1 template:72.6.1 .
 
 template:72.6.1 a respec:StaticElement,
-        html:TextElement ;
+        html:Text ;
     rdfs:label "text element" ;
     html:fragment """
         This is required for specifications that contain normative material.
@@ -908,3 +915,5 @@ template:appendix a respec:StaticElement,
     rdf:_3 template:71.4.3 ;
     html:id "index";
     html:class "appendix" .
+    
+}

@@ -22,6 +22,7 @@ prefix shp: <https://data.rijksfinancien.nl/manchester/model/shp/>
 prefix standard: <https://data.rijksfinancien.nl/manchester/id/standard/>
 prefix target: <https://data.rijksfinancien.nl/manchester/model/target/>
 
+manchester: {
   manchester:
     a
       owl:Ontology,
@@ -918,7 +919,7 @@ construct {
   
   OPTIONAL {?listItem manchester:label ?optionalLabel.}
   BIND(COALESCE(?optionalLabel, IF(isBlank(?listItem),?unboundDummy, function:getPrefixedIRI(?listItem))) as ?label)
-   }
+   } group by ?lang
   }
   
   # Establish the label for the owl class. If a blank node, then use the description of the class als label, including manchester syntax ' and ' notation. If an IRI, then use the preferred label.
@@ -993,7 +994,7 @@ construct {
   
   OPTIONAL {?listItem manchester:label ?optionalLabel.}
   BIND(COALESCE(?optionalLabel, IF(isBlank(?listItem),?unboundDummy, function:getPrefixedIRI(?listItem))) as ?label)
-   }
+   } group by ?lang
   }
 
   BIND(CONCAT("{", ?individualLabels, "}") as ?manchesterDescription)
@@ -1505,7 +1506,7 @@ prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix respec: <https://respec.org/model/def/> 
+prefix respec: <https://respec.org/ontorespec/model/def/> 
 prefix sh: <http://www.w3.org/ns/shacl#>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
@@ -1593,7 +1594,7 @@ prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix respec: <https://respec.org/model/def/> 
+prefix respec: <https://respec.org/ontorespec/model/def/> 
 prefix sh: <http://www.w3.org/ns/shacl#>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
@@ -1647,7 +1648,7 @@ prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix respec: <https://respec.org/model/def/> 
+prefix respec: <https://respec.org/ontorespec/model/def/> 
 prefix sh: <http://www.w3.org/ns/shacl#>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
@@ -2171,3 +2172,5 @@ construct {
  
 }   
 '''.
+
+}

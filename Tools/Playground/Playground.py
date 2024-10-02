@@ -19,7 +19,7 @@ dct      = Namespace("http://purl.org/dc/terms/")
 respec   = Namespace('https://respec.org/ontorespec/model/def/')
 template = Namespace('https://respec.org/ontorespec/id/')
 html     = Namespace("https://data.rijksfinancien.nl/html/model/def/")
-
+mermaid  = Namespace("https://data.rijksfinancien.nl/mermaid/model/def/")
 
 # Function to read a graph (as a string) from a file 
 def readStringFromFile(file_path):
@@ -95,6 +95,7 @@ def generateReSpecRDF(shaclgraph, serializable_graph):
 
 def generateDiagram(mermaid_generator, serializable_graph):
         
+        print ('iteratie mermaid')
         # call PyShacl engine and apply the HTML vocabulary to the serializable HTML document
         pyshacl.validate(
         data_graph=serializable_graph,
@@ -113,55 +114,19 @@ def generateDiagram(mermaid_generator, serializable_graph):
 
         # Check whether another iteration is needed. If every OWL and RDFS construct contains a mermaid:syntax statement, the processing is considered done.
         for status in statusquery:
-            if status == True:
+            if status == False:
+                print ('false')
+                writeGraph(serializable_graph, 'diagramm')
                 generateDiagram(mermaid_generator, serializable_graph)
             else:     
+                 print ('succes')
                  for result in resultquery:
-                    mermaid_code = result["mermaid_code"]
+                    mermaid_diagram = result["mermaid_code"]
                     output_file_path = directory_path+"/OntoReSpec/Tools/Playground/static/diagram.html"
-                    # Create the HTML content with the Mermaid code
-                    html_start =  '''
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                    </head>
-                    <body>
-                    <div><pre class="mermaid">
-                    %%{
-                    init: {
-                    "flowchart":{
-                    "useMaxWidth": 0
-                    }
-                    }
-                    }%%
-                    graph TB
-                    classDef Datatype fill:#9c6,stroke:#9c6;
-                    
-                    
-                    '''
-                    
-                    html_graph = f'''
-                  
-                    {mermaid_code}
-                    
-                    ''' 
-                    
-                    html_end = '''
-                    </pre>
-                    <script type="module">
-                      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-                      mermaid.initialize({ startOnLoad: true, maxTextSize : 99999999 });
-                    </script>
-                    </div>
-                    </body>
-                    </html>
-                    '''
-                    
-                    html_content = html_start + html_graph + html_end
-                    
+                
                     # Write the HTML content to the output file
                     with open(output_file_path, "w", encoding="utf-8") as file:
-                        file.write(html_content) 
+                        file.write(mermaid_diagram) 
 
 def generateHTML(shaclgraph, serializable_graph):
         
@@ -230,6 +195,7 @@ def generateReSpec():
     doc = Namespace(documentNamespace)
     generationGraph.bind("html", html)
     generationGraph.bind("respec", respec)    
+    generationGraph.bind("mermaid", mermaid)    
     generationGraph.bind("template", template)   
     generationGraph.bind("doc", doc)    
     
@@ -252,28 +218,53 @@ def generateReSpec():
 
     #2 Establish which components of the ontology need to be specified in the document
     if conceptSchemes:
-        generationGraph.add((doc[generation_iri], respec.include, Literal("conceptschemes")))
+        generationGraph.add((doc[generation_iri], respec.include, Literal("CONCEPTSCHEME")))
     
     if concepts and not conceptSchemes:
-        generationGraph.add((doc[generation_iri], respec.include, Literal("concepts")))
+        generationGraph.add((doc[generation_iri], respec.include, Literal("CONCEPT")))
     
     if classes:
-        generationGraph.add((doc[generation_iri], respec.include, Literal("classes")))
+        generationGraph.add((doc[generation_iri], respec.include, Literal("CLASS")))
     
     if objectProperties:
-        generationGraph.add((doc[generation_iri], respec.include, Literal("objectproperties")))
+        generationGraph.add((doc[generation_iri], respec.include, Literal("OBJECTPROPERTY")))
     
     if datatypeProperties:
-        generationGraph.add((doc[generation_iri], respec.include, Literal("datatypeproperties")))
+        generationGraph.add((doc[generation_iri], respec.include, Literal("DATATYPEPROPERTY")))
     
     if rdfProperties:
-        generationGraph.add((doc[generation_iri], respec.include, Literal("rdfproperties")))
+        generationGraph.add((doc[generation_iri], respec.include, Literal("RDF_PROPERTY")))
     
     if nodeshapes:
-        generationGraph.add((doc[generation_iri], respec.include, Literal("nodeshapes")))
+        generationGraph.add((doc[generation_iri], respec.include, Literal("NODESHAPE")))
     
     if namedIndividuals:
-        generationGraph.add((doc[generation_iri], respec.include, Literal("namedindividuals")))
+        generationGraph.add((doc[generation_iri], respec.include, Literal("NAMEDINDIVIDUAL")))
+
+    #2 Establish which components of the ontology need to be visualised in the document as a Mermaid diagram
+    if conceptSchemes:
+        generationGraph.add((doc[generation_iri], mermaid.include, Literal("CONCEPTSCHEME")))
+    
+    if concepts and not conceptSchemes:
+        generationGraph.add((doc[generation_iri], mermaid.include, Literal("CONCEPT")))
+    
+    if classes:
+        generationGraph.add((doc[generation_iri], mermaid.include, Literal("CLASS")))
+    
+    if objectProperties:
+        generationGraph.add((doc[generation_iri], mermaid.include, Literal("OBJECTPROPERTY")))
+    
+    if datatypeProperties:
+        generationGraph.add((doc[generation_iri], mermaid.include, Literal("DATATYPEPROPERTY")))
+    
+    if rdfProperties:
+        generationGraph.add((doc[generation_iri], mermaid.include, Literal("RDF_PROPERTY")))
+    
+    if nodeshapes:
+        generationGraph.add((doc[generation_iri], mermaid.include, Literal("NODESHAPE")))
+    
+    if namedIndividuals:
+        generationGraph.add((doc[generation_iri], mermaid.include, Literal("NAMEDINDIVIDUAL")))
 
     # Let us establish which ontology needs to be documented in ReSpec
     try:

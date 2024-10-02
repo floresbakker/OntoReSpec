@@ -1,20 +1,22 @@
-@prefix condition: <https://respec.org/ontorespec/model/condition/>.
-@prefix dct: <http://purl.org/dc/terms/>.
-@prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>.
-@prefix template: <https://respec.org/ontorespec/id/> .
-@prefix function: <https://respec.org/ontorespec/model/function/>.
-@prefix html: <https://data.rijksfinancien.nl/html/model/def/> .
-@prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/> .
-@prefix owl: <http://www.w3.org/2002/07/owl#>.
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix respec: <https://respec.org/ontorespec/model/def/> .
-@prefix rule: <https://respec.org/ontorespec/model/rule/>.
-@prefix shp: <https://respec.org/ontorespec/model/shp/>.
-@prefix target: <https://respec.org/ontorespec/model/target/>.
-@prefix sh: <http://www.w3.org/ns/shacl#>.
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
-@prefix skos: <http://www.w3.org/2004/02/skos/core#>.
+prefix condition: <https://respec.org/ontorespec/model/condition/>
+prefix dct: <http://purl.org/dc/terms/>
+prefix dom: <http://www.w3.org/DOM/model/def/>
+prefix template: <https://respec.org/ontorespec/id/> 
+prefix function: <https://respec.org/ontorespec/model/function/>
+prefix html: <https://www.w3.org/html/model/def/> 
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/> 
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+prefix respec: <https://respec.org/ontorespec/model/def/> 
+prefix rule: <https://respec.org/ontorespec/model/rule/>
+prefix shp: <https://respec.org/ontorespec/model/shp/>
+prefix target: <https://respec.org/ontorespec/model/target/>
+prefix sh: <http://www.w3.org/ns/shacl#>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+
+respec: {
 
 respec:introduction
     a owl:DatatypeProperty;
@@ -25,7 +27,7 @@ respec:introduction
 
 shp:Document
   a sh:NodeShape;
-  sh:rule rule:Document, rule:StaticElement, rule:OptionalElement, rule:Title, rule:Introduction, rule:Description, rule:Example, rule:NameSpace, rule:Abstract, rule:Configuration, rule:Classes, rule:ObjectProperties, rule:DatatypeProperties, rule:RDF_Properties, rule:NodeShapes, rule:NamedIndividuals, rule:Concepts, rule:ConceptSchemes;
+  sh:rule rule:Document, rule:StaticElement, rule:OptionalElement, rule:Title, rule:Introduction, rule:Description, rule:Example, rule:NameSpace, rule:Abstract, rule:Configuration, rule:Classes, rule:ObjectProperties, rule:DatatypeProperties, rule:RDF_Properties, rule:NodeShapes, rule:NamedIndividuals, rule:ConceptSchemes;
   sh:targetClass respec:Generation.
 
 rule:Document
@@ -34,9 +36,9 @@ rule:Document
   rdfs:comment 'The Document rule creates a document and attaches its structure.'@en ;
   sh:construct """
 prefix dct: <http://purl.org/dc/terms/>
-prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix dom: <http://www.w3.org/DOM/model/def/>
 prefix function: <https://respec.org/ontorespec/model/function/>
-prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
+prefix html: <https://www.w3.org/html/model/def/> 
 prefix prov: <http://www.w3.org/ns/prov#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
@@ -45,9 +47,11 @@ prefix respec: <https://respec.org/ontorespec/model/def/>
 construct {
   ?documentID
     a html:Document, respec:Document ;
-    rdf:_1 ?rootID ;
+    rdf:_1 ?docTypeID ;
+    rdf:_2 ?rootID ;
     prov:wasGeneratedBy $this;
     dct:subject ?ontology.
+  ?docTypeID html:documentTypeName 'html'.
   ?rootID html:lang ?language.
     
 } where {
@@ -56,11 +60,15 @@ construct {
         respec:documentLanguage ?language;
         respec:documentNamespace ?namespace.
   ?template         rdf:type respec:Template;
-                    rdf:_1 ?root.
+                    rdf:_1 ?docType;
+                    rdf:_2 ?root.
+  ?docType a html:DocumentType.
   ?root  a html:Html.
   
   # Create identifiers
+  
   bind(function:getElementIRI(?template, ?namespace) as ?documentID)
+  bind(function:getElementIRI(?docType, ?namespace) as ?docTypeID)
   bind(function:getElementIRI(?root, ?namespace) as ?rootID)
   
 }
@@ -71,9 +79,9 @@ rule:StaticElement
   skos:prefLabel 'Static Element rule'@en;
   rdfs:comment 'The Static Element rule creates a unique element and attaches its structure.'@en ;
   sh:construct """
-prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix dom: <http://www.w3.org/DOM/model/def/>
 prefix function: <https://respec.org/ontorespec/model/function/>
-prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
+prefix html: <https://www.w3.org/html/model/def/> 
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
 prefix respec: <https://respec.org/ontorespec/model/def/> 
@@ -94,7 +102,7 @@ construct {
   
   OPTIONAL {
   ?template ?element ?child.
-  ?child  a/ rdfs:subClassOf* dom:Element.}
+  ?child  a/ rdfs:subClassOf* dom:Node.}
   
   OPTIONAL {
   ?template respec:label ?languageFragment.
@@ -111,9 +119,9 @@ construct {
   
   OPTIONAL {
   ?template ?attribute ?attributeValue.
-  ?attribute rdfs:subPropertyOf html:attribute.
+  ?attribute a/rdfs:subClassOf* html:Attribute.
   }
-  ?class rdfs:subClassOf* dom:Element.
+  ?class rdfs:subClassOf* dom:Node.
   
   bind(coalesce(?respecFragment, ?htmlFragment) as ?fragment)
   
@@ -129,9 +137,9 @@ rule:OptionalElement
   skos:prefLabel 'Optional Element rule'@en;
   rdfs:comment 'The Optional Element rule creates a unique element and attaches its structure for optional sections of the document.'@en ;
   sh:construct """
-prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix dom: <http://www.w3.org/DOM/model/def/>
 prefix function: <https://respec.org/ontorespec/model/function/>
-prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
+prefix html: <https://www.w3.org/html/model/def/> 
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
 prefix respec: <https://respec.org/ontorespec/model/def/> 
@@ -154,7 +162,7 @@ construct {
   
   OPTIONAL {
   ?template ?element ?child.
-  ?child  a/ rdfs:subClassOf* dom:Element.}
+  ?child  a/ rdfs:subClassOf* dom:Node.}
   
   OPTIONAL {
   ?template respec:label ?languageFragment.
@@ -171,10 +179,10 @@ construct {
   
   OPTIONAL {
   ?template ?attribute ?attributeValue.
-  ?attribute rdfs:subPropertyOf html:attribute.
+  ?attribute a/rdfs:subClassOf* html:Attribute.
   }
   
-  ?htmlClass rdfs:subClassOf* dom:Element.
+  ?htmlClass rdfs:subClassOf* dom:Node.
   
   bind(coalesce(?respecFragment, ?htmlFragment) as ?fragment)
   
@@ -194,16 +202,16 @@ rule:Title
   sh:construct """
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
-prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix dom: <http://www.w3.org/DOM/model/def/>
 prefix function: <https://respec.org/ontorespec/model/function/>
-prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
+prefix html: <https://www.w3.org/html/model/def/> 
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
 prefix respec: <https://respec.org/ontorespec/model/def/> 
 prefix schema: <http://schema.org/>
 
 construct {
-  ?elementID rdf:type html:TextElement;
+  ?elementID rdf:type html:Text;
   html:fragment ?ontologyTitle.
     
 } where {
@@ -249,9 +257,9 @@ rule:Introduction
   sh:construct """
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
-prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix dom: <http://www.w3.org/DOM/model/def/>
 prefix function: <https://respec.org/ontorespec/model/function/>
-prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
+prefix html: <https://www.w3.org/html/model/def/> 
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
 prefix respec: <https://respec.org/ontorespec/model/def/> 
@@ -268,41 +276,42 @@ construct {
                                       html:class "informative".
   ?generalIntroductionH2              rdf:type html:H2;
                                       rdf:_1 ?generalIntroduction_title.
-  ?generalIntroduction_title          rdf:type html:TextElement;
+  ?generalIntroduction_title          rdf:type html:Text;
                                       html:fragment ?introductionTitle.
-  ?generalIntroduction_text           rdf:type html:TextElement;
+  ?generalIntroduction_text           rdf:type html:Text;
                                       html:fragment ?generalIntroduction.
   ?introductionBackgroundSection      rdf:type html:Section;
                                       rdf:_1 ?introductionBackgroundH2;
                                       rdf:_2 ?introductionBackground_text.
   ?introductionBackgroundH2           rdf:type html:H2;
                                       rdf:_1 ?introductionBackground_title.
-  ?introductionBackground_title       rdf:type html:TextElement;
+  ?introductionBackground_title       rdf:type html:Text;
                                       html:fragment ?backgroundTitle.
-  ?introductionBackground_text        rdf:type html:TextElement;
+  ?introductionBackground_text        rdf:type html:Text;
                                       html:fragment ?introductionBackground.	
   ?introductionOntologySection        rdf:type html:Section;
                                       rdf:_1 ?introductionOntologyH2;
                                       rdf:_2 ?introductionOntology_text.
   ?introductionOntologyH2             rdf:type html:H2;
                                       rdf:_1 ?introductionOntology_title.
-  ?introductionOntology_title         rdf:type html:TextElement;
+  ?introductionOntology_title         rdf:type html:Text;
                                       html:fragment ?objectiveTitle.
-  ?introductionOntology_text          rdf:type html:TextElement;
+  ?introductionOntology_text          rdf:type html:Text;
                                       html:fragment ?introductionObjective.
   ?introductionAudienceSection        rdf:type html:Section;
                                       rdf:_1 ?introductionAudienceH2;
                                       rdf:_2 ?introductionAudience_text.
   ?introductionAudienceH2             rdf:type html:H2;
                                       rdf:_1 ?introductionAudience_title.
-  ?introductionAudience_title         rdf:type html:TextElement;
+  ?introductionAudience_title         rdf:type html:Text;
                                       html:fragment ?audienceTitle.
-  ?introductionAudience_text          rdf:type html:TextElement;
+  ?introductionAudience_text          rdf:type html:Text;
                                       html:fragment ?introductionAudience.
 } where {
 
    {$this respec:documentLanguage ?language;
-          respec:documentNamespace ?namespace.
+          respec:documentNamespace ?namespace;
+          dct:subject ?ontology.
    ?template a respec:Introduction.
    
    ?templateIntroductionTitle a respec:IntroductionTitle;
@@ -327,22 +336,22 @@ construct {
    }
    
    OPTIONAL
-   {$this respec:introduction ?introduction.
+   {?ontology respec:introduction ?introduction.
    FILTER (LANG(?introduction) = ?language)
    }
    
    OPTIONAL
-   {$this respec:background ?background.
+   {?ontology respec:background ?background.
    FILTER (LANG(?background) = ?language)
    }
    
    OPTIONAL
-   {$this respec:objective ?objective.
+   {?ontology respec:objective ?objective.
    FILTER (LANG(?objective) = ?language)
    }
    
    OPTIONAL
-   {$this respec:audience ?audience.
+   {?ontology respec:audience ?audience.
    FILTER (LANG(?audience) = ?language)
    }
     
@@ -382,9 +391,9 @@ rule:Description
   sh:construct """
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
-prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix dom: <http://www.w3.org/DOM/model/def/>
 prefix function: <https://respec.org/ontorespec/model/function/>
-prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
+prefix html: <https://www.w3.org/html/model/def/> 
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
 prefix respec: <https://respec.org/ontorespec/model/def/> 
@@ -392,7 +401,7 @@ prefix schema: <http://schema.org/>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
 construct {
-  ?elementID rdf:type html:TextElement;
+  ?elementID rdf:type html:Text;
   html:fragment ?ontologyDescription.
     
 } where {
@@ -439,9 +448,9 @@ rule:Example
   sh:construct """
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
-prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix dom: <http://www.w3.org/DOM/model/def/>
 prefix function: <https://respec.org/ontorespec/model/function/>
-prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
+prefix html: <https://www.w3.org/html/model/def/> 
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
 prefix respec: <https://respec.org/ontorespec/model/def/> 
@@ -456,7 +465,7 @@ construct {
                          rdf:_1 ?examplePre.
   ?examplePre            rdf:type html:Pre;
                          rdf:_1 ?exampleTextElement.
-  ?exampleTextElement    rdf:type html:TextElement;
+  ?exampleTextElement    rdf:type html:Text;
                          html:fragment ?ontologyExample.
 } where {
   
@@ -489,7 +498,7 @@ rule:NameSpace
   sh:construct """
 PREFIX dct: <http://purl.org/dc/terms/>
 prefix function: <https://respec.org/ontorespec/model/function/>
-PREFIX html: <https://data.rijksfinancien.nl/html/model/def/> 
+PREFIX html: <https://www.w3.org/html/model/def/> 
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX respec: <https://respec.org/ontorespec/model/def/> 
@@ -503,11 +512,11 @@ construct {
                                     rdf:_2 ?namespaceIRIDataCell.
   ?namespacePrefixDataCell          rdf:type html:DataCell;
                                     rdf:_1 ?namespacePrefixDataCell_text.
-  ?namespacePrefixDataCell_text     rdf:type html:TextElement;
+  ?namespacePrefixDataCell_text     rdf:type html:Text;
                                     html:fragment ?prefix.
   ?namespaceIRIDataCell             rdf:type html:DataCell;
                                     rdf:_1 ?namespaceIRIDataCell_text.
-  ?namespaceIRIDataCell_text        rdf:type html:TextElement;
+  ?namespaceIRIDataCell_text        rdf:type html:Text;
                                     html:fragment ?namespaceDeclaration.
 
 } where {
@@ -577,15 +586,15 @@ rule:Abstract
   sh:construct """
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
-prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix dom: <http://www.w3.org/DOM/model/def/>
 prefix function: <https://respec.org/ontorespec/model/function/>
-prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
+prefix html: <https://www.w3.org/html/model/def/> 
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
 prefix respec: <https://respec.org/ontorespec/model/def/> 
 
 construct {
-  ?elementID rdf:type html:TextElement;
+  ?elementID rdf:type html:Text;
   html:fragment ?ontologyAbstract.
     
 } where {
@@ -619,7 +628,7 @@ rule:Configuration
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
 prefix function: <https://respec.org/ontorespec/model/function/>
-prefix html: <https://data.rijksfinancien.nl/html/model/def/> 
+prefix html: <https://www.w3.org/html/model/def/> 
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix prov: <http://www.w3.org/ns/prov#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
@@ -629,7 +638,7 @@ prefix schema: <http://schema.org/>
 
 construct {
   
-  ?elementID rdf:type html:TextElement;
+  ?elementID rdf:type html:Text;
   html:fragment ?fragment4.
     
 } where {
@@ -653,7 +662,8 @@ construct {
   optional
   {?ontology dct:source ?github}
   { select (group_concat(?ontologyAuthorString;separator='') as ?ontologyAuthors) 
-    {
+    {$this rdf:type respec:Generation;
+           dct:subject ?ontology.
   optional
   {?ontology dct:creator ?ontologyAuthor1}
   optional
@@ -694,9 +704,9 @@ rule:Classes
   sh:construct """
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
-prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix dom: <http://www.w3.org/DOM/model/def/>
 prefix function: <https://respec.org/ontorespec/model/function/>
-prefix html: <https://data.rijksfinancien.nl/html/model/def/>
+prefix html: <https://www.w3.org/html/model/def/>
 prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -724,7 +734,7 @@ construct {
                                               rdf:_1 ?class_dfn_instance.
       ?class_dfn_instance                     rdf:type html:Dfn;
                                               rdf:_1 ?class_title_text_instance.
-      ?class_title_text_instance              rdf:type html:TextElement;
+      ?class_title_text_instance              rdf:type html:Text;
                                               html:fragment ?cleanedManchesterLabel.
       ?class_label_div                        rdf:type html:Div;
                                               rdf:_1 ?class_label_strong;
@@ -733,9 +743,9 @@ construct {
       ?class_label_strong                     rdf:type html:Strong;
                                               rdf:_1 ?class_label_text;
                                               html:class "label".
-      ?class_label_text                       rdf:type html:TextElement;
+      ?class_label_text                       rdf:type html:Text;
                                               html:fragment 'Label: '.   
-      ?class_label_value                      rdf:type html:TextElement;
+      ?class_label_value                      rdf:type html:Text;
                                               html:fragment ?label_value_text.                                                
       ?class_IRI_div                          rdf:type html:Div;
                                               rdf:_1 ?class_IRI_strong;
@@ -744,14 +754,14 @@ construct {
       ?class_IRI_strong                       rdf:type html:Strong;
                                               rdf:_1 ?class_IRI_text;
                                               html:class "label".
-      ?class_IRI_text                         rdf:type html:TextElement;
+      ?class_IRI_text                         rdf:type html:Text;
                                               html:fragment 'IRI: '.
       ?class_IRI_a                            rdf:type html:A;
                                               html:href ?IRI_value_text;
                                               rdf:_1 ?IRI_value.
-      ?IRI_value                              rdf:type html:TextElement;
+      ?IRI_value                              rdf:type html:Text;
                                               html:fragment ?IRI_value_text.
-      ?class_definition_instance              rdf:type html:TextElement;
+      ?class_definition_instance              rdf:type html:Text;
                                               html:fragment ?classDefinition.
       ?manchester_syntax_instance                   rdf:type html:Aside;
                                                       html:class "note" ;
@@ -772,11 +782,11 @@ construct {
                                                       rdf:_2 ?manchester_definition_class_value_td.
       ?manchester_definition_class_type_td          rdf:type html:DataCell;
                                                       rdf:_1 ?manchester_definition_class_type_text. 
-      ?manchester_definition_class_type_text        rdf:type html:TextElement;
+      ?manchester_definition_class_type_text        rdf:type html:Text;
                                                       html:fragment 'Class:'.
       ?manchester_definition_class_value_td         rdf:type html:DataCell;
                                                       rdf:_1 ?manchester_definition_class_value_text.
-      ?manchester_definition_class_value_text       rdf:type html:TextElement;
+      ?manchester_definition_class_value_text       rdf:type html:Text;
                                                       html:fragment ?cleanedManchesterLabel.
       ?manchester_definition_tr_class_empty_row     rdf:type html:Row;
                                                       rdf:_1 ?manchester_definition_class_empty_td1;
@@ -790,11 +800,11 @@ construct {
                                                       rdf:_2 ?manchester_definition_equivalence_value_td.
       ?manchester_definition_equivalence_type_td    rdf:type html:DataCell;
                                                       rdf:_1 ?manchester_definition_equivalence_type_text. 
-      ?manchester_definition_equivalence_type_text  rdf:type html:TextElement;
+      ?manchester_definition_equivalence_type_text  rdf:type html:Text;
                                                       html:fragment 'EquivalentTo:'.
       ?manchester_definition_equivalence_value_td   rdf:type html:DataCell;
                                                       rdf:_1 ?manchester_definition_equivalence_value_text.
-      ?manchester_definition_equivalence_value_text rdf:type html:TextElement;
+      ?manchester_definition_equivalence_value_text rdf:type html:Text;
                                                       html:fragment ?manchesterDefinition.
       ?manchester_table_body_instance_subclass       rdf:type html:TableBody;
                                                       ?memberManchesterStringSubClassOf  ?manchester_definition_tr_subclass.
@@ -803,11 +813,11 @@ construct {
                                                       rdf:_2 ?manchester_definition_subclass_value_td.
       ?manchester_definition_subclass_type_td       rdf:type html:DataCell;
                                                       rdf:_1 ?manchester_definition_subclass_type_text. 
-      ?manchester_definition_subclass_type_text     rdf:type html:TextElement;
+      ?manchester_definition_subclass_type_text     rdf:type html:Text;
                                                       html:fragment 'SubClassOf:'.
       ?manchester_definition_subclass_value_td      rdf:type html:DataCell;
                                                       rdf:_1 ?manchester_definition_subclass_value_text.
-      ?manchester_definition_subclass_value_text    rdf:type html:TextElement;
+      ?manchester_definition_subclass_value_text    rdf:type html:Text;
                                                       html:fragment ?manchesterDefinitionS.
       ?manchester_table_body_instance_seeAlso       rdf:type html:TableBody;
                                                       ?memberManchesterStringSeeAlso  ?manchester_definition_tr_seeAlso.
@@ -816,11 +826,11 @@ construct {
                                                       rdf:_2 ?manchester_definition_seeAlso_value_td.
       ?manchester_definition_seeAlso_type_td        rdf:type html:DataCell;
                                                       rdf:_1 ?manchester_definition_seeAlso_type_text. 
-      ?manchester_definition_seeAlso_type_text      rdf:type html:TextElement;
+      ?manchester_definition_seeAlso_type_text      rdf:type html:Text;
                                                       html:fragment 'SeeAlso:'.
       ?manchester_definition_seeAlso_value_td       rdf:type html:DataCell;
                                                       rdf:_1 ?manchester_definition_seeAlso_value_text.
-      ?manchester_definition_seeAlso_value_text     rdf:type html:TextElement;
+      ?manchester_definition_seeAlso_value_text     rdf:type html:Text;
                                                       html:fragment ?seeAlsoLabel.
                                                     
       ?class_linebreak_instance1                          rdf:type html:Br.
@@ -1025,9 +1035,9 @@ rule:ObjectProperties
   sh:construct """
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
-prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix dom: <http://www.w3.org/DOM/model/def/>
 prefix function: <https://respec.org/ontorespec/model/function/>
-prefix html: <https://data.rijksfinancien.nl/html/model/def/>
+prefix html: <https://www.w3.org/html/model/def/>
 prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -1055,7 +1065,7 @@ construct {
                                                               rdf:_1 ?objectproperty_dfn_instance.
       ?objectproperty_dfn_instance                            rdf:type html:Dfn;
                                                               rdf:_1 ?objectproperty_title_text_instance.
-      ?objectproperty_title_text_instance                     rdf:type html:TextElement;
+      ?objectproperty_title_text_instance                     rdf:type html:Text;
                                                               html:fragment ?objectPropertyManchesterLabel.
       ?objectproperty_label_div                               rdf:type html:Div;
                                                               rdf:_1 ?objectproperty_label_strong;
@@ -1064,9 +1074,9 @@ construct {
       ?objectproperty_label_strong                            rdf:type html:Strong;
                                                               rdf:_1 ?objectproperty_label_text;
                                                               html:class "label".
-      ?objectproperty_label_text                              rdf:type html:TextElement;
+      ?objectproperty_label_text                              rdf:type html:Text;
                                                               html:fragment 'Label: '.
-      ?objectproperty_label_value                             rdf:type html:TextElement;
+      ?objectproperty_label_value                             rdf:type html:Text;
                                                               html:fragment ?objectproperty_value_text.                                                                   
       ?objectproperty_IRI_div                                 rdf:type html:Div;
                                                               rdf:_1 ?objectproperty_IRI_strong;
@@ -1075,14 +1085,14 @@ construct {
       ?objectproperty_IRI_strong                              rdf:type html:Strong;
                                                               rdf:_1 ?objectproperty_IRI_text;
                                                               html:class "label".
-      ?objectproperty_IRI_text                                rdf:type html:TextElement;
+      ?objectproperty_IRI_text                                rdf:type html:Text;
                                                               html:fragment 'IRI: '.
       ?objectproperty_IRI_a                                   rdf:type html:A;
                                                               html:href ?fullIRI;
                                                               rdf:_1 ?IRI_value.
-      ?IRI_value                                              rdf:type html:TextElement;
+      ?IRI_value                                              rdf:type html:Text;
                                                               html:fragment ?fullIRI.
-      ?objectproperty_definition_instance                     rdf:type html:TextElement;
+      ?objectproperty_definition_instance                     rdf:type html:Text;
                                                               html:fragment ?objectPropertyDefinition_text.
       ?manchester_syntax_instance                             rdf:type html:Aside;
                                                               html:class "note" ;
@@ -1103,11 +1113,11 @@ construct {
                                                               rdf:_2 ?manchester_definition_objectproperty_value_td.
       ?manchester_definition_objectproperty_type_td           rdf:type html:DataCell;
                                                               rdf:_1 ?manchester_definition_objectproperty_type_text. 
-      ?manchester_definition_objectproperty_type_text         rdf:type html:TextElement;
+      ?manchester_definition_objectproperty_type_text         rdf:type html:Text;
                                                               html:fragment 'ObjectProperty:'.
       ?manchester_definition_objectproperty_value_td          rdf:type html:DataCell;
                                                               rdf:_1 ?manchester_definition_objectproperty_value_text.
-      ?manchester_definition_objectproperty_value_text        rdf:type html:TextElement;
+      ?manchester_definition_objectproperty_value_text        rdf:type html:Text;
                                                               html:fragment ?objectPropertyManchesterLabel.
 
       ?manchester_definition_tr_objectproperty_empty_row      rdf:type html:Row;
@@ -1121,11 +1131,11 @@ construct {
                                                               rdf:_2 ?manchester_domain_tr_objectproperty_value_td.
       ?manchester_domain_tr_objectproperty_type_td            rdf:type html:DataCell;
                                                               rdf:_1 ?manchester_domain_tr_objectproperty_type_text. 
-      ?manchester_domain_tr_objectproperty_type_text          rdf:type html:TextElement;
+      ?manchester_domain_tr_objectproperty_type_text          rdf:type html:Text;
                                                               html:fragment 'Domain:'.
       ?manchester_domain_tr_objectproperty_value_td           rdf:type html:DataCell;
                                                               rdf:_1 ?manchester_domain_tr_objectproperty_value_text.
-      ?manchester_domain_tr_objectproperty_value_text         rdf:type html:TextElement;
+      ?manchester_domain_tr_objectproperty_value_text         rdf:type html:Text;
                                                               html:fragment ?objectPropertyManchesterDomain.
 
       ?manchester_range_tr_objectproperty                    rdf:type html:Row;
@@ -1133,11 +1143,11 @@ construct {
                                                              rdf:_2 ?manchester_range_tr_objectproperty_value_td.
       ?manchester_range_tr_objectproperty_type_td            rdf:type html:DataCell;
                                                              rdf:_1 ?manchester_range_tr_objectproperty_type_text. 
-      ?manchester_range_tr_objectproperty_type_text          rdf:type html:TextElement;
+      ?manchester_range_tr_objectproperty_type_text          rdf:type html:Text;
                                                              html:fragment 'Range:'.
       ?manchester_range_tr_objectproperty_value_td           rdf:type html:DataCell;
                                                              rdf:_1 ?manchester_range_tr_objectproperty_value_text.
-      ?manchester_range_tr_objectproperty_value_text         rdf:type html:TextElement;
+      ?manchester_range_tr_objectproperty_value_text         rdf:type html:Text;
                                                              html:fragment ?objectPropertyManchesterRange.
 
       ?manchester_subproperty_tr_objectproperty              rdf:type html:Row;
@@ -1145,11 +1155,11 @@ construct {
                                                              rdf:_2 ?manchester_subproperty_tr_objectproperty_value_td.
       ?manchester_subproperty_tr_objectproperty_type_td      rdf:type html:DataCell;
                                                              rdf:_1 ?manchester_subproperty_tr_objectproperty_type_text. 
-      ?manchester_subproperty_tr_objectproperty_type_text    rdf:type html:TextElement;
+      ?manchester_subproperty_tr_objectproperty_type_text    rdf:type html:Text;
                                                              html:fragment 'Subproperty:'.
       ?manchester_subproperty_tr_objectproperty_value_td     rdf:type html:DataCell;
                                                              rdf:_1 ?manchester_subproperty_tr_objectproperty_value_text.
-      ?manchester_subproperty_tr_objectproperty_value_text   rdf:type html:TextElement;
+      ?manchester_subproperty_tr_objectproperty_value_text   rdf:type html:Text;
                                                              html:fragment ?objectPropertyManchesterSubPropertyOf.
 
       ?objectproperty_linebreak_instance1                          rdf:type html:Br.
@@ -1291,9 +1301,9 @@ rule:DatatypeProperties
   sh:construct """
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
-prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix dom: <http://www.w3.org/DOM/model/def/>
 prefix function: <https://respec.org/ontorespec/model/function/>
-prefix html: <https://data.rijksfinancien.nl/html/model/def/>
+prefix html: <https://www.w3.org/html/model/def/>
 prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -1321,7 +1331,7 @@ construct {
                                                               rdf:_1 ?datatypeproperty_dfn_instance.
       ?datatypeproperty_dfn_instance                            rdf:type html:Dfn;
                                                               rdf:_1 ?datatypeproperty_title_text_instance.
-      ?datatypeproperty_title_text_instance                     rdf:type html:TextElement;
+      ?datatypeproperty_title_text_instance                     rdf:type html:Text;
                                                               html:fragment ?datatypePropertyManchesterLabel.
       ?datatypeproperty_label_div                                   rdf:type html:Div;
                                                               rdf:_1 ?datatypeproperty_label_strong;
@@ -1330,9 +1340,9 @@ construct {
       ?datatypeproperty_label_strong                              rdf:type html:Strong;
                                                               rdf:_1 ?datatypeproperty_label_text;
                                                               html:class "label".
-      ?datatypeproperty_label_text                                rdf:type html:TextElement;
+      ?datatypeproperty_label_text                                rdf:type html:Text;
                                                               html:fragment 'Label: '.
-      ?datatypeproperty_label_value                                rdf:type html:TextElement;
+      ?datatypeproperty_label_value                                rdf:type html:Text;
                                                               html:fragment ?datatypeproperty_value_text.                                                                    
       ?datatypeproperty_IRI_div                                   rdf:type html:Div;
                                                               rdf:_1 ?datatypeproperty_IRI_strong;
@@ -1341,14 +1351,14 @@ construct {
       ?datatypeproperty_IRI_strong                              rdf:type html:Strong;
                                                               rdf:_1 ?datatypeproperty_IRI_text;
                                                               html:class "label".
-      ?datatypeproperty_IRI_text                                rdf:type html:TextElement;
+      ?datatypeproperty_IRI_text                                rdf:type html:Text;
                                                               html:fragment 'IRI: '.
       ?datatypeproperty_IRI_a                                   rdf:type html:A;
                                                               html:href ?fullIRI;
                                                               rdf:_1 ?IRI_value.
-      ?IRI_value                                              rdf:type html:TextElement;
+      ?IRI_value                                              rdf:type html:Text;
                                                               html:fragment ?fullIRI.
-      ?datatypeproperty_definition_instance                     rdf:type html:TextElement;
+      ?datatypeproperty_definition_instance                     rdf:type html:Text;
                                                               html:fragment ?datatypePropertyDefinition_text.
       ?manchester_syntax_instance                             rdf:type html:Aside;
                                                               html:class "note" ;
@@ -1369,11 +1379,11 @@ construct {
                                                               rdf:_2 ?manchester_definition_datatypeproperty_value_td.
       ?manchester_definition_datatypeproperty_type_td           rdf:type html:DataCell;
                                                               rdf:_1 ?manchester_definition_datatypeproperty_type_text. 
-      ?manchester_definition_datatypeproperty_type_text         rdf:type html:TextElement;
+      ?manchester_definition_datatypeproperty_type_text         rdf:type html:Text;
                                                               html:fragment 'DatatypeProperty:'.
       ?manchester_definition_datatypeproperty_value_td          rdf:type html:DataCell;
                                                               rdf:_1 ?manchester_definition_datatypeproperty_value_text.
-      ?manchester_definition_datatypeproperty_value_text        rdf:type html:TextElement;
+      ?manchester_definition_datatypeproperty_value_text        rdf:type html:Text;
                                                               html:fragment ?datatypePropertyManchesterLabel.
 
       ?manchester_definition_tr_datatypeproperty_empty_row      rdf:type html:Row;
@@ -1387,11 +1397,11 @@ construct {
                                                               rdf:_2 ?manchester_domain_tr_datatypeproperty_value_td.
       ?manchester_domain_tr_datatypeproperty_type_td            rdf:type html:DataCell;
                                                               rdf:_1 ?manchester_domain_tr_datatypeproperty_type_text. 
-      ?manchester_domain_tr_datatypeproperty_type_text          rdf:type html:TextElement;
+      ?manchester_domain_tr_datatypeproperty_type_text          rdf:type html:Text;
                                                               html:fragment 'Domain:'.
       ?manchester_domain_tr_datatypeproperty_value_td           rdf:type html:DataCell;
                                                               rdf:_1 ?manchester_domain_tr_datatypeproperty_value_text.
-      ?manchester_domain_tr_datatypeproperty_value_text         rdf:type html:TextElement;
+      ?manchester_domain_tr_datatypeproperty_value_text         rdf:type html:Text;
                                                               html:fragment ?datatypePropertyManchesterDomain.
 
       ?manchester_range_tr_datatypeproperty                    rdf:type html:Row;
@@ -1399,11 +1409,11 @@ construct {
                                                              rdf:_2 ?manchester_range_tr_datatypeproperty_value_td.
       ?manchester_range_tr_datatypeproperty_type_td            rdf:type html:DataCell;
                                                              rdf:_1 ?manchester_range_tr_datatypeproperty_type_text. 
-      ?manchester_range_tr_datatypeproperty_type_text          rdf:type html:TextElement;
+      ?manchester_range_tr_datatypeproperty_type_text          rdf:type html:Text;
                                                              html:fragment 'Range:'.
       ?manchester_range_tr_datatypeproperty_value_td           rdf:type html:DataCell;
                                                              rdf:_1 ?manchester_range_tr_datatypeproperty_value_text.
-      ?manchester_range_tr_datatypeproperty_value_text         rdf:type html:TextElement;
+      ?manchester_range_tr_datatypeproperty_value_text         rdf:type html:Text;
                                                              html:fragment ?datatypePropertyManchesterRange.
 
       ?manchester_subproperty_tr_datatypeproperty              rdf:type html:Row;
@@ -1411,11 +1421,11 @@ construct {
                                                              rdf:_2 ?manchester_subproperty_tr_datatypeproperty_value_td.
       ?manchester_subproperty_tr_datatypeproperty_type_td      rdf:type html:DataCell;
                                                              rdf:_1 ?manchester_subproperty_tr_datatypeproperty_type_text. 
-      ?manchester_subproperty_tr_datatypeproperty_type_text    rdf:type html:TextElement;
+      ?manchester_subproperty_tr_datatypeproperty_type_text    rdf:type html:Text;
                                                              html:fragment 'Subproperty:'.
       ?manchester_subproperty_tr_datatypeproperty_value_td     rdf:type html:DataCell;
                                                              rdf:_1 ?manchester_subproperty_tr_datatypeproperty_value_text.
-      ?manchester_subproperty_tr_datatypeproperty_value_text   rdf:type html:TextElement;
+      ?manchester_subproperty_tr_datatypeproperty_value_text   rdf:type html:Text;
                                                              html:fragment ?datatypePropertyManchesterSubPropertyOf.
 
       ?datatypeproperty_linebreak_instance1                          rdf:type html:Br.
@@ -1557,9 +1567,9 @@ rule:RDF_Properties
   sh:construct """
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
-prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix dom: <http://www.w3.org/DOM/model/def/>
 prefix function: <https://respec.org/ontorespec/model/function/>
-prefix html: <https://data.rijksfinancien.nl/html/model/def/>
+prefix html: <https://www.w3.org/html/model/def/>
 prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -1587,7 +1597,7 @@ construct {
                                                               rdf:_1 ?RDF_Property_dfn_instance.
       ?RDF_Property_dfn_instance                            rdf:type html:Dfn;
                                                               rdf:_1 ?RDF_Property_title_text_instance.
-      ?RDF_Property_title_text_instance                     rdf:type html:TextElement;
+      ?RDF_Property_title_text_instance                     rdf:type html:Text;
                                                               html:fragment ?RDF_PropertyManchesterLabel.
       ?RDF_Property_label_div                                   rdf:type html:Div;
                                                               rdf:_1 ?RDF_Property_label_strong;
@@ -1596,9 +1606,9 @@ construct {
       ?RDF_Property_label_strong                              rdf:type html:Strong;
                                                               rdf:_1 ?RDF_Property_label_text;
                                                               html:class "label".
-      ?RDF_Property_label_text                                rdf:type html:TextElement;
+      ?RDF_Property_label_text                                rdf:type html:Text;
                                                               html:fragment 'Label: '.
-      ?RDF_Property_label_value                                rdf:type html:TextElement;
+      ?RDF_Property_label_value                                rdf:type html:Text;
                                                               html:fragment ?RDF_Property_value_text.                                                                          
       ?RDF_Property_IRI_div                                   rdf:type html:Div;
                                                               rdf:_1 ?RDF_Property_IRI_strong;
@@ -1607,14 +1617,14 @@ construct {
       ?RDF_Property_IRI_strong                              rdf:type html:Strong;
                                                               rdf:_1 ?RDF_Property_IRI_text;
                                                               html:class "label".
-      ?RDF_Property_IRI_text                                rdf:type html:TextElement;
+      ?RDF_Property_IRI_text                                rdf:type html:Text;
                                                               html:fragment 'IRI: '.
       ?RDF_Property_IRI_a                                   rdf:type html:A;
                                                               html:href ?fullIRI;
                                                               rdf:_1 ?IRI_value.
-      ?IRI_value                                              rdf:type html:TextElement;
+      ?IRI_value                                              rdf:type html:Text;
                                                               html:fragment ?fullIRI.
-      ?RDF_Property_definition_instance                     rdf:type html:TextElement;
+      ?RDF_Property_definition_instance                     rdf:type html:Text;
                                                               html:fragment ?RDF_PropertyDefinition_text.
       ?manchester_syntax_instance                             rdf:type html:Aside;
                                                               html:class "note" ;
@@ -1635,11 +1645,11 @@ construct {
                                                               rdf:_2 ?manchester_definition_RDF_Property_value_td.
       ?manchester_definition_RDF_Property_type_td           rdf:type html:DataCell;
                                                               rdf:_1 ?manchester_definition_RDF_Property_type_text. 
-      ?manchester_definition_RDF_Property_type_text         rdf:type html:TextElement;
+      ?manchester_definition_RDF_Property_type_text         rdf:type html:Text;
                                                               html:fragment 'RDF_Property:'.
       ?manchester_definition_RDF_Property_value_td          rdf:type html:DataCell;
                                                               rdf:_1 ?manchester_definition_RDF_Property_value_text.
-      ?manchester_definition_RDF_Property_value_text        rdf:type html:TextElement;
+      ?manchester_definition_RDF_Property_value_text        rdf:type html:Text;
                                                               html:fragment ?RDF_PropertyManchesterLabel.
 
       ?manchester_definition_tr_RDF_Property_empty_row      rdf:type html:Row;
@@ -1653,11 +1663,11 @@ construct {
                                                               rdf:_2 ?manchester_domain_tr_RDF_Property_value_td.
       ?manchester_domain_tr_RDF_Property_type_td            rdf:type html:DataCell;
                                                               rdf:_1 ?manchester_domain_tr_RDF_Property_type_text. 
-      ?manchester_domain_tr_RDF_Property_type_text          rdf:type html:TextElement;
+      ?manchester_domain_tr_RDF_Property_type_text          rdf:type html:Text;
                                                               html:fragment 'Domain:'.
       ?manchester_domain_tr_RDF_Property_value_td           rdf:type html:DataCell;
                                                               rdf:_1 ?manchester_domain_tr_RDF_Property_value_text.
-      ?manchester_domain_tr_RDF_Property_value_text         rdf:type html:TextElement;
+      ?manchester_domain_tr_RDF_Property_value_text         rdf:type html:Text;
                                                               html:fragment ?RDF_PropertyManchesterDomain.
 
       ?manchester_range_tr_RDF_Property                    rdf:type html:Row;
@@ -1665,11 +1675,11 @@ construct {
                                                              rdf:_2 ?manchester_range_tr_RDF_Property_value_td.
       ?manchester_range_tr_RDF_Property_type_td            rdf:type html:DataCell;
                                                              rdf:_1 ?manchester_range_tr_RDF_Property_type_text. 
-      ?manchester_range_tr_RDF_Property_type_text          rdf:type html:TextElement;
+      ?manchester_range_tr_RDF_Property_type_text          rdf:type html:Text;
                                                              html:fragment 'Range:'.
       ?manchester_range_tr_RDF_Property_value_td           rdf:type html:DataCell;
                                                              rdf:_1 ?manchester_range_tr_RDF_Property_value_text.
-      ?manchester_range_tr_RDF_Property_value_text         rdf:type html:TextElement;
+      ?manchester_range_tr_RDF_Property_value_text         rdf:type html:Text;
                                                              html:fragment ?RDF_PropertyManchesterRange.
 
       ?manchester_subproperty_tr_RDF_Property              rdf:type html:Row;
@@ -1677,11 +1687,11 @@ construct {
                                                              rdf:_2 ?manchester_subproperty_tr_RDF_Property_value_td.
       ?manchester_subproperty_tr_RDF_Property_type_td      rdf:type html:DataCell;
                                                              rdf:_1 ?manchester_subproperty_tr_RDF_Property_type_text. 
-      ?manchester_subproperty_tr_RDF_Property_type_text    rdf:type html:TextElement;
+      ?manchester_subproperty_tr_RDF_Property_type_text    rdf:type html:Text;
                                                              html:fragment 'Subproperty:'.
       ?manchester_subproperty_tr_RDF_Property_value_td     rdf:type html:DataCell;
                                                              rdf:_1 ?manchester_subproperty_tr_RDF_Property_value_text.
-      ?manchester_subproperty_tr_RDF_Property_value_text   rdf:type html:TextElement;
+      ?manchester_subproperty_tr_RDF_Property_value_text   rdf:type html:Text;
                                                              html:fragment ?RDF_PropertyManchesterSubPropertyOf.
 
       ?RDF_Property_linebreak_instance1                          rdf:type html:Br.
@@ -1824,9 +1834,9 @@ rule:NodeShapes
 
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
-prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix dom: <http://www.w3.org/DOM/model/def/>
 prefix function: <https://respec.org/ontorespec/model/function/>
-prefix html: <https://data.rijksfinancien.nl/html/model/def/>
+prefix html: <https://www.w3.org/html/model/def/>
 prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -1855,7 +1865,7 @@ construct {
                                rdf:_1 ?dfn.
   ?dfn                            rdf:type html:Dfn;
                                   rdf:_1 ?title_text.
-  ?title_text                     rdf:type html:TextElement;
+  ?title_text                     rdf:type html:Text;
                                   html:fragment ?entityManchesterLabel.
   ?label                                   rdf:type html:Div;
                                          rdf:_1 ?label_strong;
@@ -1864,9 +1874,9 @@ construct {
   ?label_strong                              rdf:type html:Strong;
                                            rdf:_1 ?label_text;
                                            html:class "label".
-  ?label_text                                rdf:type html:TextElement;
+  ?label_text                                rdf:type html:Text;
                                            html:fragment 'Label: '.  
-  ?label_value                                rdf:type html:TextElement;
+  ?label_value                                rdf:type html:Text;
                                            html:fragment ?label_value_text.                                    
   ?IRI                                   rdf:type html:Div;
                                          rdf:_1 ?IRI_strong;
@@ -1875,14 +1885,14 @@ construct {
   ?IRI_strong                              rdf:type html:Strong;
                                            rdf:_1 ?IRI_text;
                                            html:class "label".
-  ?IRI_text                                rdf:type html:TextElement;
+  ?IRI_text                                rdf:type html:Text;
                                            html:fragment 'IRI: '.
   ?IRI_a                                   rdf:type html:A;
                                            html:href ?fullIRI;
                                            rdf:_1 ?IRI_value_text.
-  ?IRI_value_text                                         rdf:type html:TextElement;
+  ?IRI_value_text                                         rdf:type html:Text;
                                                           html:fragment ?fullIRI.
-  ?definition                     rdf:type html:TextElement;
+  ?definition                     rdf:type html:Text;
                                   html:fragment ?entityDefinition.
   ?manchester_syntax                             rdf:type html:Aside;
                                                  html:class "note" ;
@@ -1904,11 +1914,11 @@ construct {
                                                          rdf:_2 ?manchester_syntax_definition_value.
   ?manchester_syntax_definition_type           rdf:type html:DataCell;
                                                rdf:_1 ?manchester_syntax_definition_type_text.
-  ?manchester_syntax_definition_type_text         rdf:type html:TextElement;
+  ?manchester_syntax_definition_type_text         rdf:type html:Text;
                                                   html:fragment 'Nodeshape:'.
   ?manchester_syntax_definition_value          rdf:type html:DataCell;
                                                rdf:_1 ?manchester_syntax_definition_value_text.
-  ?manchester_syntax_definition_value_text        rdf:type html:TextElement;
+  ?manchester_syntax_definition_value_text        rdf:type html:Text;
                                                   html:fragment ?entityManchesterLabel.
 
   ?emptyrow1      rdf:type html:Row;
@@ -1922,11 +1932,11 @@ construct {
                                                          rdf:_2 ?manchester_syntax_definition_targetClass_value.
   ?manchester_syntax_definition_targetClass_type            rdf:type html:DataCell;
                                                        rdf:_1 ?manchester_syntax_definition_targetClass_type_text.
-  ?manchester_syntax_definition_targetClass_type_text          rdf:type html:TextElement;
+  ?manchester_syntax_definition_targetClass_type_text          rdf:type html:Text;
                                                           html:fragment 'TargetClass:'.
   ?manchester_syntax_definition_targetClass_value           rdf:type html:DataCell;
                                                        rdf:_1 ?manchester_syntax_definition_targetClass_value_text.
-  ?manchester_syntax_definition_targetClass_value_text         rdf:type html:TextElement;
+  ?manchester_syntax_definition_targetClass_value_text         rdf:type html:Text;
                                                           html:fragment ?entityManchesterTargetClass.
 
   ?manchester_syntax_table_row_targetSPARQL                    rdf:type html:Row;
@@ -1934,11 +1944,11 @@ construct {
                                                         rdf:_2 ?manchester_syntax_definition_targetSPARQL_value.
   ?manchester_syntax_definition_targetSPARQL_type            rdf:type html:DataCell;
                                                       rdf:_1 ?manchester_syntax_definition_targetSPARQL_type_text.
-  ?manchester_syntax_definition_targetSPARQL_type_text          rdf:type html:TextElement;
+  ?manchester_syntax_definition_targetSPARQL_type_text          rdf:type html:Text;
                                                          html:fragment 'SPARQLTarget:'.
   ?manchester_syntax_definition_targetSPARQL_value           rdf:type html:DataCell;
                                                       rdf:_1 ?manchester_syntax_definition_targetSPARQL_value_text.
-  ?manchester_syntax_definition_targetSPARQL_value_text         rdf:type html:TextElement;
+  ?manchester_syntax_definition_targetSPARQL_value_text         rdf:type html:Text;
                                                          html:fragment ?entityManchesterTargetSPARQL.
 
   ?manchester_syntax_table_row_targetSubject              rdf:type html:Row;
@@ -1946,11 +1956,11 @@ construct {
                                                         rdf:_2 ?manchester_syntax_definition_targetSubject_value.
   ?manchester_syntax_definition_targetSubject_type      rdf:type html:DataCell;
                                                       rdf:_1 ?manchester_syntax_definition_targetSubject_type_text.
-  ?manchester_syntax_definition_targetSubject_type_text    rdf:type html:TextElement;
+  ?manchester_syntax_definition_targetSubject_type_text    rdf:type html:Text;
                                                          html:fragment 'TargetSubjectOf:'.
   ?manchester_syntax_definition_targetSubject_value     rdf:type html:DataCell;
                                                       rdf:_1 ?manchester_syntax_definition_targetSubject_value_text.
-  ?manchester_syntax_definition_targetSubject_value_text   rdf:type html:TextElement;
+  ?manchester_syntax_definition_targetSubject_value_text   rdf:type html:Text;
                                                          html:fragment ?entityManchesterTargetSubject.
 
   ?manchester_syntax_table_row_targetObject              rdf:type html:Row;
@@ -1958,11 +1968,11 @@ construct {
                                                         rdf:_2 ?manchester_syntax_definition_targetObject_value.
   ?manchester_syntax_definition_targetObject_type      rdf:type html:DataCell;
                                                       rdf:_1 ?manchester_syntax_definition_targetObject_type_text.
-  ?manchester_syntax_definition_targetObject_type_text    rdf:type html:TextElement;
+  ?manchester_syntax_definition_targetObject_type_text    rdf:type html:Text;
                                                          html:fragment 'TargetObjectOf:'.
   ?manchester_syntax_definition_targetObject_value     rdf:type html:DataCell;
                                                       rdf:_1 ?manchester_syntax_definition_targetObject_value_text.
-  ?manchester_syntax_definition_targetObject_value_text   rdf:type html:TextElement;
+  ?manchester_syntax_definition_targetObject_value_text   rdf:type html:Text;
                                                          html:fragment ?entityManchesterTargetObject.
 
   ?linebreak1                          rdf:type html:Br.
@@ -2123,9 +2133,9 @@ rule:NamedIndividuals
   sh:construct """
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
-prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix dom: <http://www.w3.org/DOM/model/def/>
 prefix function: <https://respec.org/ontorespec/model/function/>
-prefix html: <https://data.rijksfinancien.nl/html/model/def/>
+prefix html: <https://www.w3.org/html/model/def/>
 prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -2156,15 +2166,15 @@ construct {
   ?label_strong                              rdf:type html:Strong;
                                            rdf:_1 ?label_text;
                                            html:class "label".
-  ?label_text                                rdf:type html:TextElement;
+  ?label_text                                rdf:type html:Text;
                                            html:fragment 'Label: '.  
-  ?label_value                                rdf:type html:TextElement;
+  ?label_value                                rdf:type html:Text;
                                            html:fragment ?label_value_text.                                  
   ?title                       rdf:type html:H2;
                                rdf:_1 ?dfn.
   ?dfn                            rdf:type html:Dfn;
                                   rdf:_1 ?title_text.
-  ?title_text                     rdf:type html:TextElement;
+  ?title_text                     rdf:type html:Text;
                                   html:fragment ?entityManchesterLabel.
   ?IRI                                   rdf:type html:Div;
                                          rdf:_1 ?IRI_strong;
@@ -2173,14 +2183,14 @@ construct {
   ?IRI_strong                              rdf:type html:Strong;
                                            rdf:_1 ?IRI_text;
                                            html:class "label".
-  ?IRI_text                                rdf:type html:TextElement;
+  ?IRI_text                                rdf:type html:Text;
                                            html:fragment 'IRI: '.
   ?IRI_a                                   rdf:type html:A;
                                            html:href ?fullIRI;
                                            rdf:_1 ?IRI_value_text.
-  ?IRI_value_text                                         rdf:type html:TextElement;
+  ?IRI_value_text                                         rdf:type html:Text;
                                                           html:fragment ?fullIRI.
-  ?definition                     rdf:type html:TextElement;
+  ?definition                     rdf:type html:Text;
                                   html:fragment ?entityDefinition.
   ?manchester_syntax                             rdf:type html:Aside;
                                                  html:class "note" ;
@@ -2200,11 +2210,11 @@ construct {
                                                          rdf:_2 ?manchester_syntax_definition_value.
   ?manchester_syntax_definition_type           rdf:type html:DataCell;
                                                rdf:_1 ?manchester_syntax_definition_type_text.
-  ?manchester_syntax_definition_type_text         rdf:type html:TextElement;
+  ?manchester_syntax_definition_type_text         rdf:type html:Text;
                                                   html:fragment 'Named individual:'.
   ?manchester_syntax_definition_value          rdf:type html:DataCell;
                                                rdf:_1 ?manchester_syntax_definition_value_text.
-  ?manchester_syntax_definition_value_text        rdf:type html:TextElement;
+  ?manchester_syntax_definition_value_text        rdf:type html:Text;
                                                   html:fragment ?entityManchesterLabel.
 
   ?emptyrow1      rdf:type html:Row;
@@ -2218,11 +2228,11 @@ construct {
                                                          rdf:_2 ?manchester_syntax_definition_type_value.
   ?manchester_syntax_definition_type_type            rdf:type html:DataCell;
                                                        rdf:_1 ?manchester_syntax_definition_type_type_text.
-  ?manchester_syntax_definition_type_type_text          rdf:type html:TextElement;
+  ?manchester_syntax_definition_type_type_text          rdf:type html:Text;
                                                           html:fragment 'Types:'.
   ?manchester_syntax_definition_type_value           rdf:type html:DataCell;
                                                        rdf:_1 ?manchester_syntax_definition_type_value_text.
-  ?manchester_syntax_definition_type_value_text         rdf:type html:TextElement;
+  ?manchester_syntax_definition_type_value_text         rdf:type html:Text;
                                                           html:fragment ?entityManchesterClass.
 
   ?manchester_syntax_table_row_fact                    rdf:type html:Row;
@@ -2230,11 +2240,11 @@ construct {
                                                         rdf:_2 ?manchester_syntax_definition_fact_value.
   ?manchester_syntax_definition_fact_type            rdf:type html:DataCell;
                                                       rdf:_1 ?manchester_syntax_definition_fact_type_text.
-  ?manchester_syntax_definition_fact_type_text          rdf:type html:TextElement;
+  ?manchester_syntax_definition_fact_type_text          rdf:type html:Text;
                                                          html:fragment 'Facts:'.
   ?manchester_syntax_definition_fact_value           rdf:type html:DataCell;
                                                       rdf:_1 ?manchester_syntax_definition_fact_value_text.
-  ?manchester_syntax_definition_fact_value_text         rdf:type html:TextElement;
+  ?manchester_syntax_definition_fact_value_text         rdf:type html:Text;
                                                          html:fragment ?entityManchesterFact.
 
   ?linebreak1                          rdf:type html:Br.
@@ -2371,9 +2381,9 @@ rule:ConceptSchemes
   sh:construct """
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
-prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix dom: <http://www.w3.org/DOM/model/def/>
 prefix function: <https://respec.org/ontorespec/model/function/>
-prefix html: <https://data.rijksfinancien.nl/html/model/def/>
+prefix html: <https://www.w3.org/html/model/def/>
 prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -2404,7 +2414,7 @@ construct {
                           rdf:_1 ?dfn_scheme.
   ?dfn_scheme                  rdf:type html:Dfn;
                                rdf:_1 ?title_text_scheme.
-  ?title_text_scheme                     rdf:type html:TextElement;
+  ?title_text_scheme                     rdf:type html:Text;
                                   html:fragment ?conceptSchemeLabel.
   ?label_scheme                                   rdf:type html:Div;
                                                 rdf:_1 ?label_strong_scheme;
@@ -2413,9 +2423,9 @@ construct {
   ?label_strong_scheme                            rdf:type html:Strong;
                                                   rdf:_1 ?label_text_scheme;
                                                   html:class "label".
-  ?label_text_scheme                              rdf:type html:TextElement;
+  ?label_text_scheme                              rdf:type html:Text;
                                                   html:fragment 'Label: '.   
-  ?label_value_scheme                              rdf:type html:TextElement;
+  ?label_value_scheme                              rdf:type html:Text;
                                                   html:fragment ?scheme_label_text.                                                  
   ?IRI_scheme                                   rdf:type html:Div;
                                                 rdf:_1 ?IRI_strong_scheme;
@@ -2424,14 +2434,14 @@ construct {
   ?IRI_strong_scheme                              rdf:type html:Strong;
                                                   rdf:_1 ?IRI_text_scheme;
                                                   html:class "label".
-  ?IRI_text_scheme                                rdf:type html:TextElement;
+  ?IRI_text_scheme                                rdf:type html:Text;
                                                   html:fragment 'IRI: '.
   ?IRI_a_scheme                                   rdf:type html:A;
                                                   html:href ?conceptScheme_IRI;
                                                   rdf:_1 ?IRI_value_text_scheme.
-  ?IRI_value_text_scheme                                         rdf:type html:TextElement;
+  ?IRI_value_text_scheme                                         rdf:type html:Text;
                                                                  html:fragment ?conceptScheme_IRI.
-  ?definition_scheme                     rdf:type html:TextElement;
+  ?definition_scheme                     rdf:type html:Text;
                                          html:fragment ?cleanedSchemeDefinition.
   ?manchester_syntax_scheme                             rdf:type html:Aside;
                                                         html:class "note" ;
@@ -2448,15 +2458,15 @@ construct {
                                                                 rdf:_2 ?manchester_syntax_definition_value_scheme.
   ?manchester_syntax_definition_type_scheme           rdf:type html:DataCell;
                                                       rdf:_1 ?manchester_syntax_definition_type_text_scheme.
-  ?manchester_syntax_definition_type_text_scheme         rdf:type html:TextElement;
+  ?manchester_syntax_definition_type_text_scheme         rdf:type html:Text;
                                                          html:fragment 'Concept scheme:'.
   ?manchester_syntax_definition_value_scheme          rdf:type html:DataCell;
                                                       rdf:_1 ?manchester_syntax_definition_value_text_scheme.
-  ?manchester_syntax_definition_value_text_scheme        rdf:type html:TextElement;
+  ?manchester_syntax_definition_value_text_scheme        rdf:type html:Text;
                                                          html:fragment ?conceptSchemeLabel.
 
   ?chapter_concept           rdf:type html:Div;
-                             ?rdf_member ?section.
+                             rdf:_1 ?section.
   ?section                   rdf:type html:Section;
                              rdf:_1 ?title;
                              rdf:_2 ?label;
@@ -2470,7 +2480,7 @@ construct {
                                rdf:_1 ?dfn.
   ?dfn                            rdf:type html:Dfn;
                                   rdf:_1 ?title_text.
-  ?title_text                     rdf:type html:TextElement;
+  ?title_text                     rdf:type html:Text;
                                   html:fragment ?conceptLabel.
   ?label                                   rdf:type html:Div;
                                          rdf:_1 ?label_strong;
@@ -2479,9 +2489,9 @@ construct {
   ?label_strong                              rdf:type html:Strong;
                                            rdf:_1 ?label_text;
                                            html:class "label".
-  ?label_text                                rdf:type html:TextElement;
+  ?label_text                                rdf:type html:Text;
                                            html:fragment 'Label: '.
-  ?label_value                                rdf:type html:TextElement;
+  ?label_value                                rdf:type html:Text;
                                            html:fragment ?label_value_text.
   ?IRI                                   rdf:type html:Div;
                                          rdf:_1 ?IRI_strong;
@@ -2490,14 +2500,14 @@ construct {
   ?IRI_strong                              rdf:type html:Strong;
                                            rdf:_1 ?IRI_text;
                                            html:class "label".
-  ?IRI_text                                rdf:type html:TextElement;
+  ?IRI_text                                rdf:type html:Text;
                                            html:fragment 'IRI: '.
   ?IRI_a                                   rdf:type html:A;
                                            html:href ?concept_IRI;
                                            rdf:_1 ?IRI_value_text.
-  ?IRI_value_text                                         rdf:type html:TextElement;
+  ?IRI_value_text                                         rdf:type html:Text;
                                                           html:fragment ?concept_IRI.
-  ?definition                     rdf:type html:TextElement;
+  ?definition                     rdf:type html:Text;
                                   html:fragment ?conceptDefinition.
   ?manchester_syntax                             rdf:type html:Aside;
                                                  html:class "note" ;
@@ -2516,11 +2526,11 @@ construct {
                                                          rdf:_2 ?manchester_syntax_definition_value.
   ?manchester_syntax_definition_type           rdf:type html:DataCell;
                                                rdf:_1 ?manchester_syntax_definition_type_text.
-  ?manchester_syntax_definition_type_text         rdf:type html:TextElement;
+  ?manchester_syntax_definition_type_text         rdf:type html:Text;
                                                   html:fragment 'Concept:'.
   ?manchester_syntax_definition_value          rdf:type html:DataCell;
                                                rdf:_1 ?manchester_syntax_definition_value_text.
-  ?manchester_syntax_definition_value_text        rdf:type html:TextElement;
+  ?manchester_syntax_definition_value_text        rdf:type html:Text;
                                                   html:fragment ?conceptLabel.
 
   ?emptyrow1      rdf:type html:Row;
@@ -2534,11 +2544,11 @@ construct {
                                                            rdf:_2 ?manchester_syntax_definition_inscheme_value.
   ?manchester_syntax_definition_inscheme_type            rdf:type html:DataCell;
                                                          rdf:_1 ?manchester_syntax_definition_inscheme_type_text.
-  ?manchester_syntax_definition_inscheme_type_text          rdf:type html:TextElement;
+  ?manchester_syntax_definition_inscheme_type_text          rdf:type html:Text;
                                                             html:fragment 'In scheme:'.
   ?manchester_syntax_definition_inscheme_value           rdf:type html:DataCell;
                                                          rdf:_1 ?manchester_syntax_definition_inscheme_value_text.
-  ?manchester_syntax_definition_inscheme_value_text         rdf:type html:TextElement;
+  ?manchester_syntax_definition_inscheme_value_text         rdf:type html:Text;
                                                             html:fragment ?inSchemeLabel.
 
   ?linebreak1                          rdf:type html:Br.
@@ -2642,7 +2652,7 @@ construct {
     bind(function:getElementIRI(?template, ?namespace) as ?elementID)
     bind(iri(concat(str(?elementID), '-', str(?memberScheme))) as ?chapter_scheme)
     bind(iri(concat(str(?chapter_scheme),'-', str(?member))) as ?chapter_concept)
-    bind(iri(concat(str(?chapter_scheme),'-1')) as ?section_scheme)
+    bind(iri(concat(str(?chapter_scheme), '-1')) as ?section_scheme)
     bind(iri(concat(str(?section_scheme), '-1')) as ?title_scheme)
     bind(iri(concat(str(?section_scheme), '-2')) as ?label_scheme)
     bind(iri(concat(str(?section_scheme), '-3')) as ?IRI_scheme)
@@ -2677,7 +2687,7 @@ construct {
 
     # Create identifiers - concept
 
-    bind(iri(concat(str(?chapter_concept), '-', str(?member),'-1')) as ?section)
+    bind(iri(concat(str(?chapter_concept), '-1')) as ?section)
     bind(iri(concat(str(?section), '-1')) as ?title)
     bind(iri(concat(str(?section), '-2')) as ?label)
     bind(iri(concat(str(?section), '-3')) as ?IRI)
@@ -2738,9 +2748,9 @@ rule:Concepts
   sh:construct """
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
-prefix dom: <https://data.rijksfinancien.nl/dom/model/def/>
+prefix dom: <http://www.w3.org/DOM/model/def/>
 prefix function: <https://respec.org/ontorespec/model/function/>
-prefix html: <https://data.rijksfinancien.nl/html/model/def/>
+prefix html: <https://www.w3.org/html/model/def/>
 prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -2768,7 +2778,7 @@ construct {
                                rdf:_1 ?dfn.
   ?dfn                            rdf:type html:Dfn;
                                   rdf:_1 ?title_text.
-  ?title_text                     rdf:type html:TextElement;
+  ?title_text                     rdf:type html:Text;
                                   html:fragment ?conceptLabel.
   ?label                                   rdf:type html:Div;
                                          rdf:_1 ?label_strong;
@@ -2777,9 +2787,9 @@ construct {
   ?label_strong                              rdf:type html:Strong;
                                            rdf:_1 ?label_text;
                                            html:class "label".
-  ?label_text                                rdf:type html:TextElement;
+  ?label_text                                rdf:type html:Text;
                                            html:fragment 'Label: '.
-  ?label_value                                rdf:type html:TextElement;
+  ?label_value                                rdf:type html:Text;
                                            html:fragment ?label_value_text.                                  
   ?IRI                                   rdf:type html:Div;
                                          rdf:_1 ?IRI_strong;
@@ -2788,14 +2798,14 @@ construct {
   ?IRI_strong                              rdf:type html:Strong;
                                            rdf:_1 ?IRI_text;
                                            html:class "label".
-  ?IRI_text                                rdf:type html:TextElement;
+  ?IRI_text                                rdf:type html:Text;
                                            html:fragment 'IRI: '.
   ?IRI_a                                   rdf:type html:A;
                                            html:href ?concept_IRI;
                                            rdf:_1 ?IRI_value_text.
-  ?IRI_value_text                                         rdf:type html:TextElement;
+  ?IRI_value_text                                         rdf:type html:Text;
                                                           html:fragment ?concept_IRI.
-  ?definition                     rdf:type html:TextElement;
+  ?definition                     rdf:type html:Text;
                                   html:fragment ?conceptDefinition.
   ?manchester_syntax                             rdf:type html:Aside;
                                                  html:class "note" ;
@@ -2814,11 +2824,11 @@ construct {
                                                          rdf:_2 ?manchester_syntax_definition_value.
   ?manchester_syntax_definition_type           rdf:type html:DataCell;
                                                rdf:_1 ?manchester_syntax_definition_type_text.
-  ?manchester_syntax_definition_type_text         rdf:type html:TextElement;
+  ?manchester_syntax_definition_type_text         rdf:type html:Text;
                                                   html:fragment 'Concept:'.
   ?manchester_syntax_definition_value          rdf:type html:DataCell;
                                                rdf:_1 ?manchester_syntax_definition_value_text.
-  ?manchester_syntax_definition_value_text        rdf:type html:TextElement;
+  ?manchester_syntax_definition_value_text        rdf:type html:Text;
                                                   html:fragment ?conceptLabel.
 
   ?emptyrow1      rdf:type html:Row;
@@ -2832,11 +2842,11 @@ construct {
                                                            rdf:_2 ?manchester_syntax_definition_inscheme_value.
   ?manchester_syntax_definition_inscheme_type            rdf:type html:DataCell;
                                                          rdf:_1 ?manchester_syntax_definition_inscheme_type_text.
-  ?manchester_syntax_definition_inscheme_type_text          rdf:type html:TextElement;
+  ?manchester_syntax_definition_inscheme_type_text          rdf:type html:Text;
                                                             html:fragment 'In scheme:'.
   ?manchester_syntax_definition_inscheme_value           rdf:type html:DataCell;
                                                          rdf:_1 ?manchester_syntax_definition_inscheme_value_text.
-  ?manchester_syntax_definition_inscheme_value_text         rdf:type html:TextElement;
+  ?manchester_syntax_definition_inscheme_value_text         rdf:type html:Text;
                                                             html:fragment ?inSchemeLabel.
 
 
@@ -2975,11 +2985,11 @@ function:escapeHTML
                             replace(
                                 replace(
                                     $input,
-                                    '&', '&amp;', 'g'),
-                                '<', '&lt;', 'g'),
-                            '>', '&gt;', 'g'),
-                        '\"', '&quot;', 'g'),
-                    "\'", '&apos;', 'g')
+                                    '&', '&amp;'),
+                                '<', '&lt;'),
+                            '>', '&gt;'),
+                        '\"', '&quot;'),
+                    "\'", '&apos;')
                 AS ?result).
         }
         """ .
@@ -3113,3 +3123,5 @@ function:getLabel
   BIND(function:escapeHTML(COALESCE(?preferredLabel, ?alternativeLabel, ?implicitLabel)) as ?result)
 }
 """ .
+
+}
