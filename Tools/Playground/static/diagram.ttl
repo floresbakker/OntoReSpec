@@ -1,0 +1,184 @@
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix doc: <https://example.org/doc/> .
+@prefix helloworld: <https://example.org/helloworld/model/def/> .
+@prefix mermaid: <https://data.rijksfinancien.nl/mermaid/model/def/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix respec: <https://respec.org/ontorespec/model/def/> .
+@prefix rule: <https://example.org/helloworld/model/rule/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix shp: <https://example.org/helloworld/model/shp/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix status: <http://purl.org/adms/status/> .
+@prefix target: <https://example.org/helloworld/model/target/> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://example.org/doc/-diagram> a mermaid:Diagram ;
+    prov:wasGeneratedBy doc: ;
+    mermaid:label """
+            <!DOCTYPE html>
+             <html>
+               <head>
+               </head>
+               <body>
+                <div>
+                 <pre class="mermaid">
+                  %%{
+                  init: {
+                  "flowchart":{
+                  "useMaxWidth": 0
+                  }
+                  }
+                  }%%
+                  graph TB
+                  classDef Datatype fill:#9c6,stroke:#9c6;
+                   
+https://example.org/helloworld/model/def/LinkedDataEnthusiast((Linked Data enthusiast))
+https://example.org/helloworld/model/def/HelloWorld((Hello World))
+https://example.org/helloworld/model/def/LinkedDataEnthusiast -- message --> https://example.org/helloworld/model/def/HelloWorld
+
+                 </pre>
+                 <script type="module">
+                   import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+                   mermaid.initialize({ startOnLoad: true, maxTextSize : 99999999 });
+                 </script>
+               </div>
+              </body>
+             </html>
+                   
+""" .
+
+helloworld:FloresIndividual a helloworld:LinkedDataEnthusiast ;
+    rdfs:isDefinedBy helloworld: ;
+    skos:definition "Flores Bakker - an individual"@en ;
+    skos:prefLabel "Floress"@en,
+        "Flores"@nl,
+        "Florensio"@pt .
+
+helloworld:message a owl:ObjectProperty ;
+    rdfs:domain helloworld:LinkedDataEnthusiast ;
+    rdfs:isDefinedBy helloworld: ;
+    rdfs:range helloworld:HelloWorld ;
+    skos:definition "Definition of a message object property."@en ;
+    skos:prefLabel "message"@en ;
+    mermaid:label "https://example.org/helloworld/model/def/LinkedDataEnthusiast -- message --> https://example.org/helloworld/model/def/HelloWorld" ;
+    mermaid:syntax "OBJECTPROPERTY" ;
+    mermaid:type "OBJECTPROPERTY" .
+
+shp:HelloWorldShape a sh:NodeShape ;
+    rdfs:isDefinedBy helloworld: ;
+    skos:prefLabel "Hello world shape"@en ;
+    sh:rule rule:Hello ;
+    sh:target target:World .
+
+doc: a respec:Generation ;
+    dct:subject helloworld: ;
+    mermaid:include "CLASS",
+        "CONCEPTSCHEME",
+        "DATATYPEPROPERTY",
+        "NAMEDINDIVIDUAL",
+        "NODESHAPE",
+        "OBJECTPROPERTY",
+        "RDF_PROPERTY" ;
+    respec:acknowledgements "Write here your acknowledgements in relation to your ontology."@en ;
+    respec:audience "Write here about the indended audience to your ontology."@en ;
+    respec:background "Write here some background context for your ontology."@en ;
+    respec:documentLanguage "en" ;
+    respec:documentNamespace "https://example.org/doc/" ;
+    respec:include "CLASS",
+        "CONCEPTSCHEME",
+        "DATATYPEPROPERTY",
+        "NAMEDINDIVIDUAL",
+        "NODESHAPE",
+        "OBJECTPROPERTY",
+        "RDF_PROPERTY" ;
+    respec:introduction "Write here an introduction to your ontology."@en ;
+    respec:objective "Write here about the objective of your ontology."@en .
+
+helloworld:Concept a skos:Concept ;
+    rdfs:isDefinedBy helloworld: ;
+    skos:definition "Definition of a hello world! concept."@en ;
+    skos:inScheme helloworld:Scheme ;
+    skos:prefLabel "Hello world concept"@en .
+
+helloworld:HelloWorld a owl:Class ;
+    rdfs:isDefinedBy helloworld: ;
+    rdfs:seeAlso helloworld:Concept ;
+    skos:definition "Definition of a hello world! message."@en ;
+    skos:prefLabel "Hello World"@en ;
+    mermaid:label "https://example.org/helloworld/model/def/HelloWorld((Hello World))" ;
+    mermaid:syntax "CLASS" ;
+    mermaid:type "CLASS" .
+
+helloworld:Scheme a skos:ConceptScheme ;
+    rdfs:isDefinedBy helloworld: ;
+    skos:definition "Definition of a hello world! concept scheme."@en ;
+    skos:prefLabel "Hello world scheme"@en .
+
+rule:Hello a sh:SPARQLRule ;
+    rdfs:comment "A rule that creates an HTML fragment for an HTML comment."@en ;
+    rdfs:isDefinedBy helloworld: ;
+    skos:prefLabel "HTML comment fragment serialisation rule"@en ;
+    sh:construct """\r
+\r
+prefix helloworld: <https://example.org/helloworld/model/def/>\r
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>\r
+\r
+construct {\r
+\r
+  $this helloworld:label ?message.\r
+  \r
+} where {\r
+\r
+BIND("Hello world" as ?message)\r
+\r
+}""" .
+
+target:World a sh:SPARQLTarget ;
+    rdfs:isDefinedBy helloworld: ;
+    sh:select """\r
+prefix helloworld: <https://example.org/helloworld/model/def/>\r
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>\r
+select $this {\r
+  $this rdf:type helloworld:Class.\r
+}""" .
+
+helloworld:LinkedDataEnthusiast a owl:Class ;
+    rdfs:isDefinedBy helloworld: ;
+    skos:definition "Definition of an Linked Data Enthusiast."@en ;
+    skos:prefLabel "Linked Data enthusiast"@en ;
+    mermaid:label "https://example.org/helloworld/model/def/LinkedDataEnthusiast((Linked Data enthusiast))" ;
+    mermaid:syntax "CLASS" ;
+    mermaid:type "CLASS" .
+
+helloworld: a owl:Ontology ;
+    dct:abstract "An abstract of a Hello World! ontology."@en ;
+    dct:created "2021-12-08"^^xsd:date ;
+    dct:creator "Flores Bakker" ;
+    dct:description "A description of a Hello World! ontology."@en ;
+    dct:language "iso639-1:en" ;
+    dct:license "http://creativecommons.org/licenses/by/4.0"^^xsd:anyURI ;
+    dct:publisher <https://example.org/> ;
+    dct:source <https://github.com/floresbakker/OntoReSpec> ;
+    dct:status status:UnderDevelopment ;
+    dct:subject "Hello World!"@en ;
+    dct:title "Hello World! Ontology"@en ;
+    vann:preferredNamespacePrefix "helloworld" ;
+    vann:preferredNamespaceUri "https://example.org/helloworld/model/def/" ;
+    owl:imports dct:,
+        rdf:,
+        rdfs:,
+        owl:,
+        skos:,
+        sh: ;
+    owl:versionInfo "0.2.0" ;
+    skos:example """\r
+\r
+An 'hello world' example :)\r
+\r
+	\r
+"""@en .
+

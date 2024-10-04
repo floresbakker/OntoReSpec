@@ -18,7 +18,7 @@ rdfs     = Namespace("http://www.w3.org/2000/01/rdf-schema#")
 dct      = Namespace("http://purl.org/dc/terms/")
 respec   = Namespace('https://respec.org/ontorespec/model/def/')
 template = Namespace('https://respec.org/ontorespec/id/')
-html     = Namespace("https://data.rijksfinancien.nl/html/model/def/")
+html     = Namespace("https://www.w3.org/html/model/def/")
 mermaid  = Namespace("https://data.rijksfinancien.nl/mermaid/model/def/")
 
 # Function to read a graph (as a string) from a file 
@@ -40,6 +40,7 @@ respec_vocabulary     = readStringFromFile(directory_path + "/OntoReSpec/Specifi
 template_graph        = readStringFromFile(directory_path + "/OntoReSpec/Specification/ReSpecTemplate.ttl" )
 html_serialisation    = readStringFromFile(directory_path + "/OntoReSpec/Specification/html - core.ttl")
 html_vocabulary       = readStringFromFile(directory_path + "/OntoReSpec/Specification/html - core.ttl")
+dom_vocabulary       = readStringFromFile(directory_path + "/OntoReSpec/Specification/dom - core.ttl")
 manchester_vocabulary = readStringFromFile(directory_path + "/OntoReSpec/Specification/manchestersyntax.ttl")
 mermaid_vocabulary    = readStringFromFile(directory_path + "/OntoReSpec/Specification/mermaid.ttl")
 manchester_query      = readStringFromFile(directory_path + "/OntoReSpec/Tools/Playground/static/manchesterQuery.rq")
@@ -72,6 +73,7 @@ def generateManchester(manchester_generator, serializable_graph):
             if result == True:
                 return generateManchester(manchester_generator, serializable_graph)
             else: 
+                 print ('...succes')
                  return serializable_graph
 
 
@@ -89,7 +91,7 @@ def generateReSpecRDF(shaclgraph, serializable_graph):
         iterate_rules=False, # Not using the iterate rules function of PyShacl as it seems to not be working properly. Instead, offer each new resulting state freshly to PyShacl.
         debug=False,
         )
-      
+        print ('...succes')
         return serializable_graph
 
 
@@ -115,11 +117,11 @@ def generateDiagram(mermaid_generator, serializable_graph):
         # Check whether another iteration is needed. If every OWL and RDFS construct contains a mermaid:syntax statement, the processing is considered done.
         for status in statusquery:
             if status == False:
-                print ('false')
+                
                 writeGraph(serializable_graph, 'diagramm')
                 generateDiagram(mermaid_generator, serializable_graph)
             else:     
-                 print ('succes')
+                 print ('...succes')
                  for result in resultquery:
                     mermaid_diagram = result["mermaid_code"]
                     output_file_path = directory_path+"/OntoReSpec/Tools/Playground/static/diagram.html"
@@ -156,6 +158,7 @@ def generateHTML(shaclgraph, serializable_graph):
                 writeGraph(serializable_graph, 'html')
                 htmlQuery = serializable_graph.query(html_result_query)
                 for html in htmlQuery:
+                    print ('...succes')
                     return html.fragment
 
 
@@ -308,6 +311,7 @@ def generateReSpec():
     print("Step #3. Creating ReSpec document structure...")
 
     generationGraph.parse(data=html_vocabulary, format="turtle")
+    generationGraph.parse(data=dom_vocabulary, format="turtle")
     generationGraph.parse(data=template_graph, format="turtle")
     generationGraph = generateReSpecRDF(respec_vocabulary, generationGraph)
     writeGraph(generationGraph, 'respec')

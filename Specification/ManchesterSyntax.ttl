@@ -22,7 +22,7 @@ prefix shp: <https://data.rijksfinancien.nl/manchester/model/shp/>
 prefix standard: <https://data.rijksfinancien.nl/manchester/id/standard/>
 prefix target: <https://data.rijksfinancien.nl/manchester/model/target/>
 
-manchester: {
+#manchester: {
   manchester:
     a
       owl:Ontology,
@@ -2173,4 +2173,4 @@ construct {
 }   
 '''.
 
-}
+#}

@@ -16,7 +16,7 @@ prefix sh: <http://www.w3.org/ns/shacl#>
 prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
-respec: {
+#respec: {
 
 respec:introduction
     a owl:DatatypeProperty;
@@ -497,7 +497,7 @@ rule:NameSpace
   rdfs:comment 'The Namespace rule creates a namespace declaration for the ontology in the document.'@en ;
   sh:construct """
 PREFIX dct: <http://purl.org/dc/terms/>
-prefix function: <https://respec.org/ontorespec/model/function/>
+PREFIX function: <https://respec.org/ontorespec/model/function/>
 PREFIX html: <https://www.w3.org/html/model/def/> 
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -530,9 +530,9 @@ construct {
      {$this dct:subject ?ontology.
       ?ontology sh:declare ?prefixDeclaration.
       ?prefixDeclaration sh:namespace ?namespaceDeclaration;
-                         # e.g. "http://example.org/"
+                         # e.g. "http://example.org/"^^xsd:anyURI
                          sh:prefix ?prefix.
-      # e.g. "ex"
+                         # e.g. "ex"
     }
     UNION 
 
@@ -540,26 +540,26 @@ construct {
     {
       $this dct:subject ?ontology.
       ?ontology vann:preferredNamespaceUri ?namespaceDeclaration;
-                # e.g. "http://example.org/"
+                # e.g. "http://example.org/"^^xsd:anyURI
                 vann:preferredNamespacePrefix ?prefix.
-      # e.g. "ex"
+                # e.g. "ex"
     }
   
   OPTIONAL{
     {
       ?prevOntology sh:declare ?prevPrefixDeclaration.
       ?prevPrefixDeclaration sh:namespace ?prevNamespace;
-                             # e.g. "http://example.org/"
+                             # e.g. "http://example.org/"^^xsd:anyURI
                              sh:prefix ?prevPrefix.
-      # e.g. "ex"
+                             # e.g. "ex"
     }
     UNION 
 
     {
       ?prevOntology vann:preferredNamespaceUri ?prevNamespace;
-                    # e.g. "http://example.org/"
+                    # e.g. "http://example.org/"^^xsd:anyURI
                     vann:preferredNamespacePrefix ?prevPrefix.
-      # e.g. "ex"
+                    # e.g. "ex"
     }
     FILTER (?prevPrefix < ?prefix)
   }
@@ -570,7 +570,7 @@ ORDER BY ?prefix}
 BIND(IRI(CONCAT(str(rdf:),"_", str(?member))) as ?rdf_member)
 
 # Create identifiers
-BIND(function:getElementIRI(?template, ?namespace)                                as ?elementID)
+BIND(function:getElementIRI(?template, ?namespace)                      as ?elementID)
 BIND(IRI(CONCAT(STR(?elementID), '-',STR(?member)))                     as ?namespaceTableDataRow)
 BIND(IRI(CONCAT(STR(?namespaceTableDataRow),'-1'))                      as ?namespacePrefixDataCell)
 BIND(IRI(CONCAT(STR(?namespaceTableDataRow),'-2'))                      as ?namespaceIRIDataCell)
@@ -3124,4 +3124,4 @@ function:getLabel
 }
 """ .
 
-}
+#}

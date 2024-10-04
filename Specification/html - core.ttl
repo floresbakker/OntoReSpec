@@ -5355,10 +5355,7 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
 select $this {
 
   # Select all DOM nodes...
-  $this a/rdfs:subClassOf* dom:Node.
-  
-  #...that are part of the HTML vocabulary...
-  $this a/rdfs:isDefinedBy html:.
+  $this a/rdfs:subClassOf* dom:DocumentTreeNode.
   
   # ...that do not yet have an HTML fragment.
   filter not exists { $this html:fragment []. }
@@ -5368,7 +5365,7 @@ select $this {
     $this ?member ?child.
     filter(strstarts(str(?member),concat(str(rdf:),'_')))               
     filter not exists { ?child html:fragment []. }
-    ?child a/rdfs:subClassOf* dom:Node.
+    ?child a/rdfs:subClassOf* dom:DocumentTreeNode.
   }
 }''';
     rdfs:isDefinedBy html:.
@@ -5434,7 +5431,6 @@ construct {
         sh:path function:element ;
         sh:datatype xsd:anyURI ;
         sh:description "A html element in a HTML document." ;
-        sh:order 1 ; 
     ] ;
     sh:returnType xsd:string ;
     sh:select """

@@ -1,0 +1,31 @@
+
+            <!DOCTYPE html>
+             <html>
+               <head>
+               </head>
+               <body>
+                <div>
+                 <pre class="mermaid">
+                  %%{
+                  init: {
+                  "flowchart":{
+                  "useMaxWidth": 0
+                  }
+                  }
+                  }%%
+                  graph TB
+                  classDef Datatype fill:#9c6,stroke:#9c6;
+                   
+https://example.org/helloworld/model/def/LinkedDataEnthusiast((Linked Data enthusiast))
+https://example.org/helloworld/model/def/HelloWorld((Hello World))
+https://example.org/helloworld/model/def/LinkedDataEnthusiast -- message --> https://example.org/helloworld/model/def/HelloWorld
+
+                 </pre>
+                 <script type="module">
+                   import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+                   mermaid.initialize({ startOnLoad: true, maxTextSize : 99999999 });
+                 </script>
+               </div>
+              </body>
+             </html>
+                   
