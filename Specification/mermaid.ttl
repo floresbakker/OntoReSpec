@@ -182,6 +182,10 @@ select $this {
           {
             ?modelComponent owl:equivalentProperty [].
           }
+          union
+          {
+            ?modelComponent owl:inverseOf [].
+          }
         }
       }
   filter not exists{
@@ -1945,6 +1949,59 @@ construct {
 }  
 '''.
 
+shp:Serializable_inverseOfProperty
+    a sh:NodeShape;
+    #sh:rule rule:Serialize_inverseOfProperty;
+    sh:target target:Serialize_inverseOfProperty;
+    skos:prefLabel 'Serializable owl:DatatypeProperty shape with a owl:inverseOfProperty relation.'@en.
+
+  target:Serialize_inverseOfProperty
+    a sh:SPARQLTarget;
+    sh:select '''
+prefix mermaid: <https://data.rijksfinancien.nl/mermaid/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select $this {
+
+  # A datatype or object property for which exists some inverseOf property relation.
+  $this owl:inverseOf ?someProperty.
+  
+  filter not exists {
+  $this mermaid:syntax "INVERSEPROPERTY".}
+
+}
+'''.
+
+  rule:Serialize_inverseOfProperty
+    a sh:SPARQLRule;
+    rdfs:comment 'A rule that creates a Mermaid diagram language for an owl:DatatypeProperty with an inverseOfProperty relation.'@en;
+    skos:prefLabel 'Mermaid diagram language serialisation rule for owl:DatatypeProperty with an inverseOfProperty relation.'@en;
+    sh:construct '''
+prefix function: <https://data.rijksfinancien.nl/mermaid/model/function/>
+prefix mermaid: <https://data.rijksfinancien.nl/mermaid/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+construct {
+
+  # create the Mermaid diagram language for the OWL property to be serialized.
+  
+  $this mermaid:type 'INVERSEPROPERTY';
+        mermaid:syntax 'INVERSEPROPERTY';
+        mermaid:label ?mermaidLabel.		
+  
+} where {
+
+  $this owl:inverseOf ?someProperty.
+  
+  BIND(CONCAT(STR($this), " -- inverseOf --> ", STR(?someProperty)) as ?mermaidLabel)
+   
+}  
+'''.
+
 shp:Serializable_Datatype
     a sh:NodeShape;
     sh:rule rule:Serialize_Datatype;
@@ -2327,7 +2384,7 @@ construct {
 			{?someRestriction xsd:maxExclusive ?number.
 			 BIND(CONCAT("<", STR(?number)) as ?restriction) }
 		   
-	BIND(CONCAT(STR($this), STR(?someRestriction),"((",?restriction, ")):::Datatype") as ?mermaidDatatype)	  
+	BIND(CONCAT(STR($this), STR(?someRestriction),'(("',?restriction, '")):::Datatype') as ?mermaidDatatype)	  
     }		   
   }
   

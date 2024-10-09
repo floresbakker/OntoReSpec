@@ -22,7 +22,7 @@ prefix shp: <https://data.rijksfinancien.nl/manchester/model/shp/>
 prefix standard: <https://data.rijksfinancien.nl/manchester/id/standard/>
 prefix target: <https://data.rijksfinancien.nl/manchester/model/target/>
 
-#manchester: {
+manchester: {
   manchester:
     a
       owl:Ontology,
@@ -52,7 +52,7 @@ prefix target: <https://data.rijksfinancien.nl/manchester/model/target/>
     owl:versionInfo '0.1.0';
     owl:versionIRI <https://github.com/floresbakker/manchestersyntax/tree/main>;
     vann:preferredNamespacePrefix 'manchester';
-    vann:preferredNamespaceUri 'https://data.rijksfinancien.nl/manchestersyntax/model/def/';
+    vann:preferredNamespaceUri 'https://data.rijksfinancien.nl/manchestersyntax/model/def/'^^xsd:anyURI;
     void:subSet graph:model;
     void:uriRegexPattern '^https://data.rijksfinancien.nl/manchestersyntax/def/';
     void:uriSpace 'https://data.rijksfinancien.nl/manchestersyntax/model/def/'^^xsd:anyURI.
@@ -914,12 +914,12 @@ construct {
         
 } where {
 
-  {select ?lang (group_concat(?label;separator=' and ') as ?manchesterDescription) where {
+  {select (group_concat(?label;separator=' and ') as ?manchesterDescription) where {
   $this owl:intersectionOf/rdf:rest*/rdf:first ?listItem.
   
   OPTIONAL {?listItem manchester:label ?optionalLabel.}
   BIND(COALESCE(?optionalLabel, IF(isBlank(?listItem),?unboundDummy, function:getPrefixedIRI(?listItem))) as ?label)
-   } group by ?lang
+   } 
   }
   
   # Establish the label for the owl class. If a blank node, then use the description of the class als label, including manchester syntax ' and ' notation. If an IRI, then use the preferred label.
@@ -989,12 +989,12 @@ construct {
   
 } where {
 
-  {select ?lang (group_concat(?label;separator=' ') as ?individualLabels) where {
+  {select (group_concat(?label;separator=' ') as ?individualLabels) where {
   $this owl:oneOf/rdf:rest*/rdf:first ?listItem.
   
   OPTIONAL {?listItem manchester:label ?optionalLabel.}
   BIND(COALESCE(?optionalLabel, IF(isBlank(?listItem),?unboundDummy, function:getPrefixedIRI(?listItem))) as ?label)
-   } group by ?lang
+   } 
   }
 
   BIND(CONCAT("{", ?individualLabels, "}") as ?manchesterDescription)
@@ -1506,30 +1506,35 @@ prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix respec: <https://respec.org/ontorespec/model/def/> 
+prefix respec: <https://respec.org/ontorespec/model/def/>
 prefix sh: <http://www.w3.org/ns/shacl#>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
 select $this {
 
   # A named individual for which underlying class expressions are already serialized to manchester syntax.
-  
-  $this rdf:type ?class.   
-  filter not exists {
-    $this manchester:syntax 'INDIVIDUAL'
-  }  
- 
-  minus {
-    $this rdf:type ?class. 
-    ?class ?anyPredicate [].
+
+  {
+    $this rdf:type ?class.
     filter not exists {
-     ?class manchester:label []
+      $this manchester:syntax 'INDIVIDUAL'
+    }
+    ?class manchester:label ?classDescription.
+  }
+  union
+  {
+    $this rdf:type ?class.
+    filter not exists {
+      $this manchester:syntax 'INDIVIDUAL'
+    }
+    filter not exists {
+      ?class ?predicate []
     }
   }
 
-# Make sure to only query instantiations of classes, and not ontologies, classes, complex classes, properties, annotations, SHACL shapes nor SKOS concepts:
+  # Make sure to only query instantiations of classes, and not ontologies, classes, complex classes, properties, annotations, SHACL shapes nor SKOS concepts:
 
-FILTER (?class NOT IN (sh:PropertyShape, sh:NodeShape, sh:SPARQLRule, sh:SPARQLTarget, rdfs:Class, rdf:Property, owl:Class, owl:DatatypeProperty, owl:ObjectProperty, owl:FunctionalProperty, owl:IrreflexiveProperty, owl:Restriction, owl:Ontology, owl:InverseFunctionalProperty, owl:InverseProperty, owl:AllDifferent, owl:AnnotationProperty, owl:NegativePropertyAssertion, owl:OntologyProperty, owl:AllDisjointClasses, owl:AllDisjointProperties, owl:Annotation,owl:AsymmetricProperty, owl:Axiom, owl:DataRange, owl:DeprecatedClass, owl:DeprecatedProperty, skos:Concept, skos:ConceptScheme, skos:Collection, respec:Generation))
+  filter (?class not in (sh:PropertyShape, sh:NodeShape, sh:SPARQLRule, sh:SPARQLTarget, sh:SPARQLFunction, rdfs:Class, rdfs:Datatype, rdf:Property, owl:Class, owl:DatatypeProperty, owl:ObjectProperty, owl:FunctionalProperty, owl:IrreflexiveProperty, owl:Restriction, owl:Ontology, owl:InverseFunctionalProperty, owl:InverseProperty, owl:AllDifferent, owl:AnnotationProperty, owl:NegativePropertyAssertion, owl:OntologyProperty, owl:AllDisjointClasses, owl:AllDisjointProperties, owl:Annotation,owl:AsymmetricProperty, owl:Axiom, owl:DataRange, owl:DeprecatedClass, owl:DeprecatedProperty, skos:Concept, skos:ConceptScheme, skos:Collection, respec:Generation))
 }
 '''.
 
@@ -1688,63 +1693,6 @@ construct {
 }
 
 """.
-
-function:getPrefixedIRI
-    a sh:SPARQLFunction ;
-    rdfs:comment "Gets prefixed IRI from full IRI." ;
-    skos:example '''Assume an ontology with namespace "http://example.org/", prefix "ex" and a class "Person" as defined by this ontology. The function call will result in "ex:Person" for the IRI http://example.org/Person''';
-    sh:parameter [
-        sh:path function:IRI ;
-        sh:datatype xsd:anyURI ;
-        sh:description "The full IRI of a RDF resource as defined in an ontology." ;
-    ] ;
-    sh:returnType xsd:string ;
-    sh:select """
-
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX sh: <http://www.w3.org/ns/shacl#>
-PREFIX vann: <http://purl.org/vocab/vann/>
-
-SELECT ?result WHERE {
-
-  # Establish the default full IRI of the resource, e.g. ex:Person would lead to http://example.org/Person.
-  bind(str($IRI) as ?defaultFullIRI)
-
-  # Establish possible namespaces
-  optional
-  {
-    # Get the namespace declarations of the ontology
-    {
-      ?ontology sh:declare ?prefixDeclaration.
-      ?prefixDeclaration sh:namespace ?namespace;
-                         # e.g. "http://example.org/"
-                         sh:prefix ?prefix.       # e.g. "ex"
-    }
-    union
-    {
-    # Get the namespace of the ontology itself
-   
-      ?ontology vann:preferredNamespaceUri ?namespace;
-                # e.g. "http://example.org/"
-                vann:preferredNamespacePrefix ?prefix.  # e.g. "ex"
-    }
-	# Establish the full IRI of the resource, e.g. ex:Person would lead to http://example.org/Person.
-    bind(str($IRI) as ?fullIRI)  
-    
-    # Select one of the namespaces that match with the namespace of the resource
-    filter(strstarts(?fullIRI, str(?namespace))) # e.g. "http://example.org/"
-
-    # Establish the local name
-    bind(strafter(?fullIRI, str(?namespace)) as ?localName) # e.g. "Person"
-
-    # Establish the prefixed IRI if possible
-    bind(concat(str(?prefix),":",?localName) as ?prefixedIRI)
-  }
-  # Establish result, either a prefixed IRI or the full IRI
-  bind(coalesce(?prefixedIRI, ?defaultFullIRI) as ?result)
-}
-""" .
 
 shp:SerializableNodeShape
     a sh:NodeShape;
@@ -2173,4 +2121,62 @@ construct {
 }   
 '''.
 
-#}
+function:getPrefixedIRI
+    a sh:SPARQLFunction ;
+    rdfs:comment "Gets prefixed IRI from full IRI." ;
+    skos:example '''Assume an ontology with namespace "http://example.org/", prefix "ex" and a class "Person" as defined by this ontology. The function call will result in "ex:Person" for the IRI http://example.org/Person''';
+    sh:parameter [
+        sh:path function:IRI ;
+        sh:datatype xsd:anyURI ;
+        sh:description "The full IRI of a RDF resource as defined in an ontology." ;
+    ] ;
+    sh:returnType xsd:string ;
+    sh:select """
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sh: <http://www.w3.org/ns/shacl#>
+PREFIX vann: <http://purl.org/vocab/vann/>
+
+SELECT ?result WHERE {
+
+  # Establish the default full IRI of the resource, e.g. ex:Person would lead to http://example.org/Person.
+  bind(str($IRI) as ?defaultFullIRI)
+
+  # Establish possible namespaces
+  optional
+  {
+    # Get the namespace declarations of the ontology
+    {
+      ?ontology sh:declare ?prefixDeclaration.
+      ?prefixDeclaration sh:namespace ?namespace;
+                         # e.g. "http://example.org/"
+                         sh:prefix ?prefix.       # e.g. "ex"
+    }
+    union
+    {
+    # Get the namespace of the ontology itself
+   
+      ?ontology vann:preferredNamespaceUri ?namespace;
+                # e.g. "http://example.org/"
+                vann:preferredNamespacePrefix ?prefix.  # e.g. "ex"
+    }
+	# Establish the full IRI of the resource, e.g. ex:Person would lead to http://example.org/Person.
+    bind(str($IRI) as ?fullIRI)  
+    
+    # Select one of the namespaces that match with the namespace of the resource
+    filter(strstarts(?fullIRI, str(?namespace))) # e.g. "http://example.org/"
+
+    # Establish the local name
+    bind(strafter(?fullIRI, str(?namespace)) as ?localName) # e.g. "Person"
+
+    # Establish the prefixed IRI if possible
+    bind(concat(str(?prefix),":",?localName) as ?prefixedIRI)
+  }
+  # Establish result, either a prefixed IRI or the full IRI
+  bind(coalesce(?prefixedIRI, ?defaultFullIRI) as ?result)
+}
+""" .
+
+
+}
