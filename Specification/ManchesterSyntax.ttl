@@ -1381,18 +1381,27 @@ select $this {
 
   # A datatype or object property for which exists some subproperty relation.
   
-  $this rdfs:subPropertyOf ?someProperty.
-  filter not exists {
-    $this manchester:subPropertyOf []
-    }
-  
-  minus {
+  # superproperty that is described in terms of manchester syntax.
+  {
     $this rdfs:subPropertyOf ?someProperty.
-    ?someProperty ?anyPredicate [].
-     filter not exists {
-     ?someProperty manchester:label []
+    ?someProperty manchester:label []
+    FILTER NOT EXISTS {
+      $this manchester:syntax 'SUBPROPERTY'.
     }
-   }
+    
+  }
+
+  UNION
+  # superproperty that is not further described in the ontology, hence for which is there no manchester syntax known.
+  {
+    $this rdfs:subPropertyOf ?someProperty.
+    FILTER NOT EXISTS {
+      $this manchester:syntax 'SUBPROPERTY'.
+    }    
+    FILTER NOT EXISTS {
+      ?someProperty ?anyPredicate [].
+    }
+  }
 }
 '''.
 
@@ -2177,6 +2186,5 @@ SELECT ?result WHERE {
   bind(coalesce(?prefixedIRI, ?defaultFullIRI) as ?result)
 }
 """ .
-
 
 }
