@@ -16,7 +16,7 @@ prefix sh: <http://www.w3.org/ns/shacl#>
 prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
-#respec: {
+respec: {
 
 respec:introduction
     a owl:DatatypeProperty;
@@ -259,10 +259,10 @@ prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
 prefix dom: <http://www.w3.org/DOM/model/def/>
 prefix function: <https://respec.org/ontorespec/model/function/>
-prefix html: <https://www.w3.org/html/model/def/> 
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <https://respec.org/ontorespec/model/def/> 
+prefix html: <https://www.w3.org/html/model/def/>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix respec: <https://respec.org/ontorespec/model/def/>
 prefix schema: <http://schema.org/>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
@@ -288,7 +288,7 @@ construct {
   ?introductionBackground_title       rdf:type html:Text;
                                       html:fragment ?backgroundTitle.
   ?introductionBackground_text        rdf:type html:Text;
-                                      html:fragment ?introductionBackground.	
+                                      html:fragment ?introductionBackground.
   ?introductionOntologySection        rdf:type html:Section;
                                       rdf:_1 ?introductionOntologyH2;
                                       rdf:_2 ?introductionOntology_text.
@@ -309,79 +309,96 @@ construct {
                                       html:fragment ?introductionAudience.
 } where {
 
-   {$this respec:documentLanguage ?language;
+   $this respec:documentLanguage ?language;
           respec:documentNamespace ?namespace;
           dct:subject ?ontology.
-   ?template a respec:Introduction.
-   
-   ?templateIntroductionTitle a respec:IntroductionTitle;
-                      respec:label ?introductionTitle;
-                      respec:absenceLabel ?absenceIntroductionText.
-   FILTER (LANG(?introductionTitle) = ?language && LANG(?absenceIntroductionText) = ?language)
-   
-   ?templateBackgroundTitle a respec:BackgroundTitle;
-                      respec:label ?backgroundTitle ;
-                      respec:absenceLabel ?absenceBackgroundTitle.
-   FILTER (LANG(?backgroundTitle) = ?language && LANG(?absenceBackgroundTitle) = ?language)
-   
-   ?templateObjectiveTitle a respec:ObjectiveTitle;
-                      respec:label ?objectiveTitle ;
-                      respec:absenceLabel ?absenceObjectiveTitle.
-   FILTER (LANG(?objectiveTitle) = ?language && LANG(?absenceObjectiveTitle) = ?language)
-   
-   ?templateAudienceTitle a respec:AudienceTitle;
-                      respec:label ?audienceTitle ;
-                      respec:absenceLabel ?absenceAudienceTitle.
-   FILTER (LANG(?audienceTitle) = ?language && LANG(?absenceAudienceTitle) = ?language)
-   }
-   
-   OPTIONAL
-   {?ontology respec:introduction ?introduction.
-   FILTER (LANG(?introduction) = ?language)
-   }
-   
-   OPTIONAL
-   {?ontology respec:background ?background.
-   FILTER (LANG(?background) = ?language)
-   }
-   
-   OPTIONAL
-   {?ontology respec:objective ?objective.
-   FILTER (LANG(?objective) = ?language)
-   }
-   
-   OPTIONAL
-   {?ontology respec:audience ?audience.
-   FILTER (LANG(?audience) = ?language)
-   }
+          
+    optional
+    {
+      ?template a respec:Introduction.
+    }
     
-  BIND(COALESCE(?introduction, ?absenceIntroductionText) as ?generalIntroduction)
-  BIND(COALESCE(?background, ?absenceBackgroundTitle) as ?introductionBackground)
-  BIND(COALESCE(?objective, ?absenceObjectiveTitle) as ?introductionObjective)
-  BIND(COALESCE(?audience, ?absenceAudienceTitle) as ?introductionAudience)
-  
-  # Create identifiers
-  bind(function:getElementIRI(?template, ?namespace) as ?elementID)
-  bind(iri(concat(str(?elementID),'-1')) as ?generalIntroductionH2 )
-  bind(iri(concat(str(?elementID),'-2')) as ?generalIntroduction_text)
-  bind(iri(concat(str(?generalIntroductionH2 ),'-1')) as ?generalIntroduction_title )
+    optional
+    {
+      ?templateIntroductionTitle a respec:IntroductionTitle;
+                                 respec:label ?introductionTitle;
+                                 respec:absenceLabel ?absenceIntroductionText.
+      filter (lang(?introductionTitle) = ?language && lang(?absenceIntroductionText) = ?language)
+    }
     
-  bind(iri(concat(str(?elementID),'-3')) as ?introductionBackgroundSection )
-  bind(iri(concat(str(?introductionBackgroundSection),'-1')) as ?introductionBackgroundH2)
-  bind(iri(concat(str(?introductionBackgroundSection),'-2')) as ?introductionBackground_text)
-  bind(iri(concat(str(?introductionBackgroundH2),'-1')) as ?introductionBackground_title)
-  
-  bind(iri(concat(str(?elementID),'-4')) as ?introductionOntologySection )
-  bind(iri(concat(str(?introductionOntologySection),'-1')) as ?introductionOntologyH2)
-  bind(iri(concat(str(?introductionOntologySection),'-2')) as ?introductionOntology_text)
-  bind(iri(concat(str(?introductionOntologyH2),'-1')) as ?introductionOntology_title)
-  
-  bind(iri(concat(str(?elementID),'-5')) as ?introductionAudienceSection )
-  bind(iri(concat(str(?introductionAudienceSection),'-1')) as ?introductionAudienceH2)
-  bind(iri(concat(str(?introductionAudienceSection),'-2')) as ?introductionAudience_text)
-  bind(iri(concat(str(?introductionAudienceH2),'-1')) as ?introductionAudience_title)
-  
-}
+    optional
+    {
+      ?templateBackgroundTitle a respec:BackgroundTitle;
+                               respec:label ?backgroundTitle ;
+                               respec:absenceLabel ?absenceBackgroundTitle.
+      filter (lang(?backgroundTitle) = ?language && lang(?absenceBackgroundTitle) = ?language)
+    }
+    
+    optional{
+      ?templateObjectiveTitle a respec:ObjectiveTitle;
+                              respec:label ?objectiveTitle ;
+                              respec:absenceLabel ?absenceObjectiveTitle.
+      filter (lang(?objectiveTitle) = ?language && lang(?absenceObjectiveTitle) = ?language)
+    }
+    
+    optional{
+      ?templateAudienceTitle a respec:AudienceTitle;
+                             respec:label ?audienceTitle ;
+                             respec:absenceLabel ?absenceAudienceTitle.
+      filter (lang(?audienceTitle) = ?language && lang(?absenceAudienceTitle) = ?language)
+    }
+
+    optional
+    {
+      ?ontology respec:introduction ?introduction.
+      filter (lang(?introduction) = ?language)
+    }
+
+    optional
+    {
+      ?ontology respec:background ?background.
+      filter (lang(?background) = ?language)
+    }
+
+    optional
+    {
+      ?ontology respec:objective ?objective.
+      filter (lang(?objective) = ?language)
+    }
+
+    optional
+    {
+      ?ontology respec:audience ?audience.
+      filter (lang(?audience) = ?language)
+    }
+
+    bind(coalesce(?introduction, ?absenceIntroductionText) as ?generalIntroduction)
+    bind(coalesce(?background, ?absenceBackgroundTitle) as ?introductionBackground)
+    bind(coalesce(?objective, ?absenceObjectiveTitle) as ?introductionObjective)
+    bind(coalesce(?audience, ?absenceAudienceTitle) as ?introductionAudience)
+
+    # Create identifiers
+    bind(function:getElementIRI(?template, ?namespace) as ?elementID)
+    bind(iri(concat(str(?elementID),'-1')) as ?generalIntroductionH2 )
+    bind(iri(concat(str(?elementID),'-2')) as ?generalIntroduction_text)
+    bind(iri(concat(str(?generalIntroductionH2 ),'-1')) as ?generalIntroduction_title )
+
+    bind(iri(concat(str(?elementID),'-3')) as ?introductionBackgroundSection )
+    bind(iri(concat(str(?introductionBackgroundSection),'-1')) as ?introductionBackgroundH2)
+    bind(iri(concat(str(?introductionBackgroundSection),'-2')) as ?introductionBackground_text)
+    bind(iri(concat(str(?introductionBackgroundH2),'-1')) as ?introductionBackground_title)
+
+    bind(iri(concat(str(?elementID),'-4')) as ?introductionOntologySection )
+    bind(iri(concat(str(?introductionOntologySection),'-1')) as ?introductionOntologyH2)
+    bind(iri(concat(str(?introductionOntologySection),'-2')) as ?introductionOntology_text)
+    bind(iri(concat(str(?introductionOntologyH2),'-1')) as ?introductionOntology_title)
+
+    bind(iri(concat(str(?elementID),'-5')) as ?introductionAudienceSection )
+    bind(iri(concat(str(?introductionAudienceSection),'-1')) as ?introductionAudienceH2)
+    bind(iri(concat(str(?introductionAudienceSection),'-2')) as ?introductionAudience_text)
+    bind(iri(concat(str(?introductionAudienceH2),'-1')) as ?introductionAudience_title)
+
+  }
 """.
 
 rule:Description
@@ -523,59 +540,61 @@ construct {
   ?template a respec:NameSpace.
   $this respec:documentNamespace ?namespace.
   {
-  SELECT ?prefix ?namespaceDeclaration (COUNT(?prevPrefix) + 2 AS ?member) WHERE {
+    select ?prefix ?namespaceDeclaration (count(?prevPrefix) + 2 as ?member) where {
 
-  # Get the namespace declarations for the ontology ordered by prefix
-  
-     {$this dct:subject ?ontology.
-      ?ontology sh:declare ?prefixDeclaration.
-      ?prefixDeclaration sh:namespace ?namespaceDeclaration;
-                         # e.g. "http://example.org/"^^xsd:anyURI
-                         sh:prefix ?prefix.
-                         # e.g. "ex"
-    }
-    UNION 
+      # Get the namespace declarations for the ontology ordered by prefix
 
-    # Get the namespace declaration for the ontology itself
-    {
-      $this dct:subject ?ontology.
-      ?ontology vann:preferredNamespaceUri ?namespaceDeclaration;
-                # e.g. "http://example.org/"^^xsd:anyURI
-                vann:preferredNamespacePrefix ?prefix.
-                # e.g. "ex"
-    }
-  
-  OPTIONAL{
-    {
-      ?prevOntology sh:declare ?prevPrefixDeclaration.
-      ?prevPrefixDeclaration sh:namespace ?prevNamespace;
-                             # e.g. "http://example.org/"^^xsd:anyURI
-                             sh:prefix ?prevPrefix.
-                             # e.g. "ex"
-    }
-    UNION 
+      {
+        $this dct:subject ?ontology.
+        ?ontology sh:declare ?prefixDeclaration.
+        ?prefixDeclaration sh:namespace ?namespaceDeclaration;
+                           # e.g. "http://example.org/"^^xsd:anyURI
+                           sh:prefix ?prefix.
+        # e.g. "ex"
+      }
+      optional
 
-    {
-      ?prevOntology vann:preferredNamespaceUri ?prevNamespace;
-                    # e.g. "http://example.org/"^^xsd:anyURI
-                    vann:preferredNamespacePrefix ?prevPrefix.
-                    # e.g. "ex"
+      # Get the namespace declaration for the ontology itself
+      {
+        $this dct:subject ?ontology.
+        ?ontology vann:preferredNamespaceUri ?namespaceDeclaration;
+                  # e.g. "http://example.org/"^^xsd:anyURI
+                  vann:preferredNamespacePrefix ?prefix.
+        # e.g. "ex"
+      }
+
+      optional{
+        {
+          ?prevOntology sh:declare ?prevPrefixDeclaration.
+          ?prevPrefixDeclaration sh:namespace ?prevNamespaceDeclaration;
+                                 # e.g. "http://example.org/"^^xsd:anyURI
+                                 sh:prefix ?prevPrefix.
+          # e.g. "ex"
+        }
+        optional
+
+        {
+          ?prevOntology vann:preferredNamespaceUri ?prevNamespaceDeclaration;
+                        # e.g. "http://example.org/"^^xsd:anyURI
+                        vann:preferredNamespacePrefix ?prevPrefix.
+          # e.g. "ex"
+        }
+        filter (?prevPrefix < ?prefix)
+      }
     }
-    FILTER (?prevPrefix < ?prefix)
+    group by ?prefix ?namespaceDeclaration
+    order by ?prefix
   }
-}
-GROUP BY ?prefix ?namespaceDeclaration
-ORDER BY ?prefix}
 
-BIND(IRI(CONCAT(str(rdf:),"_", str(?member))) as ?rdf_member)
+  bind(iri(concat(str(rdf:),"_", str(?member))) as ?rdf_member)
 
-# Create identifiers
-BIND(function:getElementIRI(?template, ?namespace)                      as ?elementID)
-BIND(IRI(CONCAT(STR(?elementID), '-',STR(?member)))                     as ?namespaceTableDataRow)
-BIND(IRI(CONCAT(STR(?namespaceTableDataRow),'-1'))                      as ?namespacePrefixDataCell)
-BIND(IRI(CONCAT(STR(?namespaceTableDataRow),'-2'))                      as ?namespaceIRIDataCell)
-BIND(IRI(CONCAT(STR(?namespacePrefixDataCell),'-1'))                    as ?namespacePrefixDataCell_text)
-BIND(IRI(CONCAT(STR(?namespaceIRIDataCell),'-1'))                       as ?namespaceIRIDataCell_text)
+  # Create identifiers
+  bind(function:getElementIRI(?template, ?namespace)                      as ?elementID)
+  bind(iri(concat(str(?elementID), '-',str(?member)))                     as ?namespaceTableDataRow)
+  bind(iri(concat(str(?namespaceTableDataRow),'-1'))                      as ?namespacePrefixDataCell)
+  bind(iri(concat(str(?namespaceTableDataRow),'-2'))                      as ?namespaceIRIDataCell)
+  bind(iri(concat(str(?namespacePrefixDataCell),'-1'))                    as ?namespacePrefixDataCell_text)
+  bind(iri(concat(str(?namespaceIRIDataCell),'-1'))                       as ?namespaceIRIDataCell_text)
 }
 """.
 
@@ -3014,40 +3033,34 @@ PREFIX vann: <http://purl.org/vocab/vann/>
 SELECT ?result WHERE {
 
   # Establish the default full IRI of the resource, e.g. ex:Person would lead to http://example.org/Person.
-  bind(str($IRI) as ?defaultFullIRI)
+  bind(str($IRI) as ?fullIRI)
 
-  # Establish possible namespaces
+  # Establish possible namespaces through SHACL declarations
   optional
   {
-    # Get the namespace declarations of the ontology
-    {
-      ?ontology sh:declare ?prefixDeclaration.
-      ?prefixDeclaration sh:namespace ?namespace;
-                         # e.g. "http://example.org/"
-                         sh:prefix ?prefix.       # e.g. "ex"
-    }
-    union
-    {
-    # Get the namespace of the ontology itself
-   
-      ?ontology vann:preferredNamespaceUri ?namespace;
-                # e.g. "http://example.org/"
-                vann:preferredNamespacePrefix ?prefix.  # e.g. "ex"
-    }
-    # Establish the full IRI of the resource, e.g. ex:Person would lead to http://example.org/Person.
-    bind(str($IRI) as ?fullIRI)  
-    
-    # Select one of the namespaces that match with the namespace of the resource
+    ?ontology sh:declare/sh:namespace ?namespace;
+              # e.g. "http://example.org/"
+              sh:prefix ?prefix.       # e.g. "ex"
     filter(strstarts(?fullIRI, str(?namespace))) # e.g. "http://example.org/"
-
-    # Establish the local name
-    bind(strafter(?fullIRI, str(?namespace)) as ?localName) # e.g. "Person"
-
-    # Establish the prefixed IRI if prefix and localName exist, e.g. "ex:Person" or None
-    bind(concat(str(?prefix),":",?localName) as ?prefixedIRI)
   }
+  
+  # Establish possible namespaces through VANN declarations
+  optional
+  {
+    ?ontology vann:preferredNamespaceUri ?namespace;
+              # e.g. "http://example.org/"
+              vann:preferredNamespacePrefix ?prefix.  # e.g. "ex"
+    filter(strstarts(?fullIRI, str(?namespace))) # e.g. "http://example.org/"
+  }
+
+  # Establish the local name
+  bind(strafter(?fullIRI, str(?namespace)) as ?localName)
+
+  # Establish the prefixed IRI if prefix and localName exist, e.g. "ex:Person" or None
+  bind(concat(str(?prefix),":",?localName) as ?prefixedIRI)
+
   # Establish result, either a prefixed IRI or the full IRI, e.g. "ex:Person" or "http://example.org/Person"
-  bind(coalesce(?prefixedIRI, ?defaultFullIRI) as ?result)
+  bind(coalesce(?prefixedIRI, ?fullIRI) as ?result)
 }
   """ .
 
@@ -3126,4 +3139,4 @@ function:getLabel
 }
 """ .
 
-#}
+}
