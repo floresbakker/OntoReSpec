@@ -1,26 +1,27 @@
 prefix dcm: <http://purl.org/dc/dcmitype/>
 prefix dct: <http://purl.org/dc/terms/>
 prefix foaf: <http://xmlns.com/foaf/0.1/>
-prefix owl: <http://www.w3.org/2002/07/owl#>
-prefix prov: <http://www.w3.org/ns/prov#>
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-prefix rdfa: <http://www.w3.org/ns/rdfa#>
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix sh: <http://www.w3.org/ns/shacl#>
-prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix owl:    <http://www.w3.org/2002/07/owl#>
+prefix prov:   <http://www.w3.org/ns/prov#>
+prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfa:   <http://www.w3.org/ns/rdfa#>
+prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#>
+prefix sh:     <http://www.w3.org/ns/shacl#>
+prefix skos:   <http://www.w3.org/2004/02/skos/core#>
 prefix status: <http://purl.org/adms/status/>
-prefix vann: <http://purl.org/vocab/vann/>
-prefix void: <http://rdfs.org/ns/void#>
-prefix xsd: <http://www.w3.org/2001/XMLSchema#>
-
-prefix function: <https://data.rijksfinancien.nl/manchester/model/function/>
-prefix graph: <https://data.rijksfinancien.nl/manchester/graph/>
+prefix vann:   <http://purl.org/vocab/vann/>
+prefix void:   <http://rdfs.org/ns/void#>
+prefix xsd:    <http://www.w3.org/2001/XMLSchema#>
+ 
+prefix decl:       <https://data.rijksfinancien.nl/manchester/id/decl/>
+prefix function:   <https://data.rijksfinancien.nl/manchester/model/function/>
+prefix graph:      <https://data.rijksfinancien.nl/manchester/graph/>
 prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
-prefix respec: <https://respec.org/ontorespec/model/def/> 
-prefix rule: <https://data.rijksfinancien.nl/manchester/model/rule/>
-prefix shp: <https://data.rijksfinancien.nl/manchester/model/shp/>
-prefix standard: <https://data.rijksfinancien.nl/manchester/id/standard/>
-prefix target: <https://data.rijksfinancien.nl/manchester/model/target/>
+prefix respec:     <https://respec.org/ontorespec/model/def/> 
+prefix rule:       <https://data.rijksfinancien.nl/manchester/model/rule/>
+prefix shp:        <https://data.rijksfinancien.nl/manchester/model/shp/>
+prefix standard:   <https://data.rijksfinancien.nl/manchester/id/standard/>
+prefix target:     <https://data.rijksfinancien.nl/manchester/model/target/>
 
 manchester: {
   manchester:
@@ -49,6 +50,20 @@ manchester: {
       rdfs:,
       sh:,
       skos:;
+    sh:declare
+      decl:dcm,
+      decl:dct,
+      decl:foaf,
+      decl:owl,
+      decl:prov,
+      decl:rdf,
+      decl:rdfs,
+      decl:sh,
+      decl:skos,
+      decl:status,
+      decl:vann,
+      decl:void,
+      decl:xsd;      
     owl:versionInfo '0.1.0';
     owl:versionIRI <https://github.com/floresbakker/manchestersyntax/tree/main>;
     vann:preferredNamespacePrefix 'manchester';
@@ -57,6 +72,59 @@ manchester: {
     void:uriRegexPattern '^https://data.rijksfinancien.nl/manchestersyntax/def/';
     void:uriSpace 'https://data.rijksfinancien.nl/manchestersyntax/model/def/'^^xsd:anyURI.
 
+  decl:dcm
+    sh:prefix "dcm";
+    sh:namespace "http://purl.org/dc/dcmitype/"^^xsd:anyURI.
+
+  decl:dct
+    sh:prefix "dct";
+    sh:namespace "http://purl.org/dc/terms/"^^xsd:anyURI.
+    
+  decl:foaf
+    sh:prefix "foaf";
+    sh:namespace "http://xmlns.com/foaf/0.1/"^^xsd:anyURI.
+
+  decl:owl
+    sh:prefix "owl";
+    sh:namespace "http://www.w3.org/2002/07/owl#"^^xsd:anyURI.
+    
+  decl:prov
+    sh:prefix "prov";
+    sh:namespace "http://www.w3.org/ns/prov#"^^xsd:anyURI.
+
+  decl:rdf
+    sh:prefix "rdf";
+    sh:namespace "http://www.w3.org/1999/02/22-rdf-syntax-ns#"^^xsd:anyURI.
+
+  decl:rdfs
+    sh:prefix "rdfs";
+    sh:namespace "http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI.
+
+  decl:sh
+    sh:prefix "sh";
+    sh:namespace "http://www.w3.org/ns/shacl#"^^xsd:anyURI.
+
+  decl:skos
+    sh:prefix "skos";
+    sh:namespace "http://www.w3.org/2004/02/skos/core#"^^xsd:anyURI.
+    
+  decl:status
+    sh:prefix "status";
+    sh:namespace "http://purl.org/adms/status/"^^xsd:anyURI.    
+
+  decl:vann
+    sh:prefix "vann";
+    sh:namespace "http://purl.org/vocab/vann/"^^xsd:anyURI.
+
+  decl:void
+    sh:prefix "void";
+    sh:namespace "http://rdfs.org/ns/void#"^^xsd:anyURI.
+    
+  decl:xsd
+    sh:prefix "xsd";
+    sh:namespace "http://www.w3.org/2001/XMLSchema#"^^xsd:anyURI.
+
+    
   standard:manchestersyntax
     a dct:Standard;
     dct:created '2023-07-19'^^xsd:date;
@@ -698,7 +766,7 @@ construct {
   
   $this rdfs:subClassOf ?superClass.
   OPTIONAL{?superClass manchester:label ?optionalManchesterDescription.}
-  #BIND(IF(isBlank(?superClass), ?unboundDummy, function:getPrefixedIRI(?superClass)) as ?implicitClassLabel)
+  BIND(IF(isBlank(?superClass), ?unboundDummy, function:getPrefixedIRI(?superClass)) as ?implicitClassLabel)
   BIND(COALESCE(?optionalManchesterDescription, ?implicitClassLabel) as ?manchesterDescription)
   
   # Establish the label for the owl class. If a blank node, then use the description of the class als label, including manchester syntax 'subclass' notation. If an IRI, then use the preferred label.
@@ -1541,9 +1609,12 @@ select $this {
     }
   }
 
-  # Make sure to only query instantiations of classes, and not ontologies, classes, complex classes, properties, annotations, SHACL shapes nor SKOS concepts:
+  # Make sure to only query instantiations of classes, and not individual ontologies, properties, annotations, SHACL shapes, SKOS concepts, nor classes themselves.
 
-  filter (?class not in (sh:PropertyShape, sh:NodeShape, sh:SPARQLRule, sh:SPARQLTarget, sh:SPARQLFunction, rdfs:Class, rdfs:Datatype, rdf:Property, owl:Class, owl:DatatypeProperty, owl:ObjectProperty, owl:FunctionalProperty, owl:IrreflexiveProperty, owl:Restriction, owl:Ontology, owl:InverseFunctionalProperty, owl:InverseProperty, owl:AllDifferent, owl:AnnotationProperty, owl:NegativePropertyAssertion, owl:OntologyProperty, owl:AllDisjointClasses, owl:AllDisjointProperties, owl:Annotation,owl:AsymmetricProperty, owl:Axiom, owl:DataRange, owl:DeprecatedClass, owl:DeprecatedProperty, skos:Concept, skos:ConceptScheme, skos:Collection, respec:Generation))
+  filter not exists {
+    $this rdf:type ?undesiredClass.
+    filter (?undesiredClass in (sh:PropertyShape, sh:NodeShape, sh:SPARQLRule, sh:SPARQLTarget, sh:SPARQLFunction, rdfs:Class, rdfs:Datatype, rdf:Property, owl:Class, owl:DatatypeProperty, owl:ObjectProperty, owl:FunctionalProperty, owl:IrreflexiveProperty, owl:Restriction, owl:Ontology, owl:InverseFunctionalProperty, owl:InverseProperty, owl:AllDifferent, owl:AnnotationProperty, owl:NegativePropertyAssertion, owl:OntologyProperty, owl:AllDisjointClasses, owl:AllDisjointProperties, owl:Annotation,owl:AsymmetricProperty, owl:Axiom, owl:DataRange, owl:DeprecatedClass, owl:DeprecatedProperty, skos:Concept, skos:ConceptScheme, skos:Collection, respec:Generation))
+    }
 }
 '''.
 
@@ -2142,6 +2213,7 @@ function:getPrefixedIRI
     sh:returnType xsd:string ;
     sh:select """
 
+PREFIX manchester: <https://data.rijksfinancien.nl/manchester/model/def/> 
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX sh: <http://www.w3.org/ns/shacl#>
@@ -2150,40 +2222,53 @@ PREFIX vann: <http://purl.org/vocab/vann/>
 SELECT ?result WHERE {
 
   # Establish the default full IRI of the resource, e.g. ex:Person would lead to http://example.org/Person.
-  bind(str($IRI) as ?defaultFullIRI)
+  bind(str($IRI) as ?fullIRI)
 
-  # Establish possible namespaces
+  # Establish possible namespaces through SHACL declarations
   optional
   {
-    # Get the namespace declarations of the ontology
-    {
-      ?ontology sh:declare ?prefixDeclaration.
-      ?prefixDeclaration sh:namespace ?namespace;
-                         # e.g. "http://example.org/"
-                         sh:prefix ?prefix.       # e.g. "ex"
-    }
-    union
-    {
-    # Get the namespace of the ontology itself
-   
-      ?ontology vann:preferredNamespaceUri ?namespace;
-                # e.g. "http://example.org/"
-                vann:preferredNamespacePrefix ?prefix.  # e.g. "ex"
-    }
-	# Establish the full IRI of the resource, e.g. ex:Person would lead to http://example.org/Person.
-    bind(str($IRI) as ?fullIRI)  
-    
-    # Select one of the namespaces that match with the namespace of the resource
+                                                    
+     
+    ?ontology sh:declare ?namespaceDeclaration.
+    ?namespaceDeclaration sh:namespace ?namespace;
+              # e.g. "http://example.org/"
+              sh:prefix ?prefix.       # e.g. "ex"
     filter(strstarts(?fullIRI, str(?namespace))) # e.g. "http://example.org/"
-
-    # Establish the local name
-    bind(strafter(?fullIRI, str(?namespace)) as ?localName) # e.g. "Person"
-
-    # Establish the prefixed IRI if possible
-    bind(concat(str(?prefix),":",?localName) as ?prefixedIRI)
   }
-  # Establish result, either a prefixed IRI or the full IRI
-  bind(coalesce(?prefixedIRI, ?defaultFullIRI) as ?result)
+  
+  # Establish possible namespaces through VANN declarations
+  optional
+  {
+    ?ontology vann:preferredNamespaceUri ?namespace;
+              # e.g. "http://example.org/"
+              vann:preferredNamespacePrefix ?prefix.  # e.g. "ex"
+    filter(strstarts(?fullIRI, str(?namespace))) # e.g. "http://example.org/"
+  }
+
+  # Establish possible namespaces through the Manchester Syntax ontology (generic ontologies like OWL, RDF, et cetera)
+  optional 
+    {
+    manchester: sh:declare ?namespaceDeclaration.
+    ?namespaceDeclaration sh:namespace ?namespace;
+                                                      
+              # e.g. "http://example.org/"
+              sh:prefix ?prefix.       # e.g. "ex"
+     
+                                                                                                                                  
+                                 
+    
+                                                                                
+    filter(strstarts(?fullIRI, str(?namespace))) # e.g. "http://example.org/"
+  }
+
+  # Establish the local name
+  bind(strafter(?fullIRI, str(?namespace)) as ?localName)
+
+  # Establish the prefixed IRI if prefix and localName exist, e.g. "ex:Person" or None
+  bind(concat(str(?prefix),":",?localName) as ?prefixedIRI)
+
+  # Establish result, either a prefixed IRI or the full IRI, e.g. "ex:Person" or "http://example.org/Person"
+  bind(coalesce(?prefixedIRI, ?fullIRI) as ?result)
 }
 """ .
 
