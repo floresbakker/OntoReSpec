@@ -658,7 +658,7 @@ prefix schema: <http://schema.org/>
 construct {
   
   ?elementID rdf:type html:Text;
-  html:fragment ?fragment4.
+  html:fragment ?configurationFragment.
     
 } where {
   
@@ -677,7 +677,9 @@ construct {
   optional
   {?ontology owl:versionInfo ?ontologyVersionText1}
   optional
-  {?ontology dct:publisher ?workinggroup}
+  {?ontology respec:group ?workinggroup}
+  optional
+  {?ontology respec:specStatus ?specStatus}
   optional
   {?ontology dct:source ?github}
   { select (group_concat(?ontologyAuthorString;separator='') as ?ontologyAuthors) 
@@ -702,6 +704,7 @@ construct {
   BIND(REPLACE(?fragment1, 'working-group', str(?workinggroup)) as ?fragment2)
   BIND(REPLACE(?fragment2, 'some-org/mySpec', str(?github)) as ?fragment3)
   BIND(REPLACE(?fragment3, 'name: "Your Name"', str(?ontologyAuthors)) as ?fragment4)
+  BIND(REPLACE(?fragment4, 'specificationStatus', str(?specStatus)) as ?configurationFragment)
   
   # Create identifiers
   BIND(function:getElementIRI(?template, ?namespace) as ?elementID)
@@ -2203,10 +2206,6 @@ construct {
                                                         html:fragment ?label_value_text.
 
 # IRI                                                        
-                                                    
-                                                     
-                                                     
-                                                                       
   ?IRI                                                  rdf:type html:Div;
                                                         rdf:_1 ?IRI_strong;
                                                         rdf:_2 ?IRI_a;
@@ -2304,8 +2303,6 @@ construct {
       filter (lang(?absenceLabel_general) = ?language)
     }
 
-                                                                   
-
     # Get the named individuals as sorted entities including definitions, labels, types and facts.
     {
       select ?entity ?entityManchesterLabel_raw ?entityManchesterLabel ?entityDefinition_raw  ?label_value_text ?member ?entityManchesterClassGroup ?entityManchesterFactGroup where {
@@ -2317,7 +2314,6 @@ construct {
           where {
 
             ?entity manchester:syntax 'INDIVIDUAL' ;
-                                                         
                     manchester:label ?entityManchesterLabel_raw ;
                     rdfs:isDefinedBy ?ontology.
             $this dct:subject ?ontology;
@@ -2354,13 +2350,10 @@ construct {
           select ?entity (strdt(group_concat(?entityManchesterFact; separator=' , '), rdf:HTML) as ?entityManchesterFactGroup)
           where {
 
-                  
             ?entity manchester:syntax 'INDIVIDUAL' ;
                     manchester:fact ?entityManchesterFact.
           } group by ?entity
         }
-       
-                                                                                                                                                                                                                                 
       } order by ?entityManchesterLabel_raw
     }
 
