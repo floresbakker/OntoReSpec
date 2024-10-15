@@ -4,7 +4,7 @@ prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
 prefix respec: <https://respec.org/ontorespec/model/def/> 
 
-#template: {
+template: {
 
 template:document a respec:Template,
         html:Document ;
@@ -100,7 +100,7 @@ template:configuration_text a respec:Configuration,
                         "Niet beschikbaar"@nl;
     html:fragment """   
       var respecConfig = {
-        specStatus: "ED",
+        specStatus: "specificationStatus",
         latestVersion: "VersionURL",
         editors: [ name: "Your Name" ],
         github: "some-org/mySpec",
@@ -916,4 +916,4 @@ template:appendix a respec:StaticElement,
     html:id "index";
     html:class "appendix" .
     
-#}
+}
