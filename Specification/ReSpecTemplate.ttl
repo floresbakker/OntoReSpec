@@ -101,8 +101,8 @@ template:configuration_text a respec:Configuration,
     html:fragment """   
       var respecConfig = {
         specStatus: "specificationStatus",
-        latestVersion: "VersionURL",
-        editors: [ name: "Your Name" ],
+        latestVersion: "latestSpecversion",
+        editors: "listOfNames",
         github: "some-org/mySpec",
         shortName: "a shortName",
         xref: "web-platform",
@@ -491,7 +491,10 @@ template:definition a respec:StaticElement,
     rdf:_5 template:definitionDatatypeProperties;
     rdf:_6 template:definitionRDF_Properties;
     rdf:_7 template:definitionNodeShapes;
-    rdf:_8 template:definitionNamedIndividuals.
+    rdf:_8 template:definitionSPARQLTargets;
+    rdf:_9 template:definitionSPARQLRules;
+    rdf:_10 template:definitionSPARQLFunctions;
+    rdf:_11 template:definitionNamedIndividuals.
 
 template:definitionTitle a respec:StaticElement,
         html:H2 ;
@@ -779,6 +782,165 @@ template:57.10.1 a html:Text ;
     rdfs:label "text element" ;
     html:fragment "{{node shape definition}}" .
 
+template:definitionSPARQLTargets a respec:OptionalElement,
+        html:Section ;
+    rdfs:label "Section" ;
+    respec:section "sparqltargets";
+    rdf:_1 template:60.2;
+    rdf:_2 template:60.3.
+
+template:60.2 a respec:OptionalElement,
+        html:H2 ;
+    rdfs:label "h2" ;
+    respec:section "sparqltargets";
+    rdf:_1 template:60.2.1 .
+
+template:60.2.1 a respec:OptionalElement,
+        html:Text ;
+    rdfs:label "text element" ;
+    respec:section "sparqltargets";
+    respec:label  "SPARQLTargets"@en ,
+                  "SPARQLTargets"@nl ;
+    html:fragment "SPARQLTargets" .
+
+template:60.3 a respec:SPARQLTarget,
+        html:Div ;
+    rdfs:label "Div" ;
+    respec:absenceLabel "This ontology does not define any SPARQL targets."@en,
+                        "Deze ontologie definieert geen SPARQL targets."@nl;
+    rdf:_1 template:60.4 .
+
+template:60.4 a html:Div ;
+    rdfs:label "Div" ;
+    rdf:_1 template:60.9 ;
+    rdf:_2 template:60.10 .
+
+template:60.9 a html:H2 ;
+    rdfs:label "h2" ;
+    rdf:_1 template:60.11 .
+
+template:60.11 a html:Dfn ;
+    rdfs:label "Dfn" ;
+    rdf:_1 template:60.9.1 .
+
+template:60.9.1 a html:Text ;
+    rdfs:label "text element" ;
+    html:fragment "{{SPARQL target title}}" .
+
+template:60.10 a html:P ;
+    rdfs:label "p" ;
+    rdf:_1 template:60.10.1 .
+
+template:60.10.1 a html:Text ;
+    rdfs:label "text element" ;
+    html:fragment "{{SPARQL target definition}}" .
+
+template:definitionSPARQLRules a respec:OptionalElement,
+        html:Section ;
+    rdfs:label "Section" ;
+    respec:section "sparqlrules";
+    rdf:_1 template:61.2;
+    rdf:_2 template:61.3.
+
+template:61.2 a respec:OptionalElement,
+        html:H2 ;
+    rdfs:label "h2" ;
+    respec:section "sparqlrules";
+    rdf:_1 template:61.2.1 .
+
+template:61.2.1 a respec:OptionalElement,
+        html:Text ;
+    rdfs:label "text element" ;
+    respec:section "sparqlrules";
+    respec:label  "SPARQLRules"@en ,
+                  "SPARQLRules"@nl ;
+    html:fragment "SPARQLRules" .
+
+template:61.3 a respec:SPARQLRule,
+        html:Div ;
+    rdfs:label "Div" ;
+    respec:absenceLabel "This ontology does not define any SPARQL rules."@en,
+                        "Deze ontologie definieert geen SPARQL rules."@nl;
+    rdf:_1 template:61.4 .
+
+template:61.4 a html:Div ;
+    rdfs:label "Div" ;
+    rdf:_1 template:61.9 ;
+    rdf:_2 template:61.10 .
+
+template:61.9 a html:H2 ;
+    rdfs:label "h2" ;
+    rdf:_1 template:61.11 .
+
+template:61.11 a html:Dfn ;
+    rdfs:label "Dfn" ;
+    rdf:_1 template:61.9.1 .
+
+template:61.9.1 a html:Text ;
+    rdfs:label "text element" ;
+    html:fragment "{{SPARQL rule title}}" .
+
+template:61.10 a html:P ;
+    rdfs:label "p" ;
+    rdf:_1 template:61.10.1 .
+
+template:61.10.1 a html:Text ;
+    rdfs:label "text element" ;
+    html:fragment "{{SPARQL rule definition}}" .    
+
+template:definitionSPARQLFunctions a respec:OptionalElement,
+        html:Section ;
+    rdfs:label "Section" ;
+    respec:section "sparqlfunctions";
+    rdf:_1 template:62.2;
+    rdf:_2 template:62.3.
+
+template:62.2 a respec:OptionalElement,
+        html:H2 ;
+    rdfs:label "h2" ;
+    respec:section "sparqlfunctions";
+    rdf:_1 template:62.2.1 .
+
+template:62.2.1 a respec:OptionalElement,
+        html:Text ;
+    rdfs:label "text element" ;
+    respec:section "sparqlfunctions";
+    respec:label  "SPARQLFunctions"@en ,
+                  "SPARQLFunctions"@nl ;
+    html:fragment "SPARQLFunctions" .
+
+template:62.3 a respec:SPARQLFunction,
+        html:Div ;
+    rdfs:label "Div" ;
+    respec:absenceLabel "This ontology does not define any SPARQL functions."@en,
+                        "Deze ontologie definieert geen SPARQL functions."@nl;
+    rdf:_1 template:62.4 .
+
+template:62.4 a html:Div ;
+    rdfs:label "Div" ;
+    rdf:_1 template:62.9 ;
+    rdf:_2 template:62.10 .
+
+template:62.9 a html:H2 ;
+    rdfs:label "h2" ;
+    rdf:_1 template:62.11 .
+
+template:62.11 a html:Dfn ;
+    rdfs:label "Dfn" ;
+    rdf:_1 template:62.9.1 .
+
+template:62.9.1 a html:Text ;
+    rdfs:label "text element" ;
+    html:fragment "{{SPARQL function title}}" .
+
+template:62.10 a html:P ;
+    rdfs:label "p" ;
+    rdf:_1 template:62.10.1 .
+
+template:62.10.1 a html:Text ;
+    rdfs:label "text element" ;
+    html:fragment "{{SPARQL function definition}}" .
+    
 template:definitionNamedIndividuals a respec:OptionalElement,
         html:Section ;
     rdfs:label "Section" ;
