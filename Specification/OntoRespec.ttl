@@ -17,7 +17,6 @@ prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
 respec: {
-
 respec:introduction
     a owl:DatatypeProperty;
     rdfs:domain respec:Generation;
@@ -1937,14 +1936,16 @@ construct {
                                                     rdf:_3 ?manchester_syntax_table_row_targetClass;
                                                     rdf:_4 ?manchester_syntax_table_row_targetSPARQL;
                                                     rdf:_5 ?manchester_syntax_table_row_targetSubject;
-                                                    rdf:_6 ?manchester_syntax_table_row_targetObject.
+                                                    rdf:_6 ?manchester_syntax_table_row_targetObject;
+                                                    rdf:_7 ?manchester_syntax_table_row_targetNode;
+                                                    rdf:_8 ?manchester_syntax_table_row_SPARQLRule.
   ?manchester_syntax_table_row_definition                rdf:type html:Row;
                                                          rdf:_1 ?manchester_syntax_definition_type;
                                                          rdf:_2 ?manchester_syntax_definition_value.
   ?manchester_syntax_definition_type           rdf:type html:DataCell;
                                                rdf:_1 ?manchester_syntax_definition_type_text.
   ?manchester_syntax_definition_type_text         rdf:type html:Text;
-                                                  html:fragment 'Nodeshape:'.
+                                                  html:fragment 'NodeShape:'.
   ?manchester_syntax_definition_value          rdf:type html:DataCell;
                                                rdf:_1 ?manchester_syntax_definition_value_text.
   ?manchester_syntax_definition_value_text        rdf:type html:Text;
@@ -2004,6 +2005,30 @@ construct {
   ?manchester_syntax_definition_targetObject_value_text   rdf:type html:Text;
                                                          html:fragment ?entityManchesterTargetObject.
 
+  ?manchester_syntax_table_row_targetNode              rdf:type html:Row;
+                                                        rdf:_1 ?manchester_syntax_definition_targetNode_type;
+                                                        rdf:_2 ?manchester_syntax_definition_targetNode_value.
+  ?manchester_syntax_definition_targetNode_type      rdf:type html:DataCell;
+                                                      rdf:_1 ?manchester_syntax_definition_targetNode_type_text.
+  ?manchester_syntax_definition_targetNode_type_text    rdf:type html:Text;
+                                                         html:fragment 'TargetNode:'.
+  ?manchester_syntax_definition_targetNode_value     rdf:type html:DataCell;
+                                                      rdf:_1 ?manchester_syntax_definition_targetNode_value_text.
+  ?manchester_syntax_definition_targetNode_value_text   rdf:type html:Text;
+                                                         html:fragment ?entityManchesterTargetNode.                                                         
+  ?manchester_syntax_table_row_SPARQLRule              rdf:type html:Row;
+                                                        rdf:_1 ?manchester_syntax_definition_SPARQLRule_type;
+                                                        rdf:_2 ?manchester_syntax_definition_SPARQLRule_value.
+  ?manchester_syntax_definition_SPARQLRule_type      rdf:type html:DataCell;
+                                                      rdf:_1 ?manchester_syntax_definition_SPARQLRule_type_text.
+  ?manchester_syntax_definition_SPARQLRule_type_text    rdf:type html:Text;
+                                                         html:fragment 'SPARQLRule:'.
+  ?manchester_syntax_definition_SPARQLRule_value     rdf:type html:DataCell;
+                                                      rdf:_1 ?manchester_syntax_definition_SPARQLRule_value_text.
+  ?manchester_syntax_definition_SPARQLRule_value_text   rdf:type html:Text;
+                                                         html:fragment ?entityManchesterSPARQLRule.   
+
+
   ?linebreak1                          rdf:type html:Br.
   ?linebreak2                          rdf:type html:Br.
   ?linebreak3                          rdf:type html:Br.
@@ -2028,7 +2053,7 @@ construct {
     # Get the sorted entities from the ontology including semantics
 
     {
-      select ?entity ?entityManchesterLabel_raw ?entityManchesterLabel ?entityDefinition_raw ?entityManchesterTargetClass ?entityManchesterTargetSPARQL ?entityManchesterTargetSubject ?entityManchesterTargetObject ?label_value_text (count(?prevEntity) + 1 as ?member)
+      select ?entity ?entityManchesterLabel_raw ?entityManchesterLabel ?entityDefinition_raw ?entityManchesterTargetClass ?entityManchesterTargetSPARQL ?entityManchesterTargetSubject ?entityManchesterTargetObject ?entityManchesterTargetNode ?entityManchesterSPARQLRule ?label_value_text (count(?prevEntity) + 1 as ?member)
 
       where {
 
@@ -2053,11 +2078,19 @@ construct {
         }
 
         optional{
-          ?entity manchester:targetSubject ?entityManchesterTargetSubject.
+          ?entity manchester:targetSubjectsOf ?entityManchesterTargetSubject.
         }
 
         optional{
-          ?entity manchester:targetObject ?entityManchesterTargetObject.
+          ?entity manchester:targetObjectsOf ?entityManchesterTargetObject.
+        }
+        
+        optional{
+          ?entity manchester:targetNode ?entityManchesterTargetNode.
+        }
+        
+        optional{
+          ?entity manchester:rule ?entityManchesterSPARQLRule.
         }
 
         bind(function:escapeHTML(?entityManchesterLabel_raw) as ?entityManchesterLabel)
@@ -2068,7 +2101,7 @@ construct {
           filter(?prevLabel < ?entityManchesterLabel_raw)
         }
       }
-      group by ?entityManchesterLabel_raw ?entityManchesterLabel ?entityDefinition_raw ?entity ?entityManchesterTargetClass ?entityManchesterTargetSPARQL ?entityManchesterTargetSubject ?entityManchesterTargetObject ?label_value_text
+      group by ?entityManchesterLabel_raw ?entityManchesterLabel ?entityDefinition_raw ?entity ?entityManchesterTargetClass ?entityManchesterTargetSPARQL ?entityManchesterTargetSubject ?entityManchesterTargetObject ?entityManchesterTargetNode ?entityManchesterSPARQLRule ?label_value_text
       order by ?entityManchesterLabel_raw
     }
 
@@ -2084,14 +2117,14 @@ construct {
 
     bind(function:getElementIRI(?template, ?namespace) as ?elementID)
     bind(iri(concat(str(?elementID), '-', str(?member),'-1')) as ?section)
-    bind(iri(concat(str(?section), '-1')) as ?title)
-    bind(iri(concat(str(?section), '-2')) as ?label)
-    bind(iri(concat(str(?section), '-3')) as ?IRI)
-    bind(iri(concat(str(?section), '-4')) as ?linebreak1)
-    bind(iri(concat(str(?section), '-5')) as ?definition)
-    bind(iri(concat(str(?section), '-6')) as ?linebreak2)
-    bind(iri(concat(str(?section), '-7')) as ?linebreak3)
-    bind(iri(concat(str(?section), '-8')) as ?manchester_syntax)
+    bind(iri(concat(str(?section),   '-1')) as ?title)
+    bind(iri(concat(str(?section),   '-2')) as ?label)
+    bind(iri(concat(str(?section),   '-3')) as ?IRI)
+    bind(iri(concat(str(?section),   '-4')) as ?linebreak1)
+    bind(iri(concat(str(?section),   '-5')) as ?definition)
+    bind(iri(concat(str(?section),   '-6')) as ?linebreak2)
+    bind(iri(concat(str(?section),   '-7')) as ?linebreak3)
+    bind(iri(concat(str(?section),   '-8')) as ?manchester_syntax)
 
     bind(iri(concat(str(?label), '-1')) as ?label_strong)
     bind(iri(concat(str(?label), '-2')) as ?label_value)
@@ -2103,26 +2136,28 @@ construct {
     bind(iri(concat(str(?IRI_a), '-1')) as ?IRI_value_text)
 
     bind(iri(concat(str(?title), '-1')) as ?dfn)
-    bind(iri(concat(str(?dfn), '-1')) as ?title_text)
+    bind(iri(concat(str(?dfn),   '-1')) as ?title_text)
 
     # Create identifiers - Manchester Syntax
 
-    bind(iri(concat(str(?manchester_syntax), '-1')) as ?manchester_syntax_code)
-    bind(iri(concat(str(?manchester_syntax_code), '-1')) as ?manchester_syntax_table)
+    bind(iri(concat(str(?manchester_syntax),       '-1')) as ?manchester_syntax_code)
+    bind(iri(concat(str(?manchester_syntax_code),  '-1')) as ?manchester_syntax_table)
     bind(iri(concat(str(?manchester_syntax_table), '-1')) as ?manchester_syntax_table_body_definition)
 
     bind(iri(concat(str(?manchester_syntax_table_body_definition), '-1')) as ?manchester_syntax_table_row_definition)
     bind(iri(concat(str(?manchester_syntax_table_body_definition), '-2')) as ?emptyrow1)
-    bind(if(bound(?entityManchesterTargetClass),iri(concat(str(?manchester_syntax_table_body_definition), '-3')), ?unboundDummy) as ?manchester_syntax_table_row_targetClass )
-    bind(if(bound(?entityManchesterTargetSPARQL),iri(concat(str(?manchester_syntax_table_body_definition), '-4')), ?unboundDummy) as ?manchester_syntax_table_row_targetSPARQL )
+    bind(if(bound(?entityManchesterTargetClass),iri(concat(str(?manchester_syntax_table_body_definition),   '-3')), ?unboundDummy) as ?manchester_syntax_table_row_targetClass )
+    bind(if(bound(?entityManchesterTargetSPARQL),iri(concat(str(?manchester_syntax_table_body_definition),  '-4')), ?unboundDummy) as ?manchester_syntax_table_row_targetSPARQL )
     bind(if(bound(?entityManchesterTargetSubject),iri(concat(str(?manchester_syntax_table_body_definition), '-5')),?unboundDummy) as ?manchester_syntax_table_row_targetSubject )
-    bind(if(bound(?entityManchesterTargetObject),iri(concat(str(?manchester_syntax_table_body_definition), '-5')),?unboundDummy) as ?manchester_syntax_table_row_targetObject )
+    bind(if(bound(?entityManchesterTargetObject),iri(concat(str(?manchester_syntax_table_body_definition),  '-6')),?unboundDummy) as ?manchester_syntax_table_row_targetObject )
+    bind(if(bound(?entityManchesterTargetNode),iri(concat(str(?manchester_syntax_table_body_definition),    '-7')),?unboundDummy) as ?manchester_syntax_table_row_targetNode )    
+    bind(if(bound(?entityManchesterSPARQLRule),iri(concat(str(?manchester_syntax_table_body_definition),    '-8')),?unboundDummy) as ?manchester_syntax_table_row_SPARQLRule )  
 
     bind(iri(concat(str(?manchester_syntax_table_row_definition), '-1')) as ?manchester_syntax_definition_type)
     bind(iri(concat(str(?manchester_syntax_table_row_definition), '-2')) as ?manchester_syntax_definition_value)
     bind(iri(concat(str(?emptyrow1), '-1')) as ?emptycell1)
     bind(iri(concat(str(?emptyrow1), '-2')) as ?emptycell2)
-    bind(iri(concat(str(?manchester_syntax_definition_type), '-1')) as ?manchester_syntax_definition_type_text)
+    bind(iri(concat(str(?manchester_syntax_definition_type),  '-1')) as ?manchester_syntax_definition_type_text)
     bind(iri(concat(str(?manchester_syntax_definition_value), '-1')) as ?manchester_syntax_definition_value_text)
 
     bind(iri(concat(str(?manchester_syntax_table_row_targetClass), '-1')) as ?manchester_syntax_definition_targetClass_type)
@@ -2144,6 +2179,16 @@ construct {
     bind(iri(concat(str(?manchester_syntax_table_row_targetObject), '-2')) as ?manchester_syntax_definition_targetObject_value)
     bind(iri(concat(str(?manchester_syntax_definition_targetObject_type), '-1')) as ?manchester_syntax_definition_targetObject_type_text)
     bind(iri(concat(str(?manchester_syntax_definition_targetObject_value), '-1')) as ?manchester_syntax_definition_targetObject_value_text)
+    
+    bind(iri(concat(str(?manchester_syntax_table_row_targetNode), '-1')) as ?manchester_syntax_definition_targetNode_type)
+    bind(iri(concat(str(?manchester_syntax_table_row_targetNode), '-2')) as ?manchester_syntax_definition_targetNode_value)
+    bind(iri(concat(str(?manchester_syntax_definition_targetNode_type), '-1')) as ?manchester_syntax_definition_targetNode_type_text)
+    bind(iri(concat(str(?manchester_syntax_definition_targetNode_value), '-1')) as ?manchester_syntax_definition_targetNode_value_text)
+
+    bind(iri(concat(str(?manchester_syntax_table_row_SPARQLRule), '-1')) as ?manchester_syntax_definition_SPARQLRule_type)
+    bind(iri(concat(str(?manchester_syntax_table_row_SPARQLRule), '-2')) as ?manchester_syntax_definition_SPARQLRule_value)
+    bind(iri(concat(str(?manchester_syntax_definition_SPARQLRule_type), '-1')) as ?manchester_syntax_definition_SPARQLRule_type_text)
+    bind(iri(concat(str(?manchester_syntax_definition_SPARQLRule_value), '-1')) as ?manchester_syntax_definition_SPARQLRule_value_text)    
 
   }
 """.
@@ -3126,7 +3171,7 @@ construct {
   ?manchester_syntax_definition_type           rdf:type html:DataCell;
                                                rdf:_1 ?manchester_syntax_definition_type_text.
   ?manchester_syntax_definition_type_text         rdf:type html:Text;
-                                                  html:fragment 'SPARQL Rule:'.
+                                                  html:fragment 'SPARQLRule:'.
   ?manchester_syntax_definition_value          rdf:type html:DataCell;
                                                rdf:_1 ?manchester_syntax_definition_value_text.
   ?manchester_syntax_definition_value_text        rdf:type html:Text;
@@ -3339,7 +3384,7 @@ construct {
   ?manchester_syntax_definition_type           rdf:type html:DataCell;
                                                rdf:_1 ?manchester_syntax_definition_type_text.
   ?manchester_syntax_definition_type_text         rdf:type html:Text;
-                                                  html:fragment 'SPARQL Function:'.
+                                                  html:fragment 'SPARQLFunction:'.
   ?manchester_syntax_definition_value          rdf:type html:DataCell;
                                                rdf:_1 ?manchester_syntax_definition_value_text.
   ?manchester_syntax_definition_value_text        rdf:type html:Text;
@@ -3552,7 +3597,7 @@ construct {
   ?manchester_syntax_definition_type           rdf:type html:DataCell;
                                                rdf:_1 ?manchester_syntax_definition_type_text.
   ?manchester_syntax_definition_type_text         rdf:type html:Text;
-                                                  html:fragment 'SPARQL Target:'.
+                                                  html:fragment 'SPARQLTarget:'.
   ?manchester_syntax_definition_value          rdf:type html:DataCell;
                                                rdf:_1 ?manchester_syntax_definition_value_text.
   ?manchester_syntax_definition_value_text        rdf:type html:Text;
@@ -3830,6 +3875,4 @@ function:getLabel
   BIND(function:escapeHTML(COALESCE(?preferredLabel, ?alternativeLabel, ?implicitLabel)) as ?result)
 }
 """ .
-
-
 }
