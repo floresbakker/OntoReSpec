@@ -36,17 +36,18 @@ html: {
     dct:conformsTo 'https://datatracker.ietf.org/doc/html/rfc1942'^^xsd:anyURI;
     dct:created '2021-12-08'^^xsd:date;
     dct:creator
-      'Flores Bakker',
-      'Rosaline de Haan',
+      'Flores Bakker',      
       'Thomas de Groot',
       'Wouter Beek';
+    dct:contributor
+      'Rosaline de Haan',
+      'Chayenne Halvemaan';
       
-    respec:introduction '''
-In today's fast-paced business landscape, organizations grapple with the formidable challenge of information management. The demand for robust information products and agile information processing is relentless, constantly evolving with each passing moment, transcending industry boundaries. In this dynamic environment, the creation, validation, and utilization of information products are paramount, serving as the bedrock for informed decision-making and organizational effectiveness. The ability to swiftly respond to unforeseen crises or seize emerging opportunities hinges on having the right answers to previously unasked questions.
+    respec:introduction '''In today's fast-paced business landscape, organizations grapple with the formidable challenge of information management. The demand for robust information products and agile information processing is relentless, constantly evolving with each passing moment, transcending industry boundaries. In this dynamic environment, the creation, validation, and utilization of information products are paramount, serving as the bedrock for informed decision-making and organizational effectiveness. The ability to swiftly respond to unforeseen crises or seize emerging opportunities hinges on having the right answers to previously unasked questions.
 
-So, how can organizations effectively navigate this information-intensive terrain? A key part of the solution lies in the capability to exercise complete control over the generation, modification, validation, and reuse of information products. This entails the profound ability to construct and deconstruct any arbitrary information product, dissecting it from its foundational elements to its broader, strategic significance.
+    So, how can organizations effectively navigate this information-intensive terrain? A key part of the solution lies in the capability to exercise complete control over the generation, modification, validation, and reuse of information products. This entails the profound ability to construct and deconstruct any arbitrary information product, dissecting it from its foundational elements to its broader, strategic significance.
 
-To address this need, we have pioneered the development of the RDF-based Semantic HTML Core Vocabulary - a transformative framework designed to facilitate the management of an array of information artifacts built upon HTML.'''@en;
+    To address this need, we have pioneered the development of the RDF-based Semantic HTML Core Vocabulary - a transformative framework designed to facilitate the management of an array of information artifacts built upon HTML.'''@en;
 
     respec:background 'In an era where information is akin to a constantly flowing stream, organizations must grapple with several pressing challenges in aspects like velocity, variety, the insightfulness, adaptability and validity. The speed at which information is generated, transformed, and consumed is unparalleled. Keeping pace with this velocity is essential for timely decision-making. Information comes in diverse formats, from structured data to unstructured text, images, and multimedia. Effective management necessitates the ability to handle this rich variety seamlessly. Information is not merely data; it embodies insights, functionality, and knowledge. Extracting meaningful insights and practical functionality is vital for organizational success. Organizations must be agile in adapting information products to address new crises and opportunities swiftly. Finally, ensuring the correctness, compliance and reliability of information is fundamental to trustworthy decision-making and operations.'@en;
     
@@ -139,6 +140,7 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
     respec:group "htmlvoc";
     respec:shortName "htmlvoc";
     respec:specStatus "CG-DRAFT";
+    respec:latestVersion "https://github.com/floresbakker/htmlvoc"^^xsd:anyURI;
     dct:status status:UnderDevelopment;
     dct:subject 'HTML'@en;
     dct:title 'Semantic HTML Core Ontology'@en;
@@ -159,12 +161,17 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
       decl:html,
       decl:rdf,
       decl:rdfs,
+      decl:rule,
+      decl:section,
+      decl:shp,
+      decl:standard,
+      decl:target,       
       decl:xsd;
     vann:preferredNamespacePrefix 'html';
     vann:preferredNamespaceUri 'https://www.w3.org/html/model/def/'^^xsd:anyURI;
     void:uriRegexPattern '^https://www.w3.org/html/model/def/';
-    void:uriSpace 'https://www.w3.org/html/model/def/'^^xsd:anyURI.
-
+    void:uriSpace 'https://www.w3.org/html/model/def/'^^xsd:anyURI. 
+    
   decl:dom
     sh:prefix "dom";
     sh:namespace "http://www.w3.org/DOM/model/def/"^^xsd:anyURI.
@@ -185,6 +192,26 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
     sh:prefix "rdfs";
     sh:namespace "http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI.
 
+  decl:rule
+    sh:prefix "rule";
+    sh:namespace "https://www.w3.org/html/model/rule/"^^xsd:anyURI.   
+
+  decl:section
+    sh:prefix "section";
+    sh:namespace "https://www.w3.org/html/id/section/"^^xsd:anyURI.  
+    
+  decl:shp
+    sh:prefix "shp";
+    sh:namespace "https://www.w3.org/html/model/shp/"^^xsd:anyURI.       
+
+  decl:standard
+    sh:prefix "standard";
+    sh:namespace "https://www.w3.org/html/id/standard/"^^xsd:anyURI.  
+    
+  decl:target
+    sh:prefix "target";
+    sh:namespace "https://www.w3.org/html/model/target/"^^xsd:anyURI.   
+    
   decl:xsd
     sh:prefix "xsd";
     sh:namespace "http://www.w3.org/2001/XMLSchema#"^^xsd:anyURI.
@@ -196,6 +223,7 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
     a dct:Standard;
     dct:created '2021-11-09'^^xsd:date;
     dct:source 'https://html.spec.whatwg.org'^^xsd:anyURI;
+    skos:definition """HTML is the World Wide Web's core markup language. It is described in the WHATWG "HTML Living Standard" specification."""@en;
     skos:prefLabel 'HTML Living Standard'@en;
     rdfs:isDefinedBy html:.
 
@@ -371,7 +399,7 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
     skos:definition 'A section in the living standard of HTML.'@en;
     rdfs:isDefinedBy html:.
 
-   section:4.3.2
+  section:4.3.2
     a dcm:Text;
     dct:isPartOf standard:html;
     dct:source 'https://html.spec.whatwg.org/#the-article-element'^^xsd:anyURI;
@@ -1384,55 +1412,6 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
     skos:definition 'A section in the living standard of HTML.'@en;
     rdfs:isDefinedBy html:.
 
-  # HTML conceptual model
-  
-  concept:html rdf:type skos:ConceptScheme;
-    dct:subject html: ;
-    skos:prefLabel 'concept scheme of the HTML core vocabulary'@en;
-    skos:definition 'The concept scheme of the HTML core vocabulary contains concepts that define aspects of the HTML core vocabulary. It includes concepts that refer to classes, properties, SHACL shapes or other resources, that make up the core of the HTML vocabulary.'@en;
-    rdfs:isDefinedBy html:. 
-
-  concept:document rdf:type skos:Concept;
-    skos:prefLabel 'HTML document';
-    skos:definition 'An HTML document consists of a tree of elements and text. The HTML specification defines a set of elements that can be used in HTML, along with rules about the ways in which the elements can be nested. Elements can have attributes, which control how the elements work. HTML user agents (e.g., web browsers) parse the markup of HTML, turning it into a DOM (Document Object Model) tree. A DOM tree is an in-memory representation of a document. DOM trees contain several kinds of nodes, in particular a DocumentType node, Element nodes, Text nodes, Comment nodes, and in some cases ProcessingInstruction nodes.'@en;
-    skos:inScheme concept:html;
-    dct:subject html:Document,
-	              html:DocumentType,
-                html:Element,
-                html:Attribute,
-                html:Text,
-                html:Comment,
-                html:ProcessingInstruction;
-    rdfs:isDefinedBy html:.
-
-  concept:contentCategory rdf:type skos:Concept;
-    skos:prefLabel 'content category';
-    skos:definition 'Content category as defined in the HTML core vocabulary'@en;
-    skos:inScheme concept:html;             
-    dct:subject html:MetadataContent,
-                html:FlowContent,
-                html:SectioningContent,
-                html:HeadingContent,
-                html:PhrasingContent,
-                html:EmbeddedContent,     
-                html:InteractiveContent,
-                html:PalpableContent,
-                html:ScriptSupportingElement,
-                html:FormAssociatedElement,
-                html:LabelableElement;
-    rdfs:isDefinedBy html:.
-
-  concept:elementType rdf:type skos:Concept;
-    skos:prefLabel 'element type';
-    skos:definition 'Element type as defined in the HTML core vocabulary'@en;
-    skos:inScheme concept:html;             
-    dct:subject html:NormalElement,
-                html:RawTextElement,
-                html:EscapableRawTextElement,
-                html:ForeignElement,
-                html:VoidElement,
-                html:CustomElement;
-    rdfs:isDefinedBy html:.
 
   # HTML - living standard - 3.2 Elements
 
@@ -5748,18 +5727,18 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
 
 ### Shapes ###
 
-  shp:SerializableNode
+  shp:HTMLFragmentSerializationAlgorithm
     a sh:NodeShape;
     sh:rule rule:HTMLFragmentSerializationAlgorithm;
-    sh:target target:SerializableNode;
-    skos:prefLabel 'serializable node shape'@en;
-    skos:definition 'Node shape to create the HTML fragment for a node in a HTML document.'@en;    
+    sh:target target:HTMLFragmentSerializationAlgorithm;
+    skos:prefLabel 'Node shape for HTML fragment serialization algorithm'@en;
+    skos:definition 'A node shape with an algorithm to serialize an HTML fragment for a node in an HTML document.'@en;    
     rdfs:isDefinedBy html:.
 
-  target:SerializableNode
+  target:HTMLFragmentSerializationAlgorithm
     a sh:SPARQLTarget;
-    skos:prefLabel 'the target for serializable nodes'@en;
-    skos:definition 'Select nodes in a HTML document that do not have an HTML fragment yet, and whose child nodes all have an HTML fragment already.'@en;
+    skos:prefLabel 'SPARQL target for HTML fragment serialization algorithm'@en;
+    skos:definition 'A SPARQL Target to select all nodes in an HTML document that do not have an HTML fragment yet, and whose child nodes all have an HTML fragment already.'@en;
     sh:prefixes html:;
     sh:select '''
 select $this {
@@ -5782,8 +5761,8 @@ select $this {
 
   rule:HTMLFragmentSerializationAlgorithm
     a sh:SPARQLRule;
-    skos:prefLabel 'HTML fragment serialization algorithm'@en;
-    skos:definition 'Create the HTML fragment for a node in a HTML document.'@en;
+    skos:prefLabel 'SPARQL rule for HTML fragment serialization algorithm'@en;
+    skos:definition 'A SPARQL rule to serialize an HTML fragment for a node in an HTML document, analogue to the HTML fragment serialisation algorithm as described in the living standard of HTML.'@en;
     sh:prefixes html:;
     sh:construct '''
 construct {
@@ -5815,16 +5794,16 @@ construct {
 
   shp:CustomElement
     a sh:NodeShape;
-    skos:prefLabel 'Custom element shape'@en;
-    skos:definition 'Node shape to create an HTML fragment for a custom element.'@en;    
-    sh:rule rule:Serialize_HTML_fragment_CustomElement;
+    skos:prefLabel 'Node shape for custom element'@en;
+    skos:definition 'A node shape to establish an individual custom element as a subclass of the class html:CustomElement.'@en;    
+    sh:rule rule:CustomElement;
     sh:targetClass html:CustomElement;
     rdfs:isDefinedBy html:.
 
-  rule:Serialize_HTML_fragment_CustomElement
+  rule:CustomElement
     a sh:SPARQLRule;
-    skos:prefLabel 'Custom element fragment serialisation rule'@en;
-    skos:definition 'A rule that creates an HTML fragment for a custom element.'@en;
+    skos:prefLabel 'SPARQL rule for custom element'@en;
+    skos:definition 'A SPARQL rule to establish an individual custom element as a subclass of the class html:CustomElement.'@en;
     sh:prefixes html:;
     sh:construct '''
 construct {
@@ -5838,7 +5817,7 @@ construct {
   function:getElementFragment
     a sh:SPARQLFunction ;
     skos:prefLabel  "the getElementFragment() function"@en;
-    skos:definition "Returns a HTML fragment for a HTML element in a HTML document."@en ;
+    skos:definition "A SPARQL function that returns an HTML fragment for an element in an HTML document."@en ;
     sh:parameter [
         sh:path function:element ;
         sh:datatype xsd:anyURI ;
@@ -5879,7 +5858,7 @@ construct {
   function:getTextFragment
     a sh:SPARQLFunction ;
     skos:prefLabel  "the getTextFragment() function"@en;    
-    skos:definition "Returns a HTML fragment for a HTML text node in a HTML document."@en ;
+    skos:definition "A SPARQL function that returns an HTML fragment for a text node in an HTML document."@en ;
     sh:parameter [
         sh:path function:text ;
         sh:datatype xsd:anyURI ;
@@ -5907,7 +5886,7 @@ construct {
   function:getCommentFragment
     a sh:SPARQLFunction ;
     skos:prefLabel  "the getCommentFragment() function"@en;    
-    skos:definition "Returns a HTML fragment for a HTML comment in a HTML document."@en ;
+    skos:definition "A SPARQL function that returns an HTML fragment for a comment node in an HTML document."@en ;
     sh:parameter [
         sh:path function:comment ;
         sh:datatype xsd:anyURI ;
@@ -5931,7 +5910,7 @@ construct {
   function:getProcessingInstructionFragment
     a sh:SPARQLFunction ;
     skos:prefLabel  "the getProcessingInstructionFragment() function"@en;    
-    skos:definition "Returns a HTML fragment for a HTML processing instruction in a HTML document."@en ;
+    skos:definition "A SPARQL function that returns an HTML fragment for a processing instruction in an HTML document."@en ;
     sh:parameter [
         sh:path function:processingInstruction ;
         sh:datatype xsd:anyURI ;
@@ -5956,7 +5935,7 @@ construct {
   function:getDocumentTypeFragment
     a sh:SPARQLFunction ;
     skos:prefLabel  "the getDocumentTypeFragment() function"@en;    
-    skos:definition "Returns a HTML fragment for a HTML DocumentType in a HTML document."@en ;
+    skos:definition "A SPARQL function that returns an HTML fragment for a document type in an HTML document."@en ;
     sh:parameter [
         sh:path function:doctype ;
         sh:datatype xsd:anyURI ;
@@ -5982,7 +5961,7 @@ construct {
   function:getDocumentFragment
     a sh:SPARQLFunction ;
     skos:prefLabel  "the getDocumentFragment() function"@en;    
-    skos:definition "Returns a HTML fragment for a HTML Document"@en ;
+    skos:definition "A SPARQL function that returns an HTML fragment for an HTML document."@en ;
     sh:parameter [
         sh:path function:document ;
         sh:datatype xsd:anyURI ;
@@ -6006,7 +5985,7 @@ construct {
   function:getChildNodeFragment
     a sh:SPARQLFunction ;
     skos:prefLabel  "the getChildNodeFragment() function"@en;    
-    skos:definition "Returns a HTML fragment of child nodes for a node in an HTML Document"@en ;
+    skos:definition "A SPARQL function that returns an HTML fragment of child nodes for a node in an HTML document."@en ;
     sh:parameter [
         sh:path function:parentNode ;
         sh:datatype xsd:anyURI ;
@@ -6041,7 +6020,7 @@ construct {
   function:getElementAttribute
     a sh:SPARQLFunction ;
     skos:prefLabel "the getElementAttribute() function"@en;
-    skos:definition "Returns an HTML attribute of an HTML element"@en ;
+    skos:definition "A SPARQL function that returns an HTML fragment for the attributes of an HTML element."@en ;
     sh:parameter [
         sh:path function:element ;
         sh:datatype xsd:anyURI ;
