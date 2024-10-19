@@ -919,7 +919,7 @@ construct {
   }
 
   # Establish the label for the owl class. If a blank node, then use the description of the class als label, including manchester syntax ' or ' notation. If an IRI, then use the preferred label.
-  bind(if(function:isBlank($this), ?manchesterDescription, concat("[=",function:getPrefixedIRI($this), "=]")) as ?manchesterLabel)
+  bind(if(function:isBlank($this), concat('(', ?manchesterDescription, ')'), concat("[=",function:getPrefixedIRI($this), "=]")) as ?manchesterLabel)
   
   # If the class is explicitly defined in the ontology with a IRI, then add the definition to it. If the class is a blank node, do not bother.
   bind(if(function:isBlank($this), ?unboundDummy, ?manchesterDescription) as ?equivalentTo) 
@@ -994,7 +994,7 @@ construct {
   }
   
   # Establish the label for the owl class. If a blank node, then use the description of the class als label, including manchester syntax ' and ' notation. If an IRI, then use the preferred label.
-  bind(if(function:isBlank($this), ?manchesterDescription, concat("[=",function:getPrefixedIRI($this), "=]")) as ?manchesterLabel)
+  bind(if(function:isBlank($this), concat('(', ?manchesterDescription, ')'), concat("[=",function:getPrefixedIRI($this), "=]")) as ?manchesterLabel)
   
   # If the class is explicitly defined in the ontology with a IRI, then add the definition to it. If the class is a blank node, do not bother.
   bind(if(function:isBlank($this), ?unboundDummy, ?manchesterDescription) as ?equivalentTo) 
@@ -1071,7 +1071,7 @@ construct {
   bind(concat("{", ?individualLabels, "}") as ?manchesterDescription)
 
   # Establish the label for the owl class. If a blank node, then use the description of the class als label, including manchester syntax ' {} ' notation. If an IRI, then use the preferred label.
-  bind(if(function:isBlank($this), ?manchesterDescription, concat("[=",function:getPrefixedIRI($this), "=]")) as ?manchesterLabel)
+  bind(if(function:isBlank($this), concat('(', ?manchesterDescription, ')'), concat("[=",function:getPrefixedIRI($this), "=]")) as ?manchesterLabel)
   
   # If the class is explicitly defined in the ontology with a IRI, then add the definition to it. If the class is a blank node, do not bother.
   bind(if(function:isBlank($this), ?unboundDummy, ?manchesterDescription) as ?equivalentTo) 
@@ -1144,7 +1144,7 @@ construct {
   bind(concat("not ", str(COALESCE(?explicitDefinition, ?implicitDefinition))) as ?manchesterDescription)
   
   # Establish the label for the owl class. If a blank node, then use the description of the class als label, including manchester syntax 'not ' notation. If an IRI, then use the preferred label.
-  bind(if(function:isBlank($this), ?manchesterDescription, concat("[=",function:getPrefixedIRI($this), "=]")) as ?manchesterLabel)
+  bind(if(function:isBlank($this), concat('(', ?manchesterDescription, ')'), concat("[=",function:getPrefixedIRI($this), "=]")) as ?manchesterLabel)
   
   # If the class is explicitly defined in the ontology with a IRI, then add the definition to it. If the class is a blank node, do not bother.
   bind(if(function:isBlank($this), ?unboundDummy, ?manchesterDescription) as ?equivalentTo) 
