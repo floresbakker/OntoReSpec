@@ -1693,7 +1693,7 @@ select $this {
 
   filter not exists {
     $this rdf:type ?undesiredClass.
-    filter (?undesiredClass in (sh:PropertyShape, sh:NodeShape, sh:SPARQLRule, sh:SPARQLTarget, sh:SPARQLFunction, rdfs:Class, rdfs:Datatype, rdf:Property, owl:Class, owl:DatatypeProperty, owl:ObjectProperty, owl:FunctionalProperty, owl:IrreflexiveProperty, owl:Restriction, owl:Ontology, owl:InverseFunctionalProperty, owl:InverseProperty, owl:AllDifferent, owl:AnnotationProperty, owl:NegativePropertyAssertion, owl:OntologyProperty, owl:AllDisjointClasses, owl:AllDisjointProperties, owl:Annotation,owl:AsymmetricProperty, owl:Axiom, owl:DataRange, owl:DeprecatedClass, owl:DeprecatedProperty, skos:Concept, skos:ConceptScheme, skos:Collection, respec:Generation))
+    filter (?undesiredClass in (sh:PropertyShape, sh:Parameter, sh:NodeShape, sh:SPARQLRule, sh:SPARQLTarget, sh:SPARQLFunction, sh:SPARQLConstraint, rdfs:Class, rdfs:Datatype, rdf:Property, owl:Class, owl:DatatypeProperty, owl:ObjectProperty, owl:FunctionalProperty, owl:IrreflexiveProperty, owl:Restriction, owl:Ontology, owl:InverseFunctionalProperty, owl:InverseProperty, owl:AllDifferent, owl:AnnotationProperty, owl:NegativePropertyAssertion, owl:OntologyProperty, owl:AllDisjointClasses, owl:AllDisjointProperties, owl:Annotation,owl:AsymmetricProperty, owl:Axiom, owl:DataRange, owl:DeprecatedClass, owl:DeprecatedProperty, skos:Concept, skos:ConceptScheme, skos:Collection, respec:Generation))
     }
 }
 '''.
@@ -2019,6 +2019,10 @@ select $this {
   
   $this sh:path [].
   
+  # ...but no SHACL parameter
+  filter not exists { [] sh:parameter $this}
+  filter not exists {$this rdf:type sh:Parameter}
+  
   # The PropertyShape must not have an Manchester Syntax string yet
   
   filter not exists {
@@ -2050,6 +2054,68 @@ construct {
   $this sh:name ?propertyName.}
         
   bind(if(function:isBlank($this), coalesce(?propertyName, "Anonymous PropertyShape"),concat("[=",function:getPrefixedIRI($this),"=]")) as ?manchesterLabel)
+ 
+} 
+
+  '''.
+
+
+shp:SerializableParameter
+    a sh:NodeShape;
+    sh:rule rule:SerializeParameter;
+    sh:target target:SerializableParameter;
+    skos:prefLabel 'Serializable Parameter shape'@en.
+
+  target:SerializableParameter
+    a sh:SPARQLTarget;
+    sh:select '''
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix sh: <http://www.w3.org/ns/shacl#>
+
+select $this {
+  
+  # Any SHACL parameter
+  
+  {[] sh:parameter $this}
+  UNION
+  {$this rdf:type sh:Parameter}
+  
+  # The parameter must not have an Manchester Syntax string yet
+  
+  filter not exists {
+    $this manchester:syntax 'PARAMETER'.
+  }
+}
+  '''.
+
+  rule:SerializeParameter
+    a sh:SPARQLRule;
+    rdfs:comment 'A rule that creates a manchester syntax label and definition for a SHACL parameter.'@en;
+    skos:prefLabel 'Manchester Syntax serialisation rule for a SHACL parameter'@en;
+    sh:construct '''
+prefix function: <https://data.rijksfinancien.nl/manchester/model/function/>
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix sh: <http://www.w3.org/ns/shacl#>
+
+construct {
+
+  # create the manchester syntax for the Parameter to be serialized.
+  
+  $this manchester:syntax 'PARAMETER';
+        manchester:label ?manchesterLabel.
+} where {
+  
+  optional{
+  $this sh:name ?preferredParameterName.}
+
+  $this sh:path ?pathParameter.
+  bind(function:getPrefixedIRI(?pathParameter) as ?alternativeParameterName)  
+  bind(if(function:isBlank($this), coalesce(?preferredParameterName, ?alternativeParameterName),concat("[=",function:getPrefixedIRI($this),"=]")) as ?manchesterLabel)
  
 } 
 
@@ -2135,6 +2201,14 @@ select $this {
   filter not exists {
     $this manchester:label [].
   }
+  
+  # Any possible parameter of the SPARQL function should already have been processed
+  filter not exists {
+    $this sh:parameter ?parameter.
+    filter not exists {
+      ?parameter manchester:label []
+   }
+  }
 }
   '''.
 
@@ -2154,8 +2228,14 @@ construct {
   # create the manchester syntax for the SPARQLFunction to be serialized.
   
   $this manchester:syntax 'SPARQLFUNCTION';
-        manchester:label ?manchesterLabel.
+        manchester:label ?manchesterLabel;
+        manchester:parameter ?manchesterParameter.
 } where {
+  
+  OPTIONAL{
+  $this sh:parameter ?parameter.
+  ?parameter manchester:label ?manchesterParameter.
+  }
   
   bind(if(function:isBlank($this), "Anonymous SPARQLFunction",concat("[=",function:getPrefixedIRI($this),"=]")) as ?manchesterLabel)
  
