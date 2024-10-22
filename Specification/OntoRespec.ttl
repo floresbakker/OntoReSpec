@@ -17,6 +17,7 @@ prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
 respec: {
+
 respec:introduction
     a owl:DatatypeProperty;
     rdfs:domain respec:Generation;
@@ -26,7 +27,7 @@ respec:introduction
 
 shp:Document
   a sh:NodeShape;
-  sh:rule rule:Document, rule:StaticElement, rule:OptionalElement, rule:Title, rule:Introduction, rule:Description, rule:Example, rule:NameSpace, rule:Abstract, rule:Configuration, rule:Classes, rule:ObjectProperties, rule:DatatypeProperties, rule:RDF_Properties, rule:NodeShapes, rule:SparqlTargets, rule:SparqlRules, rule:SparqlFunctions, rule:NamedIndividuals, rule:ConceptSchemes;
+  sh:rule rule:Document, rule:StaticElement, rule:OptionalElement, rule:Title, rule:Introduction, rule:Description, rule:Example, rule:NameSpace, rule:Abstract, rule:Configuration, rule:Classes, rule:ObjectProperties, rule:DatatypeProperties, rule:RDF_Properties, rule:NodeShapes, rule:SparqlTargets, rule:SparqlRules, rule:SparqlFunctions, rule:Parameters, rule:NamedIndividuals, rule:ConceptSchemes;
   sh:targetClass respec:Generation.
 
 rule:Document
@@ -883,7 +884,7 @@ where  {
     filter (LANG(?absenceLabel_general) = ?language)
   }
   
-  
+  OPTIONAL
 
   # Get the class from the ontology, the label and description, and the sequence order in which the class appears amidst other classes alphanumerically.
   {
@@ -954,7 +955,7 @@ where  {
 
             optional {
 
-              ?prevClassS manchester:subClassOf ?prevManchesterDefinitions.
+              ?prevClassS manchester:subClassOf ?prevManchesterDefinitionS.
 
               filter(?prevManchesterDefinitionS < ?manchesterDefinitionS)
             }
@@ -1209,7 +1210,7 @@ where  {
     filter (LANG(?absenceLabel_entity)  = ?language)                    
     filter (LANG(?absenceLabel_general) = ?language)
   }
-  
+  OPTIONAL
   # Get the sorted entities from the ontology including semantics
   
   {SELECT ?objectProperty ?objectPropertyManchesterLabel_original ?objectPropertyManchesterLabel ?objectPropertyDefinition_original ?objectPropertyManchesterDomain ?objectPropertyManchesterRange ?objectPropertyManchesterSubPropertyOf ?objectproperty_value_text (COUNT(?prevObjectProperty) + 1 AS ?member)
@@ -1475,6 +1476,7 @@ where  {
    filter (LANG(?absenceLabel_general) = ?language)        
   }
 
+  OPTIONAL
   # Get the sorted entities from the ontology including semantics
   
   {SELECT ?datatypeProperty ?datatypePropertyManchesterLabel_original ?datatypePropertyManchesterLabel ?datatypePropertyDefinition_original ?datatypePropertyManchesterDomain ?datatypePropertyManchesterRange ?datatypePropertyManchesterSubPropertyOf ?datatypeproperty_value_text (COUNT(?prevDatatypeProperty) + 1 AS ?member)
@@ -1742,7 +1744,7 @@ where  {
     filter (LANG(?absenceLabel_general) = ?language)
 
   }
-
+  OPTIONAL
   # Get the sorted entities from the ontology including semantics
   
   {SELECT ?RDF_Property ?RDF_PropertyManchesterLabel_original ?RDF_PropertyManchesterLabel ?RDF_PropertyDefinition_original ?RDF_PropertyManchesterDomain ?RDF_PropertyManchesterRange ?RDF_PropertyManchesterSubPropertyOf ?RDF_Property_value_text (COUNT(?prevRDF_Property) + 1 AS ?member)
@@ -2051,7 +2053,7 @@ construct {
     }
 
     # Get the sorted entities from the ontology including semantics
-
+    OPTIONAL
     {
       select ?entity ?entityManchesterLabel_raw ?entityManchesterLabel ?entityDefinition_raw ?entityManchesterTargetClass ?entityManchesterTargetSPARQL ?entityManchesterTargetSubject ?entityManchesterTargetObject ?entityManchesterTargetNode ?entityManchesterSPARQLRule ?label_value_text (count(?prevEntity) + 1 as ?member)
 
@@ -2355,6 +2357,7 @@ construct {
       filter (lang(?absenceLabel_general) = ?language)
     }
 
+    OPTIONAL
     # Get the named individuals as sorted entities including definitions, labels, types and facts.
     {
       select ?entity ?entityManchesterLabel_raw ?entityManchesterLabel ?entityDefinition_raw  ?label_value_text ?member ?entityManchesterClassGroup ?entityManchesterFactGroup where {
@@ -2681,6 +2684,7 @@ construct {
     filter (LANG(?absenceLabel_entity)  = ?language)
     }
 
+    OPTIONAL
     # Get the sorted concepts from the ontology including semantics
 
     {
@@ -2976,7 +2980,7 @@ construct {
     filter (LANG(?absenceLabel_general) = ?language)
     filter (LANG(?absenceLabel_entity)  = ?language)
     }
-
+    OPTIONAL
     # Get the sorted concepts from the ontology including semantics
 
     {
@@ -3116,7 +3120,8 @@ construct {
                              rdf:_5 ?definition;
                              rdf:_6 ?linebreak2;
                              rdf:_7 ?linebreak3;
-                             rdf:_8 ?manchester_syntax.
+                             rdf:_8 ?manchester_syntax;
+                             rdf:_9 ?query.
   ?title                       rdf:type html:H2;
                                rdf:_1 ?dfn.
   ?dfn                            rdf:type html:Dfn;
@@ -3177,6 +3182,30 @@ construct {
   ?manchester_syntax_definition_value_text        rdf:type html:Text;
                                                   html:fragment ?entityManchesterLabel.
 
+  ?query rdf:type html:Details;
+         rdf:_1 ?query_table.
+  ?query_table rdf:type html:Table;
+         html:class 'def';
+         rdf:_1 ?query_tableheader;
+         rdf:_2 ?query_body.
+  ?query_tableheader rdf:type html:TableHeader;
+         rdf:_1 ?query_headerrow.
+  ?query_headerrow rdf:type html:Row;
+         rdf:_1 ?query_headercell.
+  ?query_headercell rdf:type html:HeaderCell;
+         rdf:_1 ?query_title.
+  ?query_title rdf:type html:Text;
+         html:fragment 'SPARQL query'.
+  ?query_body rdf:type html:TableBody;
+         rdf:_1 ?query_bodyrow.
+  ?query_bodyrow rdf:type html:Row;
+         rdf:_1 ?query_bodycell.
+  ?query_bodycell rdf:type html:DataCell;
+         html:style 'white-space: pre; font-family: monospace;';  
+         rdf:_1 ?query_text.
+  ?query_text rdf:type html:Text;
+         html:fragment ?query_string.
+
   ?emptyrow1      rdf:type html:Row;
                   rdf:_1 ?emptycell1;
                   rdf:_2 ?emptycell2.
@@ -3204,17 +3233,19 @@ construct {
     filter (LANG(?absenceLabel_general) = ?language)
 
     }
+    OPTIONAL
 
     # Get the sorted entities from the ontology including semantics
 
     {
-      select ?entity ?entityManchesterLabel_raw ?entityManchesterLabel ?entityDefinition_raw ?label_value_text (count(?prevEntity) + 1 as ?member)
+      select ?entity ?entityManchesterLabel_raw ?entityManchesterLabel ?entityDefinition_raw ?label_value_text ?query_string (count(?prevEntity) + 1 as ?member)
 
       where {
 
-        ?entity a sh:SPARQLRule .
-        ?entity manchester:label ?entityManchesterLabel_raw .
-        ?entity rdfs:isDefinedBy ?ontology.
+        ?entity a sh:SPARQLRule ;
+                manchester:label ?entityManchesterLabel_raw ;
+                sh:construct ?query_string;
+                rdfs:isDefinedBy ?ontology.
         $this dct:subject ?ontology;
               respec:documentLanguage ?language2.
         BIND(function:getLabel(?entity, ?language2) as ?label_value_text)              
@@ -3232,7 +3263,7 @@ construct {
           filter(?prevLabel < ?entityManchesterLabel_raw)
         }
       }
-      group by ?entityManchesterLabel_raw ?entityManchesterLabel ?entityDefinition_raw ?entity ?label_value_text
+      group by ?entityManchesterLabel_raw ?entityManchesterLabel ?entityDefinition_raw ?entity ?label_value_text ?query_string
       order by ?entityManchesterLabel_raw
     }
 
@@ -3256,6 +3287,7 @@ construct {
     bind(iri(concat(str(?section), '-6')) as ?linebreak2)
     bind(iri(concat(str(?section), '-7')) as ?linebreak3)
     bind(iri(concat(str(?section), '-8')) as ?manchester_syntax)
+    bind(iri(concat(str(?section), '-9')) as ?query)
 
     bind(iri(concat(str(?label), '-1')) as ?label_strong)
     bind(iri(concat(str(?label), '-2')) as ?label_value)
@@ -3285,6 +3317,18 @@ construct {
     bind(iri(concat(str(?manchester_syntax_definition_type), '-1')) as ?manchester_syntax_definition_type_text)
     bind(iri(concat(str(?manchester_syntax_definition_value), '-1')) as ?manchester_syntax_definition_value_text)
 
+    # Create identifiers SPARQL query
+    
+    bind(iri(concat(str(?query), '-1')) as ?query_table)
+    bind(iri(concat(str(?query_table), '-1')) as ?query_tableheader)
+    bind(iri(concat(str(?query_table), '-2')) as ?query_body)
+    bind(iri(concat(str(?query_tableheader), '-1')) as ?query_headerrow)
+    bind(iri(concat(str(?query_headerrow), '-1')) as ?query_headercell)
+    bind(iri(concat(str(?query_headercell), '-1')) as ?query_title)    
+    bind(iri(concat(str(?query_body), '-1')) as ?query_bodyrow)    
+    bind(iri(concat(str(?query_bodyrow), '-1')) as ?query_bodycell)        
+    bind(iri(concat(str(?query_bodycell), '-1')) as ?query_text)   
+
   }
 """.
 
@@ -3299,6 +3343,299 @@ rule:SparqlFunctions
   skos:prefLabel 'Sparql Functions rule'@en;
   rdfs:comment 'The Sparql Functions rule creates a section of SPARQL functions for the ontology in the document.'@en ;
   sh:condition condition:SparqlFunctions;
+  sh:construct """
+
+prefix dct: <http://purl.org/dc/terms/>
+prefix dc:  <http://purl.org/dc/elements/1.1/>
+prefix dom: <http://www.w3.org/DOM/model/def/>
+prefix function: <https://respec.org/ontorespec/model/function/>
+prefix html: <https://www.w3.org/html/model/def/>
+prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix respec: <https://respec.org/ontorespec/model/def/>
+prefix schema: <http://schema.org/>
+prefix sh: <http://www.w3.org/ns/shacl#>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix vann: <http://purl.org/vocab/vann/>
+
+construct {
+
+  ?elementID                 rdf:type html:Div;
+                             ?rdf_member ?section;
+                             html:fragment ?absenceOfDefinitions.
+  ?section                   rdf:type html:Section;
+                             rdf:_1 ?title;
+                             rdf:_2 ?label;
+                             rdf:_3 ?IRI;
+                             rdf:_4 ?linebreak1;
+                             rdf:_5 ?definition;
+                             rdf:_6 ?linebreak2;
+                             rdf:_7 ?linebreak3;
+                             rdf:_8 ?manchester_syntax;
+                             rdf:_9 ?query.
+  ?title                       rdf:type html:H2;
+                               rdf:_1 ?dfn.
+  ?dfn                            rdf:type html:Dfn;
+                                  rdf:_1 ?title_text.
+  ?title_text                     rdf:type html:Text;
+                                  html:fragment ?entityManchesterLabel.
+  ?label                                   rdf:type html:Div;
+                                         rdf:_1 ?label_strong;
+                                         rdf:_2 ?label_value;
+                                         html:class "container".
+  ?label_strong                              rdf:type html:Strong;
+                                           rdf:_1 ?label_text;
+                                           html:class "label".
+  ?label_text                                rdf:type html:Text;
+                                           html:fragment 'Label: '.  
+  ?label_value                                rdf:type html:Text;
+                                           html:fragment ?label_value_text.                                    
+  ?IRI                                   rdf:type html:Div;
+                                         rdf:_1 ?IRI_strong;
+                                         rdf:_2 ?IRI_a;
+                                         html:class "container".
+  ?IRI_strong                              rdf:type html:Strong;
+                                           rdf:_1 ?IRI_text;
+                                           html:class "label".
+  ?IRI_text                                rdf:type html:Text;
+                                           html:fragment 'IRI: '.
+  ?IRI_a                                   rdf:type html:A;
+                                           html:href ?fullIRI;
+                                           rdf:_1 ?IRI_value_text.
+  ?IRI_value_text                                         rdf:type html:Text;
+                                                          html:fragment ?fullIRI.
+  ?definition                     rdf:type html:Text;
+                                  html:fragment ?entityDefinition.
+  ?manchester_syntax                             rdf:type html:Aside;
+                                                 html:class "note" ;
+                                                 html:title "Manchester Syntax (Extended)";
+                                                 rdf:_1 ?manchester_syntax_code.
+  ?manchester_syntax_code                        rdf:type html:Code;
+                                                 rdf:_1 ?manchester_syntax_table.
+  ?manchester_syntax_table                              rdf:type html:Table;
+                                                        rdf:_1 ?manchester_syntax_table_body_definition.
+  ?manchester_syntax_table_body_definition          rdf:type html:TableBody;
+                                                    rdf:_1 ?manchester_syntax_table_row_definition;
+                                                    rdf:_2 ?emptyrow1;
+                                                    ?memberParameterProperty ?manchester_syntax_table_row_parameter.
+  ?manchester_syntax_table_row_definition                rdf:type html:Row;
+                                                         rdf:_1 ?manchester_syntax_definition_type;
+                                                         rdf:_2 ?manchester_syntax_definition_value.
+  ?manchester_syntax_definition_type           rdf:type html:DataCell;
+                                               rdf:_1 ?manchester_syntax_definition_type_text.
+  ?manchester_syntax_definition_type_text         rdf:type html:Text;
+                                                  html:fragment 'SPARQLFunction:'.
+  ?manchester_syntax_definition_value          rdf:type html:DataCell;
+                                               rdf:_1 ?manchester_syntax_definition_value_text.
+  ?manchester_syntax_definition_value_text        rdf:type html:Text;
+                                                  html:fragment ?entityManchesterLabel.
+
+  ?emptyrow1      rdf:type html:Row;
+                  rdf:_1 ?emptycell1;
+                  rdf:_2 ?emptycell2.
+  ?emptycell1         rdf:type html:DataCell.
+  ?emptycell2         rdf:type html:DataCell.
+
+  ?manchester_syntax_table_row_parameter                    rdf:type html:Row;
+                                                        rdf:_1 ?manchester_syntax_definition_parameter_type;
+                                                        rdf:_2 ?manchester_syntax_definition_parameter_value.
+  ?manchester_syntax_definition_parameter_type            rdf:type html:DataCell;
+                                                      rdf:_1 ?manchester_syntax_definition_parameter_type_text.
+  ?manchester_syntax_definition_parameter_type_text          rdf:type html:Text;
+                                                         html:fragment 'Parameter:'.
+  ?manchester_syntax_definition_parameter_value           rdf:type html:DataCell;
+                                                      rdf:_1 ?manchester_syntax_definition_parameter_value_text.
+  ?manchester_syntax_definition_parameter_value_text         rdf:type html:Text;
+                                                         html:fragment ?manchesterParameter.
+
+  ?query rdf:type html:Details;
+         rdf:_1 ?query_table.
+  ?query_table rdf:type html:Table;
+         html:class 'def';
+         rdf:_1 ?query_tableheader;
+         rdf:_2 ?query_body.
+  ?query_tableheader rdf:type html:TableHeader;
+         rdf:_1 ?query_headerrow.
+  ?query_headerrow rdf:type html:Row;
+         rdf:_1 ?query_headercell.
+  ?query_headercell rdf:type html:HeaderCell;
+         rdf:_1 ?query_title.
+  ?query_title rdf:type html:Text;
+         html:fragment 'SPARQL query'.
+  ?query_body rdf:type html:TableBody;
+         rdf:_1 ?query_bodyrow.
+  ?query_bodyrow rdf:type html:Row;
+         rdf:_1 ?query_bodycell.
+  ?query_bodycell rdf:type html:DataCell;
+         html:style 'white-space: pre; font-family: monospace;';  
+         rdf:_1 ?query_text.
+  ?query_text rdf:type html:Text;
+         html:fragment ?query_string.
+   
+
+  ?linebreak1                          rdf:type html:Br.
+  ?linebreak2                          rdf:type html:Br.
+  ?linebreak3                          rdf:type html:Br.
+
+}
+
+  where  {
+    # Get the template
+
+    {?template rdf:type respec:SPARQLFunction;
+              respec:absenceLabel ?absenceLabel_general.
+    $this     dct:subject ?ontology;
+              respec:documentLanguage ?language;
+              respec:documentNamespace ?namespace.
+    []        rdf:type respec:Definition;
+              respec:absenceLabel ?absenceLabel_entity.  
+    filter (LANG(?absenceLabel_entity)  = ?language)              
+    filter (LANG(?absenceLabel_general) = ?language)
+
+    }
+    OPTIONAL
+
+    # Get the sorted entities from the ontology including semantics
+
+    {
+      select ?entity ?entityManchesterLabel_raw ?entityManchesterLabel ?entityDefinition_raw ?label_value_text ?query_string (count(?prevEntity) + 1 as ?member)
+
+      where {
+
+        ?entity a sh:SPARQLFunction ;
+                manchester:label ?entityManchesterLabel_raw ;
+                sh:select ?query_string ;
+                rdfs:isDefinedBy ?ontology .
+        
+        $this dct:subject ?ontology;
+              respec:documentLanguage ?language2.
+        BIND(function:getLabel(?entity, ?language2) as ?label_value_text)              
+
+        optional{
+          ?entity skos:definition ?entityDefinition_raw.
+          filter (lang(?entityDefinition_raw) = ?language2)
+        }
+
+        bind(function:escapeHTML(?entityManchesterLabel_raw) as ?entityManchesterLabel)
+
+        optional {
+          ?prevEntity a sh:SPARQLFunction .
+          ?prevEntity manchester:label ?prevLabel .
+          filter(?prevLabel < ?entityManchesterLabel_raw)
+        }
+      }
+      group by ?entityManchesterLabel_raw ?entityManchesterLabel ?entityDefinition_raw ?entity ?label_value_text ?query_string
+      order by ?entityManchesterLabel_raw
+    }
+    
+    optional # parameter
+      {
+        ?entity a sh:SPARQLFunction .
+        # Get the possibly multiple parameters for the SPARQL function
+        {
+          select ?entity ?manchesterParameter (count(?prevManchesterParameter) + 2 as ?memberParameter)
+          where {
+
+
+            ?entity manchester:parameter ?manchesterParameter.
+
+            optional {
+
+              ?prevEntity manchester:parameter ?prevManchesterParameter.
+
+              filter(?prevManchesterParameter < ?manchesterParameter)
+            }
+          }
+          group by ?entity ?manchesterParameter
+          order by ?entity ?manchesterParameter
+        }
+      }
+
+    bind(if(!bound(?entity), ?absenceLabel_general, ?unboundDummy) as ?absenceOfDefinitions)
+    bind(if(bound(?entityDefinition_raw), coalesce(function:escapeHTML(?entityDefinition_raw)), ?absenceLabel_entity) as ?entityDefinition)    
+    bind(iri(concat(str(rdf:),"_", str(?member))) as ?rdf_member)
+
+    # Establishing the prefixed IRI of the entity.
+
+    bind(str(?entity) as ?fullIRI)
+    bind(iri(concat(str(rdf:),"_", str(?memberParameter))) as ?memberParameterProperty)
+
+    # Create identifiers - generic
+
+    bind(function:getElementIRI(?template, ?namespace) as ?elementID)
+    bind(iri(concat(str(?elementID), '-', str(?member),'-1')) as ?section)
+    bind(iri(concat(str(?section), '-1')) as ?title)
+    bind(iri(concat(str(?section), '-2')) as ?label)
+    bind(iri(concat(str(?section), '-3')) as ?IRI)
+    bind(iri(concat(str(?section), '-4')) as ?linebreak1)
+    bind(iri(concat(str(?section), '-5')) as ?definition)
+    bind(iri(concat(str(?section), '-6')) as ?linebreak2)
+    bind(iri(concat(str(?section), '-7')) as ?linebreak3)
+    bind(iri(concat(str(?section), '-8')) as ?manchester_syntax)
+    bind(iri(concat(str(?section), '-9')) as ?query)
+
+    bind(iri(concat(str(?label), '-1')) as ?label_strong)
+    bind(iri(concat(str(?label), '-2')) as ?label_value)
+    bind(iri(concat(str(?label_strong), '-1')) as ?label_text)
+    
+    bind(iri(concat(str(?IRI), '-1')) as ?IRI_strong)
+    bind(iri(concat(str(?IRI), '-2')) as ?IRI_a)
+    bind(iri(concat(str(?IRI_strong), '-1')) as ?IRI_text)
+    bind(iri(concat(str(?IRI_a), '-1')) as ?IRI_value_text)
+
+    bind(iri(concat(str(?title), '-1')) as ?dfn)
+    bind(iri(concat(str(?dfn), '-1')) as ?title_text)
+
+    # Create identifiers - Manchester Syntax
+
+    bind(iri(concat(str(?manchester_syntax), '-1')) as ?manchester_syntax_code)
+    bind(iri(concat(str(?manchester_syntax_code), '-1')) as ?manchester_syntax_table)
+    bind(iri(concat(str(?manchester_syntax_table), '-1')) as ?manchester_syntax_table_body_definition)
+
+    bind(iri(concat(str(?manchester_syntax_table_body_definition), '-1')) as ?manchester_syntax_table_row_definition)
+    bind(iri(concat(str(?manchester_syntax_table_body_definition), '-2')) as ?emptyrow1)
+    bind(if(bound(?manchesterParameter),iri(concat(str(?manchester_syntax_table_body_definition),  '-', str(?memberParameter))), ?unboundDummy) as ?manchester_syntax_table_row_parameter )
+
+    bind(iri(concat(str(?manchester_syntax_table_row_definition), '-1')) as ?manchester_syntax_definition_type)
+    bind(iri(concat(str(?manchester_syntax_table_row_definition), '-2')) as ?manchester_syntax_definition_value)
+    bind(iri(concat(str(?emptyrow1), '-1')) as ?emptycell1)
+    bind(iri(concat(str(?emptyrow1), '-2')) as ?emptycell2)
+    bind(iri(concat(str(?manchester_syntax_definition_type), '-1')) as ?manchester_syntax_definition_type_text)
+    bind(iri(concat(str(?manchester_syntax_definition_value), '-1')) as ?manchester_syntax_definition_value_text)
+
+    bind(iri(concat(str(?manchester_syntax_table_row_parameter), '-1')) as ?manchester_syntax_definition_parameter_type)
+    bind(iri(concat(str(?manchester_syntax_table_row_parameter), '-2')) as ?manchester_syntax_definition_parameter_value)
+    bind(iri(concat(str(?manchester_syntax_definition_parameter_type), '-1')) as ?manchester_syntax_definition_parameter_type_text)
+    bind(iri(concat(str(?manchester_syntax_definition_parameter_value), '-1')) as ?manchester_syntax_definition_parameter_value_text)                
+
+    # Create identifiers SPARQL query
+    
+    bind(iri(concat(str(?query), '-1')) as ?query_table)
+    bind(iri(concat(str(?query_table), '-1')) as ?query_tableheader)
+    bind(iri(concat(str(?query_table), '-2')) as ?query_body)
+    bind(iri(concat(str(?query_tableheader), '-1')) as ?query_headerrow)
+    bind(iri(concat(str(?query_headerrow), '-1')) as ?query_headercell)
+    bind(iri(concat(str(?query_headercell), '-1')) as ?query_title)    
+    bind(iri(concat(str(?query_body), '-1')) as ?query_bodyrow)    
+    bind(iri(concat(str(?query_bodyrow), '-1')) as ?query_bodycell)        
+    bind(iri(concat(str(?query_bodycell), '-1')) as ?query_text)      
+   
+  }
+""".
+
+condition:Parameters
+  a sh:PropertyShape;
+  skos:prefLabel 'The user has requested the specification of ontology Parameters in the document.'@en;
+  sh:path respec:include;
+  sh:hasValue "parameters".
+
+rule:Parameters
+  a sh:SPARQLRule;
+  skos:prefLabel 'Parameters rule'@en;
+  rdfs:comment 'The Parameters rule creates a section of Parameters for the ontology in the document.'@en ;
+  sh:condition condition:Parameters;
   sh:construct """
 
 prefix dct: <http://purl.org/dc/terms/>
@@ -3384,7 +3721,7 @@ construct {
   ?manchester_syntax_definition_type           rdf:type html:DataCell;
                                                rdf:_1 ?manchester_syntax_definition_type_text.
   ?manchester_syntax_definition_type_text         rdf:type html:Text;
-                                                  html:fragment 'SPARQLFunction:'.
+                                                  html:fragment 'Parameter:'.
   ?manchester_syntax_definition_value          rdf:type html:DataCell;
                                                rdf:_1 ?manchester_syntax_definition_value_text.
   ?manchester_syntax_definition_value_text        rdf:type html:Text;
@@ -3406,7 +3743,7 @@ construct {
   where  {
     # Get the template
 
-    {?template rdf:type respec:SPARQLFunction;
+    {?template rdf:type respec:Parameter;
               respec:absenceLabel ?absenceLabel_general.
     $this     dct:subject ?ontology;
               respec:documentLanguage ?language;
@@ -3417,6 +3754,7 @@ construct {
     filter (LANG(?absenceLabel_general) = ?language)
 
     }
+    OPTIONAL
 
     # Get the sorted entities from the ontology including semantics
 
@@ -3425,7 +3763,7 @@ construct {
 
       where {
 
-        ?entity a sh:SPARQLFunction .
+        ?entity a sh:Parameter .
         ?entity manchester:label ?entityManchesterLabel_raw .
         ?entity rdfs:isDefinedBy ?ontology.
         $this dct:subject ?ontology;
@@ -3440,7 +3778,7 @@ construct {
         bind(function:escapeHTML(?entityManchesterLabel_raw) as ?entityManchesterLabel)
 
         optional {
-          ?prevEntity a sh:SPARQLFunction .
+          ?prevEntity a sh:Parameter .
           ?prevEntity manchester:label ?prevLabel .
           filter(?prevLabel < ?entityManchesterLabel_raw)
         }
@@ -3542,7 +3880,8 @@ construct {
                              rdf:_5 ?definition;
                              rdf:_6 ?linebreak2;
                              rdf:_7 ?linebreak3;
-                             rdf:_8 ?manchester_syntax.
+                             rdf:_8 ?manchester_syntax;
+                             rdf:_9 ?query.
   ?title                       rdf:type html:H2;
                                rdf:_1 ?dfn.
   ?dfn                            rdf:type html:Dfn;
@@ -3603,6 +3942,30 @@ construct {
   ?manchester_syntax_definition_value_text        rdf:type html:Text;
                                                   html:fragment ?entityManchesterLabel.
 
+  ?query rdf:type html:Details;
+         rdf:_1 ?query_table.
+  ?query_table rdf:type html:Table;
+         html:class 'def';
+         rdf:_1 ?query_tableheader;
+         rdf:_2 ?query_body.
+  ?query_tableheader rdf:type html:TableHeader;
+         rdf:_1 ?query_headerrow.
+  ?query_headerrow rdf:type html:Row;
+         rdf:_1 ?query_headercell.
+  ?query_headercell rdf:type html:HeaderCell;
+         rdf:_1 ?query_title.
+  ?query_title rdf:type html:Text;
+         html:fragment 'SPARQL query'.
+  ?query_body rdf:type html:TableBody;
+         rdf:_1 ?query_bodyrow.
+  ?query_bodyrow rdf:type html:Row;
+         rdf:_1 ?query_bodycell.
+  ?query_bodycell rdf:type html:DataCell;
+         html:style 'white-space: pre; font-family: monospace;';
+         rdf:_1 ?query_text.
+  ?query_text rdf:type html:Text;
+         html:fragment ?query_string.
+
   ?emptyrow1      rdf:type html:Row;
                   rdf:_1 ?emptycell1;
                   rdf:_2 ?emptycell2.
@@ -3630,17 +3993,19 @@ construct {
     filter (LANG(?absenceLabel_general) = ?language)
 
     }
+    OPTIONAL
 
     # Get the sorted entities from the ontology including semantics
 
     {
-      select ?entity ?entityManchesterLabel_raw ?entityManchesterLabel ?entityDefinition_raw ?label_value_text (count(?prevEntity) + 1 as ?member)
+      select ?entity ?entityManchesterLabel_raw ?entityManchesterLabel ?entityDefinition_raw ?label_value_text ?query_string (count(?prevEntity) + 1 as ?member)
 
       where {
 
-        ?entity a sh:SPARQLTarget .
-        ?entity manchester:label ?entityManchesterLabel_raw .
-        ?entity rdfs:isDefinedBy ?ontology.
+        ?entity a sh:SPARQLTarget ;
+                manchester:label ?entityManchesterLabel_raw ;
+                sh:select ?query_string;
+                rdfs:isDefinedBy ?ontology.
         $this dct:subject ?ontology;
               respec:documentLanguage ?language2.
         BIND(function:getLabel(?entity, ?language2) as ?label_value_text)              
@@ -3658,7 +4023,7 @@ construct {
           filter(?prevLabel < ?entityManchesterLabel_raw)
         }
       }
-      group by ?entityManchesterLabel_raw ?entityManchesterLabel ?entityDefinition_raw ?entity ?label_value_text
+      group by ?entityManchesterLabel_raw ?entityManchesterLabel ?entityDefinition_raw ?entity ?label_value_text ?query_string
       order by ?entityManchesterLabel_raw
     }
 
@@ -3682,6 +4047,7 @@ construct {
     bind(iri(concat(str(?section), '-6')) as ?linebreak2)
     bind(iri(concat(str(?section), '-7')) as ?linebreak3)
     bind(iri(concat(str(?section), '-8')) as ?manchester_syntax)
+    bind(iri(concat(str(?section), '-9')) as ?query)
 
     bind(iri(concat(str(?label), '-1')) as ?label_strong)
     bind(iri(concat(str(?label), '-2')) as ?label_value)
@@ -3711,6 +4077,18 @@ construct {
     bind(iri(concat(str(?manchester_syntax_definition_type), '-1')) as ?manchester_syntax_definition_type_text)
     bind(iri(concat(str(?manchester_syntax_definition_value), '-1')) as ?manchester_syntax_definition_value_text)
 
+    # Create identifiers SPARQL query
+    
+    bind(iri(concat(str(?query), '-1')) as ?query_table)
+    bind(iri(concat(str(?query_table), '-1')) as ?query_tableheader)
+    bind(iri(concat(str(?query_table), '-2')) as ?query_body)
+    bind(iri(concat(str(?query_tableheader), '-1')) as ?query_headerrow)
+    bind(iri(concat(str(?query_headerrow), '-1')) as ?query_headercell)
+    bind(iri(concat(str(?query_headercell), '-1')) as ?query_title)    
+    bind(iri(concat(str(?query_body), '-1')) as ?query_bodyrow)    
+    bind(iri(concat(str(?query_bodyrow), '-1')) as ?query_bodycell)        
+    bind(iri(concat(str(?query_bodycell), '-1')) as ?query_text)    
+    
   }
 """.
 
@@ -3875,4 +4253,5 @@ function:getLabel
   BIND(function:escapeHTML(COALESCE(?preferredLabel, ?alternativeLabel, ?implicitLabel)) as ?result)
 }
 """ .
+
 }
