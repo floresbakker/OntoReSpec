@@ -157,6 +157,7 @@ template:28.6.1 a html:Text ;
 
 template:introduction a respec:Introduction, 
         html:Section ;
+    html:style 'white-space: pre-wrap;';
     rdf:_1 template:introductionTitle ;
     rdf:_2 template:introductionText ;
     rdf:_3 template:background ;
@@ -179,6 +180,7 @@ template:introductionText a html:Text ;
     html:fragment "Introductory text of the ontology.".
 
 template:background a html:Section ;
+    html:style 'white-space: pre-wrap;';
     rdf:_1 template:background_title ;
     rdf:_2 template:background_text .
 
@@ -197,6 +199,7 @@ template:background_text a html:Text ;
     html:fragment "Background text" .
 
 template:objective a html:Section ;
+    html:style 'white-space: pre-wrap;';
     rdf:_1 template:30.4-4-1 ;
     rdf:_2 template:30.4-4-1-2 .
 
@@ -215,6 +218,7 @@ template:30.4-4-1-2 a html:Text ;
     html:fragment "Objective text" .
 
 template:audience a html:Section ;
+    html:style 'white-space: pre-wrap;';
     rdf:_1 template:30.4-5-1 ;
     rdf:_2 template:30.4-5-1-2 .
 
@@ -262,6 +266,7 @@ template:38.6.1 a respec:StaticElement,
 template:overview_paragraph a respec:StaticElement,
         html:P ;
     rdfs:label "p" ;
+    html:style 'white-space: pre-wrap;';
     rdf:_1 template:38.7.1 .
 
 template:38.7.1 a respec:Overview,
