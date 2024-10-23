@@ -17,7 +17,6 @@ prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
 respec: {
-
 respec:introduction
     a owl:DatatypeProperty;
     rdfs:domain respec:Generation;
@@ -3244,11 +3243,11 @@ construct {
 
         ?entity a sh:SPARQLRule ;
                 manchester:label ?entityManchesterLabel_raw ;
-                sh:construct ?query_string;
+                sh:construct ?query_string_raw;
                 rdfs:isDefinedBy ?ontology.
         $this dct:subject ?ontology;
               respec:documentLanguage ?language2.
-        BIND(function:getLabel(?entity, ?language2) as ?label_value_text)              
+        BIND(function:getLabel(?entity, ?language2) as ?label_value_text)
 
         optional{
           ?entity skos:definition ?entityDefinition_raw.
@@ -3256,6 +3255,7 @@ construct {
         }
 
         bind(function:escapeHTML(?entityManchesterLabel_raw) as ?entityManchesterLabel)
+        bind(function:escapeHTML(?query_string_raw) as ?query_string)
 
         optional {
           ?prevEntity a sh:SPARQLRule .
@@ -3391,7 +3391,7 @@ construct {
   ?label_text                                rdf:type html:Text;
                                            html:fragment 'Label: '.  
   ?label_value                                rdf:type html:Text;
-                                           html:fragment ?label_value_text.                                    
+                                           html:fragment ?label_value_text.
   ?IRI                                   rdf:type html:Div;
                                          rdf:_1 ?IRI_strong;
                                          rdf:_2 ?IRI_a;
@@ -3506,12 +3506,12 @@ construct {
 
         ?entity a sh:SPARQLFunction ;
                 manchester:label ?entityManchesterLabel_raw ;
-                sh:select ?query_string ;
+                sh:select ?query_string_raw ;
                 rdfs:isDefinedBy ?ontology .
         
         $this dct:subject ?ontology;
               respec:documentLanguage ?language2.
-        BIND(function:getLabel(?entity, ?language2) as ?label_value_text)              
+        BIND(function:getLabel(?entity, ?language2) as ?label_value_text)
 
         optional{
           ?entity skos:definition ?entityDefinition_raw.
@@ -3519,6 +3519,7 @@ construct {
         }
 
         bind(function:escapeHTML(?entityManchesterLabel_raw) as ?entityManchesterLabel)
+        bind(function:escapeHTML(?query_string_raw) as ?query_string)        
 
         optional {
           ?prevEntity a sh:SPARQLFunction .
@@ -3683,7 +3684,7 @@ construct {
   ?label_text                                rdf:type html:Text;
                                            html:fragment 'Label: '.  
   ?label_value                                rdf:type html:Text;
-                                           html:fragment ?label_value_text.                                    
+                                           html:fragment ?label_value_text.
   ?IRI                                   rdf:type html:Div;
                                          rdf:_1 ?IRI_strong;
                                          rdf:_2 ?IRI_a;
@@ -4004,7 +4005,7 @@ construct {
 
         ?entity a sh:SPARQLTarget ;
                 manchester:label ?entityManchesterLabel_raw ;
-                sh:select ?query_string;
+                sh:select ?query_string_raw;
                 rdfs:isDefinedBy ?ontology.
         $this dct:subject ?ontology;
               respec:documentLanguage ?language2.
@@ -4016,6 +4017,7 @@ construct {
         }
 
         bind(function:escapeHTML(?entityManchesterLabel_raw) as ?entityManchesterLabel)
+        bind(function:escapeHTML(?query_string_raw) as ?query_string)
 
         optional {
           ?prevEntity a sh:SPARQLTarget .
@@ -4253,5 +4255,4 @@ function:getLabel
   BIND(function:escapeHTML(COALESCE(?preferredLabel, ?alternativeLabel, ?implicitLabel)) as ?result)
 }
 """ .
-
 }
