@@ -1,31 +1,31 @@
 # Generic prefixes
-prefix aria:     <http://www.w3.org/ns/wai-aria/>
-prefix dcm:      <http://purl.org/dc/dcmitype/>
-prefix dct:      <http://purl.org/dc/terms/>
-prefix dom:      <http://www.w3.org/DOM/model/def/>
-prefix foaf:     <http://xmlns.com/foaf/0.1/>
-prefix owl:      <http://www.w3.org/2002/07/owl#>
-prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-prefix rdfa:     <http://www.w3.org/ns/rdfa#>
-prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#>
-prefix respec:   <https://respec.org/ontorespec/model/def/>
-prefix sh:       <http://www.w3.org/ns/shacl#>
-prefix skos:     <http://www.w3.org/2004/02/skos/core#>
-prefix status:   <http://purl.org/adms/status/>
-prefix vann:     <http://purl.org/vocab/vann/>
-prefix void:     <http://rdfs.org/ns/void#>
-prefix xsd:      <http://www.w3.org/2001/XMLSchema#>
+prefix aria:      <http://www.w3.org/ns/wai-aria/>
+prefix dcm:       <http://purl.org/dc/dcmitype/>
+prefix dct:       <http://purl.org/dc/terms/>
+prefix dom:       <http://www.w3.org/DOM/model/def/>
+prefix foaf:      <http://xmlns.com/foaf/0.1/>
+prefix owl:       <http://www.w3.org/2002/07/owl#>
+prefix rdf:       <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfa:      <http://www.w3.org/ns/rdfa#>
+prefix rdfs:      <http://www.w3.org/2000/01/rdf-schema#>
+prefix respec:    <https://respec.org/ontorespec/model/def/>
+prefix sh:        <http://www.w3.org/ns/shacl#>
+prefix skos:      <http://www.w3.org/2004/02/skos/core#>
+prefix status:    <http://purl.org/adms/status/>
+prefix vann:      <http://purl.org/vocab/vann/>
+prefix void:      <http://rdfs.org/ns/void#>
+prefix xsd:       <http://www.w3.org/2001/XMLSchema#>
 
 # HTML prefixes
-prefix concept:  <https://www.w3.org/html/model/concept/>
-prefix decl:     <https://www.w3.org/html/id/decl/>
-prefix function: <https://www.w3.org/html/model/function/>
-prefix html:     <https://www.w3.org/html/model/def/>
-prefix rule:     <https://www.w3.org/html/model/rule/>
-prefix section:  <https://www.w3.org/html/id/section/>
-prefix shp:      <https://www.w3.org/html/model/shp/>
-prefix standard: <https://www.w3.org/html/id/standard/>
-prefix target:   <https://www.w3.org/html/model/target/>
+prefix decl:      <https://www.w3.org/html/id/decl/>
+prefix function:  <https://www.w3.org/html/model/function/>
+prefix html:      <https://www.w3.org/html/model/def/>
+prefix parameter: <https://www.w3.org/html/model/parameter/>
+prefix rule:      <https://www.w3.org/html/model/rule/>
+prefix section:   <https://www.w3.org/html/id/section/>
+prefix shp:       <https://www.w3.org/html/model/shp/>
+prefix standard:  <https://www.w3.org/html/id/standard/>
+prefix target:    <https://www.w3.org/html/model/target/>
 
 html: {
   html:
@@ -45,21 +45,25 @@ html: {
       
     respec:introduction '''In today's fast-paced business landscape, organizations grapple with the formidable challenge of information management. The demand for robust information products and agile information processing is relentless, constantly evolving with each passing moment, transcending industry boundaries. In this dynamic environment, the creation, validation, and utilization of information products are paramount, serving as the bedrock for informed decision-making and organizational effectiveness. The ability to swiftly respond to unforeseen crises or seize emerging opportunities hinges on having the right answers to previously unasked questions.
 
-    So, how can organizations effectively navigate this information-intensive terrain? A key part of the solution lies in the capability to exercise complete control over the generation, modification, validation, and reuse of information products. This entails the profound ability to construct and deconstruct any arbitrary information product, dissecting it from its foundational elements to its broader, strategic significance.
+So, how can organizations effectively navigate this information-intensive terrain? A key part of the solution lies in the capability to exercise complete control over the generation, modification, validation, and reuse of information products. This entails the profound ability to construct and deconstruct any arbitrary information product, dissecting it from its foundational elements to its broader, strategic significance.
 
-    To address this need, we have pioneered the development of the RDF-based Semantic HTML Core Vocabulary - a transformative framework designed to facilitate the management of an array of information artifacts built upon HTML.'''@en;
+To address this need, we have pioneered the development of the RDF-based HTML vocabulary - a transformative framework designed to facilitate the management of an array of information artifacts built upon HTML.'''@en;
 
     respec:background 'In an era where information is akin to a constantly flowing stream, organizations must grapple with several pressing challenges in aspects like velocity, variety, the insightfulness, adaptability and validity. The speed at which information is generated, transformed, and consumed is unparalleled. Keeping pace with this velocity is essential for timely decision-making. Information comes in diverse formats, from structured data to unstructured text, images, and multimedia. Effective management necessitates the ability to handle this rich variety seamlessly. Information is not merely data; it embodies insights, functionality, and knowledge. Extracting meaningful insights and practical functionality is vital for organizational success. Organizations must be agile in adapting information products to address new crises and opportunities swiftly. Finally, ensuring the correctness, compliance and reliability of information is fundamental to trustworthy decision-making and operations.'@en;
     
-    respec:objective 'In response to these challenges, we introduce the RDF-based semantic HTML Core Vocabulary - a paradigm-shifting framework that empowers organizations to conquer the intricacies of information management. With this vocabulary, organizations gain the capacity to (1) construct and deconstruct, (2) generate and validate and (3) adapt and reuse. Constructing and deconstructing means that one can craft and dismantle information products at will, from their fundamental building blocks to their overarching significance. Generating and validating comes down to creating new information products and rigorously validating their accuracy and completeness. Finally, adapting and reusing is about adapting existing information products to swiftly respond to evolving scenarios and reusing valuable components across a spectrum of contexts. This innovative vocabulary forms the cornerstone of an information management ecosystem that harmonizes the power of RDF with the ubiquity of HTML. It revolutionizes how organizations handle information artifacts, enabling them to seamlessly transition from raw data to strategic insights and practical solutions.'@en;
+    respec:objective 'In response to these challenges, we introduce the RDF-based HTML vocabulary. With this vocabulary, organizations gain the capacity to (1) construct and deconstruct, (2) generate and validate and (3) adapt and reuse. Constructing and deconstructing means that one can craft and dismantle information products at will, from their fundamental building blocks to their overarching significance. Generating and validating comes down to creating new information products and rigorously validating their accuracy and completeness. Finally, adapting and reusing is about adapting existing information products to swiftly respond to evolving scenarios and reusing valuable components across a spectrum of contexts. This innovative vocabulary forms the cornerstone of an information management ecosystem that harmonizes the power of RDF with the ubiquity of HTML. It revolutionizes how organizations handle information artifacts, enabling them to seamlessly transition from raw data to strategic insights and practical solutions.'@en;
     
     respec:audience 'This document is intended for a diverse audience of web developers, content managers, semantic web enthusiasts, and anyone seeking to enhance the sustainability of information management, information processing and information technology.'@en;
     
     respec:acknowledgements 'This standard has been developed through collaborative efforts and contributions from a diverse community of experts and stakeholders. Their dedication and expertise have been instrumental in bringing this vocabulary to life.'@en;
     
-    dct:description '''The HTML Core Vocabulary establishes a draft standard that enables the semantic representation of any HTML document in RDF. The vocabulary is based on the Living Standard of HTML and offers classes to represent HTML elements, datatype properties to represent HTML attributes and a small number of SHACL shapes for the serialisation of HTML code. Center to this ontology is the class 'html:Element', which represents a HTML element and is in fact a subclass of 'dom:Element', an element as specified in the Document Object Model specification. Any specific HTML element like 'html:A' (anchor element) or 'html:Body' (body element) is a subclass of the class 'html:Element'. Another fundamental building block of this ontology is the 'html:Attribute' class of all HTML attributes. Any attribute in HTML like 'html:class' or 'html:style' is also a subproperty of 'html:attribute'. An HTML attribute can be an attribute as defined in the Living Standard of HTML, RDFa or a custom defined attribute. In addition, there is the class of 'html:Text', where all instantiations contain a html:fragment property relation with an actual textual string, as for example in the triples 'doc:1.0 a html:Text; html:fragment "Hello, World!".'. In order to serialize this HTML document to actual HTML code, there is the SHACL node shape shp:SerializableNode to process the RDF-structure and transform this into HTML code. The rule in the node shape calls six functions, depending on the content of the HTML document. The logic behind the shape is that the HTML code can be serialized from the leaves of the tree upwards up and till the top of the tree. It means that an arbitrary element in the DOM tree of an HTML document can only be serialized to HTML code, whenever the underlying child elements of that element have been serialized to HTML already, including the HTML code of possible attributes and their values. The outer edges of the tree are text nodes and elements that do not contain any child elements. From the start these can be transformed into HTML code immediately without the necessity of any context. From the outer edges the node shape shp:SerializableNode works its way up the tree until the moment that all the HTML elements have received an HTML fragment and the HTML document can be created based on the html:fragment, as contained in the html:html root element of that document. The processing halts the moment the document itself has an html:fragment.'''@en;
+    dct:description '''The HTML vocabulary establishes a draft standard that enables the semantic representation of any HTML document in RDF. The vocabulary is based on the Living Standard of HTML and offers classes to represent HTML elements, datatype properties to represent HTML attributes and a small number of SHACL shapes for the serialisation of HTML code.
+
+Center to this ontology is the class 'html:Element', which represents a HTML element and is in fact a subclass of 'dom:Element', an element as specified in the Document Object Model specification. Any specific HTML element like 'html:A' (anchor element) or 'html:Body' (body element) is a subclass of the class 'html:Element'. Another fundamental building block of this ontology is the 'html:Attribute' class of all HTML attributes. Any attribute in HTML like 'html:class' or 'html:style' is also a subproperty of 'html:attribute'. An HTML attribute can be an attribute as defined in the Living Standard of HTML, RDFa or a custom defined attribute. In addition, there is the class of 'html:Text', where all instantiations contain a html:fragment property relation with an actual textual string, as for example in the triples 'doc:1.0 a html:Text; html:fragment "Hello, World!".'.
+
+In order to serialize this HTML document to actual HTML code, there is the SHACL node shape shp:HTMLFragmentSerializationAlgorithm to process the RDF-structure and transform this into HTML code. The rule in the node shape calls six functions, depending on the content of the HTML document. The logic behind the shape is that the HTML code can be serialized from the leaves of the tree upwards up and till the top of the tree. It means that an arbitrary element in the DOM tree of an HTML document can only be serialized to HTML code, whenever the underlying child elements of that element have been serialized to HTML already, including the HTML code of possible attributes and their values. The outer edges of the tree are text nodes and elements that do not contain any child elements. From the start these can be transformed into HTML code immediately without the necessity of any context. From the outer edges the node shape shp:HTMLFragmentSerializationAlgorithm works its way up the tree until the moment that all the HTML elements have received an HTML fragment and the HTML document can be created based on the html:fragment, as contained in the html:html root element of that document. The processing halts the moment the document itself has an html:fragment.'''@en;
     
-    dct:abstract 'This RDF-based vocabulary establishes a draft standard to semantically represent HTML documents in RDF. The vocabulary is based on the HTML Living Standard. It includes classes for HTML elements, datatype properties for attributes, and SHACL shapes for code serialization. HTML documents can thus be represented, queried, generated, validated, analysed, transformed and reused as semantic objects themselves. As HTML documents are widely used in a myriad of use cases, from websites, dashboard, applications, to social media and documents, this vocabulary helps organisations and individuals to get a better grasp of their information products.'@en;
+    dct:abstract 'The HTML vocabulary establishes a draft standard to semantically represent HTML documents in RDF. The vocabulary is based on the HTML Living Standard. It includes classes for HTML elements, datatype properties for attributes, and SHACL shapes for code serialization. HTML documents can thus be represented, queried, generated, validated, analysed, transformed and reused as semantic objects themselves. As HTML documents are widely used in a myriad of use cases, from websites, dashboard, applications, to social media and documents, this vocabulary helps organisations and individuals to get a better grasp of their information products.'@en;
     
     skos:example '''
 An 'hello world' HTML document:
@@ -80,7 +84,7 @@ An 'hello world' HTML document:
     </body>
   </html>
 
-This can be rendered in RDF using the HTML Core Vocabulary as follows:
+This can be rendered in RDF using the HTML vocabulary as follows:
 
   prefix doc: <http://www.example.org/document/>
   prefix html: <https://www.w3.org/html/model/def/>
@@ -143,7 +147,7 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
     respec:latestVersion "https://github.com/floresbakker/htmlvoc"^^xsd:anyURI;
     dct:status status:UnderDevelopment;
     dct:subject 'HTML'@en;
-    dct:title 'Semantic HTML Core Ontology'@en;
+    dct:title 'HTML vocabulary'@en;
     dct:source <https://github.com/floresbakker/htmlvoc>;
     foaf:depiction 'https://www.rijksfinancien.nl/themes/custom/indicia_theme/files/logo-rijksoverheid.svg'^^xsd:anyURI;
     foaf:homepage 'https://www.rijksfinancien.nl/'^^xsd:anyURI;
@@ -156,9 +160,11 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
       skos:;
     owl:versionInfo '0.2.0';
     sh:declare
+      decl:aria,
       decl:dom,
       decl:function, 
       decl:html,
+      decl:parameter,       
       decl:rdf,
       decl:rdfs,
       decl:rule,
@@ -171,6 +177,10 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
     vann:preferredNamespaceUri 'https://www.w3.org/html/model/def/'^^xsd:anyURI;
     void:uriRegexPattern '^https://www.w3.org/html/model/def/';
     void:uriSpace 'https://www.w3.org/html/model/def/'^^xsd:anyURI. 
+
+  decl:aria
+    sh:prefix "aria";
+    sh:namespace "http://www.w3.org/ns/wai-aria/"^^xsd:anyURI.
     
   decl:dom
     sh:prefix "dom";
@@ -184,6 +194,10 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
     sh:prefix "html";
     sh:namespace "https://www.w3.org/html/model/def/"^^xsd:anyURI.
 
+  decl:parameter
+    sh:prefix "parameter";
+    sh:namespace "https://www.w3.org/html/model/parameter/"^^xsd:anyURI.  
+    
   decl:rdf
     sh:prefix "rdf";
     sh:namespace "http://www.w3.org/1999/02/22-rdf-syntax-ns#"^^xsd:anyURI.
@@ -1404,15 +1418,6 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
     skos:definition 'A section in the living standard of HTML.'@en;
     rdfs:isDefinedBy html:.    
 
-  section:4.13.3
-    a dcm:Text;
-    dct:isPartOf standard:html;
-    dct:source 'https://html.spec.whatwg.org/#custom-elements-core-concepts'^^xsd:anyURI;
-    skos:prefLabel '§ 4.13.3 Core concepts'@en;
-    skos:definition 'A section in the living standard of HTML.'@en;
-    rdfs:isDefinedBy html:.
-
-
   # HTML - living standard - 3.2 Elements
 
   # HTML element (<TAG>…</TAG>)
@@ -1489,9 +1494,20 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
   html:AutonomousCustomElement
     a owl:Class;
     rdfs:subClassOf html:CustomElement;
-    owl:equivalentClass [rdf:type owl:Restriction;
-                         owl:someValuesFrom [owl:intersectionOf (html:Element [owl:complementOf [owl:unionOf (html:NormalElement html:RawTextElement html:EscapableRawTextElement html:ForeignElement html:VoidElement html:CustomizedBuiltInElement)]])];
-                         owl:onProperty html:extends];
+    owl:equivalentClass
+      [ a owl:Restriction;
+        owl:someValuesFrom
+          [ owl:intersectionOf
+              ( html:Element
+                [ owl:complementOf
+                    [ owl:unionOf
+                        ( html:CustomizedBuiltInElement
+                          html:EscapableRawTextElement
+                          html:ForeignElement
+                          html:NormalElement
+                          html:RawTextElement
+                          html:VoidElement ) ] ] ) ];
+        owl:onProperty html:extends ];
     dct:conformsTo section:4.13.3;                         
     skos:definition 'An autonomous custom element is a custom HTML element that is defined with no extends option. These types of custom elements have a local name equal to their defined name.'@en;
     skos:prefLabel 'autonomous custom element'@en;
@@ -1500,9 +1516,16 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
   html:CustomizedBuiltInElement
     a owl:Class;
     rdfs:subClassOf html:CustomElement;
-    owl:equivalentClass [rdf:type owl:Restriction;
-                         owl:someValuesFrom [owl:unionOf (html:NormalElement html:RawTextElement html:EscapableRawTextElement html:ForeignElement html:VoidElement)];
-                         owl:onProperty html:extends];
+    owl:equivalentClass
+      [ a owl:Restriction;
+        owl:someValuesFrom
+          [ owl:unionOf
+              ( html:EscapableRawTextElement
+                html:ForeignElement
+                html:NormalElement
+                html:RawTextElement
+                html:VoidElement ) ];
+        owl:onProperty html:extends ];
     dct:conformsTo section:4.13.3;                         
     skos:definition 'A customized built-in element is a custom HTML element that is defined with an extends option. These types of custom elements have a local name equal to the value passed in their extends option, and their defined name is used as the value of the is attribute, which therefore must be a valid custom element name.'@en;
     skos:prefLabel 'customized built-in element'@en;
@@ -1544,7 +1567,7 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
     a owl:Class;
     rdfs:subClassOf dom:Text;
     dct:conformsTo section:13.1.3;
-    skos:definition 'Textual content that does not contain any HTML Core Vocabulary.'@en;
+    skos:definition 'Textual content that does not contain any HTML vocabulary.'@en;
     skos:example
       'A numeric value that appears in a table cell.'@en,
       'A natural language sentence that appears in a table caption.'@en;
@@ -1573,87 +1596,185 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
   html:FlowContent
     rdf:type owl:Class;
     rdfs:subClassOf html:ContentCategory;
-    owl:unionOf (
-                  [owl:intersectionOf (html:Area [rdf:type owl:Restriction;
-                                                    owl:someValuesFrom html:Map ;
-                                                    owl:onProperty [owl:inverseOf rdfs:member]
-                                                   ] 
-                                         )]
-                  [owl:unionOf(
-                                    [owl:intersectionOf (html:Link [rdf:type owl:Restriction ; 
-                                                                    owl:cardinality "1"^^xsd:nonNegativeInteger ; 
-                                                                    owl:onProperty  html:itemprop]
-                                                                )] 
+    owl:unionOf
+      ( [ owl:intersectionOf
+            ( html:Area
+                [ a owl:Restriction;
+                  owl:someValuesFrom html:Map;
+                  owl:onProperty
+                    [ owl:inverseOf rdfs:member] ] ) ]
+                                                     
+                                           
+                    [ owl:unionOf
+                        ( [ owl:intersectionOf
+                              ( html:Link
+                                [ a owl:Restriction;
+                                  owl:cardinality "1"^^xsd:nonNegativeInteger;
+                                  owl:onProperty  html:itemprop ] ) ]
+                                                                   
 
-                                    [owl:intersectionOf (html:Link [owl:unionOf(
+                          [ owl:intersectionOf
+                              ( html:Link
+                                [ owl:unionOf
+                                    ( [ a owl:Restriction;
+                                        owl:onProperty html:rel;
+                                        owl:hasValue "dns-prefetch" ]
 
-                                                                                 [rdf:type owl:Restriction;
-                                                                                  owl:onProperty html:rel;
-                                                                                  owl:hasValue "dns-prefetch"^^xsd:string]
+                                      [ a owl:Restriction;
+                                        owl:onProperty html:rel;
+                                        owl:hasValue "modulepreload" ]
 
-                                                                                 [rdf:type owl:Restriction;
-                                                                                  owl:onProperty html:rel;
-                                                                                  owl:hasValue "modulepreload"^^xsd:string]
+                                      [ a owl:Restriction;
+                                        owl:onProperty html:rel;
+                                        owl:hasValue "pingback" ]
 
-                                                                                 [rdf:type owl:Restriction;
-                                                                                  owl:onProperty html:rel;
-                                                                                  owl:hasValue "pingback"^^xsd:string]
+                                      [ a owl:Restriction;
+                                        owl:onProperty html:rel;
+                                        owl:hasValue "preconnect" ]
 
-                                                                                 [rdf:type owl:Restriction;
-                                                                                  owl:onProperty html:rel;
-                                                                                  owl:hasValue "preconnect"^^xsd:string]
+                                      [ a owl:Restriction;
+                                        owl:onProperty html:rel;
+                                        owl:hasValue "prefetch" ]
 
-                                                                                 [rdf:type owl:Restriction;
-                                                                                  owl:onProperty html:rel;
-                                                                                  owl:hasValue "prefetch"^^xsd:string]
+                                      [ a owl:Restriction;
+                                        owl:onProperty html:rel;
+                                        owl:hasValue "preload" ]
 
-                                                                                 [rdf:type owl:Restriction;
-                                                                                  owl:onProperty html:rel;
-                                                                                  owl:hasValue "preload"^^xsd:string]
+                                      [ a owl:Restriction;
+                                        owl:onProperty html:rel;
+                                        owl:hasValue "stylesheet" ] ) ] ) ] ) ]
+                                                                                      
+                                                                  
+                                   
+                      [ owl:intersectionOf
+                          ( html:Meta
+                              [ a owl:Restriction;
+                                owl:cardinality "1"^^xsd:nonNegativeInteger;
+                                owl:onProperty  html:itemprop ] ) ]
+                                                      
+                      [ owl:intersectionOf
+                          ( html:Main
+                              [ owl:unionOf
+                                  ( [ a owl:Restriction;
+                                      owl:someValuesFrom html:Html;
+                                      owl:onProperty
+                                        [ owl:inverseOf rdfs:member ] ]
+                                                                     
 
-                                                                                 [rdf:type owl:Restriction;
-                                                                                  owl:onProperty html:rel;
-                                                                                  owl:hasValue "stylesheet"^^xsd:string]
-                                                                                 )]   
-                                                                )]
-                                )] 
-                  [owl:intersectionOf (html:Meta [rdf:type owl:Restriction ; 
-                                                    owl:cardinality "1"^^xsd:nonNegativeInteger ; 
-                                                    owl:onProperty  html:itemprop]
-                                                )]    
-                  [owl:intersectionOf (html:Main [owl:unionOf (
-                                                                   [rdf:type owl:Restriction;
-                                                                    owl:someValuesFrom html:Html ;
-                                                                    owl:onProperty [owl:inverseOf rdfs:member]
-                                                                    ]
-
-                                                                   [rdf:type owl:Restriction;
-                                                                    owl:someValuesFrom html:Body ;
-                                                                    owl:onProperty [owl:inverseOf rdfs:member]
-                                                                    ]
+                                    [ a owl:Restriction;
+                                      owl:someValuesFrom html:Body ;
+                                      owl:onProperty
+                                        [ owl:inverseOf rdfs:member ] ]
+                                                                     
                                                                     
-                                                                   [rdf:type owl:Restriction;
-                                                                    owl:someValuesFrom html:Div ;
-                                                                    owl:onProperty [owl:inverseOf rdfs:member]
-                                                                    ]
+                                    [ a owl:Restriction;
+                                      owl:someValuesFrom html:Div;
+                                      owl:onProperty
+                                        [ owl:inverseOf rdfs:member ] ]
+                                                                     
 
-                                                                   [rdf:type owl:Restriction;
-                                                                    owl:someValuesFrom html:CustomElement ;
-                                                                    owl:onProperty [owl:inverseOf rdfs:member]                                                                    
-                                                                    ]
+                                    [ a owl:Restriction;
+                                      owl:someValuesFrom html:CustomElement;
+                                      owl:onProperty
+                                        [ owl:inverseOf rdfs:member] ]
+                                                                     
                                                                     
-                                                                   [rdf:type owl:Restriction;
-                                                                    owl:someValuesFrom [ owl:intersectionOf (html:Form [owl:complementOf [rdf:type owl:Restriction ; 
-                                                                                                                                          owl:cardinality "1"^^xsd:nonNegativeInteger ; 
-                                                                                                                                          owl:onProperty  aria:aria-label]
-                                                                                                                        ])
-                                                                                       ];
-                                                                    owl:onProperty [owl:inverseOf rdfs:member]
-                                                                    ]
-                                                               )
-                                                     ])
-                   ]                                                
-     html:A html:Abbr html:Address html:Article html:Aside html:Audio html:B html:Bdi html:Bdo html:Blockquote html:Br html:Button html:Canvas html:Cite html:Code html:Data html:Datalist html:Del html:Details html:Dfn html:Dialog html:Div html:Dl html:Em html:Embed html:Fieldset html:Figure html:Footer html:Form html:H1 html:H2 html:H3 html:H4 html:H5 html:H6 html:Header html:Hgroup html:Hr html:I html:Iframe html:Img html:Input html:Ins html:Kbd html:Label html:Map html:Mark html:MathML html:Menu html:Meter html:Nav html:Noscript html:Object html:Ol html:Output html:P html:Picture html:Pre html:Progress html:Q html:Ruby html:S html:Samp html:Script html:Search html:Section html:Select html:Slot html:Small html:Span html:Strong html:Sub html:Sup html:SVG html:Table html:Template html:Textarea html:Time html:U html:Ul html:Var html:Video html:Wbr html:CustomElement html:Text);
+                                    [ a owl:Restriction;
+                                      owl:someValuesFrom
+                                        [ owl:intersectionOf
+                                            ( html:Form
+                                              [ owl:complementOf
+                                                  [ a owl:Restriction;
+                                                    owl:cardinality "1"^^xsd:nonNegativeInteger;
+                                                    owl:onProperty aria:aria-label ] ] ) ];
+                                      owl:onProperty
+                                                                                         
+                                        [ owl:inverseOf rdfs:member ] ] ) ] ) ]
+        html:A
+        html:Abbr
+        html:Address
+        html:Article
+        html:Aside
+        html:Audio
+        html:B
+        html:Bdi
+        html:Bdo
+        html:Blockquote
+        html:Br
+        html:Button
+        html:Canvas
+        html:Cite
+        html:Code
+        html:Data
+        html:Datalist
+        html:Del
+        html:Details
+        html:Dfn
+        html:Dialog
+        html:Div
+        html:Dl
+        html:Em
+        html:Embed
+        html:Fieldset
+        html:Figure
+        html:Footer
+        html:Form
+        html:H1
+        html:H2
+        html:H3
+        html:H4
+        html:H5
+        html:H6
+        html:Header
+        html:Hgroup
+        html:Hr
+        html:I
+        html:Iframe
+        html:Img
+        html:Input
+        html:Ins
+        html:Kbd
+        html:Label
+        html:Map
+        html:Mark
+        html:MathML
+        html:Menu
+        html:Meter
+        html:Nav
+        html:Noscript
+        html:Object
+        html:Ol
+        html:Output
+        html:P
+        html:Picture
+        html:Pre
+        html:Progress
+        html:Q
+        html:Ruby
+        html:S
+        html:Samp
+        html:Script
+        html:Search
+        html:Section
+        html:Select
+        html:Slot
+        html:Small
+        html:Span
+        html:Strong
+        html:Sub
+        html:Sup
+        html:SVG
+        html:Table
+        html:Template
+        html:Textarea
+        html:Time
+        html:U
+        html:Ul
+        html:Var
+        html:Video
+        html:Wbr
+        html:CustomElement
+        html:Text );
     dct:conformsTo section:3.2.5.2.2;
     skos:definition 'Most elements that are used in the body of documents and applications are categorized as flow content.'@en;
     skos:prefLabel 'Flow content'@en;
@@ -1671,11 +1792,26 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
   html:HeadingContent
     rdf:type owl:Class;
     rdfs:subClassOf html:ContentCategory;
-    owl:unionOf (html:H1 html:H2 html:H3 html:H4 html:H5 html:H6 [ owl:intersectionOf 
-                                                                    (html:Hgroup [rdf:type owl:Restriction;
-                                                                                  owl:someValuesFrom [owl:unionOf (html:H1 html:H2 html:H3 html:H4 html:H5 html:H6)];
-                                                                                  owl:onProperty rdfs:member])
-    ]);  
+    owl:unionOf
+      ( html:H1
+        html:H2
+        html:H3
+        html:H4
+        html:H5
+        html:H6
+        [ owl:intersectionOf
+            ( html:Hgroup
+                [ a owl:Restriction;
+                  owl:someValuesFrom
+                    [ owl:unionOf
+                        ( html:H1
+                          html:H2
+                          html:H3
+                          html:H4
+                          html:H5
+                          html:H6 ) ];
+                  owl:onProperty rdfs:member ] ) ] ); 
+         
     dct:conformsTo section:3.2.5.2.4;
     skos:definition 'Heading content defines the heading of a section (whether explicitly marked up using sectioning content elements, or implied by the heading content itself).'@en;
     skos:prefLabel 'Heading content'@en;
@@ -1683,55 +1819,114 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
 
   html:PhrasingContent rdf:type owl:Class;
     rdfs:subClassOf html:ContentCategory;
-    owl:unionOf (
-                    [owl:intersectionOf (html:Area [rdf:type owl:Restriction;
-                                                    owl:someValuesFrom html:Map ;
-                                                    owl:onProperty [owl:inverseOf rdfs:member]
-                                                   ] 
-                                         )]
-                    [owl:intersectionOf (html:Meta [rdf:type owl:Restriction ; 
-                                                    owl:cardinality "1"^^xsd:nonNegativeInteger ; 
-                                                    owl:onProperty  html:itemprop]
-                                                )]
-                    [owl:unionOf(
-                                    [owl:intersectionOf (html:Link [rdf:type owl:Restriction ; 
-                                                                    owl:cardinality "1"^^xsd:nonNegativeInteger ; 
-                                                                    owl:onProperty  html:itemprop]
-                                                                )] 
+    owl:unionOf
+      ( [ owl:intersectionOf
+            ( html:Area
+                [ a owl:Restriction;
+                  owl:someValuesFrom html:Map;
+                  owl:onProperty
+                    [ owl:inverseOf rdfs:member ] ] ) ]
+                                                     
+                                           
+        [ owl:intersectionOf
+            ( html:Meta
+                [ a owl:Restriction;
+                  owl:cardinality "1"^^xsd:nonNegativeInteger ;
+                  owl:onProperty  html:itemprop ] ) ]
+                                                  
+        [ owl:unionOf
+            ( [ owl:intersectionOf
+                  ( html:Link
+                      [ a owl:Restriction;
+                        owl:cardinality "1"^^xsd:nonNegativeInteger ;
+                        owl:onProperty  html:itemprop ] ) ]
+                                                                   
 
-                                    [owl:intersectionOf (html:Link [owl:unionOf(
+              [ owl:intersectionOf
+                  ( html:Link
+                      [ owl:unionOf
+                          ( [ a owl:Restriction;
+                              owl:onProperty html:rel;
+                              owl:hasValue "dns-prefetch" ]
 
-                                                                                 [rdf:type owl:Restriction;
-                                                                                  owl:onProperty html:rel;
-                                                                                  owl:hasValue "dns-prefetch"^^xsd:string]
+                            [ a owl:Restriction;
+                              owl:onProperty html:rel;
+                              owl:hasValue "modulepreload" ]
 
-                                                                                 [rdf:type owl:Restriction;
-                                                                                  owl:onProperty html:rel;
-                                                                                  owl:hasValue "modulepreload"^^xsd:string]
+                            [ a owl:Restriction;
+                              owl:onProperty html:rel;
+                              owl:hasValue "pingback" ]
 
-                                                                                 [rdf:type owl:Restriction;
-                                                                                  owl:onProperty html:rel;
-                                                                                  owl:hasValue "pingback"^^xsd:string]
+                            [ a owl:Restriction;
+                              owl:onProperty html:rel;
+                              owl:hasValue "preconnect" ]
 
-                                                                                 [rdf:type owl:Restriction;
-                                                                                  owl:onProperty html:rel;
-                                                                                  owl:hasValue "preconnect"^^xsd:string]
+                            [ a owl:Restriction;
+                              owl:onProperty html:rel;
+                              owl:hasValue "prefetch" ]
 
-                                                                                 [rdf:type owl:Restriction;
-                                                                                  owl:onProperty html:rel;
-                                                                                  owl:hasValue "prefetch"^^xsd:string]
+                            [ a owl:Restriction;
+                              owl:onProperty html:rel;
+                              owl:hasValue "preload" ]
 
-                                                                                 [rdf:type owl:Restriction;
-                                                                                  owl:onProperty html:rel;
-                                                                                  owl:hasValue "preload"^^xsd:string]
-
-                                                                                 [rdf:type owl:Restriction;
-                                                                                  owl:onProperty html:rel;
-                                                                                  owl:hasValue "stylesheet"^^xsd:string]
-                                                                                 )]   
-                                                                )]
-                                )]
-    html:A html:Abbr html:Audio html:B html:Bdi html:Bdo html:Br html:Button html:Canvas html:Cite html:Code html:Data html:Datalist html:Del html:Dfn html:Em html:Embed html:I html:Iframe html:Img html:Input html:Ins html:Kbd html:Label html:Map html:Mark html:MathML html:Meter html:Noscript html:Object html:Output html:Picture html:Progress html:Q html:Ruby html:S html:Samp html:Script html:Select html:Slot html:Small html:Span html:Strong html:Sub html:Sup html:SVG html:Template html:Textarea html:Time html:U html:Var html:Video html:Wbr html:CustomElement html:Text);
+                            [ a owl:Restriction;
+                              owl:onProperty html:rel;
+                              owl:hasValue "stylesheet" ] ) ] ) ] ) ]
+        html:A
+        html:Abbr
+        html:Audio
+        html:B
+        html:Bdi
+        html:Bdo
+        html:Br
+        html:Button
+        html:Canvas
+        html:Cite
+        html:Code
+        html:Data
+        html:Datalist
+        html:Del
+        html:Dfn
+        html:Em
+        html:Embed
+        html:I
+        html:Iframe
+        html:Img
+        html:Input
+        html:Ins
+        html:Kbd
+        html:Label
+        html:Map
+        html:Mark
+        html:MathML
+        html:Meter
+        html:Noscript
+        html:Object
+        html:Output
+        html:Picture
+        html:Progress
+        html:Q
+        html:Ruby
+        html:S
+        html:Samp
+        html:Script
+        html:Select
+        html:Slot
+        html:Small
+        html:Span
+        html:Strong
+        html:Sub
+        html:Sup
+        html:SVG
+        html:Template
+        html:Textarea
+        html:Time
+        html:U
+        html:Var
+        html:Video
+        html:Wbr
+        html:CustomElement
+        html:Text );
     dct:conformsTo section:3.2.5.2.5;
     skos:definition 'Phrasing content is the text of the document, as well as elements that mark up that text at the intra-paragraph level. Runs of phrasing content form paragraphs.'@en;
     skos:prefLabel 'Phrasing content'@en;
@@ -1749,29 +1944,44 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
   html:InteractiveContent
     rdf:type owl:Class;
     rdfs:subClassOf html:ContentCategory;
-    owl:unionOf ( 
-    [owl:intersectionOf (html:A [rdf:type owl:Restriction ; 
-                                 owl:cardinality "1"^^xsd:nonNegativeInteger ; 
-                                 owl:onProperty  html:href]
-                                )] 
-    [owl:intersectionOf (html:Audio [rdf:type owl:Restriction ; 
-                                     owl:cardinality "1"^^xsd:nonNegativeInteger ; 
-                                     owl:onProperty  html:controls]
-                                )]      
-    [owl:intersectionOf (html:Img [rdf:type owl:Restriction ; 
-                                   owl:cardinality "1"^^xsd:nonNegativeInteger ; 
-                                   owl:onProperty  html:usemap]
-                                )] 
-    [owl:intersectionOf (html:Input [owl:complementOf [rdf:type owl:Restriction;
-                                                       owl:onProperty html:type;
-                                                       owl:hasValue "hidden"^^xsd:string]
-                                     ]    
-                                )]
-    [owl:intersectionOf (html:Video [rdf:type owl:Restriction ; 
-                                   owl:cardinality "1"^^xsd:nonNegativeInteger ; 
-                                   owl:onProperty  html:controls]
-                                )]                                 
-    html:Button html:Details html:Embed html:Iframe html:Label html:Select html:Textarea);
+    owl:unionOf
+      ( [ owl:intersectionOf
+            ( html:A
+                [ a owl:Restriction;
+                  owl:cardinality "1"^^xsd:nonNegativeInteger;
+                  owl:onProperty  html:href ] ) ]
+                                   
+        [ owl:intersectionOf
+            ( html:Audio
+                [ a owl:Restriction;
+                  owl:cardinality "1"^^xsd:nonNegativeInteger;
+                  owl:onProperty  html:controls ] ) ]
+                                        
+        [ owl:intersectionOf
+            ( html:Img
+                [ a owl:Restriction;
+                  owl:cardinality "1"^^xsd:nonNegativeInteger;
+                  owl:onProperty  html:usemap ] ) ]
+        [ owl:intersectionOf
+            ( html:Input
+                [ owl:complementOf
+                    [ a owl:Restriction;
+                      owl:onProperty html:type;
+                      owl:hasValue "hidden" ] ] ) ]
+                                          
+                                  
+        [ owl:intersectionOf
+            ( html:Video
+                [ a owl:Restriction;
+                  owl:cardinality "1"^^xsd:nonNegativeInteger;
+                  owl:onProperty  html:controls ] ) ]                                
+    html:Button 
+    html:Details 
+    html:Embed 
+    html:Iframe 
+    html:Label 
+    html:Select 
+    html:Textarea);
     dct:conformsTo section:3.2.5.2.7;
     skos:definition 'Interactive content is content that is specifically intended for user interaction.'@en;
     skos:prefLabel 'Interactive content'@en;
@@ -1780,39 +1990,119 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
   html:PalpableContent
     rdf:type owl:Class;
     rdfs:subClassOf html:ContentCategory;
-    owl:unionOf (
-                 [owl:intersectionOf (html:Audio [rdf:type owl:Restriction ; 
-                                                  owl:cardinality "1"^^xsd:nonNegativeInteger ; 
-                                                  owl:onProperty  html:controls]
-                                )] 
-                 [owl:intersectionOf (html:Input [owl:complementOf [rdf:type owl:Restriction;
-                                                  owl:onProperty html:type;
-                                                  owl:hasValue "hidden"^^xsd:string]
-                                     ]    
-                                )]
-                 [owl:intersectionOf (html:Menu [rdf:type owl:Restriction;
-                                                 owl:someValuesFrom html:Li;
-                                                 owl:onProperty rdfs:member]
-                                     )]
-                 [owl:intersectionOf (html:Ol   [rdf:type owl:Restriction;
-                                                 owl:someValuesFrom html:Li;
-                                                 owl:onProperty rdfs:member]
-                                     )]                                      
-                 [owl:intersectionOf (html:Ul   [rdf:type owl:Restriction;
-                                                 owl:someValuesFrom html:Li;
-                                                 owl:onProperty rdfs:member]
-                                     )]    
-                 [owl:intersectionOf (html:Dl   [owl:intersectionOf (
-                                                                     [rdf:type owl:Restriction;
-                                                                     owl:someValuesFrom html:Dt;
-                                                                     owl:onProperty rdfs:member]
+    owl:unionOf
+      ( [ owl:intersectionOf
+            ( html:Audio
+                [ a owl:Restriction;
+                  owl:cardinality "1"^^xsd:nonNegativeInteger;
+                  owl:onProperty  html:controls ] ) ]
+        [ owl:intersectionOf
+            ( html:Input
+              [ owl:complementOf
+                  [ a owl:Restriction;
+                    owl:onProperty html:type;
+                    owl:hasValue "hidden" ] ] ) ]
+                                          
+                                  
+        [ owl:intersectionOf
+            ( html:Menu
+                [ a owl:Restriction;
+                  owl:someValuesFrom html:Li;
+                  owl:onProperty rdfs:member ] ) ]
+                                       
+        [ owl:intersectionOf
+            ( html:Ol
+                [ a owl:Restriction;
+                  owl:someValuesFrom html:Li;
+                  owl:onProperty rdfs:member ] ) ]
+                                                                                                                                        
+        [ owl:intersectionOf
+            ( html:Ul
+                [ a owl:Restriction;
+                  owl:someValuesFrom html:Li;
+                  owl:onProperty rdfs:member ] ) ]
+                                           
+        [ owl:intersectionOf
+            ( html:Dl
+              [ owl:intersectionOf
+                  ( [ a owl:Restriction;
+                      owl:someValuesFrom html:Dt;
+                      owl:onProperty rdfs:member ]
                                                                      
-                                                                     [rdf:type owl:Restriction;
-                                                                     owl:someValuesFrom html:Dd;
-                                                                     owl:onProperty rdfs:member]
-                                                                    )]
-                                     )]                                       
-    html:A html:Abbr html:Address html:Article html:Aside html:B html:Bdi html:Bdo html:Blockquote html:Button html:Canvas html:Cite html:Code html:Data html:Del html:Details html:Dfn html:Div  html:Em html:Embed html:Fieldset html:Figure html:Footer html:Form html:H1 html:H2 html:H3 html:H4 html:H5 html:H6 html:Header html:Hgroup html:I html:Iframe html:Img html:Ins html:Kbd html:Label html:Main html:Map html:Mark html:MathML html:Meter html:Nav html:Object html:Output html:P html:Picture html:Pre html:Progress html:Q html:Ruby html:S html:Samp html:Search html:Section html:Select html:Small html:Span html:Strong html:Sub html:Sup html:SVG html:Table html:Textarea html:Time html:U html:Var html:Video html:CustomElement html:Text);
+                    [ a owl:Restriction;
+                      owl:someValuesFrom html:Dd;
+                      owl:onProperty rdfs:member ] ) ] ) ]
+        html:A
+        html:Abbr
+        html:Address
+        html:Article
+        html:Aside
+        html:B
+        html:Bdi
+        html:Bdo
+        html:Blockquote
+        html:Button
+        html:Canvas
+        html:Cite
+        html:Code
+        html:Data
+        html:Del
+        html:Details
+        html:Dfn
+        html:Div
+        html:Em
+        html:Embed
+        html:Fieldset
+        html:Figure
+        html:Footer
+        html:Form
+        html:H1
+        html:H2
+        html:H3
+        html:H4
+        html:H5
+        html:H6
+        html:Header
+        html:Hgroup
+        html:I
+        html:Iframe
+        html:Img
+        html:Ins
+        html:Kbd
+        html:Label
+        html:Main
+        html:Map
+        html:Mark
+        html:MathML
+        html:Meter
+        html:Nav
+        html:Object
+        html:Output
+        html:P
+        html:Picture
+        html:Pre
+        html:Progress
+        html:Q
+        html:Ruby
+        html:S
+        html:Samp
+        html:Search
+        html:Section
+        html:Select
+        html:Small
+        html:Span
+        html:Strong
+        html:Sub
+        html:Sup
+        html:SVG
+        html:Table
+        html:Textarea
+        html:Time
+        html:U
+        html:Var
+        html:Video
+        html:CustomElement
+        html:Text );
     dct:conformsTo section:3.2.5.2.8;
     skos:definition 'As a general rule, elements whose content model allows any flow content or phrasing content should have at least one node in its contents that is palpable content and that does not have the hidden attribute specified.'@en;
     skos:note 'Palpable content makes an element non-empty by providing either some descendant non-empty text, or else something users can hear (audio elements) or view (video, img, or canvas elements) or otherwise interact with (for example, interactive form controls).';
@@ -1896,14 +2186,16 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
   html:CustomDataAttribute
     rdf:type owl:Class;
     rdfs:subClassOf html:Attribute;
-    owl:equivalentClass [a owl:Restriction ;
-                         owl:onProperty html:key ;
-                         owl:allValuesFrom [
-                                             a rdfs:Datatype ;
-                                             owl:onDatatype xsd:string ;
-                                             owl:withRestrictions ([ xsd:pattern "^data-[a-z_:][a-z0-9_.:-]*$" ])
-                                           ]
-    ];
+    owl:equivalentClass
+      [ a owl:Restriction;
+        owl:onProperty html:key;
+        owl:allValuesFrom
+          [ a rdfs:Datatype;
+            owl:onDatatype xsd:string;
+            owl:withRestrictions
+              ( [ xsd:pattern "^data-[a-z_:][a-z0-9_.:-]*$" ] ) ] ];
+                                            
+      
     dct:conformsTo section:3.2.6;
     skos:definition 'A custom data attribute is an attribute in no namespace whose name starts with the string "data-", has at least one character after the hyphen, is XML-compatible, and contains no ASCII upper alphas.'@en;
     skos:prefLabel 'custom data attribute'@en;
@@ -1927,7 +2219,7 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
     a owl:Class;
     rdfs:subClassOf dom:Document;
     dct:conformsTo section:13.1;
-    skos:definition 'An HTML document consists of a tree of elements and text. Each element is denoted in the source by a start tag, such as ‘<body>’, and an end tag, such as ‘</body>’. Tags have to be nested such that elements are all completely within each other, without overlapping. Elements can have attributes, which control how the elements work. The HTML Core Vocabulary defines a set of elements that can be used in a HTML document, along with rules about the ways in which the elements can be nested. HTML user agents (e.g., web browsers) parse a HTML document, turning it into a DOM (Document Object Model) tree. A DOM tree is an in-memory representation of a document. A HTML document represents a media-independent description of interactive content. A HTML document might be rendered to a screen, or through a speech synthesizer, or on a braille display. To influence exactly how such rendering takes place, authors can use a styling language such as CSS.'@en;
+    skos:definition 'An HTML document consists of a tree of elements and text. Each element is denoted in the source by a start tag, such as ‘<body>’, and an end tag, such as ‘</body>’. Tags have to be nested such that elements are all completely within each other, without overlapping. Elements can have attributes, which control how the elements work. The HTML vocabulary defines a set of elements that can be used in a HTML document, along with rules about the ways in which the elements can be nested. HTML user agents (e.g., web browsers) parse a HTML document, turning it into a DOM (Document Object Model) tree. A DOM tree is an in-memory representation of a document. A HTML document represents a media-independent description of interactive content. A HTML document might be rendered to a screen, or through a speech synthesizer, or on a braille display. To influence exactly how such rendering takes place, authors can use a styling language such as CSS.'@en;
     skos:prefLabel 'html document'@en;
     rdfs:isDefinedBy html:.
 
@@ -3103,7 +3395,7 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
             html:Text
             ) ];
     rdfs:range rdf:HTML;
-    skos:definition 'Property that links the html fragment to a node in a document, representing the HTML document itself or the document type, HTML element, text, CDATA section or comment within that HTML-document. '@en;
+    skos:definition 'Property that links the html fragment to a node in a document, representing the HTML document itself or the document type, HTML element, text, CDATA section or comment within that HTML document. '@en;
     skos:prefLabel 'fragment property'@en;
     rdfs:isDefinedBy html:.
 
@@ -5131,17 +5423,6 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
     skos:prefLabel 'the ondragenter attribute'@en;
     rdfs:isDefinedBy html:.
 
-  html:ondragexit
-    a owl:DatatypeProperty;
-    rdfs:subPropertyOf html:attribute;    
-    html:key 'ondragexit';
-    rdf:type html:EventHandlerContentAttribute;
-    rdfs:domain html:Element;
-    rdfs:range xsd:string;
-    skos:definition "Specifies the dragexit event handler."@en;
-    skos:prefLabel 'the ondragexit attribute'@en;
-    rdfs:isDefinedBy html:.
-
   html:ondragleave
     a owl:DatatypeProperty;
     rdfs:subPropertyOf html:attribute;    
@@ -5224,7 +5505,7 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
     rdfs:subPropertyOf html:attribute;    
     html:key 'onerror';
     rdf:type html:EventHandlerContentAttribute;
-    rdfs:domain html:Element, html:Body, html:Window;
+    rdfs:domain html:Element;
     rdfs:range xsd:string;
     skos:definition "Specifies the error event handler."@en;
     skos:prefLabel 'the onerror attribute'@en;
@@ -5252,6 +5533,17 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
     skos:prefLabel 'the onformdata attribute'@en;
     rdfs:isDefinedBy html:.
 
+  html:onhashchange
+    a owl:DatatypeProperty;
+    rdfs:subPropertyOf html:attribute;    
+    html:key 'onhashchange';
+    rdf:type html:EventHandlerContentAttribute;
+    rdfs:domain html:Body;
+    rdfs:range xsd:string;
+    skos:definition "Specifies the hashchange event handler for Window object."@en;
+    skos:prefLabel 'the onhashchange attribute'@en;
+    rdfs:isDefinedBy html:.
+    
   html:oninput
     a owl:DatatypeProperty;
     rdfs:subPropertyOf html:attribute;    
@@ -5312,7 +5604,7 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
     rdfs:subPropertyOf html:attribute;    
     html:key 'onlanguagechange';
     rdf:type html:EventHandlerContentAttribute;
-    rdfs:domain html:Window;
+    rdfs:domain html:Body;
     rdfs:range xsd:string;
     skos:definition "Specifies the languagechange event handler for a Window object."@en;
     skos:prefLabel 'the onlanguagechange attribute'@en;
@@ -5323,7 +5615,7 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
     rdfs:subPropertyOf html:attribute;    
     html:key 'onload';
     rdf:type html:EventHandlerContentAttribute;
-    rdfs:domain html:Element, html:Body, html:Window;
+    rdfs:domain html:Element;
     rdfs:range xsd:string;
     skos:definition "Specifies the load event handler."@en;
     skos:prefLabel 'the onload attribute'@en;
@@ -5367,7 +5659,7 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
     rdfs:subPropertyOf html:attribute;    
     html:key 'onmessage';
     rdf:type html:EventHandlerContentAttribute;
-    rdfs:domain html:Element, html:Body, html:Window;
+    rdfs:domain html:Body;
     rdfs:range xsd:string;
     skos:definition "Specifies the message event handler."@en;
     skos:prefLabel 'the onmessage attribute'@en;
@@ -5378,7 +5670,7 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
     rdfs:subPropertyOf html:attribute;    
     html:key 'onmessageerror';
     rdf:type html:EventHandlerContentAttribute;
-    rdfs:domain html:Window;
+    rdfs:domain html:Body;
     rdfs:range xsd:string;
     skos:definition "Specifies the messageerror event handler for a Window object."@en;
     skos:prefLabel 'the onmessageerror attribute'@en;
@@ -5461,15 +5753,15 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
     skos:prefLabel 'the onmouseup attribute'@en;
     rdfs:isDefinedBy html:.
 
-  html:onmousewheel
+  html:onpaste
     a owl:DatatypeProperty;
     rdfs:subPropertyOf html:attribute;    
-    html:key 'onmousewheel';
+    html:key 'onpaste';
     rdf:type html:EventHandlerContentAttribute;
     rdfs:domain html:Element;
     rdfs:range xsd:string;
-    skos:definition "Specifies the mousewheel event handler."@en;
-    skos:prefLabel 'the onmousewheel attribute'@en;
+    skos:definition "Specifies the paste event handler."@en;
+    skos:prefLabel 'the onpaste attribute'@en;
     rdfs:isDefinedBy html:.
 
   html:onpause
@@ -5503,6 +5795,17 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
     rdfs:range xsd:string;
     skos:definition "Specifies the playing event handler."@en;
     skos:prefLabel 'the onplaying attribute'@en;
+    rdfs:isDefinedBy html:.
+
+  html:onpopstate
+    a owl:DatatypeProperty;
+    rdfs:subPropertyOf html:attribute;    
+    html:key 'onpopstate';
+    rdf:type html:EventHandlerContentAttribute;
+    rdfs:domain html:Element;
+    rdfs:range xsd:string;
+    skos:definition "Specifies the popstate event handler for Window object."@en;
+    skos:prefLabel 'the onpopstate attribute'@en;
     rdfs:isDefinedBy html:.
 
   html:onprogress
@@ -5543,18 +5846,29 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
     rdfs:subPropertyOf html:attribute;    
     html:key 'onresize';
     rdf:type html:EventHandlerContentAttribute;
-    rdfs:domain html:Element, html:Body, html:Window;
+    rdfs:domain html:Element;
     rdfs:range xsd:string;
     skos:definition "Specifies the resize event handler."@en;
     skos:prefLabel 'the onresize attribute'@en;
     rdfs:isDefinedBy html:.
+
+  html:onrejectionhandled
+    a owl:DatatypeProperty;
+    rdfs:subPropertyOf html:attribute;    
+    html:key 'onrejectionhandled';
+    rdf:type html:EventHandlerContentAttribute;
+    rdfs:domain html:Body;
+    rdfs:range xsd:string;
+    skos:definition "Specifies the rejectionhandled event handler for Window object."@en;
+    skos:prefLabel 'the onrejectionhandled attribute'@en;
+    rdfs:isDefinedBy html:.    
 
   html:onscroll
     a owl:DatatypeProperty;
     rdfs:subPropertyOf html:attribute;    
     html:key 'onscroll';
     rdf:type html:EventHandlerContentAttribute;
-    rdfs:domain html:Element, html:Body, html:Window;
+    rdfs:domain html:Element;
     rdfs:range xsd:string;
     skos:definition "Specifies the scroll event handler."@en;
     skos:prefLabel 'the onscroll attribute'@en;
@@ -5576,7 +5890,7 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
     rdfs:subPropertyOf html:attribute;    
     html:key 'onsecuritypolicyviolation';
     rdf:type html:EventHandlerContentAttribute;
-    rdfs:domain html:Element, html:Body, html:Window;
+    rdfs:domain html:Element;
     rdfs:range xsd:string;
     skos:definition "Specifies the securitypolicyviolation event handler."@en;
     skos:prefLabel 'the onsecuritypolicyviolation attribute'@en;
@@ -5642,7 +5956,7 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
     rdfs:subPropertyOf html:attribute;    
     html:key 'onstorage';
     rdf:type html:EventHandlerContentAttribute;
-    rdfs:domain html:Window;
+    rdfs:domain html:Body;
     rdfs:range xsd:string;
     skos:definition "Specifies the storage event handler for a Window object."@en;
     skos:prefLabel 'the onstorage attribute'@en;
@@ -5692,6 +6006,28 @@ This can be rendered in RDF using the HTML Core Vocabulary as follows:
     skos:prefLabel 'the ontoggle attribute'@en;
     rdfs:isDefinedBy html:.
 
+  html:onunhandledrejection
+    a owl:DatatypeProperty;
+    rdfs:subPropertyOf html:attribute;    
+    html:key 'onunhandledrejection';
+    rdf:type html:EventHandlerContentAttribute;
+    rdfs:domain html:Body;
+    rdfs:range xsd:string;
+    skos:definition "Specifies the unhandledrejection event handler for Window object."@en;
+    skos:prefLabel 'the onunhandledrejection attribute'@en;
+    rdfs:isDefinedBy html:.
+
+  html:onunload
+    a owl:DatatypeProperty;
+    rdfs:subPropertyOf html:attribute;    
+    html:key 'onunload';
+    rdf:type html:EventHandlerContentAttribute;
+    rdfs:domain html:Body;
+    rdfs:range xsd:string;
+    skos:definition "Specifies the unload event handler for Window object."@en;
+    skos:prefLabel 'the onunload attribute'@en;
+    rdfs:isDefinedBy html:.
+    
   html:onvolumechange
     a owl:DatatypeProperty;
     rdfs:subPropertyOf html:attribute;    
@@ -5752,7 +6088,7 @@ select $this {
   # ...but whose child nodes (if any) all have an HTML fragment
   filter not exists {
     $this ?member ?child.
-    filter(strstarts(str(?member),concat(str(rdf:),'_')))               
+    filter(function:isMembershipProperty(?member))           
     filter not exists { ?child html:fragment []. }
     ?child a/rdfs:subClassOf* dom:DocumentTreeNode.
   }
@@ -5879,7 +6215,7 @@ construct {
     bind(strdt(?data,xsd:string) as ?fragment)
      }
     bind(if(bound(?fragment),?fragment,'') as ?result)  
-    }	
+    }
 """ ;
     rdfs:isDefinedBy html:.
 
@@ -5993,9 +6329,10 @@ construct {
     ] ;
     sh:returnType xsd:string ;
     sh:select """
-    
+
+    prefix function: <https://www.w3.org/html/model/function/>      
     prefix html: <https://www.w3.org/html/model/def/>
-  	prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
     prefix xsd: <http://www.w3.org/2001/XMLSchema#> 
     
     select ?result where {
@@ -6005,10 +6342,10 @@ construct {
       {
         select $parentNode ?member ?childFragment {
           $parentNode ?member ?childNode.
-          filter(strstarts(str(?member),concat(str(rdf:),'_')))
+          filter(function:isMembershipProperty(?member))
           ?childNode html:fragment ?childFragment.
         }
-        order by xsd:integer(strafter(str(?member),concat(str(rdf:),'_')))
+        order by function:getMemberIndex(?member)
        }
       } group by $parentNode
      }
@@ -6049,4 +6386,50 @@ construct {
 """ ;
     rdfs:isDefinedBy html:.
 
+  function:getMemberIndex
+    a sh:SPARQLFunction;
+    skos:prefLabel "the getMemberIndex() function"@en;
+    skos:definition "A SPARQL function that returns the sibling index of a node in an HTML document."@en ;    
+    sh:parameter parameter:getMemberIndex;
+    sh:prefixes html:;
+    sh:returnType xsd:positiveInteger;
+    sh:select '''
+      select(
+        xsd:integer(
+          strafter(
+            str($property),
+            concat(str(rdf:), '_'))) as $return){}''';
+    rdfs:isDefinedBy html:.            
+            
+  parameter:getMemberIndex
+    a sh:Parameter;
+    skos:prefLabel "the getMemberIndex parameter"@en;
+    skos:definition "A SHACL parameter"@en;       
+    sh:class rdfs:ContainerMembershipProperty;
+    sh:order 1;
+    sh:path parameter:property;
+    rdfs:isDefinedBy html:.    
+
+  function:isMembershipProperty
+    a sh:SPARQLFunction;
+    skos:prefLabel "the isMembershipProperty() function"@en;
+    skos:definition "A SPARQL function that returns a boolean value based on whether a property is or is not an instance of the ContainerMembershipProperty class."@en ;    
+    sh:parameter parameter:isMembershipProperty;
+    sh:prefixes html:;
+    sh:returnType xsd:boolean;
+    sh:select '''
+      select(
+        strstarts(
+          str($iri),
+          concat(str(rdf:), '_')) as $return){}''';
+    rdfs:isDefinedBy html:.          
+          
+  parameter:isMembershipProperty
+    a sh:Parameter;
+    skos:prefLabel "the isMembershipProperty parameter"@en;
+    skos:definition "A SHACL parameter"@en;     
+    sh:class rdfs:Resource;
+    sh:order 1;
+    sh:path parameter:iri;
+    rdfs:isDefinedBy html:.    
 }
