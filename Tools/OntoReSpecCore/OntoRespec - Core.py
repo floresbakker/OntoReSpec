@@ -48,11 +48,13 @@ def iteratePyShacl(respec_html_generator, serializable_graph):
              
 
 # Get the OntoRespec vocabulary and place it in a string
-respec_generator = readGraphFromFile(directory_path +"/OntoReSpec/Specification/OntoRespec.ttl")
+respec_generator = readGraphFromFile(directory_path +"/OntoReSpec/Specification/OntoRespec6.ttl")
 # Get the HTML vocabulary and place it in a string
-html_vocabulary = readGraphFromFile(directory_path + "/htmlvoc/Specification/html - core.ttl")
-
-respec_html_generator = respec_generator + html_vocabulary
+html_vocabulary = readGraphFromFile(directory_path + "/OntoReSpec/Specification/html - core.ttl")
+# Get the DOM vocabulary and place it in a string
+dom_vocabulary = readGraphFromFile(directory_path + "/OntoReSpec/Specification/dom - core.ttl")
+# Get the ReSpec template and place it in a string
+template_graph = readGraphFromFile(directory_path + "/OntoReSpec/Specification/ReSpecTemplate.ttl" )
 
 # loop through any ReSpec RDF files in the input directory
 for filename in os.listdir(directory_path+"/OntoReSpec/Tools/OntoReSpecCore/Input"):
@@ -64,10 +66,10 @@ for filename in os.listdir(directory_path+"/OntoReSpec/Tools/OntoReSpecCore/Inpu
 
 # Get any RDF-based ReSpec document and place it in a string. 
 ontology_graph = readGraphFromFile(file_path)   
-template_graph = readGraphFromFile(directory_path + "/OntoReSpec/Specification/ReSpecTemplate.ttl" )
+                                                                                                    
 
 # Join the HTML vocabulary and the RDF-model of the HTML-based ReSpec-document into a string
-serializable_graph_string = ontology_graph + template_graph + html_vocabulary
+serializable_graph_string = ontology_graph +'\n' + template_graph + '\n' + html_vocabulary + '\n' + dom_vocabulary
 
 # Create a graph of the string containing the HTML vocabulary and the RDF-model of the HTML-based ReSpec-document
 serializable_graph = rdflib.Graph().parse(data=serializable_graph_string , format="ttl")
@@ -76,6 +78,6 @@ serializable_graph = rdflib.Graph().parse(data=serializable_graph_string , forma
 print ('Instantiating ReSpec document...')
 
 # Call the shacl engine with the HTML vocabulary and the document to be serialized
-iteratePyShacl(respec_html_generator, serializable_graph)
+iteratePyShacl(respec_generator, serializable_graph)
 
 print ('ReSpec document instantiated.')

@@ -17,6 +17,7 @@ prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 prefix skos: <http://www.w3.org/2004/02/skos/core#>
 
 respec: {
+
 respec:introduction
     a owl:DatatypeProperty;
     rdfs:domain respec:Generation;
@@ -101,7 +102,7 @@ construct {
   
   OPTIONAL {
   ?template ?element ?child.
-  ?child  a/ rdfs:subClassOf* dom:Node.}
+  ?child  a/ rdfs:subClassOf* dom:DocumentTreeNode.}
   
   OPTIONAL {
   ?template respec:label ?languageFragment.
@@ -120,7 +121,7 @@ construct {
   ?template ?attribute ?attributeValue.
   ?attribute a/rdfs:subClassOf* html:Attribute.
   }
-  ?class rdfs:subClassOf* dom:Node.
+  ?class rdfs:subClassOf* dom:DocumentTreeNode.
   
   bind(coalesce(?respecFragment, ?htmlFragment) as ?fragment)
   
@@ -161,7 +162,7 @@ construct {
   
   OPTIONAL {
   ?template ?element ?child.
-  ?child  a/ rdfs:subClassOf* dom:Node.}
+  ?child  a/ rdfs:subClassOf* dom:DocumentTreeNode.}
   
   OPTIONAL {
   ?template respec:label ?languageFragment.
@@ -181,7 +182,7 @@ construct {
   ?attribute a/rdfs:subClassOf* html:Attribute.
   }
   
-  ?htmlClass rdfs:subClassOf* dom:Node.
+  ?htmlClass rdfs:subClassOf* dom:DocumentTreeNode.
   
   bind(coalesce(?respecFragment, ?htmlFragment) as ?fragment)
   
@@ -421,7 +422,7 @@ construct {
   html:fragment ?ontologyDescription.
     
 } where {
-   {?template a respec:Overview;
+   {?template a respec:Description;
               respec:absenceLabel ?absenceLabel.
    $this respec:documentLanguage ?language;
          respec:documentNamespace ?namespace;
@@ -2535,11 +2536,11 @@ construct {
   ?label_text_scheme                              rdf:type html:Text;
                                                   html:fragment 'Label: '.   
   ?label_value_scheme                              rdf:type html:Text;
-                                                  html:fragment ?scheme_label_text.                                                  
+                                                  html:fragment ?scheme_label_text.
   ?IRI_scheme                                   rdf:type html:Div;
                                                 rdf:_1 ?IRI_strong_scheme;
                                                 rdf:_2 ?IRI_a_scheme;
-                                                html:class "container".                                               
+                                                html:class "container".
   ?IRI_strong_scheme                              rdf:type html:Strong;
                                                   rdf:_1 ?IRI_text_scheme;
                                                   html:class "label".
@@ -4255,4 +4256,15 @@ function:getLabel
   BIND(function:escapeHTML(COALESCE(?preferredLabel, ?alternativeLabel, ?implicitLabel)) as ?result)
 }
 """ .
+
+respec:data-format
+    a owl:DatatypeProperty;
+    rdfs:subPropertyOf html:attribute;
+    html:key 'data-format';
+    rdf:type html:Attribute;
+    rdfs:domain html:Element;
+    rdfs:range xsd:string;
+    skos:definition "Specifies the format of an HTML element within a ReSpec document."@en;
+    skos:prefLabel 'the data-format attribute'@en;
+    rdfs:isDefinedBy respec:.
 }

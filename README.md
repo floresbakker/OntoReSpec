@@ -4,7 +4,11 @@ OntoReSpec is a collection of RDF-based vocabularies to generate ReSpec specific
 
 # Status
 
-Unstable, no release yet. Work in progress. First working version planned for Q2 2024.
+Unstable, no release yet. Work in progress. First working version planned for somewhere in 2025. There is a bug in the external library RDFLib that hinders the use of OntoReSpec. Alternative for now is to run OntoReSpec on your own triple store & SHACL/SPARQL engines.
+
+See bug report https://github.com/RDFLib/rdflib/issues/2957.
+
+For a demonstration of what OntoReSpec can do, see this [example] (https://floresbakker.github.io/htmlvoc/) of generated documentation for the HTML vocabulary. This was run on a commercial semantic web stack (triple store, SPARQL engine, SHACL engine), using a typescript implementation of the scripting part of OntoReSpec.
 
 # Background
 

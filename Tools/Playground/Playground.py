@@ -13,13 +13,14 @@ current_dir = os.getcwd()
 directory_path = os.path.abspath(os.path.join(current_dir, '..', '..', '..'))
 
 # namespace declaration
-rdf      = Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
-rdfs     = Namespace("http://www.w3.org/2000/01/rdf-schema#")
-dct      = Namespace("http://purl.org/dc/terms/")
-respec   = Namespace('https://respec.org/ontorespec/model/def/')
-template = Namespace('https://respec.org/ontorespec/id/')
-html     = Namespace("https://www.w3.org/html/model/def/")
-mermaid  = Namespace("https://data.rijksfinancien.nl/mermaid/model/def/")
+rdf        = Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
+rdfs       = Namespace("http://www.w3.org/2000/01/rdf-schema#")
+dct        = Namespace("http://purl.org/dc/terms/")
+respec     = Namespace('https://respec.org/ontorespec/model/def/')
+template   = Namespace('https://respec.org/ontorespec/id/')
+html       = Namespace("https://www.w3.org/html/model/def/")
+mermaid    = Namespace("https://data.rijksfinancien.nl/mermaid/model/def/")
+manchester = Namespace("https://data.rijksfinancien.nl/manchester/model/def/")
 
 # Function to read a graph (as a string) from a file 
 def readStringFromFile(file_path):
@@ -40,7 +41,7 @@ respec_vocabulary     = readStringFromFile(directory_path + "/OntoReSpec/Specifi
 template_graph        = readStringFromFile(directory_path + "/OntoReSpec/Specification/ReSpecTemplate.ttl" )
 html_serialisation    = readStringFromFile(directory_path + "/OntoReSpec/Specification/html - core.ttl")
 html_vocabulary       = readStringFromFile(directory_path + "/OntoReSpec/Specification/html - core.ttl")
-dom_vocabulary       = readStringFromFile(directory_path + "/OntoReSpec/Specification/dom - core.ttl")
+dom_vocabulary        = readStringFromFile(directory_path + "/OntoReSpec/Specification/dom - core.ttl")
 manchester_vocabulary = readStringFromFile(directory_path + "/OntoReSpec/Specification/manchestersyntax.ttl")
 mermaid_vocabulary    = readStringFromFile(directory_path + "/OntoReSpec/Specification/mermaid.ttl")
 manchester_query      = readStringFromFile(directory_path + "/OntoReSpec/Tools/Playground/static/manchesterQuery.rq")
@@ -199,6 +200,7 @@ def generateReSpec():
     generationGraph.bind("html", html)
     generationGraph.bind("respec", respec)    
     generationGraph.bind("mermaid", mermaid)    
+    generationGraph.bind("manchester", manchester)      
     generationGraph.bind("template", template)   
     generationGraph.bind("doc", doc)    
     
@@ -221,28 +223,28 @@ def generateReSpec():
 
     #2 Establish which components of the ontology need to be specified in the document
     if conceptSchemes:
-        generationGraph.add((doc[generation_iri], respec.include, Literal("CONCEPTSCHEME")))
+        generationGraph.add((doc[generation_iri], respec.include, Literal("conceptschemes")))
     
     if concepts and not conceptSchemes:
-        generationGraph.add((doc[generation_iri], respec.include, Literal("CONCEPT")))
+        generationGraph.add((doc[generation_iri], respec.include, Literal("concepts")))
     
     if classes:
-        generationGraph.add((doc[generation_iri], respec.include, Literal("CLASS")))
+        generationGraph.add((doc[generation_iri], respec.include, Literal("classes")))
     
     if objectProperties:
-        generationGraph.add((doc[generation_iri], respec.include, Literal("OBJECTPROPERTY")))
+        generationGraph.add((doc[generation_iri], respec.include, Literal("objectproperties")))
     
     if datatypeProperties:
-        generationGraph.add((doc[generation_iri], respec.include, Literal("DATATYPEPROPERTY")))
+        generationGraph.add((doc[generation_iri], respec.include, Literal("datatypeproperties")))
     
     if rdfProperties:
-        generationGraph.add((doc[generation_iri], respec.include, Literal("RDF_PROPERTY")))
+        generationGraph.add((doc[generation_iri], respec.include, Literal("rdfproperties")))
     
     if nodeshapes:
-        generationGraph.add((doc[generation_iri], respec.include, Literal("NODESHAPE")))
+        generationGraph.add((doc[generation_iri], respec.include, Literal("nodeshapes")))
     
     if namedIndividuals:
-        generationGraph.add((doc[generation_iri], respec.include, Literal("NAMEDINDIVIDUAL")))
+        generationGraph.add((doc[generation_iri], respec.include, Literal("namedindividuals")))
 
     #2 Establish which components of the ontology need to be visualised in the document as a Mermaid diagram
     if conceptSchemes:
