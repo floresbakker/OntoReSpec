@@ -44,9 +44,9 @@ The tool aims to be a complete environment in which you can generate a ReSpec ba
 
 A. Install all necessary libraries:
 
-	1. pip install os
-	2. pip install pyshacl
-	3. pip install rdflib
+    1. pip install os
+    2. pip install pyshacl
+    3. pip install rdflib
     4. pip install flask
     5. pip install datetime
     
@@ -69,8 +69,8 @@ The tool OntoReSpec.py is used to read OWL ontologies and generate a presentatio
 
 A. Install all necessary libraries:
 
-	1. pip install os
-	2. pip install pyshacl
+    1. pip install os
+    2. pip install pyshacl
     3. pip install rdflib
 
 B. Place one or more OWL-ontologies in the input folder in \OntoReSpec\Tools\Input. 

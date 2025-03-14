@@ -1046,7 +1046,7 @@ construct {
   BIND(IF(isBlank(?someProperty),CONCAT(?mermaidLabelProperty, "\\n"),CONCAT(str($this),str(?someProperty), "[",  ?mermaidLabelProperty,"]\\n"))  as ?mermaidProperty)
 
   # Establish the inner OWL logic 
-  BIND(CONCAT(STR($this),"thing((thing)) --> ", ?mermaidProperty, "\\n", ?mermaidProperty,  " -- exactly ", str(?n), " --> ", qualifyingClassLabel) as ?mermaidDefinition)
+  BIND(CONCAT(STR($this),"thing((thing)) --> ", ?mermaidProperty, "\\n", ?mermaidProperty,  " -- exactly ", str(?n), " --> ", ?qualifyingClassLabel) as ?mermaidDefinition)
   
   # Establish label and identifier for the outer OWL logic    
   BIND(IF(isBlank($this), ?unboundDummy, function:getPrefixedIRI($this)) as ?classLabel)
@@ -1117,7 +1117,7 @@ construct {
   BIND(IF(isBlank(?someProperty),CONCAT(?mermaidLabelProperty, "\\n"),CONCAT(str($this),str(?someProperty), "[",  ?mermaidLabelProperty,"]\\n"))  as ?mermaidProperty)
 
   # Establish the inner OWL logic 
-  BIND(CONCAT(STR($this),"thing((thing)) --> ", ?mermaidProperty, "\\n", ?mermaidProperty,  " -- max ", str(?n), " --> ", qualifyingClassLabel) as ?mermaidDefinition)
+  BIND(CONCAT(STR($this),"thing((thing)) --> ", ?mermaidProperty, "\\n", ?mermaidProperty,  " -- max ", str(?n), " --> ", ?qualifyingClassLabel) as ?mermaidDefinition)
   
   # Establish label and identifier for the outer OWL logic    
   BIND(IF(isBlank($this), ?unboundDummy, function:getPrefixedIRI($this)) as ?classLabel)
@@ -1187,7 +1187,7 @@ construct {
   BIND(IF(isBlank(?someProperty),CONCAT(?mermaidLabelProperty, "\\n"),CONCAT(str($this),str(?someProperty), "[",  ?mermaidLabelProperty,"]\\n"))  as ?mermaidProperty)
 
   # Establish the inner OWL logic 
-  BIND(CONCAT(STR($this),"thing((thing)) --> ", ?mermaidProperty, "\\n", ?mermaidProperty,  " -- min ", str(?n), " --> ", qualifyingClassLabel) as ?mermaidDefinition)
+  BIND(CONCAT(STR($this),"thing((thing)) --> ", ?mermaidProperty, "\\n", ?mermaidProperty,  " -- min ", str(?n), " --> ", ?qualifyingClassLabel) as ?mermaidDefinition)
   
   # Establish label and identifier for the outer OWL logic    
   BIND(IF(isBlank($this), ?unboundDummy, function:getPrefixedIRI($this)) as ?classLabel)
