@@ -16,12 +16,15 @@ prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 prefix decl:       <https://mermaid.org/ontomermaid/model/decl/>
 prefix function:   <https://mermaid.org/ontomermaid/model/function/>
 prefix graph:      <https://mermaid.org/ontomermaid/model/graph/>
+prefix list:       <https://mermaid.org/ontomermaid/model/list/>
 prefix mermaid:    <https://mermaid.org/ontomermaid/model/def/>
+prefix parameter:  <https://mermaid.org/ontomermaid/model/parameter/>
 prefix rule:       <https://mermaid.org/ontomermaid/model/rule/>
 prefix shp:        <https://mermaid.org/ontomermaid/model/shp/>
 prefix standard:   <https://mermaid.org/ontomermaid/id/standard/>
 prefix target:     <https://mermaid.org/ontomermaid/model/target/>
 
+mermaid: {
   mermaid:
     a
       owl:Ontology,
@@ -566,7 +569,7 @@ construct {
         mermaid:fragment ?mermaidLabel.
 } where {
 
-  BIND(IF(isBlank($this),STR($this),CONCAT(STR($this),"((",function:getPrefixedIRI($this), "))")) as ?mermaidLabel)
+  BIND(IF(function:isBlank($this),STR($this),CONCAT(STR($this),"((",function:getPrefixedIRI($this), "))")) as ?mermaidLabel)
 }
 '''.
 
@@ -624,20 +627,20 @@ construct {
         owl:onProperty ?someProperty.
 		
   # Establish the label and identifier for the inner OWL logic
-  BIND(IF(isBlank(?someClass), str(?someClass), function:getPrefixedIRI(?someClass)) as ?mermaidLabelClass)
-  BIND(IF(isBlank(?someProperty), str(?someProperty), function:getPrefixedIRI(?someProperty)) as ?mermaidLabelProperty)
-  BIND(IF(isBlank(?someClass)   ,CONCAT(?mermaidLabelClass   , "\\n"),CONCAT(str($this),str(?someClass)   , "((", ?mermaidLabelClass,   "))\\n")) as ?mermaidClass)
-  BIND(IF(isBlank(?someProperty),CONCAT(?mermaidLabelProperty, "\\n"),CONCAT(str($this),str(?someProperty), "[",  ?mermaidLabelProperty,"]\\n"))  as ?mermaidProperty)
+  BIND(IF(function:isBlank(?someClass), str(?someClass), function:getPrefixedIRI(?someClass)) as ?mermaidLabelClass)
+  BIND(IF(function:isBlank(?someProperty), str(?someProperty), function:getPrefixedIRI(?someProperty)) as ?mermaidLabelProperty)
+  BIND(IF(function:isBlank(?someClass)   ,CONCAT(?mermaidLabelClass   , "\\n"),CONCAT(str($this),str(?someClass)   , "((", ?mermaidLabelClass,   "))\\n")) as ?mermaidClass)
+  BIND(IF(function:isBlank(?someProperty),CONCAT(?mermaidLabelProperty, "\\n"),CONCAT(str($this),str(?someProperty), "[",  ?mermaidLabelProperty,"]\\n"))  as ?mermaidProperty)
   
   # Establish the inner OWL logic 
   BIND(CONCAT(STR($this),"thing((thing)) --> ", ?mermaidProperty, "\\n", ?mermaidProperty, " -- only --> ", ?mermaidClass) as ?mermaidDefinition)
    
   # Establish label and identifier for the outer OWL logic
-  BIND(IF(isBlank($this), ?unboundDummy, function:getPrefixedIRI($this)) as ?classLabel)
+  BIND(IF(function:isBlank($this), ?unboundDummy, function:getPrefixedIRI($this)) as ?classLabel)
   BIND(SHA256(?mermaidDefinition) as ?mermaidDefinition_SHA256)
   
   # Establish the outer OWL logic
-  BIND(IF(isBlank($this),CONCAT("subgraph ",STR($this), "[Restriction &forall; R C]\\n", ?mermaidDefinition, "\\nend\\n"),
+  BIND(IF(function:isBlank($this),CONCAT("subgraph ",STR($this), "[Restriction &forall; R C]\\n", ?mermaidDefinition, "\\nend\\n"),
                          CONCAT(STR($this),"((", ?classLabel, ")) -- equivalentTo --> ",STR($this),?mermaidDefinition_SHA256,"\\n","subgraph ",STR($this),?mermaidDefinition_SHA256, "[Restriction &forall; R C]\\n", ?mermaidDefinition, "\\nend\\n")) as ?mermaidLabel)
   
 }
@@ -696,20 +699,20 @@ construct {
         owl:onProperty ?someProperty.
   
   # Establish the label and identifier for the inner OWL logic
-  BIND(IF(isBlank(?someClass), str(?someClass), function:getPrefixedIRI(?someClass)) as ?mermaidLabelClass)
-  BIND(IF(isBlank(?someProperty), str(?someProperty), function:getPrefixedIRI(?someProperty)) as ?mermaidLabelProperty)
-  BIND(IF(isBlank(?someClass)   ,CONCAT(?mermaidLabelClass   , "\\n"),CONCAT(str($this),str(?someClass)   , "((", ?mermaidLabelClass,   "))\\n")) as ?mermaidClass)
-  BIND(IF(isBlank(?someProperty),CONCAT(?mermaidLabelProperty, "\\n"),CONCAT(str($this),str(?someProperty), "[",  ?mermaidLabelProperty,"]\\n"))  as ?mermaidProperty)
+  BIND(IF(function:isBlank(?someClass), str(?someClass), function:getPrefixedIRI(?someClass)) as ?mermaidLabelClass)
+  BIND(IF(function:isBlank(?someProperty), str(?someProperty), function:getPrefixedIRI(?someProperty)) as ?mermaidLabelProperty)
+  BIND(IF(function:isBlank(?someClass)   ,CONCAT(?mermaidLabelClass   , "\\n"),CONCAT(str($this),str(?someClass)   , "((", ?mermaidLabelClass,   "))\\n")) as ?mermaidClass)
+  BIND(IF(function:isBlank(?someProperty),CONCAT(?mermaidLabelProperty, "\\n"),CONCAT(str($this),str(?someProperty), "[",  ?mermaidLabelProperty,"]\\n"))  as ?mermaidProperty)
   
   # Establish the inner OWL logic 
   BIND(CONCAT(STR($this),"thing((thing)) --> ", ?mermaidProperty, "\\n", ?mermaidProperty, " -- some --> ", ?mermaidClass) as ?mermaidDefinition)
    
   # Establish label and identifier for the outer OWL logic
-  BIND(IF(isBlank($this), ?unboundDummy, function:getPrefixedIRI($this)) as ?classLabel)
+  BIND(IF(function:isBlank($this), ?unboundDummy, function:getPrefixedIRI($this)) as ?classLabel)
   BIND(SHA256(?mermaidDefinition) as ?mermaidDefinition_SHA256)
   
   # Establish the outer OWL logic
-  BIND(IF(isBlank($this),CONCAT("subgraph ",STR($this), "[Restriction &exist; R C]\\n", ?mermaidDefinition, "\\nend\\n"),
+  BIND(IF(function:isBlank($this),CONCAT("subgraph ",STR($this), "[Restriction &exist; R C]\\n", ?mermaidDefinition, "\\nend\\n"),
                          CONCAT(STR($this),"((", ?classLabel, ")) -- equivalentTo --> ",STR($this),?mermaidDefinition_SHA256,"\\n","subgraph ",STR($this),?mermaidDefinition_SHA256, "[Restriction 	&exist; R C]\\n", ?mermaidDefinition, "\\nend\\n")) as ?mermaidLabel)
 }  '''.
 
@@ -766,20 +769,20 @@ construct {
         owl:onProperty ?someProperty.
   
   # Establish the label and identifier for the inner OWL logic
-  BIND(IF(isBlank(?someIndividual), str(?someIndividual),function:getPrefixedIRI(?someIndividual)) as ?mermaidLabelIndividual)
-  BIND(IF(isBlank(?someProperty), str(?someProperty), function:getPrefixedIRI(?someProperty)) as ?mermaidLabelProperty)
-  BIND(IF(isBlank(?someIndividual),CONCAT(?mermaidLabelIndividual, "\\n"),CONCAT(str($this),str(?someIndividual), "((", ?mermaidLabelIndividual,"))\\n")) as ?mermaidIndividual)
-  BIND(IF(isBlank(?someProperty)  ,CONCAT(?mermaidLabelProperty,   "\\n"),CONCAT(str($this),str(?someProperty),   "[",  ?mermaidLabelProperty  ,"]\\n"))  as ?mermaidProperty)
+  BIND(IF(function:isBlank(?someIndividual), str(?someIndividual),function:getPrefixedIRI(?someIndividual)) as ?mermaidLabelIndividual)
+  BIND(IF(function:isBlank(?someProperty), str(?someProperty), function:getPrefixedIRI(?someProperty)) as ?mermaidLabelProperty)
+  BIND(IF(function:isBlank(?someIndividual),CONCAT(?mermaidLabelIndividual, "\\n"),CONCAT(str($this),str(?someIndividual), "((", ?mermaidLabelIndividual,"))\\n")) as ?mermaidIndividual)
+  BIND(IF(function:isBlank(?someProperty)  ,CONCAT(?mermaidLabelProperty,   "\\n"),CONCAT(str($this),str(?someProperty),   "[",  ?mermaidLabelProperty  ,"]\\n"))  as ?mermaidProperty)
 
   # Establish the inner OWL logic   
   BIND(CONCAT(STR($this),"thing((thing)) --> ", ?mermaidProperty, "\\n", ?mermaidProperty, " -- value --> ", ?mermaidIndividual) as ?mermaidDefinition)
     
   # Establish label and identifier for the outer OWL logic
-  BIND(IF(isBlank($this), ?unboundDummy, function:getPrefixedIRI($this)) as ?classLabel)
+  BIND(IF(function:isBlank($this), ?unboundDummy, function:getPrefixedIRI($this)) as ?classLabel)
   BIND(SHA256(?mermaidDefinition) as ?mermaidDefinition_SHA256)
   
   # Establish the outer OWL logic
-  BIND(IF(isBlank($this),CONCAT("subgraph ",STR($this), " [Restriction &exist; R x]\\n", ?mermaidDefinition, "\\nend\\n"),
+  BIND(IF(function:isBlank($this),CONCAT("subgraph ",STR($this), " [Restriction &exist; R x]\\n", ?mermaidDefinition, "\\nend\\n"),
                          CONCAT(STR($this),"((", ?classLabel, ")) -- equivalentTo --> ",STR($this),?mermaidDefinition_SHA256,"\\n","subgraph ",STR($this),?mermaidDefinition_SHA256, "[Restriction &exist; R x]\\n", ?mermaidDefinition, "\\nend\\n")) as ?mermaidLabel)
 } '''.
 
@@ -835,18 +838,18 @@ construct {
         owl:onProperty ?someProperty.
   
   # Establish the label and identifier for the inner OWL logic
-  BIND(IF(isBlank(?someProperty), str(?someProperty), function:getPrefixedIRI(?someProperty)) as ?mermaidLabelProperty)
-  BIND(IF(isBlank(?someProperty),CONCAT(?mermaidLabelProperty, "\\n"),CONCAT(str($this),str(?someProperty), "[",  ?mermaidLabelProperty,"]\\n"))  as ?mermaidProperty)
+  BIND(IF(function:isBlank(?someProperty), str(?someProperty), function:getPrefixedIRI(?someProperty)) as ?mermaidLabelProperty)
+  BIND(IF(function:isBlank(?someProperty),CONCAT(?mermaidLabelProperty, "\\n"),CONCAT(str($this),str(?someProperty), "[",  ?mermaidLabelProperty,"]\\n"))  as ?mermaidProperty)
   
   # Establish the inner OWL logic 
   BIND(CONCAT(STR($this),"thing((thing)) --> ", ?mermaidProperty, "\\n", ?mermaidProperty, " -- exactly --> ", str(?n)) as ?mermaidDefinition)
   
   # Establish label and identifier for the outer OWL logic 
-  BIND(IF(isBlank($this), ?unboundDummy, function:getPrefixedIRI($this)) as ?classLabel)
+  BIND(IF(function:isBlank($this), ?unboundDummy, function:getPrefixedIRI($this)) as ?classLabel)
   BIND(SHA256(?mermaidDefinition) as ?mermaidDefinition_SHA256)
   
   # Establish the outer OWL logic  
-  BIND(IF(isBlank($this),CONCAT("subgraph ",STR($this), " [Restriction = N R]\\n", ?mermaidDefinition, "\\nend\\n"),
+  BIND(IF(function:isBlank($this),CONCAT("subgraph ",STR($this), " [Restriction = N R]\\n", ?mermaidDefinition, "\\nend\\n"),
                          CONCAT(STR($this),"((", ?classLabel, ")) -- equivalentTo --> ",STR($this),?mermaidDefinition_SHA256,"\\n","subgraph ",STR($this),?mermaidDefinition_SHA256, "[Restriction = N R]\\n", ?mermaidDefinition, "\\nend\\n")) as ?mermaidLabel)
 }
 
@@ -904,18 +907,18 @@ construct {
         owl:onProperty ?someProperty.
   
   # Establish the label and identifier for the inner OWL logic
-  BIND(IF(isBlank(?someProperty), str(?someProperty), function:getPrefixedIRI(?someProperty)) as ?mermaidLabelProperty)
-  BIND(IF(isBlank(?someProperty),CONCAT(?mermaidLabelProperty, "\\n"),CONCAT(str($this),str(?someProperty), "[",  ?mermaidLabelProperty,"]\\n"))  as ?mermaidProperty)
+  BIND(IF(function:isBlank(?someProperty), str(?someProperty), function:getPrefixedIRI(?someProperty)) as ?mermaidLabelProperty)
+  BIND(IF(function:isBlank(?someProperty),CONCAT(?mermaidLabelProperty, "\\n"),CONCAT(str($this),str(?someProperty), "[",  ?mermaidLabelProperty,"]\\n"))  as ?mermaidProperty)
   
   # Establish the inner OWL logic 
   BIND(CONCAT(STR($this),"thing((thing)) --> ", ?mermaidProperty, "\\n", ?mermaidProperty, " -- max --> ", str(?n)) as ?mermaidDefinition)
   
   # Establish label and identifier for the outer OWL logic  
-  BIND(IF(isBlank($this), ?unboundDummy, function:getPrefixedIRI($this)) as ?classLabel)
+  BIND(IF(function:isBlank($this), ?unboundDummy, function:getPrefixedIRI($this)) as ?classLabel)
   BIND(SHA256(?mermaidDefinition) as ?mermaidDefinition_SHA256)
   
   # Establish the outer OWL logic  
-  BIND(IF(isBlank($this),CONCAT("subgraph ",STR($this), " [Restriction ≤ N R]\\n", ?mermaidDefinition, "\\nend\\n"),
+  BIND(IF(function:isBlank($this),CONCAT("subgraph ",STR($this), " [Restriction ≤ N R]\\n", ?mermaidDefinition, "\\nend\\n"),
                          CONCAT(STR($this),"((", ?classLabel, ")) -- equivalentTo --> ",STR($this),?mermaidDefinition_SHA256,"\\n","subgraph ",STR($this),?mermaidDefinition_SHA256, "[Restriction ≤ N R]\\n", ?mermaidDefinition, "\\nend\\n")) as ?mermaidLabel)
 }
 '''.
@@ -972,18 +975,18 @@ construct {
         owl:onProperty ?someProperty.
   
   # Establish the label and identifier for the inner OWL logic
-  BIND(IF(isBlank(?someProperty), str(?someProperty), function:getPrefixedIRI(?someProperty)) as ?mermaidLabelProperty)
-  BIND(IF(isBlank(?someProperty),CONCAT(?mermaidLabelProperty, "\\n"),CONCAT(str($this),str(?someProperty), "[",  ?mermaidLabelProperty,"]\\n"))  as ?mermaidProperty)
+  BIND(IF(function:isBlank(?someProperty), str(?someProperty), function:getPrefixedIRI(?someProperty)) as ?mermaidLabelProperty)
+  BIND(IF(function:isBlank(?someProperty),CONCAT(?mermaidLabelProperty, "\\n"),CONCAT(str($this),str(?someProperty), "[",  ?mermaidLabelProperty,"]\\n"))  as ?mermaidProperty)
   
   # Establish the inner OWL logic 
   BIND(CONCAT(STR($this),"thing((thing)) --> ", ?mermaidProperty, "\\n", ?mermaidProperty, " -- min --> ", str(?n)) as ?mermaidDefinition)
   
   # Establish label and identifier for the outer OWL logic  
-  BIND(IF(isBlank($this), ?unboundDummy, function:getPrefixedIRI($this)) as ?classLabel)
+  BIND(IF(function:isBlank($this), ?unboundDummy, function:getPrefixedIRI($this)) as ?classLabel)
   BIND(SHA256(?mermaidDefinition) as ?mermaidDefinition_SHA256)
   
   # Establish the outer OWL logic  
-  BIND(IF(isBlank($this),CONCAT("subgraph ",STR($this), " [Restriction ≥ N R]\\n", ?mermaidDefinition, "\\nend\\n"),
+  BIND(IF(function:isBlank($this),CONCAT("subgraph ",STR($this), " [Restriction ≥ N R]\\n", ?mermaidDefinition, "\\nend\\n"),
                          CONCAT(STR($this),"((", ?classLabel, ")) -- equivalentTo --> ",STR($this),?mermaidDefinition_SHA256,"\\n","subgraph ",STR($this),?mermaidDefinition_SHA256, "[Restriction ≥ N R]\\n", ?mermaidDefinition, "\\nend\\n")) as ?mermaidLabel)
 }
 '''.
@@ -1041,19 +1044,19 @@ construct {
 		owl:onClass ?someClass.
   
   # Establish the label and identifier for the inner OWL logic
-  BIND(IF(isBlank(?someProperty), str(?someProperty), function:getPrefixedIRI(?someProperty)) as ?mermaidLabelProperty)
-  BIND(IF(isBlank(?someClass), "Anonymous class", function:getPrefixedIRI(?someClass)) as ?qualifyingClassLabel)
-  BIND(IF(isBlank(?someProperty),CONCAT(?mermaidLabelProperty, "\\n"),CONCAT(str($this),str(?someProperty), "[",  ?mermaidLabelProperty,"]\\n"))  as ?mermaidProperty)
+  BIND(IF(function:isBlank(?someProperty), str(?someProperty), function:getPrefixedIRI(?someProperty)) as ?mermaidLabelProperty)
+  BIND(IF(function:isBlank(?someClass), "Anonymous class", function:getPrefixedIRI(?someClass)) as ?qualifyingClassLabel)
+  BIND(IF(function:isBlank(?someProperty),CONCAT(?mermaidLabelProperty, "\\n"),CONCAT(str($this),str(?someProperty), "[",  ?mermaidLabelProperty,"]\\n"))  as ?mermaidProperty)
 
   # Establish the inner OWL logic 
   BIND(CONCAT(STR($this),"thing((thing)) --> ", ?mermaidProperty, "\\n", ?mermaidProperty,  " -- exactly ", str(?n), " --> ", ?qualifyingClassLabel) as ?mermaidDefinition)
   
   # Establish label and identifier for the outer OWL logic    
-  BIND(IF(isBlank($this), ?unboundDummy, function:getPrefixedIRI($this)) as ?classLabel)
+  BIND(IF(function:isBlank($this), ?unboundDummy, function:getPrefixedIRI($this)) as ?classLabel)
   BIND(SHA256(?mermaidDefinition) as ?mermaidDefinition_SHA256)
   
   # Establish the outer OWL logic    
-  BIND(IF(isBlank($this),CONCAT("subgraph ",STR($this), " [Restriction = N R]\\n", ?mermaidDefinition, "\\nend\\n"),
+  BIND(IF(function:isBlank($this),CONCAT("subgraph ",STR($this), " [Restriction = N R]\\n", ?mermaidDefinition, "\\nend\\n"),
                          CONCAT(STR($this),"((", ?classLabel, ")) -- equivalentTo --> ",STR($this),?mermaidDefinition_SHA256,"\\n","subgraph ",STR($this),?mermaidDefinition_SHA256, "[Restriction = N R]\\n", ?mermaidDefinition, "\\nend\\n")) as ?mermaidLabel)
 }
 
@@ -1112,19 +1115,19 @@ construct {
 		owl:onClass ?someClass.
   
   # Establish the label and identifier for the inner OWL logic
-  BIND(IF(isBlank(?someProperty), str(?someProperty), function:getPrefixedIRI(?someProperty)) as ?mermaidLabelProperty)
-  BIND(IF(isBlank(?someClass), "Anonymous class", function:getPrefixedIRI(?someClass)) as ?qualifyingClassLabel)
-  BIND(IF(isBlank(?someProperty),CONCAT(?mermaidLabelProperty, "\\n"),CONCAT(str($this),str(?someProperty), "[",  ?mermaidLabelProperty,"]\\n"))  as ?mermaidProperty)
+  BIND(IF(function:isBlank(?someProperty), str(?someProperty), function:getPrefixedIRI(?someProperty)) as ?mermaidLabelProperty)
+  BIND(IF(function:isBlank(?someClass), "Anonymous class", function:getPrefixedIRI(?someClass)) as ?qualifyingClassLabel)
+  BIND(IF(function:isBlank(?someProperty),CONCAT(?mermaidLabelProperty, "\\n"),CONCAT(str($this),str(?someProperty), "[",  ?mermaidLabelProperty,"]\\n"))  as ?mermaidProperty)
 
   # Establish the inner OWL logic 
   BIND(CONCAT(STR($this),"thing((thing)) --> ", ?mermaidProperty, "\\n", ?mermaidProperty,  " -- max ", str(?n), " --> ", ?qualifyingClassLabel) as ?mermaidDefinition)
   
   # Establish label and identifier for the outer OWL logic    
-  BIND(IF(isBlank($this), ?unboundDummy, function:getPrefixedIRI($this)) as ?classLabel)
+  BIND(IF(function:isBlank($this), ?unboundDummy, function:getPrefixedIRI($this)) as ?classLabel)
   BIND(SHA256(?mermaidDefinition) as ?mermaidDefinition_SHA256)
 
   # Establish the outer OWL logic   
-  BIND(IF(isBlank($this),CONCAT("subgraph ",STR($this), " [Restriction ≤ N R]\\n", ?mermaidDefinition, "\\nend\\n"),
+  BIND(IF(function:isBlank($this),CONCAT("subgraph ",STR($this), " [Restriction ≤ N R]\\n", ?mermaidDefinition, "\\nend\\n"),
                          CONCAT(STR($this),"((", ?classLabel, ")) -- equivalentTo --> ",STR($this),?mermaidDefinition_SHA256,"\\n","subgraph ",STR($this),?mermaidDefinition_SHA256, "[Restriction ≤ N R]\\n", ?mermaidDefinition, "\\nend\\n")) as ?mermaidLabel)
 }
 '''.
@@ -1182,19 +1185,19 @@ construct {
 		owl:onClass ?someClass.
   
   # Establish the label and identifier for the inner OWL logic
-  BIND(IF(isBlank(?someProperty), str(?someProperty), function:getPrefixedIRI(?someProperty)) as ?mermaidLabelProperty)
-  BIND(IF(isBlank(?someClass), "Anonymous class", function:getPrefixedIRI(?someClass)) as ?qualifyingClassLabel)
-  BIND(IF(isBlank(?someProperty),CONCAT(?mermaidLabelProperty, "\\n"),CONCAT(str($this),str(?someProperty), "[",  ?mermaidLabelProperty,"]\\n"))  as ?mermaidProperty)
+  BIND(IF(function:isBlank(?someProperty), str(?someProperty), function:getPrefixedIRI(?someProperty)) as ?mermaidLabelProperty)
+  BIND(IF(function:isBlank(?someClass), "Anonymous class", function:getPrefixedIRI(?someClass)) as ?qualifyingClassLabel)
+  BIND(IF(function:isBlank(?someProperty),CONCAT(?mermaidLabelProperty, "\\n"),CONCAT(str($this),str(?someProperty), "[",  ?mermaidLabelProperty,"]\\n"))  as ?mermaidProperty)
 
   # Establish the inner OWL logic 
   BIND(CONCAT(STR($this),"thing((thing)) --> ", ?mermaidProperty, "\\n", ?mermaidProperty,  " -- min ", str(?n), " --> ", ?qualifyingClassLabel) as ?mermaidDefinition)
   
   # Establish label and identifier for the outer OWL logic    
-  BIND(IF(isBlank($this), ?unboundDummy, function:getPrefixedIRI($this)) as ?classLabel)
+  BIND(IF(function:isBlank($this), ?unboundDummy, function:getPrefixedIRI($this)) as ?classLabel)
   BIND(SHA256(?mermaidDefinition) as ?mermaidDefinition_SHA256)
   
   # Establish the outer OWL logic    
-  BIND(IF(isBlank($this),CONCAT("subgraph ",STR($this), " [Restriction = N R]\\n", ?mermaidDefinition, "\\nend\\n"),
+  BIND(IF(function:isBlank($this),CONCAT("subgraph ",STR($this), " [Restriction = N R]\\n", ?mermaidDefinition, "\\nend\\n"),
                          CONCAT(STR($this),"((", ?classLabel, ")) -- equivalentTo --> ",STR($this),?mermaidDefinition_SHA256,"\\n","subgraph ",STR($this),?mermaidDefinition_SHA256, "[Restriction = N R]\\n", ?mermaidDefinition, "\\nend\\n")) as ?mermaidLabel)
 }
 '''.
@@ -1247,8 +1250,8 @@ construct {
 } where {
   $this rdfs:subClassOf ?superClass.
     
-  BIND(IF(isBlank($this), "Anonymous class", function:getPrefixedIRI($this)) as ?classLabel)
-  BIND(IF(isBlank(?superClass), "Anonymous class", function:getPrefixedIRI(?superClass)) as ?superClassLabel)
+  BIND(IF(function:isBlank($this), "Anonymous class", function:getPrefixedIRI($this)) as ?classLabel)
+  BIND(IF(function:isBlank(?superClass), "Anonymous class", function:getPrefixedIRI(?superClass)) as ?superClassLabel)
   
   BIND(CONCAT(STR($this), "((",?classLabel,")) -- subClassOf --> ", str(?superClass), "((", ?superClassLabel, "))\\n") as ?mermaidLabel)
 
@@ -1316,8 +1319,8 @@ construct {
 } where {
   $this owl:equivalentClass ?superClass.
     
-  BIND(IF(isBlank($this), "Anonymous class", function:getPrefixedIRI($this)) as ?classLabel)
-  BIND(IF(isBlank(?superClass), "Anonymous class", function:getPrefixedIRI(?superClass)) as ?superClassLabel)
+  BIND(IF(function:isBlank($this), "Anonymous class", function:getPrefixedIRI($this)) as ?classLabel)
+  BIND(IF(function:isBlank(?superClass), "Anonymous class", function:getPrefixedIRI(?superClass)) as ?superClassLabel)
   
   BIND(CONCAT(STR($this), "((",?classLabel,")) -- equivalentTo --> ", str(?superClass), "((", ?superClassLabel, "))\\n") as ?mermaidLabel)
 
@@ -1378,14 +1381,14 @@ construct {
   {select (group_concat(str(?mermaidClass);separator=' -- or --- ') as ?mermaidDefinition) where {
            $this owl:unionOf/rdf:rest*/rdf:first ?someClass.
 		   
-          BIND(IF(isBlank(?someClass),STR(?someClass),CONCAT(STR($this), STR(?someClass),"((",function:getPrefixedIRI(?someClass), "))")) as ?mermaidClass)
+          BIND(IF(function:isBlank(?someClass),STR(?someClass),CONCAT(STR($this), STR(?someClass),"((",function:getPrefixedIRI(?someClass), "))")) as ?mermaidClass)
     }
   }
    
 
-  BIND(IF(isBlank($this),"Union &cup;",function:getPrefixedIRI($this)) as ?classLabel)
+  BIND(IF(function:isBlank($this),"Union &cup;",function:getPrefixedIRI($this)) as ?classLabel)
   BIND(SHA256(?mermaidDefinition) as ?mermaidDefinition_SHA256)
-  BIND(IF(isBlank($this),CONCAT("subgraph ",STR($this), "[Union C &cup; D]\\n", ?mermaidDefinition, "\\nend\\n"),
+  BIND(IF(function:isBlank($this),CONCAT("subgraph ",STR($this), "[Union C &cup; D]\\n", ?mermaidDefinition, "\\nend\\n"),
                          CONCAT(STR($this),"((", ?classLabel, ")) -- equivalentTo --> ",STR($this),?mermaidDefinition_SHA256,"\\n","subgraph ",STR($this),?mermaidDefinition_SHA256," [Union C &cap; D]\\n", ?mermaidDefinition, "\\nend\\n")) as ?mermaidLabel)
   
 }
@@ -1445,14 +1448,14 @@ construct {
   {select (group_concat(str(?mermaidClass);separator=' -- and --- ') as ?mermaidDefinition) where {
            $this owl:intersectionOf/rdf:rest*/rdf:first ?someClass.
 		   
-		  BIND(IF(isBlank(?someClass),STR(?someClass),CONCAT(STR($this), STR(?someClass),"((",function:getPrefixedIRI(?someClass), "))")) as ?mermaidClass)
+		  BIND(IF(function:isBlank(?someClass),STR(?someClass),CONCAT(STR($this), STR(?someClass),"((",function:getPrefixedIRI(?someClass), "))")) as ?mermaidClass)
 		  
     }		   
   }
   
-  BIND(IF(isBlank($this),"Intersection &cap;",function:getPrefixedIRI($this)) as ?classLabel)
+  BIND(IF(function:isBlank($this),"Intersection &cap;",function:getPrefixedIRI($this)) as ?classLabel)
   BIND(SHA256(?mermaidDefinition) as ?mermaidDefinition_SHA256)
-  BIND(IF(isBlank($this),CONCAT("subgraph ",STR($this), "[Intersection C &cap; D]\\n", ?mermaidDefinition, "\\nend\\n"),
+  BIND(IF(function:isBlank($this),CONCAT("subgraph ",STR($this), "[Intersection C &cap; D]\\n", ?mermaidDefinition, "\\nend\\n"),
                           CONCAT(STR($this),"((", ?classLabel, ")) -- equivalentTo --> ",STR($this),?mermaidDefinition_SHA256,"\\n","subgraph ",STR($this),?mermaidDefinition_SHA256," [Intersection C &cap; D]\\n", ?mermaidDefinition, "\\nend\\n")) as ?mermaidLabel)
   
 }
@@ -1518,9 +1521,9 @@ construct {
     }	   
   }
   
-  BIND(IF(isBlank($this),"Enumeration x &cap; y",function:getPrefixedIRI($this)) as ?classLabel)  
+  BIND(IF(function:isBlank($this),"Enumeration x &cap; y",function:getPrefixedIRI($this)) as ?classLabel)  
   BIND(SHA256(?mermaidDefinition) as ?mermaidDefinition_SHA256)
-  BIND(IF(isBlank($this),CONCAT("subgraph ",STR($this), "[Enumeration x &cap; y]\\n", ?mermaidDefinition, "\\nend\\n"),
+  BIND(IF(function:isBlank($this),CONCAT("subgraph ",STR($this), "[Enumeration x &cap; y]\\n", ?mermaidDefinition, "\\nend\\n"),
                          CONCAT(STR($this),"((", ?classLabel, ")) -- equivalentTo --> ",STR($this),?mermaidDefinition_SHA256,"\\n","subgraph ",STR($this),?mermaidDefinition_SHA256," [Enumeration x &cap; y]\\n", ?mermaidDefinition, "\\nend\\n")) as ?mermaidLabel)
 }
 '''.
@@ -1573,10 +1576,10 @@ construct {
 
   $this owl:complementOf ?someClass.
 		   
-  BIND(IF(isBlank(?someClass),STR(?someClass),CONCAT(STR($this), STR(?someClass),"((",function:getPrefixedIRI(?someClass), "))")) as ?mermaidDefinition)
-  BIND(IF(isBlank($this),"Negation &not; C",function:getPrefixedIRI($this)) as ?classLabel)
+  BIND(IF(function:isBlank(?someClass),STR(?someClass),CONCAT(STR($this), STR(?someClass),"((",function:getPrefixedIRI(?someClass), "))")) as ?mermaidDefinition)
+  BIND(IF(function:isBlank($this),"Negation &not; C",function:getPrefixedIRI($this)) as ?classLabel)
   BIND(SHA256(?mermaidDefinition) as ?mermaidDefinition_SHA256)
-  BIND(IF(isBlank($this),CONCAT("subgraph ",STR($this), "[Negation &not; C]\\n", ?mermaidDefinition, "\\nend\\n"),
+  BIND(IF(function:isBlank($this),CONCAT("subgraph ",STR($this), "[Negation &not; C]\\n", ?mermaidDefinition, "\\nend\\n"),
                          CONCAT(STR($this),"((", ?classLabel, ")) -- equivalentTo --> ",STR($this),?mermaidDefinition_SHA256,"\\n","subgraph ",STR($this),?mermaidDefinition_SHA256, " [Negation &not; C]\\n", ?mermaidDefinition, "\\nend\\n")) as ?mermaidLabel)
 }
 '''.
@@ -1632,21 +1635,21 @@ construct {
   {select (group_concat(str(?mermaidClass);separator='\\n') as ?mermaidDefinition) where {
            $this owl:members/rdf:rest*/rdf:first ?someClass.
 		   
-		  BIND(IF(isBlank(?someClass),STR(?someClass),CONCAT(STR($this), STR(?someClass),"((",function:getPrefixedIRI(?someClass), "))")) as ?mermaidClass)
+		  BIND(IF(function:isBlank(?someClass),STR(?someClass),CONCAT(STR($this), STR(?someClass),"((",function:getPrefixedIRI(?someClass), "))")) as ?mermaidClass)
 		  
     }		   
   }
   
-  BIND(IF(isBlank($this),"DisjointClasses",function:getPrefixedIRI($this)) as ?classLabel)
+  BIND(IF(function:isBlank($this),"DisjointClasses",function:getPrefixedIRI($this)) as ?classLabel)
   BIND(SHA256(?mermaidDefinition) as ?mermaidDefinition_SHA256)
-  BIND(IF(isBlank($this),CONCAT("subgraph ",STR($this), "[DisjointClasses]\\n", ?mermaidDefinition, "\\nend\\n"),
+  BIND(IF(function:isBlank($this),CONCAT("subgraph ",STR($this), "[DisjointClasses]\\n", ?mermaidDefinition, "\\nend\\n"),
                           CONCAT(STR($this),"((", ?classLabel, ")) -- equivalentTo --> ",STR($this),?mermaidDefinition_SHA256,"\\n","subgraph ",STR($this),?mermaidDefinition_SHA256," [Disjoint]\\n", ?mermaidDefinition, "\\nend\\n")) as ?mermaidLabel)  
 }
 '''.
 
 shp:Serializable_RDF_Property
     a sh:NodeShape;
-	sh:rule rule:Serialize_RDF_Property_overview;
+   	sh:rule rule:Serialize_RDF_Property;
     sh:target target:Serialize_RDF_Property;
     skos:prefLabel 'Serializable rdf:Property shape'@en.
 
@@ -1669,7 +1672,7 @@ select $this {
  }
   '''.
 
-rule:Serialize_RDF_Property_overview
+rule:Serialize_RDF_Property
     a sh:SPARQLRule;
     rdfs:comment 'A rule that creates a Mermaid diagram language label and definition for the rdfs:domain and rdfs:range of a rdf:Property.'@en;
     skos:prefLabel 'Mermaid diagram language serialisation rule for rdf:Property.'@en;
@@ -1689,6 +1692,7 @@ construct {
         
 } where {
 
+  BIND(function:getPrefixedIRI($this) as ?propertyLabel)
 
   # Domain
   OPTIONAL
@@ -1701,14 +1705,14 @@ construct {
   BIND(COALESCE(STR(?rangeClass), "rdfs:Resource") as ?mermaidRange)
     
   # Establish the label of the property to be serialized.
-  BIND(CONCAT(STR(?mermaidDomain)," -- ",function:getPrefixedIRI($this)," --> ", ?mermaidRange) as ?mermaidLabel)
+  BIND(CONCAT(STR(?mermaidDomain)," -- ",?propertyLabel," --> ", ?mermaidRange) as ?mermaidLabel)
 }    
 '''.
 
 shp:Serializable_datatypeProperty
     a sh:NodeShape;
-    #sh:rule rule:Serialize_datatypeProperty;
-	sh:rule rule:Serialize_datatypeProperty_overview;
+                                             
+	  sh:rule rule:Serialize_datatypeProperty;
     sh:target target:Serialize_datatypeProperty;
     skos:prefLabel 'Serializable owl:DatatypeProperty shape'@en.
 
@@ -1731,43 +1735,7 @@ select $this {
  }
   '''.
 
-  rule:Serialize_datatypeProperty
-    a sh:SPARQLRule;
-    rdfs:comment 'A rule that creates a Mermaid diagram language label and definition for the rdfs:domain of an owl:DatatypeProperty.'@en;
-    skos:prefLabel 'Mermaid diagram language serialisation rule for owl:DatatypeProperty.'@en;
-    sh:construct '''
-prefix function: <https://mermaid.org/ontomermaid/model/function/>
-prefix mermaid: <https://mermaid.org/ontomermaid/model/def/>
-prefix owl: <http://www.w3.org/2002/07/owl#>
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-
-construct {
-
-  # create the Mermaid diagram language for the OWL property to be serialized.
-  
-  $this mermaid:syntax 'DATATYPEPROPERTY';
-        mermaid:fragment ?mermaidLabel, ?mermaidDomain, ?mermaidRange.
-        
-} where {
-
-  # Label
-  {BIND(CONCAT(STR($this), ">",function:getPrefixedIRI($this),"]") as ?mermaidLabel)}
-  
-  # Domain
-  UNION
-  {$this rdfs:domain ?domainClass.
-  BIND(CONCAT(STR($this), " -- domain --> ", STR(?domainClass)) as ?mermaidDomain)}
-  
-  # Range 
-  UNION
-  {$this rdfs:range ?rangeDatatype.
-  BIND(CONCAT(STR($this), " -- range --> ", STR(?rangeDatatype)) as ?mermaidRange)}
-}  
-
-'''.
-
-rule:Serialize_datatypeProperty_overview
+rule:Serialize_datatypeProperty
     a sh:SPARQLRule;
     rdfs:comment 'A rule that creates a Mermaid diagram language label and definition for the rdfs:domain of an owl:DatatypeProperty.'@en;
     skos:prefLabel 'Mermaid diagram language serialisation rule for owl:DatatypeProperty.'@en;
@@ -1787,26 +1755,62 @@ construct {
         
 } where {
   
+         
+  BIND(function:getPrefixedIRI($this) as ?propertyLabel)
+  
+          
+       
+                                  
+                                                                                   
+  
+          
+       
+                                   
+                                                                                   
+   
+
+    
+
+                                        
+                    
+                                                                                                                                          
+                                                                                              
+                    
+                                                                  
+                                                            
+                                            
+                                                         
+                                                    
+
+           
+
+                                                                              
+  
+                                          
+                                       
+  
+         
+  
   # Domain
   OPTIONAL
-  {$this rdfs:domain ?domainClass.
+   {$this rdfs:domain ?domainClass.}
   BIND(COALESCE(STR(?domainClass), "rdfs:Resource") as ?mermaidDomain)
-  }
+   
   
   # Range 
   OPTIONAL
-  {$this rdfs:range ?rangeDatatype.
-  BIND(COALESCE(STR(?rangeDatatype), "rdfs:Resource") as ?mermaidRange)}
+   {$this rdfs:range ?rangeDatatype.}
+  BIND(COALESCE(STR(?rangeDatatype), "rdfs:Resource") as ?mermaidRange)  
      
   # Establish the label of the property to be serialized.
-  BIND(CONCAT(STR(?mermaidDomain)," -- ",function:getPrefixedIRI($this)," --> ", ?mermaidRange,":::Datatype") as ?mermaidLabel)
+  BIND(CONCAT(STR(?mermaidDomain)," -- ",?propertyLabel," --> ", ?mermaidRange,":::Datatype") as ?mermaidLabel)
 }  
 '''.
 
 shp:Serializable_objectProperty
     a sh:NodeShape;
-    #sh:rule rule:Serialize_objectProperty;
-	sh:rule rule:Serialize_objectProperty_overview;
+                                           
+	  sh:rule rule:Serialize_objectProperty;
     sh:target target:Serialize_objectProperty;
     skos:prefLabel 'Serializable owl:ObjectProperty shape'@en.
 
@@ -1824,9 +1828,9 @@ select $this {
   
   $this rdf:type owl:ObjectProperty.
   filter not exists {
-  $this mermaid:syntax 'OBJECTPROPERTY'}
-  
- }
+    $this mermaid:syntax 'OBJECTPROPERTY'
+  }
+}
   '''.
 
 
@@ -1846,60 +1850,61 @@ construct {
   # create the Mermaid diagram language for the OWL property to be serialized.
   
   $this mermaid:syntax 'OBJECTPROPERTY';
-        mermaid:fragment ?mermaidLabel,?mermaidDomain, ?mermaidRange.
+                                                                     
         
-} where {
+         
 
 
-  # Label
-  {BIND(CONCAT(STR($this), ">",function:getPrefixedIRI($this),"]") as ?mermaidLabel)}
+         
+                                                                                     
   
-  # Domain
-  UNION
-  {$this rdfs:domain ?domainClass.
-  BIND(CONCAT(STR($this), " -- domain --> ", STR(?domainClass)) as ?mermaidDomain)}
+          
+       
+                                  
+                                                                                   
   
-  # Range 
-  UNION
-  {$this rdfs:range ?rangeClass.
-  BIND(CONCAT(STR($this), " -- range --> ", STR(?rangeClass)) as ?mermaidRange)}
-}   
-'''.
+          
+       
+                                
+                                                                                
+    
+    
 
-  rule:Serialize_objectProperty_overview
-    a sh:SPARQLRule;
-    rdfs:comment 'A rule that creates a Mermaid diagram language label and definition for the rdfs:domain and rdfs:range of an owl:ObjectProperty.'@en;
-    skos:prefLabel 'Mermaid diagram language serialisation rule for owl:ObjectProperty.'@en;
-    sh:construct '''
-prefix function: <https://mermaid.org/ontomermaid/model/function/>
-prefix mermaid: <https://mermaid.org/ontomermaid/model/def/>
-prefix owl: <http://www.w3.org/2002/07/owl#>
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                                        
+                    
+                                                                                                                                                       
+                                                                                            
+                    
+                                                                  
+                                                            
+                                            
+                                                         
+                                                    
 
-construct {
+           
 
-  # create the Mermaid diagram language for the OWL property to be serialized.
+                                                                              
   
-  $this mermaid:syntax 'OBJECTPROPERTY';
+                                        
         mermaid:fragment ?mermaidLabel.
         
 } where {
 
-
+  BIND(function:getPrefixedIRI($this) as ?propertyLabel)
+  
   # Domain
   OPTIONAL
-  {$this rdfs:domain ?domainClass.
+   {$this rdfs:domain ?domainClass.}
   BIND(COALESCE(STR(?domainClass), "rdfs:Resource") as ?mermaidDomain)
-  }
-  
+   
+
   # Range 
   OPTIONAL
-  {$this rdfs:range ?rangeClass.
-  BIND(COALESCE(STR(?rangeClass), "rdfs:Resource") as ?mermaidRange)}
-    
+   {$this rdfs:range ?rangeClass.}
+  BIND(COALESCE(STR(?rangeClass), "rdfs:Resource") as ?mermaidRange)
+  
   # Establish the label of the property to be serialized.
-  BIND(CONCAT(STR(?mermaidDomain)," -- ",function:getPrefixedIRI($this)," --> ", ?mermaidRange) as ?mermaidLabel)
+  BIND(CONCAT(STR(?mermaidDomain)," -- ",?propertyLabel," --> ", ?mermaidRange) as ?mermaidLabel)
 }    
 '''.
 
@@ -2017,17 +2022,19 @@ shp:Serializable_inverseOf
   target:Serialize_inverseOf
     a sh:SPARQLTarget;
     sh:select '''
+prefix function:   <https://mermaid.org/ontomermaid/model/function/>
 prefix mermaid: <https://mermaid.org/ontomermaid/model/def/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
 
 select $this {
 
   # An anonymous inverseOf relation.
 
   $this owl:inverseOf ?someProperty.
-  filter(isBlank($this))
+  filter(function:isBlank($this))
   filter not exists {
     $this mermaid:syntax "INVERSE".
     }
@@ -2057,7 +2064,7 @@ construct {
   $this owl:inverseOf ?someProperty.
   
   
-  BIND(IF(isBlank(?someProperty), str(?someProperty), function:getPrefixedIRI(?someProperty)) as ?mermaidLabelProperty)
+  BIND(IF(function:isBlank(?someProperty), str(?someProperty), function:getPrefixedIRI(?someProperty)) as ?mermaidLabelProperty)
   BIND(CONCAT("subgraph ", STR($this), "[inverseOf]", "\\n",STR($this), ?mermaidLabelProperty,"[",?mermaidLabelProperty, "]\\nend\\n") as ?mermaidLabel)
    
 }  
@@ -2126,7 +2133,7 @@ construct {
 } where {
   $this rdf:type rdfs:Datatype.
     
-  BIND(IF(isBlank($this),STR($this),CONCAT(STR($this),"[",function:getPrefixedIRI($this), "]:::Datatype")) as ?mermaidLabel)
+  BIND(IF(function:isBlank($this),STR($this),CONCAT(STR($this),"[",function:getPrefixedIRI($this), "]:::Datatype")) as ?mermaidLabel)
 
 } '''.
 
@@ -2180,14 +2187,14 @@ construct {
   {select (group_concat(str(?mermaidDatatype);separator=' -- or --- ') as ?mermaidDefinition) where {
            $this owl:unionOf/rdf:rest*/rdf:first ?someDatatype.
 		   
-		  BIND(IF(isBlank(?someDatatype),STR(?someDatatype),CONCAT(STR($this), STR(?someDatatype),"((",function:getPrefixedIRI(?someDatatype), "))", ":::Datatype")) as ?mermaidDatatype)
+		  BIND(IF(function:isBlank(?someDatatype),STR(?someDatatype),CONCAT(STR($this), STR(?someDatatype),"((",function:getPrefixedIRI(?someDatatype), "))", ":::Datatype")) as ?mermaidDatatype)
     }
   }
    
 
-  BIND(IF(isBlank($this),"Union &cup;",function:getPrefixedIRI($this)) as ?datatypeLabel)
+  BIND(IF(function:isBlank($this),"Union &cup;",function:getPrefixedIRI($this)) as ?datatypeLabel)
   BIND(SHA256(?mermaidDefinition) as ?mermaidDefinition_SHA256)
-  BIND(IF(isBlank($this),CONCAT("subgraph ",STR($this), "[Union C &cup; D]\\n","style ", str($this), " fill:#d8f1b3,stroke:#9c6\\n", ?mermaidDefinition, "\\nend\\n"),
+  BIND(IF(function:isBlank($this),CONCAT("subgraph ",STR($this), "[Union C &cup; D]\\n","style ", str($this), " fill:#d8f1b3,stroke:#9c6\\n", ?mermaidDefinition, "\\nend\\n"),
                          CONCAT(STR($this),"[", ?datatypeLabel, "] -- equivalentTo --> ",STR($this),?mermaidDefinition_SHA256,"\\n","subgraph ",STR($this),?mermaidDefinition_SHA256," [Union C &cap; D]\\n", ?mermaidDefinition,"\\n style ", str($this), " fill:#d8f1b3,stroke:#9c6\\nend\\n")) as ?mermaidLabel)
   
 }
@@ -2243,14 +2250,14 @@ construct {
   {select (group_concat(str(?mermaidDatatype);separator=' -- and --- ') as ?mermaidDefinition) where {
            $this owl:intersectionOf/rdf:rest*/rdf:first ?someDatatype.
 		   
-		  BIND(IF(isBlank(?someDatatype),STR(?someDatatype),CONCAT(STR($this), STR(?someDatatype),"((",function:getPrefixedIRI(?someDatatype), "))", ":::Datatype")) as ?mermaidDatatype)
+		  BIND(IF(function:isBlank(?someDatatype),STR(?someDatatype),CONCAT(STR($this), STR(?someDatatype),"((",function:getPrefixedIRI(?someDatatype), "))", ":::Datatype")) as ?mermaidDatatype)
 		  
     }		   
   }
   
-  BIND(IF(isBlank($this),"Intersection &cap;",function:getPrefixedIRI($this)) as ?datatypeLabel)
+  BIND(IF(function:isBlank($this),"Intersection &cap;",function:getPrefixedIRI($this)) as ?datatypeLabel)
   BIND(SHA256(?mermaidDefinition) as ?mermaidDefinition_SHA256)
-  BIND(IF(isBlank($this),CONCAT("subgraph ",STR($this), "[Intersection C &cap; D]\\n","style ", str($this), " fill:#d8f1b3,stroke:#9c6\\n", ?mermaidDefinition, "\\nend\\n"),
+  BIND(IF(function:isBlank($this),CONCAT("subgraph ",STR($this), "[Intersection C &cap; D]\\n","style ", str($this), " fill:#d8f1b3,stroke:#9c6\\n", ?mermaidDefinition, "\\nend\\n"),
                           CONCAT(STR($this),"((", ?datatypeLabel, ")) -- equivalentTo --> ",STR($this),?mermaidDefinition_SHA256,"\\n","subgraph ",STR($this),?mermaidDefinition_SHA256," [Intersection C &cap; D]\\n", ?mermaidDefinition, "\\n style ", str($this), " fill:#d8f1b3,stroke:#9c6\\nend\\n")) as ?mermaidLabel)
   
 }
@@ -2312,9 +2319,9 @@ construct {
     }	   
   }
   
-  BIND(IF(isBlank($this),"Enumeration x &cap; y",function:getPrefixedIRI($this)) as ?datatypeLabel)  
+  BIND(IF(function:isBlank($this),"Enumeration x &cap; y",function:getPrefixedIRI($this)) as ?datatypeLabel)  
   BIND(SHA256(?mermaidDefinition) as ?mermaidDefinition_SHA256)
-  BIND(IF(isBlank($this),CONCAT("subgraph ",STR($this), "[Enumeration x &cap; y]\\n","style ", str($this), " fill:#d8f1b3,stroke:#9c6\\n", ?mermaidDefinition, "\\nend\\n"),
+  BIND(IF(function:isBlank($this),CONCAT("subgraph ",STR($this), "[Enumeration x &cap; y]\\n","style ", str($this), " fill:#d8f1b3,stroke:#9c6\\n", ?mermaidDefinition, "\\nend\\n"),
                          CONCAT(STR($this),"((", ?datatypeLabel, ")) -- equivalentTo --> ",STR($this),?mermaidDefinition_SHA256,"\\n","subgraph ",STR($this),?mermaidDefinition_SHA256," [Enumeration x &cap; y]\\n", ?mermaidDefinition, "\\n style ", str($this), " fill:#d8f1b3,stroke:#9c6\\nend\\n")) as ?mermaidLabel)
 }
 '''.
@@ -2367,10 +2374,10 @@ construct {
 
   $this owl:datatypeComplementOf ?someDatatype.
 		   
-  BIND(IF(isBlank(?someDatatype),STR(?someDatatype),CONCAT(STR($this), STR(?someDatatype),"((",function:getPrefixedIRI(?someDatatype), ")):::Datatype")) as ?mermaidDefinition)
-  BIND(IF(isBlank($this),"Negation &not; C",function:getPrefixedIRI($this)) as ?datatypeLabel)
+  BIND(IF(function:isBlank(?someDatatype),STR(?someDatatype),CONCAT(STR($this), STR(?someDatatype),"((",function:getPrefixedIRI(?someDatatype), ")):::Datatype")) as ?mermaidDefinition)
+  BIND(IF(function:isBlank($this),"Negation &not; C",function:getPrefixedIRI($this)) as ?datatypeLabel)
   BIND(SHA256(?mermaidDefinition) as ?mermaidDefinition_SHA256)
-  BIND(IF(isBlank($this),CONCAT("subgraph ",STR($this), "[Negation &not; C]\\n","style ", str($this), " fill:#d8f1b3,stroke:#9c6\\n", ?mermaidDefinition, "\\nend\\n"),
+  BIND(IF(function:isBlank($this),CONCAT("subgraph ",STR($this), "[Negation &not; C]\\n","style ", str($this), " fill:#d8f1b3,stroke:#9c6\\n", ?mermaidDefinition, "\\nend\\n"),
                          CONCAT(STR($this),"((", ?datatypeLabel, ")) -- equivalentTo --> ",STR($this),?mermaidDefinition_SHA256,"\\n","subgraph ",STR($this),?mermaidDefinition_SHA256, " [Negation &not; C]\\n", ?mermaidDefinition, "\\n style ", str($this), " fill:#d8f1b3,stroke:#9c6\\nend\\n")) as ?mermaidLabel)
 }
 '''.
@@ -2456,11 +2463,11 @@ construct {
   }
   
   # Establish the label & identifier for the outer OWL logic
-  BIND(IF(isBlank($this), ?unboundDummy, function:getPrefixedIRI($this)) as ?datatypeLabel)
+  BIND(IF(function:isBlank($this), ?unboundDummy, function:getPrefixedIRI($this)) as ?datatypeLabel)
   BIND(SHA256(?mermaidDefinition) as ?mermaidDefinition_SHA256)
   
   # Establish the outer OWL logic
-  BIND(IF(isBlank($this),CONCAT("subgraph ",STR($this), " [Datatype Restriction]\\n","style ", str($this), " fill:#d8f1b3,stroke:#9c6\\n", ?mermaidDefinition, "\\nend\\n"),
+  BIND(IF(function:isBlank($this),CONCAT("subgraph ",STR($this), " [Datatype Restriction]\\n","style ", str($this), " fill:#d8f1b3,stroke:#9c6\\n", ?mermaidDefinition, "\\nend\\n"),
                          CONCAT(STR($this),"((", ?datatypeLabel, ")) -- equivalentTo --> ",STR($this),?mermaidDefinition_SHA256,"\\n","subgraph ",STR($this),?mermaidDefinition_SHA256, "[Restriction ≥ N R]\\n", ?mermaidDefinition, "\\n style ", str($this), " fill:#d8f1b3,stroke:#9c6\\nend\\n")) as ?mermaidLabel)
 }
 '''.
@@ -2577,7 +2584,7 @@ SELECT ?result WHERE {
     filter(strstarts(?fullIRI, str(?namespace))) # e.g. "http://example.org/"
   }
 
-  # Establish possible namespaces through the Manchester Syntax ontology (generic ontologies like OWL, RDF, et cetera)
+  # Establish possible namespaces through the Mermaid ontology (generic ontologies like OWL, RDF, et cetera)
   optional 
     {
     mermaid: sh:declare ?namespaceDeclaration.
@@ -2597,3 +2604,46 @@ SELECT ?result WHERE {
   bind(coalesce(?prefixedIRI, ?fullIRI) as ?result)
 }
 """ .
+
+parameter:IRILike
+    a sh:Parameter;
+    sh:or list:IRILike;
+    sh:order 1;
+    sh:path parameter:IRI.
+      
+list:IRILike rdf:type rdf:List;
+             rdf:first  [sh:class rdfs:Resource];
+             rdf:rest list:URILike.
+
+list:URILike rdf:type rdf:List;
+             rdf:first [sh:datatype xsd:anyuri];
+             rdf:rest  [rdf:first [sh:datatype xsd:string];
+                        rdf:rest rdf:nil].
+
+function:isBlank
+    a sh:SPARQLFunction ;
+    
+    rdfs:comment "Returns a boolean indicating whether an IRI is a blank node or not. Normally this could be done using the SPARQL function:isBlank() function. However, some triple stores use the 'well-known IRI' concept and then that function does not work well, despite such an IRI originating from a blank node." ;
+   
+    sh:parameter [
+        sh:path parameter:IRILike ;
+        sh:datatype xsd:anyURI ;
+        sh:description "An IRI-like pattern." ;
+    ] ;
+    sh:returnType xsd:boolean ;
+    sh:select """
+
+select $result
+
+{
+# Pseudo-logic:
+# If the resource is a blank node, return true;
+# Else if it is not a blank node, but a well-known IRI then return true;
+# Else return false as the resource must be a real IRI.
+
+bind(if(isBlank($IRILike), true, contains(str($IRILike), '/.well-known/genid/')) as $result)
+}
+
+""" .
+
+}
