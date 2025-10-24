@@ -146,7 +146,7 @@ mermaid: {
     skos:prefLabel "Mermaid diagram"@en;
     skos:definition "An HTML document containing a Mermaid diagram"@en.
 
- target:Diagram
+  target:Diagram
     a sh:SPARQLTarget;
     sh:select '''
 prefix dct:     <http://purl.org/dc/terms/>
@@ -292,18 +292,13 @@ CONSTRUCT {
          
 } WHERE {
 
-{SELECT ?concept ?diagramName (GROUP_CONCAT(?label; separator="\\n") AS ?mermaid_code)
+{SELECT (GROUP_CONCAT(?label; separator="\\n") AS ?mermaid_code)
 WHERE {
-  ?element mermaid:fragment ?label.
-  ?concept dct:subject ?element;
-           rdf:type skos:Concept;
-           skos:prefLabel ?diagramName;
-           skos:inScheme ?scheme.
-  ?scheme  dct:subject ?ontology.
-  $this    dct:subject ?ontology.
-  
-  } group by ?concept ?diagramName
-ORDER BY ?concept ?diagramName ?mermaid_code}
+  ?element mermaid:fragment ?label;
+           rdfs:isDefinedBy ?ontology.
+  $this    dct:subject ?ontology
+  }
+}
 
 BIND("""
             <!DOCTYPE html>
@@ -338,7 +333,7 @@ BIND("""
                    
 """ as ?diagram_end)
 
-BIND(IRI(CONCAT(str($this),'-', str(?concept) ,'-diagram')) as ?diagram)
+BIND(IRI(CONCAT(str($this),'-diagram')) as ?diagram)
 BIND(CONCAT(?diagram_start, ?mermaid_code, ?diagram_end) as ?diagramFragment)
 }
 ''';

@@ -1,43 +1,21 @@
-<!DOCTYPE html><html lang="en"><head><meta charset=utf-8><title>Hello World! Ontology</title><style> 
-
-    .term-table {
-            border-collapse: collapse;
-            border-color: #000000;
-            margin: 16px;
-
-    .term-table td,
-        th {
-            border-width: 1px;
-            border-style: solid;
-            padding: 5px;
-        }
-    }
-        
-    .container {
-        display: flex;
-    }
-
-    .label {
-        flex: 0 0 100px; /* Adjust the width as needed */
-    }
-    
-    </style><script class=remove defer src="https://www.w3.org/Tools/respec/respec-w3c"></script><script class=remove>   
+<!DOCTYPE html><html lang="en"><head><meta charset=utf-8><title>Hello World! Ontology</title><script class=remove defer src="https://www.w3.org/Tools/respec/respec-w3c"></script><script class=remove>   
       var respecConfig = {
-        specStatus: "ED",
-        latestVersion: "Not available",
-        editors: [ {name: "Flores Bakker"}, ],
+        
+        
+        editors: [{name: "Flores Bakker"},],
         github: "https://github.com/floresbakker/OntoReSpec",
-        shortName: "a shortName",
-        xref: "web-platform",
-        group: "https://example.org/",
+        
+        
+        maxTocLevel: 2,
+        
       };
       // All config options at https://respec.org/docs/ 
-    </script></head><body><section id=abstract><p>An abstract of a Hello World! ontology.</section><section id=sotd><p></section><section class=informative><h2>Introduction</h2>This specification document does not describe an introduction to the ontology.<section><h2>Background</h2>This specification document does not describe the background of the ontology.</section><section><h2>Objective</h2>This specification document does not define the objective of the ontology.</section><section><h2>Audience</h2>This specification document does not describe the intended audience of the ontology.</section></section><section><h2>Overview</h2><p>A description of a Hello World! ontology.<aside class="example"><p><pre>
+    </script></head><body><section id=abstract><p>An abstract of a Hello World! ontology.</section><section id=sotd><p></section><section class=informative style="white-space: pre-wrap;"><h2>Introduction</h2>This specification document does not describe an introduction to the ontology.<section><h2>Background</h2>This specification document does not describe the background of the ontology.</section><section><h2>Objective</h2>This specification document does not define the objective of the ontology.</section><section><h2>Audience</h2>This specification document does not describe the intended audience of the ontology.</section><section><h2>Related work</h2>This specification document does not describe the related work for the ontology.</section></section><section><h2>Overview</h2><h2 class=informative>Description</h2><p style="white-space: pre-wrap;"><div><p style="white-space: pre-wrap;">A description of a Hello World! ontology.</div></p><h2 class=informative>Full example</h2><aside class="example"><p><pre>
 An 'hello world' example :)
 
 	
-</pre></p></aside><h2 class=informative>Datamodel</h2><p>A visualisation of the ontology<iframe src=diagram.html style="width: 900px; height: 400px; resize: both; overflow: auto;"></iframe><h2 class=informative>Namespace</h2><table class=def><caption>Prefixes and namespaces used in this specification</caption><tr><td>Prefix<td>Namespace<tr><td>helloworld<td>https://example.org/helloworld/model/def/</table><h2 class=informative>Serialisation</h2><p>A serialisation of the ontology in Turtle-format (*.ttl) can be found <a href=ontology.ttl>here</a>.<section><h2>Current issues</h2><p class=issue> Issue can automatically be populated from GitHub </section></section><section><h2>Definition</h2></section><section id=conformance><p>
+</pre></p></aside><h2 class=informative>Visualisation</h2><p>A visualisation of the ontology<iframe src=diagram.html style="width: 900px; height: 400px; resize: both; overflow: auto;"></iframe><h2 class=informative>Namespace</h2><table class=def><caption>Prefixes and namespaces used in this specification</caption><tr><th>Prefix<th>Namespace</table><h2 class=informative>Serialisation</h2><p>A serialisation of the ontology in Turtle-format (*.ttl) can be found <a href=ontology.ttl>here</a>.<section><h2>Current issues</h2><p class=issue> Issue can automatically be populated from GitHub </section></section><section><h2>Definition</h2><section><h2>Concepts<dfn class=lint-ignore style="display: none;">Concepts</dfn></h2><p><p><p><p><section><h2><dfn>[=Concepts/helloworld:Scheme=]</dfn></h2><p class=container><strong class=label>Label: </strong>Hello world scheme<div class=container><strong class=label>IRI: </strong><a href="https://example.org/helloworld/model/def/Scheme">https://example.org/helloworld/model/def/Scheme</a></div><br>Definition of a hello world! concept scheme.<br><br><aside class=note title="Manchester Syntax (Extended)"><code><table><tr><td>Concept scheme:<td>[=Concepts/helloworld:Scheme=]<tr><td>Concepts:<td>[=Concepts/helloworld:Concept=]</table></code></aside></section></p></p><p><section><h2><dfn>[=Concepts/helloworld:Concept=]</dfn></h2><p class=container><strong class=label>Label: </strong>Hello world concept<div class=container><strong class=label>IRI: </strong><a href="https://example.org/helloworld/model/def/Concept">https://example.org/helloworld/model/def/Concept</a></div><br>Definition of a hello world! concept.<br><br><aside class=note title="Manchester Syntax (Extended)"><code><table><tr><td>Concept:<td>[=Concepts/helloworld:Concept=]<tr><td><td><tr><td>In scheme:<td>[=Concepts/helloworld:Scheme=]</table></code></aside></section></p></p></p></section><section><h2>Classes<dfn class=lint-ignore style="display: none;">Classes</dfn></h2><p><section><h2><dfn>helloworld:HelloWorld</dfn></h2><div class=container><strong class=label>Label: </strong>Hello World</div><div class=container><strong class=label>IRI: </strong><a href="https://example.org/helloworld/model/def/HelloWorld">https://example.org/helloworld/model/def/HelloWorld</a></div><br>Definition of a hello world! message.<br><br><aside class=note title="Manchester Syntax (Extended)"><code><table><tr><td>Class:<td>[=Classes/helloworld:HelloWorld=]<tr><td><td><tbody><tr><td>SeeAlso:<td>[=Concepts/helloworld:Concept=]</table></code></aside></section><section><h2><dfn>helloworld:LinkedDataEnthusiast</dfn></h2><div class=container><strong class=label>Label: </strong>Linked Data enthusiast</div><div class=container><strong class=label>IRI: </strong><a href="https://example.org/helloworld/model/def/LinkedDataEnthusiast">https://example.org/helloworld/model/def/LinkedDataEnthusiast</a></div><br>Definition of an Linked Data Enthusiast.<br><br><aside class=note title="Manchester Syntax (Extended)"><code><table><tr><td>Class:<td>[=Classes/helloworld:LinkedDataEnthusiast=]<tr><td><td></table></code></aside></section></p></section><section><h2>Object Properties<dfn class=lint-ignore style="display: none;">Object Properties</dfn></h2><p><section><h2><dfn>[=Object Properties/helloworld:message=]</dfn></h2><div class=container><strong class=label>Label: </strong>message</div><div class=container><strong class=label>IRI: </strong><a href="https://example.org/helloworld/model/def/message">https://example.org/helloworld/model/def/message</a></div><br>Definition of a message object property.<br><br><aside class=note title="Manchester Syntax (Extended)"><code><table><tr><td>ObjectProperty:<td>[=Object Properties/helloworld:message=]<tr><td><td><tr><td>Domain:<td>[=Classes/helloworld:LinkedDataEnthusiast=]<tr><td>Range:<td>[=Classes/helloworld:HelloWorld=]</table></code></aside></section></p></section><section><h2>Datatype Properties<dfn class=lint-ignore style="display: none;">Datatype Properties</dfn></h2>This ontology does not define any datatype properties.</section><section><h2>RDF Properties<dfn class=lint-ignore style="display: none;">RDF Properties</dfn></h2>This ontology does not define any RDF properties.</section><section><h2>Node Shapes</h2>This ontology does not define any nodeshapes.</section><section><h2>Named Individuals<dfn class=lint-ignore style="display: none;">Named Individuals</dfn></h2><p><p><section><h2><dfn>[=Named Individuals/helloworld:FloresIndividual=]</dfn></h2><p class=container><strong class=label>Label: </strong>Floress<div class=container><strong class=label>IRI: </strong><a href="https://example.org/helloworld/model/def/FloresIndividual">https://example.org/helloworld/model/def/FloresIndividual</a></div><br>Flores Bakker - an individual<br><br><aside class=note title="Manchester Syntax (Extended)"><code><table><tr><td>Named individual:<td>[=Named Individuals/helloworld:FloresIndividual=]<tr><td><td><tr><td>Types:<td>[=Classes/helloworld:LinkedDataEnthusiast=]</table></code></aside></section></p></p></section></section><section id=conformance><p>
         This is required for specifications that contain normative material.
       </section><section class=appendix id=index><p>
         This is required for specifications that contain normative material.
-      </section></body></html>
+      </section><p style="text-align: center; font-style: italic;">This document was automatically generated by OntoReSpec.</body></html>

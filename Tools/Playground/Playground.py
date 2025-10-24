@@ -1,16 +1,16 @@
 from flask import Flask, request, render_template, url_for
-from rdflib import Graph, Namespace, Literal, RDF, URIRef, XSD
+from rdflib import Graph, Namespace, Literal, RDF, URIRef, XSD, Dataset
 import pyshacl
 import datetime
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='tools/playground/templates', static_folder='tools/playground/static')
 
 # Get the current working directory in which the Playground.py file is located.
 current_dir = os.getcwd()
 
 # Set the path to the desired standard directory. 
-directory_path = os.path.abspath(os.path.join(current_dir, '..', '..', '..'))
+directory_path = os.path.abspath(os.path.join(current_dir))
 
 # namespace declaration
 rdf        = Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
@@ -19,7 +19,7 @@ dct        = Namespace("http://purl.org/dc/terms/")
 respec     = Namespace('https://respec.org/ontorespec/model/def/')
 template   = Namespace('https://respec.org/ontorespec/id/')
 html       = Namespace("https://www.w3.org/html/model/def/")
-mermaid    = Namespace("https://data.rijksfinancien.nl/mermaid/model/def/")
+mermaid    = Namespace("https://mermaid.org/ontomermaid/model/def/")
 manchester = Namespace("https://data.rijksfinancien.nl/manchester/model/def/")
 
 # Function to read a graph (as a string) from a file 
@@ -33,23 +33,23 @@ def readStringFromFile(file_path):
 
 # Function to write a graph to a file
 def writeGraph(graph, name):
-    graph.serialize(destination=directory_path + "/OntoReSpec/Tools/Playground/static/" + name + ".ttl", format="turtle")
+    graph.serialize(destination=directory_path + "/tools/playground/static/" + name + ".trig", format="trig")
 
 
 # Get the ReSpec vocabulary and place it in a string
-respec_vocabulary     = readStringFromFile(directory_path + "/OntoReSpec/Specification/OntoRespec.ttl")
-template_graph        = readStringFromFile(directory_path + "/OntoReSpec/Specification/ReSpecTemplate.ttl" )
-html_serialisation    = readStringFromFile(directory_path + "/OntoReSpec/Specification/html - core.ttl")
-html_vocabulary       = readStringFromFile(directory_path + "/OntoReSpec/Specification/html - core.ttl")
-dom_vocabulary        = readStringFromFile(directory_path + "/OntoReSpec/Specification/dom - core.ttl")
-manchester_vocabulary = readStringFromFile(directory_path + "/OntoReSpec/Specification/manchestersyntax.ttl")
-mermaid_vocabulary    = readStringFromFile(directory_path + "/OntoReSpec/Specification/mermaid.ttl")
-manchester_query      = readStringFromFile(directory_path + "/OntoReSpec/Tools/Playground/static/manchesterQuery.rq")
-mermaid_status_query  = readStringFromFile(directory_path + "/OntoReSpec/Tools/Playground/static/mermaidStatusQuery.rq")
-mermaid_result_query  = readStringFromFile(directory_path + "/OntoReSpec/Tools/Playground/static/mermaidResultQuery.rq")
-html_status_query     = readStringFromFile(directory_path + "/OntoReSpec/Tools/Playground/static/htmlStatusQuery.rq")
-html_result_query     = readStringFromFile(directory_path + "/OntoReSpec/Tools/Playground/static/htmlResultQuery.rq")
-ontology_query        = readStringFromFile(directory_path + "/OntoReSpec/Tools/Playground/static/ontologyQuery.rq")
+respec_vocabulary     = readStringFromFile(directory_path + "/specification/ontorespec.trig")
+template_graph        = readStringFromFile(directory_path + "/specification/ontorespectemplate.trig" )
+html_serialisation    = readStringFromFile(directory_path + "/specification/html - core.trig")
+html_vocabulary       = readStringFromFile(directory_path + "/specification/html - core.trig")
+dom_vocabulary        = readStringFromFile(directory_path + "/specification/dom - core.trig")
+manchester_vocabulary = readStringFromFile(directory_path + "/specification/manchestersyntax.trig")
+mermaid_vocabulary    = readStringFromFile(directory_path + "/specification/mermaid.trig")
+manchester_query      = readStringFromFile(directory_path + "/tools/playground/static/manchesterQuery.rq")
+mermaid_status_query  = readStringFromFile(directory_path + "/tools/playground/static/mermaidStatusQuery.rq")
+mermaid_result_query  = readStringFromFile(directory_path + "/tools/playground/static/mermaidResultQuery.rq")
+html_status_query     = readStringFromFile(directory_path + "/tools/playground/static/htmlStatusQuery.rq")
+html_result_query     = readStringFromFile(directory_path + "/tools/playground/static/htmlResultQuery.rq")
+ontology_query        = readStringFromFile(directory_path + "/tools/playground/static/ontologyQuery.rq")
 
 
 def generateManchester(manchester_generator, serializable_graph):
@@ -58,8 +58,8 @@ def generateManchester(manchester_generator, serializable_graph):
         pyshacl.validate(
         data_graph=serializable_graph,
         shacl_graph=manchester_generator,
-        data_graph_format="turtle",
-        shacl_graph_format="turtle",
+        data_graph_format="trig",
+        shacl_graph_format="trig",
         advanced=True,
         inplace=True,
         inference=None,
@@ -84,8 +84,8 @@ def generateReSpecRDF(shaclgraph, serializable_graph):
         pyshacl.validate(
         data_graph=serializable_graph,
         shacl_graph=shaclgraph,
-        data_graph_format="turtle",
-        shacl_graph_format="turtle",
+        data_graph_format="trig",
+        shacl_graph_format="trig",
         advanced=True,
         inplace=True,
         inference=None,
@@ -98,17 +98,17 @@ def generateReSpecRDF(shaclgraph, serializable_graph):
 
 def generateDiagram(mermaid_generator, serializable_graph):
         
-        print ('iteratie mermaid')
+        print ('iteration mermaid')
         # call PyShacl engine and apply the HTML vocabulary to the serializable HTML document
         pyshacl.validate(
         data_graph=serializable_graph,
         shacl_graph=mermaid_generator,
-        data_graph_format="turtle",
-        shacl_graph_format="turtle",
+        data_graph_format="trig",
+        shacl_graph_format="trig",
         advanced=True,
         inplace=True,
         inference=None,
-        iterate_rules=False, #rather than setting this to true, it is better to do the iteration in the script as PyShacl seems to have some buggy behavior around iteration.
+        iterate_rules=False, # rather than setting this to true, it is better to do the iteration in the script as PyShacl seems to have some buggy behavior around iteration.
         debug=False,
         )
         
@@ -119,13 +119,13 @@ def generateDiagram(mermaid_generator, serializable_graph):
         for status in statusquery:
             if status == False:
                 
-                writeGraph(serializable_graph, 'diagramm')
+                writeGraph(serializable_graph, 'diagram')
                 generateDiagram(mermaid_generator, serializable_graph)
             else:     
                  print ('...succes')
                  for result in resultquery:
                     mermaid_diagram = result["mermaid_code"]
-                    output_file_path = directory_path+"/OntoReSpec/Tools/Playground/static/diagram.html"
+                    output_file_path = directory_path+"/tools/playground/static/diagram.html"
                 
                     # Write the HTML content to the output file
                     with open(output_file_path, "w", encoding="utf-8") as file:
@@ -137,8 +137,8 @@ def generateHTML(shaclgraph, serializable_graph):
         pyshacl.validate(
         data_graph=serializable_graph,
         shacl_graph=shaclgraph,
-        data_graph_format="turtle",
-        shacl_graph_format="turtle",
+        data_graph_format="trig",
+        shacl_graph_format="trig",
         advanced=True,
         inplace=True,
         inference=None,
@@ -169,33 +169,33 @@ def generateReSpec():
     print("Starting generation of the ReSpec document...")
     
     #1 Retrieve content from user
-    ontology = request.form['ontology']
-    introduction = request.form['introduction']
-    background = request.form['background']
-    audience = request.form['audience']
-    objective = request.form['objective']
-    acknowledgements = request.form['acknowledgements']
-    documentLanguage = request.form['documentLanguage']
-    documentNamespace = request.form['documentNamespace']
+    ontology           = request.form['ontology']
+    introduction       = request.form['introduction']
+    background         = request.form['background']
+    audience           = request.form['audience']
+    objective          = request.form['objective']
+    acknowledgements   = request.form['acknowledgements']
+    documentLanguage   = request.form['documentLanguage']
+    documentNamespace  = request.form['documentNamespace']
 
     #2 Retrieve which components of the ontology need to be specified in the document
-    conceptSchemes = request.form.get('conceptSchemes') == 'true'
-    concepts = request.form.get('concepts') == 'true'
-    classes = request.form.get('classes') == 'true'
-    objectProperties = request.form.get('objectProperties') == 'true'
+    conceptSchemes     = request.form.get('conceptSchemes')     == 'true'
+    concepts           = request.form.get('concepts')           == 'true'
+    classes            = request.form.get('classes')            == 'true'
+    objectProperties   = request.form.get('objectProperties')   == 'true'
     datatypeProperties = request.form.get('datatypeProperties') == 'true'
-    rdfProperties = request.form.get('rdfProperties') == 'true'
-    nodeshapes = request.form.get('nodeshapes') == 'true'
-    namedIndividuals = request.form.get('namedIndividuals') == 'true'
+    rdfProperties      = request.form.get('rdfProperties')      == 'true'
+    nodeshapes         = request.form.get('nodeshapes')         == 'true'
+    namedIndividuals   = request.form.get('namedIndividuals')   == 'true'
     
     # Write ontology to file
-    ontology_filepath = directory_path + "/OntoReSpec/Tools/Playground/static/ontology.ttl"
+    ontology_filepath = directory_path + "/tools/playground/static/ontology.trig"
     with open(ontology_filepath, 'w', encoding='utf-8') as file:
        file.write(str(ontology))
 
     # Initialize graph
     generation_iri = hash(str(ontology) + str(datetime.datetime.now()))
-    generationGraph = Graph()
+    generationGraph = Dataset(default_union=True)
     doc = Namespace(documentNamespace)
     generationGraph.bind("html", html)
     generationGraph.bind("respec", respec)    
@@ -225,7 +225,7 @@ def generateReSpec():
     if conceptSchemes:
         generationGraph.add((doc[generation_iri], respec.include, Literal("conceptschemes")))
     
-    if concepts and not conceptSchemes:
+    if concepts:
         generationGraph.add((doc[generation_iri], respec.include, Literal("concepts")))
     
     if classes:
@@ -273,24 +273,24 @@ def generateReSpec():
 
     # Let us establish which ontology needs to be documented in ReSpec
     try:
-       generationGraph.parse(data=ontology , format="turtle")
+       generationGraph.parse(data=ontology , format="trig")
     except Exception as e:
         error_message = str(e)
         return render_template('index.html', 
-                               ontology=ontology, 
-                               introduction=introduction,
-                               background=background,
-                               audience=audience,
-                               objective=objective,
-                               acknowledgements=acknowledgements,
-                               conceptSchemes = conceptSchemes,
-                               concepts = concepts,
-                               classes = classes,
-                               objectProperties = objectProperties,
+                               ontology           = ontology, 
+                               introduction       = introduction,
+                               background         = background,
+                               audience           = audience,
+                               objective          = objective,
+                               acknowledgements   = acknowledgements,
+                               conceptSchemes     = conceptSchemes,
+                               concepts           = concepts,
+                               classes            = classes,
+                               objectProperties   = objectProperties,
                                datatypeProperties = datatypeProperties,
-                               rdfProperties = rdfProperties,
-                               nodeshapes = nodeshapes,
-                               namedIndividuals = namedIndividuals,
+                               rdfProperties      = rdfProperties,
+                               nodeshapes         = nodeshapes,
+                               namedIndividuals   = namedIndividuals,
                                status='Error: Unable to parse the ontology {}'.format(error_message))
     
     ontologyQuery = generationGraph.query(ontology_query) 
@@ -312,9 +312,9 @@ def generateReSpec():
     # Build the ReSpec structure of the document in RDF
     print("Step #3. Creating ReSpec document structure...")
 
-    generationGraph.parse(data=html_vocabulary, format="turtle")
-    generationGraph.parse(data=dom_vocabulary, format="turtle")
-    generationGraph.parse(data=template_graph, format="turtle")
+    generationGraph.parse(data=html_vocabulary, format="trig")
+    generationGraph.parse(data=dom_vocabulary,  format="trig")
+    generationGraph.parse(data=template_graph,  format="trig")
     generationGraph = generateReSpecRDF(respec_vocabulary, generationGraph)
     writeGraph(generationGraph, 'respec')
     
@@ -323,7 +323,7 @@ def generateReSpec():
 
     html_fragment = generateHTML(html_vocabulary, generationGraph)
     print("...Done")
-    filepath = directory_path+"/OntoRespec/Tools/Playground/static/output.html"
+    filepath = directory_path+"/tools/playground/static/output.html"
     src_filepath = url_for('static', filename='output.html')
     with open(filepath, 'w', encoding='utf-8') as file:
        file.write(html_fragment)
@@ -348,20 +348,20 @@ def generateReSpec():
 @app.route('/')
 def index():
     return render_template('index.html', 
-                           ontology='Place your ontology in turtle code here', 
-                           introduction='Write here an introduction to your ontology.',
-                           background='Write here some background context for your ontology.',
-                           audience='Write here about the indended audience to your ontology.',
-                           objective='Write here about the objective of your ontology.',
-                           acknowledgements='Write here your acknowledgements in relation to your ontology.',
-                           conceptSchemes=True,
-                           concepts=True,
-                           classes=True,
-                           objectProperties=True,
-                           datatypeProperties=True,
-                           rdfProperties=True,
-                           nodeshapes=True,
-                           namedIndividuals=True,
+                           ontology          = 'Place your ontology in trig format here', 
+                           introduction      = 'Write here an introduction to your ontology.',
+                           background        = 'Write here some background context for your ontology.',
+                           audience          = 'Write here about the indended audience to your ontology.',
+                           objective         = 'Write here about the objective of your ontology.',
+                           acknowledgements  = 'Write here your acknowledgements in relation to your ontology.',
+                           conceptSchemes    = True,
+                           concepts          = True,
+                           classes           = True,
+                           objectProperties  = True,
+                           datatypeProperties= True,
+                           rdfProperties     = True,
+                           nodeshapes        = True,
+                           namedIndividuals  = True,
                            status='Ready'
                            )
 

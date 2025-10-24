@@ -8,36 +8,42 @@ template: {
 
 template:document a respec:Template,
         html:Document ;
+    rdfs:label "Template for ReSpec document";    
     rdf:_1 template:docType;
     rdf:_2 template:root .
 
 template:docType a respec:StaticElement,
         html:DocumentType;
+    rdfs:label "doctype"@en ;
+    rdfs:label "doctype"@nl ;            
     html:documentTypeName 'html'.
 
 template:root a respec:StaticElement,
         html:Html ;
-    rdfs:label "html" ;
+    rdfs:label "html"@en ;
+    rdfs:label "html"@nl ;    
     rdf:_1 template:head ;
     rdf:_2 template:body .
 
 template:head a respec:StaticElement,
         html:Head ;
-    rdfs:label "head" ;
+    rdfs:label "head"@en ;
+    rdfs:label "head"@nl ;    
     rdf:_1 template:meta ;
     rdf:_2 template:title ;
-    rdf:_3 template:style ;
-    rdf:_4 template:script_respec ;
-    rdf:_5 template:script_configuration.
+    rdf:_3 template:script_respec ;
+    rdf:_4 template:script_configuration.
 
 template:meta a respec:StaticElement,
         html:Meta ;
-    rdfs:label "meta" ;
+    rdfs:label "meta: charset utf-8"@en ;
+    rdfs:label "meta: charset utf-8"@nl ;    
     html:charset "utf-8" .
 
 template:title a respec:StaticElement,
         html:Title ;
-    rdfs:label "title" ;
+    rdfs:label "title"@en ;
+    rdfs:label "titel"@nl ;    
     rdf:_1 template:title_text .
 
 template:title_text a respec:Title,
@@ -47,55 +53,25 @@ template:title_text a respec:Title,
                         'Geen titel gespecificeerd'@nl;
     html:fragment "{{title}}" .
 
-template:style a respec:StaticElement,
-        html:StyleSheet ;
-    rdfs:label "style" ;
-    rdf:_1 template:style_text .
-
-template:style_text a respec:StaticElement,
-        html:Text ;
-    rdfs:label "text element" ;
-    html:fragment """ 
-
-    .term-table {
-            border-collapse: collapse;
-            border-color: #000000;
-            margin: 16px;
-
-    .term-table td,
-        th {
-            border-width: 1px;
-            border-style: solid;
-            padding: 5px;
-        }
-    }
-        
-    .container {
-        display: flex;
-    }
-
-    .label {
-        flex: 0 0 100px; /* Adjust the width as needed */
-    }
-    
-    """ .
-
 template:script_respec a respec:StaticElement,
         html:Script ;
-    rdfs:label "script" ;
+    rdfs:label "script ReSpec: src"@en ;
+    rdfs:label "script ReSpec: src"@nl ;    
     html:class "remove" ;
     html:defer "" ;
     html:src "https://www.w3.org/Tools/respec/respec-w3c" .
 
 template:script_configuration a respec:StaticElement,
         html:Script ;
-    rdfs:label "script" ;
+    rdfs:label "script ReSpec: configuration"@en ;
+    rdfs:label "script ReSpec: configuratie"@nl ;    
     rdf:_1 template:configuration_text ;
     html:class "remove" .
 
 template:configuration_text a respec:Configuration,
         html:Text ;
-    rdfs:label "text element" ;
+    rdfs:label "ReSpec: configuration fragment"@en ;
+    rdfs:label "ReSpec: configuratiefragment"@nl ;   
     respec:absenceLabel "Not available"@en,
                         "Niet beschikbaar"@nl;
     html:fragment """   
@@ -105,15 +81,17 @@ template:configuration_text a respec:Configuration,
         editors: "listOfNames",
         github: "some-org/mySpec",
         shortName: "a shortName",
-        xref: "web-platform",
         group: "working-group",
+        maxTocLevel: 2,
+        xref: "web-platform",
       };
       // All config options at https://respec.org/docs/ 
     """ .
 
 template:body a respec:StaticElement,
         html:Body ;
-    rdfs:label "body" ;
+    rdfs:label "body"@en ;
+    rdfs:label "body"@nl ;    
     rdf:_1 template:abstract ;
     rdf:_2 template:sotd ;
     rdf:_3 template:introduction ;
@@ -125,7 +103,8 @@ template:body a respec:StaticElement,
 
 template:abstract a respec:StaticElement,
         html:Section ;
-    rdfs:label "section abstract" ;
+    rdfs:label "section: abstract"@en ;
+    rdfs:label "section: samenvatting"@nl ;    
     rdf:_1 template:25.7 ;
     html:id "abstract" .
 
@@ -143,7 +122,8 @@ template:25.7.1 a respec:Abstract,
 
 template:sotd a respec:StaticElement,
         html:Section ;
-    rdfs:label "section status of this document" ;
+    rdfs:label "section: status of this document"@en ;
+    rdfs:label "section: status van dit document"@nl ;
     rdf:_1 template:28.6 ;
     html:id "sotd" .
 
@@ -159,11 +139,14 @@ template:28.6.1 a html:Text ;
 template:introduction a respec:Introduction, 
         html:Section ;
     html:style 'white-space: pre-wrap;';
+    rdfs:label "Introduction"@en,
+               "Inleiding"@nl;    
     rdf:_1 template:introductionTitle ;
     rdf:_2 template:introductionText ;
     rdf:_3 template:background ;
     rdf:_4 template:objective ;
     rdf:_5 template:audience ;
+    rdf:_6 template:relatedWork;
     html:class "informative" .
 
 template:introductionTitle a html:H2 ;
@@ -182,6 +165,8 @@ template:introductionText a html:Text ;
 
 template:background a html:Section ;
     html:style 'white-space: pre-wrap;';
+    rdfs:label "Background"@en,
+               "Achtergrond"@nl;     
     rdf:_1 template:background_title ;
     rdf:_2 template:background_text .
 
@@ -237,22 +222,41 @@ template:30.4-5-1-1 a respec:AudienceTitle,
 template:30.4-5-1-2 a html:Text ;
     html:fragment "Text in which is explained for which audience this technical specification document is intended." .
 
+template:relatedWork a html:Section ;
+    html:style 'white-space: pre-wrap;';
+    rdf:_1 template:30.4-6-1 ;
+    rdf:_2 template:30.4-6-1-2 .
+
+template:30.4-6-1 a html:H2 ;
+    rdf:_1 template:30.4-6-1-1 .
+
+template:30.4-6-1-1 a respec:RelatedWork,
+               html:Text ;
+    respec:label "Related work"@en, 
+                 "Gerelateerd werk"@nl ;
+    respec:absenceLabel "This specification document does not describe the related work for the ontology."@en ,
+                        "Dit specificatiedocument beschrijft geen gerelateerd werk voor de ontologie."@nl ;
+    html:fragment "Related work" .
+
+template:30.4-6-1-2 a html:Text ;
+    html:fragment "Text in which other works related and relevant to this ontology are described." .
+
 template:overview a respec:StaticElement,
         html:Section ;
     rdfs:label "section" ;
     rdf:_1 template:overview_title ;
     rdf:_2 template:description_title;
-    rdf:_2 template:description_paragraph ;
-    rdf:_3 template:example_title ;
-    rdf:_4 template:example_aside ;
-    rdf:_5 template:visualisation_title ;
-    rdf:_6 template:visualisation_paragraph ;
-    rdf:_7 template:visualisation ;
-    rdf:_8 template:namespace_title ;
-    rdf:_9 template:namespace ;
-    rdf:_10 template:serialisation_title ;
-    rdf:_11 template:serialisation_paragraph ;  
-    rdf:_12 template:currentIssues .
+    rdf:_3 template:description_paragraph ;
+    rdf:_4 template:example_title ;
+    rdf:_5 template:example_aside ;
+    rdf:_6 template:visualisation_title ;
+    rdf:_7 template:visualisation_paragraph ;
+    rdf:_8 template:visualisation ;
+    rdf:_9 template:namespace_title ;
+    rdf:_10 template:namespace ;
+    rdf:_11 template:serialisation_title ;
+    rdf:_12 template:serialisation_paragraph ;  
+    rdf:_13 template:currentIssues .
 
 template:overview_title a respec:StaticElement,
         html:H2 ;
@@ -302,9 +306,9 @@ template:example_title a respec:StaticElement,
 template:example_text a respec:StaticElement,
         html:Text ;
     rdfs:label "text element" ;
-    respec:label "Example"@en ,
-                 "Voorbeeld"@nl ;
-    html:fragment "Example" .
+    respec:label "Full example"@en ,
+                 "Volledig voorbeeld"@nl ;
+    html:fragment "Full example" .
 
 template:example_aside a respec:Example,
         html:Aside ;
@@ -392,8 +396,8 @@ template:41.6.2.1 a respec:StaticElement,
     rdf:_2 template:41.6.2.1.2.
 
 template:41.6.2.1.1 a respec:StaticElement,
-        html:DataCell ;
-    rdfs:label "data cell element" ;
+        html:HeaderCell ;
+    rdfs:label "header cell element" ;
     rdf:_1 template:41.6.2.1.1.1.
 
 template:41.6.2.1.1.1 a respec:StaticElement,
@@ -404,7 +408,7 @@ template:41.6.2.1.1.1 a respec:StaticElement,
     html:fragment "Prefix".
 
 template:41.6.2.1.2 a respec:StaticElement,
-        html:DataCell ;
+        html:HeaderCell ;
     rdfs:label "data cell element" ;
     rdf:_1 template:41.6.2.1.2.1.
 
@@ -516,7 +520,8 @@ template:48.8.2 a respec:StaticElement,
 template:definition a respec:StaticElement,
                  respec:Definition,
         html:Section ;
-    rdfs:label "Section" ;
+    rdfs:label "Section: definition"@en ,
+               "Sectie: definitie"@nl ;    
     respec:absenceLabel "The ontology does not provide a definition for this entity."@en, 
                         "De ontologie biedt geen definitie voor deze entiteit."@nl ; 
     rdf:_1 template:definitionTitle;
@@ -546,16 +551,19 @@ template:54.5.1 a respec:StaticElement,
 
 template:definitionClasses a respec:OptionalElement,
         html:Section ;
-    rdfs:label "Section" ;
+    rdfs:label "Section: classes"@en ;
+    rdfs:label "Section: klassen"@nl ;  
     respec:section "classes";
     rdf:_1 template:54.6;
     rdf:_2 template:54.7.
 
 template:54.6 a respec:OptionalElement,
         html:H2 ;
-    rdfs:label "h2" ;
+    rdfs:label "H2: classes"@en ;
+    rdfs:label "H2: klassen"@nl ;    
     respec:section "classes";
-    rdf:_1 template:54.6.1 .
+    rdf:_1 template:54.6.1 ;
+    rdf:_2 template:54.6.2 .
 
 template:54.6.1 a respec:OptionalElement,
         html:Text ;
@@ -563,11 +571,27 @@ template:54.6.1 a respec:OptionalElement,
     respec:section "classes";
     respec:label "Classes"@en ,
                  "Klassen"@nl ;
+    html:fragment "Classes" . 
+    
+template:54.6.2 a respec:OptionalElement,
+        html:Dfn;
+        rdfs:label "class definition"@en;
+        rdfs:label "Klassedefinitie"@nl;
+        respec:section "classes";        
+        html:class "lint-ignore";
+        html:style "display: none;";
+        rdf:_1 template:54.6.2.1.
+    
+template:54.6.2.1 a respec:OptionalElement,
+        html:Text ;
+    rdfs:label "text element" ;
+    respec:section "classes";
     html:fragment "Classes" .
-
+    
 template:54.7 a respec:ClassDefinition,
         html:Div ;
-    rdfs:label "Div" ;
+    rdfs:label "Classes"@en ,
+               "Klassen"@nl ;    
     respec:absenceLabel "This ontology does not define any classes."@en,
                         "Deze ontologie definieert geen klassen."@nl;
     rdf:_1 template:54.8 .
@@ -617,7 +641,8 @@ template:55.2 a respec:OptionalElement,
         html:H2 ;
     rdfs:label "h2" ;
     respec:section "objectproperties";
-    rdf:_1 template:55.2.1 .
+    rdf:_1 template:55.2.1 ;
+    rdf:_2 template:55.2.2 .    
 
 template:55.2.1 a respec:OptionalElement,
         html:Text ;
@@ -625,6 +650,20 @@ template:55.2.1 a respec:OptionalElement,
     respec:section "objectproperties";         
     respec:label "Object Properties"@en ,
                  "Objecteigenschappen"@nl ;
+    html:fragment "Object Properties" .
+    
+template:55.2.2 a respec:OptionalElement,
+        html:Dfn ;
+    rdfs:label "object property definition"@en;
+    respec:section "objectproperties";        
+    html:class "lint-ignore";  
+    html:style "display: none;" ;  
+    rdf:_1 template:55.2.2.1.
+    
+template:55.2.2.1 a respec:OptionalElement,
+        html:Text ;
+    rdfs:label "text element" ;
+    respec:section "objectproperties";         
     html:fragment "Object Properties" .
 
 template:55.3 a respec:ObjectProperty,
@@ -670,7 +709,8 @@ template:56.2 a respec:OptionalElement,
         html:H2 ;
     rdfs:label "h2" ;
     respec:section "datatypeproperties";
-    rdf:_1 template:56.2.1 .
+    rdf:_1 template:56.2.1 ;
+    rdf:_2 template:56.2.2 .    
 
 template:56.2.1 a respec:OptionalElement,
         html:Text ;
@@ -678,6 +718,20 @@ template:56.2.1 a respec:OptionalElement,
     respec:section "datatypeproperties";
     respec:label "Datatype Properties"@en ,
                  "Datatype-eigenschappen"@nl ;
+    html:fragment "Datatype Properties" .
+    
+template:56.2.2 a respec:OptionalElement,
+        html:Dfn ;
+    rdfs:label "datatype properties definition" ;
+    respec:section "datatypeproperties";
+    html:class "lint-ignore";  
+    html:style "display: none;";
+    rdf:_1 template:56.2.2.1.
+
+template:56.2.2.1 a respec:OptionalElement,
+        html:Text ;
+    rdfs:label "text element" ;
+    respec:section "datatypeproperties";
     html:fragment "Datatype Properties" .
 
 template:56.3 a respec:DatatypeProperty,
@@ -723,7 +777,8 @@ template:53.2 a respec:OptionalElement,
         html:H2 ;
     rdfs:label "h2" ;
     respec:section "rdfproperties";
-    rdf:_1 template:53.2.1 .
+    rdf:_1 template:53.2.1 ;
+    rdf:_2 template:53.2.2 .    
 
 template:53.2.1 a respec:OptionalElement,
         html:Text ;
@@ -732,6 +787,22 @@ template:53.2.1 a respec:OptionalElement,
     respec:label "RDF Properties"@en ,
                  "RDF-eigenschappen"@nl ;
     html:fragment "RDF Properties" .
+
+template:53.2.2 a respec:OptionalElement,
+        html:Dfn ;
+    rdfs:label "RDF Properties definition"@en ;
+    respec:section "rdfproperties";
+    html:class "lint-ignore";
+    html:style "display: none;";                 
+    rdf:_1  template:53.2.2.1.
+
+template:53.2.2.1 a respec:OptionalElement,
+        html:Text ;
+    rdfs:label "text element" ;
+    respec:section "rdfproperties";
+    respec:label "RDF Properties"@en ,
+                 "RDF-eigenschappen"@nl ;
+    html:fragment "RDF Properties" .    
 
 template:53.3 a respec:RDF_Property,
         html:Div ;
@@ -776,7 +847,8 @@ template:57.2 a respec:OptionalElement,
         html:H2 ;
     rdfs:label "h2" ;
     respec:section "nodeshapes";
-    rdf:_1 template:57.2.1 .
+    rdf:_1 template:57.2.1 ;
+    rdf:_2 template:57.2.2 .    
 
 template:57.2.1 a respec:OptionalElement,
         html:Text ;
@@ -784,6 +856,19 @@ template:57.2.1 a respec:OptionalElement,
     respec:section "nodeshapes";
     respec:label  "Node Shapes"@en ,
                   "Node Shapes"@nl ;
+    html:fragment "Node Shapes" .
+    
+template:57.2.2 a respec:OptionalElement,
+        html:Dfn ;
+    rdfs:label "Node shape definition" ;
+    html:class "lint-ignore"; 
+    html:style "display: none;";    
+    rdf:_1 template:57.2.2.1 .
+    
+template:57.2.2.1 a respec:OptionalElement,
+        html:Text ;
+    rdfs:label "text element" ;
+    respec:section "nodeshapes";
     html:fragment "Node Shapes" .
 
 template:57.3 a respec:NodeShape,
@@ -829,7 +914,8 @@ template:60.2 a respec:OptionalElement,
         html:H2 ;
     rdfs:label "h2" ;
     respec:section "sparqltargets";
-    rdf:_1 template:60.2.1 .
+    rdf:_1 template:60.2.1 ;
+    rdf:_2 template:60.2.2.
 
 template:60.2.1 a respec:OptionalElement,
         html:Text ;
@@ -837,6 +923,20 @@ template:60.2.1 a respec:OptionalElement,
     respec:section "sparqltargets";
     respec:label  "SPARQL Targets"@en ,
                   "SPARQL Targets"@nl ;
+    html:fragment "SPARQL Targets" .
+
+template:60.2.2 a respec:OptionalElement,
+        html:Dfn ;
+    rdfs:label "SPARQL Targets definition"@en ;
+    respec:section "sparqltargets";
+    html:class "lint-ignore";
+    html:style "display: none;"; 
+    rdf:_1 template:60.2.2.1.
+
+template:60.2.2.1 a respec:OptionalElement,
+        html:Text ;
+    rdfs:label "text element" ;
+    respec:section "sparqltargets";
     html:fragment "SPARQL Targets" .
 
 template:60.3 a respec:SPARQLTarget,
@@ -882,7 +982,8 @@ template:61.2 a respec:OptionalElement,
         html:H2 ;
     rdfs:label "h2" ;
     respec:section "sparqlrules";
-    rdf:_1 template:61.2.1 .
+    rdf:_1 template:61.2.1 ;
+    rdf:_2 template:61.2.2 .    
 
 template:61.2.1 a respec:OptionalElement,
         html:Text ;
@@ -892,6 +993,20 @@ template:61.2.1 a respec:OptionalElement,
                   "SPARQL Rules"@nl ;
     html:fragment "SPARQL Rules" .
 
+template:61.2.2 a respec:OptionalElement,
+        html:Dfn ;
+    rdfs:label "text element" ;
+    respec:section "sparqlrules";
+    html:class "lint-ignore";
+    html:style "display: none;";                  
+    rdf:_1 template:61.2.2.1 .
+
+template:61.2.2.1 a respec:OptionalElement,
+        html:Text ;
+    rdfs:label "text element" ;
+    respec:section "sparqlrules";
+    html:fragment "SPARQL Rules" .   
+    
 template:61.3 a respec:SPARQLRule,
         html:Div ;
     rdfs:label "Div" ;
@@ -935,7 +1050,8 @@ template:62.2 a respec:OptionalElement,
         html:H2 ;
     rdfs:label "h2" ;
     respec:section "sparqlfunctions";
-    rdf:_1 template:62.2.1 .
+    rdf:_1 template:62.2.1 ;
+    rdf:_2 template:62.2.2 .    
 
 template:62.2.1 a respec:OptionalElement,
         html:Text ;
@@ -943,6 +1059,20 @@ template:62.2.1 a respec:OptionalElement,
     respec:section "sparqlfunctions";
     respec:label  "SPARQL Functions"@en ,
                   "SPARQL Functions"@nl ;
+    html:fragment "SPARQL Functions" .
+
+template:62.2.2 a respec:OptionalElement,
+        html:Dfn ;
+    rdfs:label "SPARQL Functions definition" ;
+    respec:section "sparqlfunctions";
+    html:class "lint-ignore";
+    html:style "display: none;";                  
+    rdf:_1 template:62.2.2.1.
+
+template:62.2.2.1 a respec:OptionalElement,
+        html:Text ;
+    rdfs:label "text element" ;
+    respec:section "sparqlfunctions";
     html:fragment "SPARQL Functions" .
 
 template:62.3 a respec:SPARQLFunction,
@@ -988,7 +1118,8 @@ template:63.2 a respec:OptionalElement,
         html:H2 ;
     rdfs:label "h2" ;
     respec:section "parameters";
-    rdf:_1 template:63.2.1 .
+    rdf:_1 template:63.2.1 ;
+    rdf:_2 template:63.2.2 .    
 
 template:63.2.1 a respec:OptionalElement,
         html:Text ;
@@ -998,6 +1129,20 @@ template:63.2.1 a respec:OptionalElement,
                   "SHACL Parameters"@nl ;
     html:fragment "SHACL Parameters" .
 
+template:63.2.2 a respec:OptionalElement,
+        html:Dfn ;
+    rdfs:label "SHACL Parameters definition" ;
+    respec:section "parameters";
+    html:class "lint-ignore";
+    html:style "display: none;";                  
+    rdf:_1 template:63.2.2.1.
+
+template:63.2.2.1 a respec:OptionalElement,
+        html:Text ;
+    rdfs:label "text element" ;
+    respec:section "parameters";
+    html:fragment "SHACL Parameters" .
+    
 template:63.3 a respec:Parameter,
         html:Div ;
     rdfs:label "Div" ;
@@ -1041,7 +1186,8 @@ template:58.2 a respec:OptionalElement,
         html:H2 ;
     rdfs:label "h2" ;
     respec:section "namedindividuals";
-    rdf:_1 template:58.2.1 .
+    rdf:_1 template:58.2.1 ;
+    rdf:_2 template:58.2.2 .    
 
 template:58.2.1 a respec:OptionalElement,
         html:Text ;
@@ -1051,9 +1197,23 @@ template:58.2.1 a respec:OptionalElement,
                  "Exemplaren"@nl ;
     html:fragment "Named Individuals" .
 
+template:58.2.2 a respec:OptionalElement,
+        html:Dfn ;
+    rdfs:label "Named Individuals definition"@en ;
+    respec:section "namedindividuals";
+    html:class "lint-ignore";
+    html:style "display: none;";                 
+    rdf:_1 template:58.2.2.1.
+    
+template:58.2.2.1 a respec:OptionalElement,
+        html:Text ;
+    rdfs:label "text element" ;
+    respec:section "namedindividuals";
+    html:fragment "Named Individuals" .
+
 template:58.3 a respec:OptionalElement,
-        html:Div ;
-    rdfs:label "Div" ;
+        html:P ;
+    rdfs:label "Paragraph" ;
     respec:section "namedindividuals";
     rdf:_1 template:58.4 .
 
@@ -1096,7 +1256,8 @@ template:59.2 a respec:OptionalElement,
         html:H2 ;
     rdfs:label "h2" ;
     respec:section "concepts", "conceptschemes" ;
-    rdf:_1 template:59.2.1 .
+    rdf:_1 template:59.2.1 ;
+    rdf:_2 template:59.2.2 .    
 
 template:59.2.1 a respec:OptionalElement,
         html:Text ;
@@ -1105,16 +1266,30 @@ template:59.2.1 a respec:OptionalElement,
     respec:label "Concepts"@en ,
                  "Concepten"@nl ;
     html:fragment "Concepts" .
+    
+template:59.2.2 a respec:OptionalElement,
+        html:Dfn ;
+    rdfs:label "Conceptscheme definition"@en ;
+    respec:section "concepts", "conceptschemes";
+    html:class "lint-ignore";
+    html:style "display: none;";               
+    rdf:_1 template:59.2.2.1.
+    
+template:59.2.2.1 a respec:OptionalElement,
+        html:Text ;
+    rdfs:label "text element" ;
+    respec:section "concepts", "conceptschemes";
+    html:fragment "Concepts" .
 
 template:59.3 a respec:OptionalElement,
-        html:Div ;
-    rdfs:label "Div" ;
+        html:P ;
+    rdfs:label "P" ;
     respec:section "concepts", "conceptschemes";
     rdf:_1 template:59.4 .
 
 template:59.4 a respec:Concept,
-        html:Div ;
-    rdfs:label "Div" ;
+        html:P ;
+    rdfs:label "P" ;
     respec:absenceLabel "This ontology does not define any concept schemes or concepts."@en,
                         "Deze ontologie definieert geen conceptenschema's of concepten."@nl;    
     rdf:_1 template:59.9 ;

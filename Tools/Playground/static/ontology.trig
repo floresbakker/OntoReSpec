@@ -1,0 +1,130 @@
+prefix dcm: <http://purl.org/dc/dcmitype/>
+prefix dct: <http://purl.org/dc/terms/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfa: <http://www.w3.org/ns/rdfa#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix sh: <http://www.w3.org/ns/shacl#>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix status: <http://purl.org/adms/status/>
+prefix vann: <http://purl.org/vocab/vann/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+
+prefix helloworld: <https://example.org/helloworld/model/def/>
+prefix rule: <https://example.org/helloworld/model/rule/>
+prefix section: <https://example.org/helloworld/id/section/>
+prefix shp: <https://example.org/helloworld/model/shp/>
+prefix standard: <https://example.org/helloworld/id/standard/>
+prefix target: <https://example.org/helloworld/model/target/>
+
+  helloworld:
+    a
+      owl:Ontology;
+    dct:created '2021-12-08'^^xsd:date;
+    dct:creator
+      'Flores Bakker';
+    dct:description '''A description of a Hello World! ontology.'''@en;
+    dct:abstract '''An abstract of a Hello World! ontology.'''@en; 
+    skos:example """
+
+An 'hello world' example :)
+
+	
+"""@en;
+    dct:language 'iso639-1:en';
+    dct:license 'http://creativecommons.org/licenses/by/4.0'^^xsd:anyURI;
+    dct:publisher <https://example.org/>;
+    dct:status status:UnderDevelopment;
+    dct:subject 'Hello World!'@en;
+    dct:title 'Hello World! Ontology'@en;
+    dct:source <https://github.com/floresbakker/OntoReSpec>;
+    owl:imports
+      dct:,
+      owl:,
+      rdf:,
+      rdfs:,
+      sh:,
+      skos:;
+    owl:versionInfo '0.2.0';
+    vann:preferredNamespacePrefix 'helloworld';
+    vann:preferredNamespaceUri 'https://example.org/helloworld/model/def/'.
+
+### Definitions
+
+  helloworld:Scheme
+    a skos:ConceptScheme;
+    skos:definition 'Definition of a hello world! concept scheme.'@en;
+    skos:prefLabel 'Hello world scheme'@en;
+    rdfs:isDefinedBy helloworld:.
+
+  helloworld:Concept
+    a skos:Concept;
+    skos:definition 'Definition of a hello world! concept.'@en;
+    skos:prefLabel 'Hello world concept'@en;
+    skos:inScheme helloworld:Scheme;
+    rdfs:isDefinedBy helloworld:.
+
+  helloworld:HelloWorld
+    a owl:Class;
+    skos:definition 'Definition of a hello world! message.'@en;
+    skos:prefLabel 'Hello World'@en;
+    rdfs:seeAlso helloworld:Concept;
+    rdfs:isDefinedBy helloworld:.
+    
+  helloworld:LinkedDataEnthusiast
+    a owl:Class;
+    skos:definition 'Definition of an Linked Data Enthusiast.'@en;
+    skos:prefLabel 'Linked Data enthusiast'@en;
+    rdfs:isDefinedBy helloworld:.
+
+  helloworld:message
+    a owl:ObjectProperty;
+    rdfs:domain helloworld:LinkedDataEnthusiast;
+    skos:definition 'Definition of a message object property.'@en;
+    skos:prefLabel 'message'@en;
+    rdfs:range helloworld:HelloWorld;
+    rdfs:isDefinedBy helloworld:.
+
+  shp:HelloWorldShape
+    a sh:NodeShape;
+    skos:prefLabel 'Hello world shape'@en;
+    sh:rule rule:Hello;
+    sh:target target:World;
+    rdfs:isDefinedBy helloworld:.
+
+  target:World
+    a sh:SPARQLTarget;
+    sh:select '''
+prefix helloworld: <https://example.org/helloworld/model/def/>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+select $this {
+  $this rdf:type helloworld:Class.
+}''';
+    rdfs:isDefinedBy helloworld:.
+    
+  rule:Hello
+    a sh:SPARQLRule;
+    rdfs:comment 'A rule that creates an HTML fragment for an HTML comment.'@en;
+    skos:prefLabel 'HTML comment fragment serialisation rule'@en;
+    sh:construct '''
+
+prefix helloworld: <https://example.org/helloworld/model/def/>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+construct {
+
+  $this helloworld:label ?message.
+  
+} where {
+
+BIND("Hello world" as ?message)
+
+}''';
+    rdfs:isDefinedBy helloworld:.
+
+  helloworld:FloresIndividual
+    a helloworld:LinkedDataEnthusiast;
+    skos:definition 'Flores Bakker - an individual'@en;
+    skos:prefLabel 'Flores'@nl, 'Florensio'@pt, 'Floress'@en;
+    rdfs:isDefinedBy helloworld:.    

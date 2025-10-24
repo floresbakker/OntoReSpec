@@ -68,7 +68,7 @@ manchester: {
       decl:xsd;      
     owl:versionInfo '0.1.0';
     owl:versionIRI <https://github.com/floresbakker/manchestersyntax/tree/main>;
-    manchester:iriPattern """^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?$""";    
+    #manchester:iriPattern """^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?$""";    
     vann:preferredNamespacePrefix 'manchester';
     vann:preferredNamespaceUri 'https://data.rijksfinancien.nl/manchestersyntax/model/def/'^^xsd:anyURI;
     void:subSet graph:model;
@@ -203,7 +203,7 @@ construct {
         manchester:label ?manchesterLabel.
 } where {
   
-  bind(if(function:isBlank($this), "Anonymous class",concat("[=",function:getPrefixedIRI($this),"=]")) as ?manchesterLabel)
+  bind(if(function:isBlank($this), "Anonymous class",concat("[=Classes/",function:getPrefixedIRI($this),"=]")) as ?manchesterLabel)
   
 } 
 '''.
@@ -292,7 +292,7 @@ construct {
   bind(concat(?propertyLabel, " only ", ?classLabel) as ?manchesterDescription)
       
   # Establish the label for the owl class. If a blank node, then use the description of the class als label. If an IRI, then use the preferred label.
-  bind(if(function:isBlank($this), ?manchesterDescription, concat("[=",function:getPrefixedIRI($this), "=]")) as ?manchesterLabel)
+  bind(if(function:isBlank($this), ?manchesterDescription, concat("[=Classes/",function:getPrefixedIRI($this), "=]")) as ?manchesterLabel)
   
   # If the class is defined in the ontology with a IRI, then add the definition to it. If the class is a blank node, do not bother.
   bind(if(function:isBlank($this), ?unboundDummy, ?manchesterDescription) as ?equivalentTo)
@@ -380,7 +380,7 @@ construct {
   bind(concat(?propertyLabel, " some ", ?classLabel) as ?manchesterDescription)
     
   # Establish the label for the owl class. If a blank node, then use the description of the class als label. If an IRI, then use the preferred label.
-  bind(if(function:isBlank($this), ?manchesterDescription, concat("[=",function:getPrefixedIRI($this), "=]")) as ?manchesterLabel)
+  bind(if(function:isBlank($this), ?manchesterDescription, concat("[=Classes/",function:getPrefixedIRI($this), "=]")) as ?manchesterLabel)
   
   # If the class is defined in the ontology with a IRI, then add the definition to it. If the class is a blank node, do not bother.
   bind(if(function:isBlank($this), ?unboundDummy, ?manchesterDescription) as ?equivalentTo)
@@ -477,7 +477,7 @@ construct {
   bind(concat(?propertyLabel, " value ", ?individualLabel) as ?manchesterDescription)
     
   # Establish the label for the owl class. If a blank node, then use the description of the class als label. If an IRI, then use the preferred label.
-  bind(if(function:isBlank($this), ?manchesterDescription, concat("[=",function:getPrefixedIRI($this), "=]")) as ?manchesterLabel)
+  bind(if(function:isBlank($this), ?manchesterDescription, concat("[=Classes/",function:getPrefixedIRI($this), "=]")) as ?manchesterLabel)
   
   # If the class is defined in the ontology with a IRI, then add the definition to it. If the class is a blank node, do not bother.
   bind(if(function:isBlank($this), ?unboundDummy, ?manchesterDescription) as ?equivalentTo)
@@ -553,7 +553,7 @@ construct {
   bind(concat(?labelProperty, " exactly ", str(?n)) as ?manchesterDescription)
  
   # Establish the label for the owl class. If a blank node, then use the description of the class als label. If an IRI, then use the preferred label.
-  bind(if(function:isBlank($this), ?manchesterDescription, concat("[=",function:getPrefixedIRI($this), "=]")) as ?manchesterLabel)
+  bind(if(function:isBlank($this), ?manchesterDescription, concat("[=Classes/",function:getPrefixedIRI($this), "=]")) as ?manchesterLabel)
   
   # If the class is defined in the ontology with a IRI, then add the definition to it. If the class is a blank node, do not bother.
   bind(if(function:isBlank($this), ?unboundDummy, ?manchesterDescription) as ?equivalentTo)
@@ -628,7 +628,7 @@ construct {
   bind(concat(str(?labelProperty), " max ", str(?n)) as ?manchesterDescription)
   
   # Establish the label for the owl class. If a blank node, then use the description of the class als label. If an IRI, then use the preferred label.
-  bind(if(function:isBlank($this), ?manchesterDescription, concat("[=",function:getPrefixedIRI($this), "=]")) as ?manchesterLabel)
+  bind(if(function:isBlank($this), ?manchesterDescription, concat("[=Classes/",function:getPrefixedIRI($this), "=]")) as ?manchesterLabel)
   
   # If the class is defined in the ontology with a IRI, then add the definition to it. If the class is a blank node, do not bother.
   bind(if(function:isBlank($this), ?unboundDummy, ?manchesterDescription) as ?equivalentTo)
@@ -703,7 +703,7 @@ construct {
   bind(concat(str(?labelProperty), " min ", str(?n)) as ?manchesterDescription)
   
   # Establish the label for the owl class. If a blank node, then use the description of the class als label. If an IRI, then use the preferred label.
-  bind(if(function:isBlank($this), ?manchesterDescription, concat("[=",function:getPrefixedIRI($this), "=]")) as ?manchesterLabel)
+  bind(if(function:isBlank($this), ?manchesterDescription, concat("[=Classes/",function:getPrefixedIRI($this), "=]")) as ?manchesterLabel)
   
   # If the class is defined in the ontology with a IRI, then add the definition to it. If the class is a blank node, do not bother.
   bind(if(function:isBlank($this), ?unboundDummy, ?manchesterDescription) as ?equivalentTo)
@@ -773,7 +773,7 @@ construct {
   bind(coalesce(?optionalManchesterDescription, ?implicitClassLabel) as ?manchesterDescription)
   
   # Establish the label for the owl class. If a blank node, then use the description of the class als label, including manchester syntax 'subclass' notation. If an IRI, then use the preferred label.
-  bind(if(function:isBlank($this), concat("SubClassOf: ",?manchesterDescription), concat("[=",function:getPrefixedIRI($this), "=]")) as ?manchesterLabel)
+  bind(if(function:isBlank($this), concat("SubClassOf: ",?manchesterDescription), concat("[=Classes/",function:getPrefixedIRI($this), "=]")) as ?manchesterLabel)
   
   # If the class is explicitly defined in the ontology with a IRI, then add the definition to it. If the class is a blank node, do not bother.
   bind(if(function:isBlank($this), ?unboundDummy, ?manchesterDescription) as ?subClassOf)
@@ -843,7 +843,7 @@ construct {
   bind(coalesce(?optionalManchesterDescription, ?implicitClassLabel) as ?manchesterDescription)
   
   # Establish the label for the owl class. If a blank node, then use the description of the class als label, including manchester syntax 'EquivalentTo' notation. If an IRI, then use the preferred label.
-  bind(if(function:isBlank($this), concat("EquivalentTo: ",?manchesterDescription), concat("[=",function:getPrefixedIRI($this), "=]")) as ?manchesterLabel)
+  bind(if(function:isBlank($this), concat("EquivalentTo: ",?manchesterDescription), concat("[=Classes/",function:getPrefixedIRI($this), "=]")) as ?manchesterLabel)
   
   # If the class is explicitly defined in the ontology with a IRI, then add the definition to it. If the class is a blank node, do not bother.
   bind(if(function:isBlank($this), ?unboundDummy, ?manchesterDescription) as ?equivalentTo)
@@ -919,7 +919,7 @@ construct {
   }
 
   # Establish the label for the owl class. If a blank node, then use the description of the class als label, including manchester syntax ' or ' notation. If an IRI, then use the preferred label.
-  bind(if(function:isBlank($this), concat('(', ?manchesterDescription, ')'), concat("[=",function:getPrefixedIRI($this), "=]")) as ?manchesterLabel)
+  bind(if(function:isBlank($this), concat('(', ?manchesterDescription, ')'), concat("[=Classes/",function:getPrefixedIRI($this), "=]")) as ?manchesterLabel)
   
   # If the class is explicitly defined in the ontology with a IRI, then add the definition to it. If the class is a blank node, do not bother.
   bind(if(function:isBlank($this), ?unboundDummy, ?manchesterDescription) as ?equivalentTo) 
@@ -994,7 +994,7 @@ construct {
   }
   
   # Establish the label for the owl class. If a blank node, then use the description of the class als label, including manchester syntax ' and ' notation. If an IRI, then use the preferred label.
-  bind(if(function:isBlank($this), concat('(', ?manchesterDescription, ')'), concat("[=",function:getPrefixedIRI($this), "=]")) as ?manchesterLabel)
+  bind(if(function:isBlank($this), concat('(', ?manchesterDescription, ')'), concat("[=Classes/",function:getPrefixedIRI($this), "=]")) as ?manchesterLabel)
   
   # If the class is explicitly defined in the ontology with a IRI, then add the definition to it. If the class is a blank node, do not bother.
   bind(if(function:isBlank($this), ?unboundDummy, ?manchesterDescription) as ?equivalentTo) 
@@ -1071,7 +1071,7 @@ construct {
   bind(concat("{", ?individualLabels, "}") as ?manchesterDescription)
 
   # Establish the label for the owl class. If a blank node, then use the description of the class als label, including manchester syntax ' {} ' notation. If an IRI, then use the preferred label.
-  bind(if(function:isBlank($this), concat('(', ?manchesterDescription, ')'), concat("[=",function:getPrefixedIRI($this), "=]")) as ?manchesterLabel)
+  bind(if(function:isBlank($this), concat('(', ?manchesterDescription, ')'), concat("[=Classes/",function:getPrefixedIRI($this), "=]")) as ?manchesterLabel)
   
   # If the class is explicitly defined in the ontology with a IRI, then add the definition to it. If the class is a blank node, do not bother.
   bind(if(function:isBlank($this), ?unboundDummy, ?manchesterDescription) as ?equivalentTo) 
@@ -1144,7 +1144,7 @@ construct {
   bind(concat("not ", str(coalesce(?explicitDefinition, ?implicitDefinition))) as ?manchesterDescription)
   
   # Establish the label for the owl class. If a blank node, then use the description of the class als label, including manchester syntax 'not ' notation. If an IRI, then use the preferred label.
-  bind(if(function:isBlank($this), concat('(', ?manchesterDescription, ')'), concat("[=",function:getPrefixedIRI($this), "=]")) as ?manchesterLabel)
+  bind(if(function:isBlank($this), concat('(', ?manchesterDescription, ')'), concat("[=Classes/",function:getPrefixedIRI($this), "=]")) as ?manchesterLabel)
   
   # If the class is explicitly defined in the ontology with a IRI, then add the definition to it. If the class is a blank node, do not bother.
   bind(if(function:isBlank($this), ?unboundDummy, ?manchesterDescription) as ?equivalentTo) 
@@ -1217,7 +1217,7 @@ construct {
 
   # Label of RDF property
   
-  bind(concat("[=",function:getPrefixedIRI($this),"=]") as ?manchesterLabel)
+  bind(concat("[=RDF Properties/",function:getPrefixedIRI($this),"=]") as ?manchesterLabel)
   
   # Domain
   optional
@@ -1311,7 +1311,7 @@ construct {
 
   # Label of datatype property
   
-  bind(concat("[=",function:getPrefixedIRI($this),"=]") as ?manchesterLabel)
+  bind(concat("[=Datatype Properties/",function:getPrefixedIRI($this),"=]") as ?manchesterLabel)
   
  # Domain
   optional
@@ -1399,7 +1399,7 @@ construct {
 } where {
 
   # Label of object property
-  bind(concat("[=",function:getPrefixedIRI($this),"=]") as ?manchesterLabel)
+  bind(concat("[=Object Properties/",function:getPrefixedIRI($this),"=]") as ?manchesterLabel)
   
   # Domain
   optional
@@ -1645,7 +1645,7 @@ construct {
   
   bind(concat("inverse of ", if(function:isIRI(?inverseProperty), function:getPrefixedIRI(?inverseProperty), ?optionalManchesterInverseProperty)) as ?manchesterDescription) 
   bind(coalesce(?optionalManchesterInverseProperty, function:getPrefixedIRI(?inverseProperty)) as ?manchesterInverseProperty)
-  bind(if(function:isBlank($this), concat('(', ?manchesterDescription, ')'), concat("[=",function:getPrefixedIRI($this), "=]")) as ?manchesterLabel)
+  bind(if(function:isBlank($this), concat('(', ?manchesterDescription, ')'), concat("[=Object Properties/",function:getPrefixedIRI($this), "=]")) as ?manchesterLabel)
   
 }  
 '''.
@@ -1721,7 +1721,7 @@ construct {
   # Label of the named individual
   
   $this a ?class.
-  bind(if(function:isIRI($this), concat("[=",function:getPrefixedIRI($this),"=]"), 'Anonymous individual') as ?manchesterLabel)
+  bind(if(function:isIRI($this), concat("[=Named Individuals/",function:getPrefixedIRI($this),"=]"), 'Anonymous individual') as ?manchesterLabel)
     
   # Class description   
   optional {?class manchester:label ?explicitClassName.}
@@ -1795,7 +1795,7 @@ construct {
 } where {
 
   # Label of the concept scheme
-  bind(concat("[=",function:getPrefixedIRI($this),"=]") as ?manchesterLabel)
+  bind(concat("[=Concepts/",function:getPrefixedIRI($this),"=]") as ?manchesterLabel)
 }
 
 """.
@@ -1849,7 +1849,7 @@ construct {
 } where {
 
   # Label of the concept 
-  bind(concat("[=",function:getPrefixedIRI($this),"=]") as ?manchesterLabel)
+  bind(concat("[=Concepts/",function:getPrefixedIRI($this),"=]") as ?manchesterLabel)
 }
 
 """.
@@ -1945,7 +1945,7 @@ construct {
         manchester:rule ?manchesterRule.
 } where {
   
-  bind(if(function:isBlank($this), "Anonymous NodeShape",concat("[=",function:getPrefixedIRI($this),"=]")) as ?manchesterLabel)
+  bind(if(function:isBlank($this), "Anonymous NodeShape",concat("[=Node Shapes/",function:getPrefixedIRI($this),"=]")) as ?manchesterLabel)
   
   optional{
   $this sh:property ?propertyShape.
@@ -2053,7 +2053,7 @@ construct {
   optional{
   $this sh:name ?propertyName.}
         
-  bind(if(function:isBlank($this), coalesce(?propertyName, "Anonymous PropertyShape"),concat("[=",function:getPrefixedIRI($this),"=]")) as ?manchesterLabel)
+  bind(if(function:isBlank($this), coalesce(?propertyName, "Anonymous PropertyShape"),concat("[=Property Shapes/",function:getPrefixedIRI($this),"=]")) as ?manchesterLabel)
  
 } 
 
@@ -2115,7 +2115,7 @@ construct {
 
   $this sh:path ?pathParameter.
   bind(function:getPrefixedIRI(?pathParameter) as ?alternativeParameterName)  
-  bind(if(function:isBlank($this), coalesce(?preferredParameterName, ?alternativeParameterName),concat("[=",function:getPrefixedIRI($this),"=]")) as ?manchesterLabel)
+  bind(if(function:isBlank($this), coalesce(?preferredParameterName, ?alternativeParameterName),concat("[=SHACL Parameters/",function:getPrefixedIRI($this),"=]")) as ?manchesterLabel)
  
 } 
 
@@ -2169,7 +2169,7 @@ construct {
         manchester:label ?manchesterLabel.
 } where {
   
-  bind(if(function:isBlank($this), "Anonymous SPARQLConstraint",concat("[=",function:getPrefixedIRI($this),"=]")) as ?manchesterLabel)
+  bind(if(function:isBlank($this), "Anonymous SPARQLConstraint",concat("[=SPARQL Constraints/",function:getPrefixedIRI($this),"=]")) as ?manchesterLabel)
  
 } 
 
@@ -2237,7 +2237,7 @@ construct {
   ?parameter manchester:label ?manchesterParameter.
   }
   
-  bind(if(function:isBlank($this), "Anonymous SPARQLFunction",concat("[=",function:getPrefixedIRI($this),"=]")) as ?manchesterLabel)
+  bind(if(function:isBlank($this), "Anonymous SPARQLFunction",concat("[=SPARQL Functions/",function:getPrefixedIRI($this),"=]")) as ?manchesterLabel)
  
 }   
 '''.
@@ -2290,7 +2290,7 @@ construct {
         manchester:label ?manchesterLabel.
 } where {
   
-  bind(if(function:isBlank($this), "Anonymous SPARQLRule",concat("[=",function:getPrefixedIRI($this),"=]")) as ?manchesterLabel)
+  bind(if(function:isBlank($this), "Anonymous SPARQLRule",concat("[=SPARQL Rules/",function:getPrefixedIRI($this),"=]")) as ?manchesterLabel)
  
 }   
 '''.
@@ -2343,7 +2343,7 @@ construct {
         manchester:label ?manchesterLabel.
 } where {
   
-  bind(if(function:isBlank($this), "Anonymous TripleRule",concat("[=",function:getPrefixedIRI($this),"=]")) as ?manchesterLabel)
+  bind(if(function:isBlank($this), "Anonymous TripleRule",concat("[=SHACL Triple Rules/",function:getPrefixedIRI($this),"=]")) as ?manchesterLabel)
  
 }   
 '''.
@@ -2396,7 +2396,7 @@ construct {
         manchester:label ?manchesterLabel.
 } where {
   
-  bind(if(function:isBlank($this), "Anonymous SPARQLTarget",concat("[=",function:getPrefixedIRI($this),"=]")) as ?manchesterLabel)
+  bind(if(function:isBlank($this), "Anonymous SPARQLTarget",concat("[=SPARQL Targets/",function:getPrefixedIRI($this),"=]")) as ?manchesterLabel)
  
 }   
 '''.
@@ -2449,7 +2449,7 @@ construct {
         manchester:label ?manchesterLabel.
 } where {
   
-  bind(if(function:isBlank($this), "Anonymous SPARQLTargetType",concat("[=",function:getPrefixedIRI($this),"=]")) as ?manchesterLabel)
+  bind(if(function:isBlank($this), "Anonymous SPARQLTargetType",concat("[=SPARQL Target Types/",function:getPrefixedIRI($this),"=]")) as ?manchesterLabel)
  
 }   
 '''.

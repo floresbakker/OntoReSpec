@@ -16,9 +16,12 @@
                   graph TB
                   classDef Datatype fill:#9c6,stroke:#9c6;
                    
-https://example.org/helloworld/model/def/LinkedDataEnthusiast((Linked Data enthusiast))
-https://example.org/helloworld/model/def/HelloWorld((Hello World))
-https://example.org/helloworld/model/def/LinkedDataEnthusiast -- message --> https://example.org/helloworld/model/def/HelloWorld
+https://example.org/helloworld/model/def/Scheme[helloworld:Scheme]:::Scheme
+https://example.org/helloworld/model/def/Concept[helloworld:Concept]:::Concept
+https://example.org/helloworld/model/def/Concept -- http://www.w3.org/2004/02/skos/core#inScheme --> https://example.org/helloworld/model/def/Scheme
+https://example.org/helloworld/model/def/HelloWorld((helloworld:HelloWorld))
+https://example.org/helloworld/model/def/LinkedDataEnthusiast((helloworld:LinkedDataEnthusiast))
+https://example.org/helloworld/model/def/LinkedDataEnthusiast -- helloworld:message --> https://example.org/helloworld/model/def/HelloWorld
 
                  </pre>
                  <script type="module">

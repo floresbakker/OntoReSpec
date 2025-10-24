@@ -1,20 +1,20 @@
-prefix condition: <https://respec.org/ontorespec/model/condition/>
-prefix dct: <http://purl.org/dc/terms/>
-prefix dom: <http://www.w3.org/DOM/model/def/>
-prefix template: <https://respec.org/ontorespec/id/> 
-prefix function: <https://respec.org/ontorespec/model/function/>
-prefix html: <https://www.w3.org/html/model/def/> 
+prefix condition:  <https://respec.org/ontorespec/model/condition/>
+prefix dct:        <http://purl.org/dc/terms/>
+prefix dom:        <http://www.w3.org/DOM/model/def/>
+prefix template:   <https://respec.org/ontorespec/id/> 
+prefix function:   <https://respec.org/ontorespec/model/function/>
+prefix html:       <https://www.w3.org/html/model/def/> 
 prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/> 
-prefix owl: <http://www.w3.org/2002/07/owl#>
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <https://respec.org/ontorespec/model/def/> 
-prefix rule: <https://respec.org/ontorespec/model/rule/>
-prefix shp: <https://respec.org/ontorespec/model/shp/>
-prefix target: <https://respec.org/ontorespec/model/target/>
-prefix sh: <http://www.w3.org/ns/shacl#>
-prefix xsd: <http://www.w3.org/2001/XMLSchema#>
-prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix owl:        <http://www.w3.org/2002/07/owl#>
+prefix rdf:        <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix rdfs:       <http://www.w3.org/2000/01/rdf-schema#> 
+prefix respec:     <https://respec.org/ontorespec/model/def/> 
+prefix rule:       <https://respec.org/ontorespec/model/rule/>
+prefix shp:        <https://respec.org/ontorespec/model/shp/>
+prefix target:     <https://respec.org/ontorespec/model/target/>
+prefix sh:         <http://www.w3.org/ns/shacl#>
+prefix xsd:        <http://www.w3.org/2001/XMLSchema#>
+prefix skos:       <http://www.w3.org/2004/02/skos/core#>
 
 respec: {
 
@@ -27,7 +27,7 @@ respec:introduction
 
 shp:Document
   a sh:NodeShape;
-  sh:rule rule:Document, rule:StaticElement, rule:OptionalElement, rule:Title, rule:Introduction, rule:Description, rule:Example, rule:NameSpace, rule:Abstract, rule:Configuration, rule:Classes, rule:ObjectProperties, rule:DatatypeProperties, rule:RDF_Properties, rule:NodeShapes, rule:SparqlTargets, rule:SparqlRules, rule:SparqlFunctions, rule:Parameters, rule:NamedIndividuals, rule:ConceptSchemes;
+  sh:rule rule:Document, rule:StaticElement, rule:OptionalElement, rule:Title, rule:Introduction,rule:Example, rule:NameSpace, rule:Abstract, rule:Configuration, rule:Classes, rule:ObjectProperties, rule:DatatypeProperties, rule:RDF_Properties, rule:NodeShapes, rule:SparqlTargets, rule:SparqlRules, rule:SparqlFunctions, rule:Parameters, rule:NamedIndividuals, rule:Concepts, rule:ConceptSchemes;
   sh:targetClass respec:Generation.
 
 rule:Document
@@ -35,18 +35,22 @@ rule:Document
   skos:prefLabel 'Document rule'@en;
   rdfs:comment 'The Document rule creates a document and attaches its structure.'@en ;
   sh:construct """
-prefix dct: <http://purl.org/dc/terms/>
-prefix dom: <http://www.w3.org/DOM/model/def/>
+prefix dc:       <http://purl.org/dc/elements/1.1/>
+prefix dct:      <http://purl.org/dc/terms/>
+prefix dom:      <http://www.w3.org/DOM/model/def/>
 prefix function: <https://respec.org/ontorespec/model/function/>
-prefix html: <https://www.w3.org/html/model/def/> 
-prefix prov: <http://www.w3.org/ns/prov#>
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <https://respec.org/ontorespec/model/def/> 
+prefix html:     <https://www.w3.org/html/model/def/> 
+prefix prov:     <http://www.w3.org/ns/prov#>
+prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> 
+prefix respec:   <https://respec.org/ontorespec/model/def/> 
+prefix schema:   <https://schema.org/>
+prefix skos:     <http://www.w3.org/2004/02/skos/core#>
 
 construct {
   ?documentID
     a html:Document, respec:Document ;
+    skos:prefLabel ?documentTitle;
     rdf:_1 ?docTypeID ;
     rdf:_2 ?rootID ;
     prov:wasGeneratedBy $this;
@@ -64,6 +68,26 @@ construct {
                     rdf:_2 ?root.
   ?docType a html:DocumentType.
   ?root  a html:Html.
+  
+  OPTIONAL 
+  {
+  ?ontology dc:title ?ontologyTitle1.
+  FILTER(LANG(?ontologyTitle1)=?language)
+  }
+  
+  OPTIONAL
+  {
+  ?ontology dct:title ?ontologyTitle2.
+  FILTER(LANG(?ontologyTitle2)=?language)
+  }
+  
+  OPTIONAL
+  {
+  ?ontology schema:name ?ontologyTitle3.
+  FILTER(LANG(?ontologyTitle3)=?language)
+  }
+  bind(coalesce(?ontologyTitle1, ?ontologyTitle2, ?ontologyTitle3, ?unboundDummy) as ?ontologyTitle) 
+  bind(if(!bound(?ontologyTitle), 'ReSpec document', concat('ReSpec document for "', str(?ontologyTitle), '"')) as ?documentTitle)
   
   # Create identifiers
   
@@ -211,8 +235,9 @@ prefix respec: <https://respec.org/ontorespec/model/def/>
 prefix schema: <http://schema.org/>
 
 construct {
-  ?elementID rdf:type html:Text;
-  html:fragment ?ontologyTitle.
+  ?elementID 
+      rdf:type html:Text;
+      html:fragment ?ontologyTitle.
     
 } where {
    {$this dct:subject ?ontology;
@@ -255,25 +280,29 @@ rule:Introduction
   skos:prefLabel 'Introduction rule'@en;
   rdfs:comment 'The Introduction rule creates an introduction for the ontology in the document.'@en ;
   sh:construct """
-prefix dct: <http://purl.org/dc/terms/>
-prefix dc:  <http://purl.org/dc/elements/1.1/>
-prefix dom: <http://www.w3.org/DOM/model/def/>
+prefix dct:      <http://purl.org/dc/terms/>
+prefix dc:       <http://purl.org/dc/elements/1.1/>
+prefix dom:      <http://www.w3.org/DOM/model/def/>
 prefix function: <https://respec.org/ontorespec/model/function/>
-prefix html: <https://www.w3.org/html/model/def/>
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix respec: <https://respec.org/ontorespec/model/def/>
-prefix schema: <http://schema.org/>
-prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix html:     <https://www.w3.org/html/model/def/>
+prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#>
+prefix respec:   <https://respec.org/ontorespec/model/def/>
+prefix schema:   <http://schema.org/>
+prefix skos:     <http://www.w3.org/2004/02/skos/core#>
 
 construct {
   ?elementID                          rdf:type html:Section;
+                                      skos:prefLabel ?introductionTitle;
                                       rdf:_1 ?generalIntroductionH2;
                                       rdf:_2 ?generalIntroduction_text;
                                       rdf:_3 ?introductionBackgroundSection;
-                                      rdf:_4 ?introductionOntologySection;
+                                      rdf:_4 ?introductionObjectiveSection;
                                       rdf:_5 ?introductionAudienceSection;
-                                      html:class "informative".
+                                      rdf:_6 ?introductionRelatedWorkSection;
+                                      html:class "informative";
+                                      html:style 'white-space: pre-wrap;';
+                                      respec:data-format 'markdown'.
   ?generalIntroductionH2              rdf:type html:H2;
                                       rdf:_1 ?generalIntroduction_title.
   ?generalIntroduction_title          rdf:type html:Text;
@@ -281,6 +310,7 @@ construct {
   ?generalIntroduction_text           rdf:type html:Text;
                                       html:fragment ?generalIntroduction.
   ?introductionBackgroundSection      rdf:type html:Section;
+                                      skos:prefLabel ?backgroundTitle;
                                       rdf:_1 ?introductionBackgroundH2;
                                       rdf:_2 ?introductionBackground_text.
   ?introductionBackgroundH2           rdf:type html:H2;
@@ -289,16 +319,18 @@ construct {
                                       html:fragment ?backgroundTitle.
   ?introductionBackground_text        rdf:type html:Text;
                                       html:fragment ?introductionBackground.
-  ?introductionOntologySection        rdf:type html:Section;
-                                      rdf:_1 ?introductionOntologyH2;
-                                      rdf:_2 ?introductionOntology_text.
-  ?introductionOntologyH2             rdf:type html:H2;
-                                      rdf:_1 ?introductionOntology_title.
-  ?introductionOntology_title         rdf:type html:Text;
+  ?introductionObjectiveSection       rdf:type html:Section;
+                                      skos:prefLabel ?objectiveTitle;
+                                      rdf:_1 ?introductionObjectiveH2;
+                                      rdf:_2 ?introductionObjective_text.
+  ?introductionObjectiveH2            rdf:type html:H2;
+                                      rdf:_1 ?introductionObjective_title.
+  ?introductionObjective_title        rdf:type html:Text;
                                       html:fragment ?objectiveTitle.
-  ?introductionOntology_text          rdf:type html:Text;
+  ?introductionObjective_text         rdf:type html:Text;
                                       html:fragment ?introductionObjective.
   ?introductionAudienceSection        rdf:type html:Section;
+                                      skos:prefLabel ?audienceTitle;
                                       rdf:_1 ?introductionAudienceH2;
                                       rdf:_2 ?introductionAudience_text.
   ?introductionAudienceH2             rdf:type html:H2;
@@ -307,15 +339,25 @@ construct {
                                       html:fragment ?audienceTitle.
   ?introductionAudience_text          rdf:type html:Text;
                                       html:fragment ?introductionAudience.
+  ?introductionRelatedWorkSection     rdf:type html:Section;
+                                      skos:prefLabel ?relatedWorkTitle;
+                                      rdf:_1 ?introductionRelatedWorkH2;
+                                      rdf:_2 ?introductionRelatedWork_text.
+  ?introductionRelatedWorkH2          rdf:type html:H2;
+                                      rdf:_1 ?introductionRelatedWork_title.
+  ?introductionRelatedWork_title      rdf:type html:Text;
+                                      html:fragment ?relatedWorkTitle.
+  ?introductionRelatedWork_text       rdf:type html:Text;
+                                      html:fragment ?introductionRelatedWork.
 } where {
 
    $this respec:documentLanguage ?language;
-          respec:documentNamespace ?namespace;
-          dct:subject ?ontology.
+         respec:documentNamespace ?namespace;
+         dct:subject ?ontology.
           
     optional
     {
-      ?template a respec:Introduction.
+      ?template a respec:Introduction;
     }
     
     optional
@@ -347,6 +389,13 @@ construct {
                              respec:absenceLabel ?absenceAudienceTitle.
       filter (lang(?audienceTitle) = ?language && lang(?absenceAudienceTitle) = ?language)
     }
+    
+    optional{
+      ?templateRelatedWorkTitle a respec:RelatedWork;
+                             respec:label ?relatedWorkTitle ;
+                             respec:absenceLabel ?absenceRelatedWorkTitle.
+      filter (lang(?relatedWorkTitle) = ?language && lang(?absenceRelatedWorkTitle) = ?language)
+    }    
 
     optional
     {
@@ -371,11 +420,18 @@ construct {
       ?ontology respec:audience ?audience.
       filter (lang(?audience) = ?language)
     }
+    
+    optional
+    {
+      ?ontology respec:relatedWork ?relatedWork.
+      filter (lang(?relatedWork) = ?language)
+    }    
 
     bind(coalesce(?introduction, ?absenceIntroductionText) as ?generalIntroduction)
     bind(coalesce(?background, ?absenceBackgroundTitle) as ?introductionBackground)
     bind(coalesce(?objective, ?absenceObjectiveTitle) as ?introductionObjective)
     bind(coalesce(?audience, ?absenceAudienceTitle) as ?introductionAudience)
+    bind(coalesce(?relatedWork, ?absenceRelatedWorkTitle) as ?introductionRelatedWork)
 
     # Create identifiers
     bind(function:getElementIRI(?template, ?namespace) as ?elementID)
@@ -388,80 +444,27 @@ construct {
     bind(iri(concat(str(?introductionBackgroundSection),'-2')) as ?introductionBackground_text)
     bind(iri(concat(str(?introductionBackgroundH2),'-1')) as ?introductionBackground_title)
 
-    bind(iri(concat(str(?elementID),'-4')) as ?introductionOntologySection )
-    bind(iri(concat(str(?introductionOntologySection),'-1')) as ?introductionOntologyH2)
-    bind(iri(concat(str(?introductionOntologySection),'-2')) as ?introductionOntology_text)
-    bind(iri(concat(str(?introductionOntologyH2),'-1')) as ?introductionOntology_title)
+    bind(iri(concat(str(?elementID),'-4')) as ?introductionObjectiveSection )
+    bind(iri(concat(str(?introductionObjectiveSection),'-1')) as ?introductionObjectiveH2)
+    bind(iri(concat(str(?introductionObjectiveSection),'-2')) as ?introductionObjective_text)
+    bind(iri(concat(str(?introductionObjectiveH2),'-1')) as ?introductionObjective_title)
 
     bind(iri(concat(str(?elementID),'-5')) as ?introductionAudienceSection )
     bind(iri(concat(str(?introductionAudienceSection),'-1')) as ?introductionAudienceH2)
     bind(iri(concat(str(?introductionAudienceSection),'-2')) as ?introductionAudience_text)
     bind(iri(concat(str(?introductionAudienceH2),'-1')) as ?introductionAudience_title)
 
+    bind(iri(concat(str(?elementID),'-6')) as ?introductionRelatedWorkSection )
+    bind(iri(concat(str(?introductionRelatedWorkSection),'-1')) as ?introductionRelatedWorkH2)
+    bind(iri(concat(str(?introductionRelatedWorkSection),'-2')) as ?introductionRelatedWork_text)
+    bind(iri(concat(str(?introductionRelatedWorkH2),'-1')) as ?introductionRelatedWork_title)
   }
-""".
-
-rule:Description
-  a sh:SPARQLRule;
-  skos:prefLabel 'Description rule'@en;
-  rdfs:comment 'The Description rule creates a description for the ontology in the document.'@en ;
-  sh:construct """
-prefix dct: <http://purl.org/dc/terms/>
-prefix dc:  <http://purl.org/dc/elements/1.1/>
-prefix dom: <http://www.w3.org/DOM/model/def/>
-prefix function: <https://respec.org/ontorespec/model/function/>
-prefix html: <https://www.w3.org/html/model/def/> 
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix respec: <https://respec.org/ontorespec/model/def/> 
-prefix schema: <http://schema.org/>
-prefix skos: <http://www.w3.org/2004/02/skos/core#>
-
-construct {
-  ?elementID rdf:type html:Text;
-  html:fragment ?ontologyDescription.
-    
-} where {
-   {?template a respec:Description;
-              respec:absenceLabel ?absenceLabel.
-   $this respec:documentLanguage ?language;
-         respec:documentNamespace ?namespace;
-         dct:subject ?ontology.
-   FILTER (LANG(?absenceLabel) = ?language)
-   }
-  
-  OPTIONAL
-  {?ontology dc:description ?ontologyDescription1
-  FILTER (LANG(?ontologyDescription1) = ?language)}
-  
-  OPTIONAL
-  {?ontology dct:description ?ontologyDescription2
-  FILTER (LANG(?ontologyDescription2) = ?language)}
-  
-  OPTIONAL
-  {?ontology rdfs:comment ?ontologyDescription3
-  FILTER (LANG(?ontologyDescription3) = ?language)}
-  
-  OPTIONAL
-  {?ontology schema:description ?ontologyDescription4
-  FILTER (LANG(?ontologyDescription4) = ?language)}
-  
-  OPTIONAL
-  {?ontology skos:note ?ontologyDescription5
-  FILTER (LANG(?ontologyDescription5) = ?language)}
-
-  BIND(COALESCE(?ontologyDescription1, ?ontologyDescription2, ?ontologyDescription3, ?ontologyDescription4, ?ontologyDescription5, ?absenceLabel) as ?ontologyDescription)
-
-  # Create identifiers
-  bind(function:getElementIRI(?template, ?namespace) as ?elementID)
-    
-}
 """.
 
 rule:Example
   a sh:SPARQLRule;
   skos:prefLabel 'Example rule'@en;
-  rdfs:comment 'The Example rule creates an example for the ontology in the document.'@en ;
+  rdfs:comment 'The Example rule creates a full example for the ontology in the document.'@en ;
   sh:construct """
 prefix dct: <http://purl.org/dc/terms/>
 prefix dc:  <http://purl.org/dc/elements/1.1/>
@@ -477,6 +480,7 @@ prefix skos: <http://www.w3.org/2004/02/skos/core#>
 construct {
   ?elementID             rdf:type html:Aside;
                          html:class 'example';
+                         skos:prefLabel "Full example";
                          rdf:_1 ?exampleParagraph.
   ?exampleParagraph      rdf:type html:P;
                          rdf:_1 ?examplePre.
@@ -682,6 +686,7 @@ construct {
   {?ontology respec:specStatus ?specStatus}
   optional
   {?ontology respec:latestVersion ?latestVersion}
+  bind(if(?latestVersion!='null', concat('"',str(?latestVersion),'"'),?latestVersion) as ?strLatestVersion)
   optional
   {?ontology respec:shortName ?shortName}  
   optional
@@ -708,7 +713,7 @@ construct {
   BIND(REPLACE(?fragment , 'group: "working-group",'            , COALESCE(CONCAT('group: "'         ,str(?workinggroup)     ,'",'), '')) as ?fragment1)
   BIND(REPLACE(?fragment1, 'github: "some-org/mySpec",'         , COALESCE(CONCAT('github: "'        ,str(?github)           ,'",'), '')) as ?fragment2)
   BIND(REPLACE(?fragment2, 'editors: "listOfNames",'            , COALESCE(CONCAT('editors: ['       ,str(?ontologyAuthors)  ,'],'), '')) as ?fragment3)
-  BIND(REPLACE(?fragment3, 'latestVersion: "latestSpecversion",', COALESCE(CONCAT('latestVersion: "' ,str(?latestVersion)    ,'",'), '')) as ?fragment4)
+  BIND(REPLACE(?fragment3, 'latestVersion: "latestSpecversion",', COALESCE(CONCAT('latestVersion: '  ,?strLatestVersion      ,',') , '')) as ?fragment4)
   BIND(REPLACE(?fragment4, 'shortName: "a shortName",'          , COALESCE(CONCAT('shortName: "'     ,str(?shortName)        ,'",'), '')) as ?fragment5)
   BIND(REPLACE(?fragment5, 'xref: "web-platform",'              , COALESCE(CONCAT('xref: "'          ,str(?xref)             ,'",'), '')) as ?fragment6)  
   BIND(REPLACE(?fragment6, 'specStatus: "specificationStatus",' , COALESCE(CONCAT('specStatus: "'    ,str(?specStatus)       ,'",'), '')) as ?configurationFragment)
@@ -747,10 +752,13 @@ prefix vann: <http://purl.org/vocab/vann/>
 
 construct {
 
-      ?elementID                              rdf:type html:Div;
+      ?elementID                              rdf:type html:P;
+                                              skos:prefLabel ?divLabel;
                                               ?memberClassString ?divDefinitionClass2Instance;
                                               html:fragment ?absenceOfClassDefinitions.
       ?divDefinitionClass2Instance            rdf:type html:Section;
+                                              dct:subject ?class;
+                                              skos:prefLabel ?label_value_text;
                                               rdf:_1 ?class_title_instance_h2;
                                               rdf:_2 ?class_label_div;
                                               rdf:_3 ?class_IRI_div;
@@ -762,9 +770,10 @@ construct {
       ?class_title_instance_h2                rdf:type html:H2;
                                               rdf:_1 ?class_dfn_instance.
       ?class_dfn_instance                     rdf:type html:Dfn;
+                                              respec:data-dfn-for "Classes";
                                               rdf:_1 ?class_title_text_instance.
       ?class_title_text_instance              rdf:type html:Text;
-                                              html:fragment ?cleanedManchesterLabel.
+                                              html:fragment ?prefixedLabel.
       ?class_label_div                        rdf:type html:Div;
                                               rdf:_1 ?class_label_strong;
                                               rdf:_2 ?class_label_value;
@@ -874,6 +883,7 @@ where  {
 
   {
     ?template rdf:type respec:ClassDefinition;
+              rdfs:label ?divLabel;
               respec:absenceLabel ?absenceLabel_general.
     $this     dct:subject ?ontology;
               respec:documentLanguage ?language;
@@ -882,6 +892,7 @@ where  {
               respec:absenceLabel ?absenceLabel_entity. 
     filter (LANG(?absenceLabel_entity)  = ?language)
     filter (LANG(?absenceLabel_general) = ?language)
+    filter (LANG(?divLabel) = ?language)    
   }
   
   OPTIONAL
@@ -984,7 +995,8 @@ where  {
   
   # Establishing the IRI of the class
 
-  BIND(STR(?class) as ?IRI_value_text)
+  bind(str(?class) as ?IRI_value_text)
+  bind(function:getPrefixedIRI(?class) as ?prefixedLabel)
   
   # Create identifiers - generic
   
@@ -1078,10 +1090,12 @@ prefix vann: <http://purl.org/vocab/vann/>
 
 construct {
 
-      ?elementID                                              rdf:type html:Div;
+      ?elementID                                              rdf:type html:P;
                                                               ?rdf_member ?divDefinitionObjectProperty2Instance;
                                                               html:fragment ?absenceOfObjectPropertyDefinitions.
       ?divDefinitionObjectProperty2Instance                   rdf:type html:Section;
+                                                              dct:subject ?objectProperty;
+                                                              skos:prefLabel ?label_value_text;      
                                                               rdf:_1 ?objectproperty_title_instance_h2;
                                                               rdf:_2 ?objectproperty_label_div;
                                                               rdf:_3 ?objectproperty_IRI_div;
@@ -1093,6 +1107,7 @@ construct {
       ?objectproperty_title_instance_h2                       rdf:type html:H2;
                                                               rdf:_1 ?objectproperty_dfn_instance.
       ?objectproperty_dfn_instance                            rdf:type html:Dfn;
+                                                              respec:data-dfn-for "Object Properties";     
                                                               rdf:_1 ?objectproperty_title_text_instance.
       ?objectproperty_title_text_instance                     rdf:type html:Text;
                                                               html:fragment ?objectPropertyManchesterLabel.
@@ -1106,7 +1121,7 @@ construct {
       ?objectproperty_label_text                              rdf:type html:Text;
                                                               html:fragment 'Label: '.
       ?objectproperty_label_value                             rdf:type html:Text;
-                                                              html:fragment ?objectproperty_value_text.                                                                   
+                                                              html:fragment ?label_value_text.                                                                   
       ?objectproperty_IRI_div                                 rdf:type html:Div;
                                                               rdf:_1 ?objectproperty_IRI_strong;
                                                               rdf:_2 ?objectproperty_IRI_a;
@@ -1213,14 +1228,14 @@ where  {
   OPTIONAL
   # Get the sorted entities from the ontology including semantics
   
-  {SELECT ?objectProperty ?objectPropertyManchesterLabel_original ?objectPropertyManchesterLabel ?objectPropertyDefinition_original ?objectPropertyManchesterDomain ?objectPropertyManchesterRange ?objectPropertyManchesterSubPropertyOf ?objectproperty_value_text (COUNT(?prevObjectProperty) + 1 AS ?member)
+  {SELECT ?objectProperty ?objectPropertyManchesterLabel_original ?objectPropertyManchesterLabel ?objectPropertyDefinition_original ?objectPropertyManchesterDomain ?objectPropertyManchesterRange ?objectPropertyManchesterSubPropertyOf ?label_value_text (COUNT(?prevObjectProperty) + 1 AS ?member)
 WHERE {
   ?objectProperty a owl:ObjectProperty .
   ?objectProperty manchester:label ?objectPropertyManchesterLabel_original .
   ?objectProperty rdfs:isDefinedBy ?ontology.
   $this dct:subject ?ontology;
         respec:documentLanguage ?language2.
-  BIND(function:getLabel(?objectProperty, ?language2) as ?objectproperty_value_text)
+  BIND(function:getLabel(?objectProperty, ?language2) as ?label_value_text)
 
   OPTIONAL{
   ?objectProperty skos:definition ?objectPropertyDefinition_original.
@@ -1242,7 +1257,7 @@ WHERE {
     FILTER(?prevLabel < ?objectPropertyManchesterLabel_original)
   }
 }
-  GROUP BY ?objectPropertyManchesterLabel_original ?objectPropertyManchesterLabel ?objectPropertyDefinition_original ?objectProperty ?objectPropertyManchesterDomain ?objectPropertyManchesterRange ?objectPropertyManchesterSubPropertyOf ?objectproperty_value_text
+  GROUP BY ?objectPropertyManchesterLabel_original ?objectPropertyManchesterLabel ?objectPropertyDefinition_original ?objectProperty ?objectPropertyManchesterDomain ?objectPropertyManchesterRange ?objectPropertyManchesterSubPropertyOf ?label_value_text
   ORDER BY ?objectPropertyManchesterLabel_original
 }
 
@@ -1344,10 +1359,12 @@ prefix vann: <http://purl.org/vocab/vann/>
 
 construct {
 
-      ?elementID                                              rdf:type html:Div;
+      ?elementID                                              rdf:type html:P;
                                                               ?rdf_member ?divDefinitionDatatypeProperty2Instance;
                                                               html:fragment ?absenceOfDatatypePropertyDefinitions.
-      ?divDefinitionDatatypeProperty2Instance                   rdf:type html:Section;
+      ?divDefinitionDatatypeProperty2Instance                 rdf:type html:Section;
+                                                              dct:subject ?datatypeProperty;
+                                                              skos:prefLabel ?label_value_text;        
                                                               rdf:_1 ?datatypeproperty_title_instance_h2;
                                                               rdf:_2 ?datatypeproperty_label_div;
                                                               rdf:_3 ?datatypeproperty_IRI_div;
@@ -1359,6 +1376,7 @@ construct {
       ?datatypeproperty_title_instance_h2                       rdf:type html:H2;
                                                               rdf:_1 ?datatypeproperty_dfn_instance.
       ?datatypeproperty_dfn_instance                            rdf:type html:Dfn;
+                                                              respec:data-dfn-for "Datatype Properties";           
                                                               rdf:_1 ?datatypeproperty_title_text_instance.
       ?datatypeproperty_title_text_instance                     rdf:type html:Text;
                                                               html:fragment ?datatypePropertyManchesterLabel.
@@ -1372,7 +1390,7 @@ construct {
       ?datatypeproperty_label_text                                rdf:type html:Text;
                                                               html:fragment 'Label: '.
       ?datatypeproperty_label_value                                rdf:type html:Text;
-                                                              html:fragment ?datatypeproperty_value_text.                                                                    
+                                                              html:fragment ?label_value_text.                                                                    
       ?datatypeproperty_IRI_div                                   rdf:type html:Div;
                                                               rdf:_1 ?datatypeproperty_IRI_strong;
                                                               rdf:_2 ?datatypeproperty_IRI_a;
@@ -1479,14 +1497,14 @@ where  {
   OPTIONAL
   # Get the sorted entities from the ontology including semantics
   
-  {SELECT ?datatypeProperty ?datatypePropertyManchesterLabel_original ?datatypePropertyManchesterLabel ?datatypePropertyDefinition_original ?datatypePropertyManchesterDomain ?datatypePropertyManchesterRange ?datatypePropertyManchesterSubPropertyOf ?datatypeproperty_value_text (COUNT(?prevDatatypeProperty) + 1 AS ?member)
+  {SELECT ?datatypeProperty ?datatypePropertyManchesterLabel_original ?datatypePropertyManchesterLabel ?datatypePropertyDefinition_original ?datatypePropertyManchesterDomain ?datatypePropertyManchesterRange ?datatypePropertyManchesterSubPropertyOf ?label_value_text (COUNT(?prevDatatypeProperty) + 1 AS ?member)
 WHERE {
   ?datatypeProperty a owl:DatatypeProperty .
   ?datatypeProperty manchester:label ?datatypePropertyManchesterLabel_original .
   ?datatypeProperty rdfs:isDefinedBy ?ontology.
   $this dct:subject ?ontology;
         respec:documentLanguage ?language2.
-  BIND(function:getLabel(?datatypeProperty, ?language2) as ?datatypeproperty_value_text)        
+  BIND(function:getLabel(?datatypeProperty, ?language2) as ?label_value_text)        
      
   OPTIONAL{
   ?datatypeProperty skos:definition ?datatypePropertyDefinition_original.
@@ -1510,7 +1528,7 @@ WHERE {
     FILTER(?prevLabel < ?datatypePropertyManchesterLabel_original)
    }
   }
-  GROUP BY ?datatypePropertyManchesterLabel_original ?datatypePropertyManchesterLabel ?datatypePropertyDefinition_original ?datatypeProperty ?datatypePropertyManchesterDomain ?datatypePropertyManchesterRange ?datatypePropertyManchesterSubPropertyOf ?datatypeproperty_value_text
+  GROUP BY ?datatypePropertyManchesterLabel_original ?datatypePropertyManchesterLabel ?datatypePropertyDefinition_original ?datatypeProperty ?datatypePropertyManchesterDomain ?datatypePropertyManchesterRange ?datatypePropertyManchesterSubPropertyOf ?label_value_text
   ORDER BY ?datatypePropertyManchesterLabel_original
 }
   BIND(IRI(CONCAT(str(rdf:),"_", str(?member))) as ?rdf_member)  
@@ -1611,10 +1629,12 @@ prefix vann: <http://purl.org/vocab/vann/>
 
 construct {
 
-      ?elementID                                            rdf:type html:Div;
+      ?elementID                                            rdf:type html:P;
                                                               ?rdf_member ?divDefinitionRDF_Property2Instance;
                                                               html:fragment ?absenceOfRDF_PropertyDefinitions.
       ?divDefinitionRDF_Property2Instance                   rdf:type html:Section;
+                                                              dct:subject ?RDF_Property;
+                                                              skos:prefLabel ?label_value_text;        
                                                               rdf:_1 ?RDF_Property_title_instance_h2;
                                                               rdf:_2 ?RDF_Property_label_div;
                                                               rdf:_3 ?RDF_Property_IRI_div;
@@ -1626,6 +1646,7 @@ construct {
       ?RDF_Property_title_instance_h2                       rdf:type html:H2;
                                                               rdf:_1 ?RDF_Property_dfn_instance.
       ?RDF_Property_dfn_instance                            rdf:type html:Dfn;
+                                                              respec:data-dfn-for "RDF Properties";        
                                                               rdf:_1 ?RDF_Property_title_text_instance.
       ?RDF_Property_title_text_instance                     rdf:type html:Text;
                                                               html:fragment ?RDF_PropertyManchesterLabel.
@@ -1639,7 +1660,7 @@ construct {
       ?RDF_Property_label_text                                rdf:type html:Text;
                                                               html:fragment 'Label: '.
       ?RDF_Property_label_value                                rdf:type html:Text;
-                                                              html:fragment ?RDF_Property_value_text.                                                                          
+                                                              html:fragment ?label_value_text.                                                                          
       ?RDF_Property_IRI_div                                   rdf:type html:Div;
                                                               rdf:_1 ?RDF_Property_IRI_strong;
                                                               rdf:_2 ?RDF_Property_IRI_a;
@@ -1747,14 +1768,14 @@ where  {
   OPTIONAL
   # Get the sorted entities from the ontology including semantics
   
-  {SELECT ?RDF_Property ?RDF_PropertyManchesterLabel_original ?RDF_PropertyManchesterLabel ?RDF_PropertyDefinition_original ?RDF_PropertyManchesterDomain ?RDF_PropertyManchesterRange ?RDF_PropertyManchesterSubPropertyOf ?RDF_Property_value_text (COUNT(?prevRDF_Property) + 1 AS ?member)
+  {SELECT ?RDF_Property ?RDF_PropertyManchesterLabel_original ?RDF_PropertyManchesterLabel ?RDF_PropertyDefinition_original ?RDF_PropertyManchesterDomain ?RDF_PropertyManchesterRange ?RDF_PropertyManchesterSubPropertyOf ?label_value_text (COUNT(?prevRDF_Property) + 1 AS ?member)
 WHERE {
   ?RDF_Property a rdf:Property .
   ?RDF_Property manchester:label ?RDF_PropertyManchesterLabel_original .
   ?RDF_Property rdfs:isDefinedBy ?ontology.
   $this dct:subject ?ontology;
         respec:documentLanguage ?language2.
-  BIND(function:getLabel(?RDF_Property, ?language2) as ?RDF_Property_value_text)        
+  BIND(function:getLabel(?RDF_Property, ?language2) as ?label_value_text)        
 
   OPTIONAL{
   ?RDF_Property skos:definition ?RDF_PropertyDefinition_original.
@@ -1775,7 +1796,7 @@ WHERE {
     FILTER(?prevLabel < ?RDF_PropertyManchesterLabel_original)
   }
 }
-  GROUP BY ?RDF_PropertyManchesterLabel_original ?RDF_PropertyManchesterLabel ?RDF_PropertyDefinition_original ?RDF_Property ?RDF_PropertyManchesterDomain ?RDF_PropertyManchesterRange ?RDF_PropertyManchesterSubPropertyOf ?RDF_Property_value_text
+  GROUP BY ?RDF_PropertyManchesterLabel_original ?RDF_PropertyManchesterLabel ?RDF_PropertyDefinition_original ?RDF_Property ?RDF_PropertyManchesterDomain ?RDF_PropertyManchesterRange ?RDF_PropertyManchesterSubPropertyOf ?label_value_text
   ORDER BY ?RDF_PropertyManchesterLabel_original
 }
 
@@ -1879,10 +1900,12 @@ prefix vann: <http://purl.org/vocab/vann/>
 
 construct {
 
-  ?elementID                 rdf:type html:Div;
+  ?elementID                 rdf:type html:P;
                              ?rdf_member ?section;
                              html:fragment ?absenceOfDefinitions.
   ?section                   rdf:type html:Section;
+                             dct:subject ?entity;
+                             skos:prefLabel ?label_value_text;    
                              rdf:_1 ?title;
                              rdf:_2 ?label;
                              rdf:_3 ?IRI;
@@ -1894,6 +1917,7 @@ construct {
   ?title                       rdf:type html:H2;
                                rdf:_1 ?dfn.
   ?dfn                            rdf:type html:Dfn;
+                                  respec:data-dfn-for "Node Shapes";    
                                   rdf:_1 ?title_text.
   ?title_text                     rdf:type html:Text;
                                   html:fragment ?entityManchesterLabel.
@@ -2224,11 +2248,13 @@ prefix vann: <http://purl.org/vocab/vann/>
 construct {
 
 # Div
-  ?elementID                                            rdf:type html:Div;
+  ?elementID                                            rdf:type html:P;
                                                         ?rdf_member ?section;
                                                         html:fragment ?absenceOfDefinitions.
 # Section
   ?section                                              rdf:type html:Section;
+                                                        dct:subject ?entity;
+                                                        skos:prefLabel ?label_value_text;   
                                                         rdf:_1 ?title;
                                                         rdf:_2 ?label;
                                                         rdf:_3 ?IRI;
@@ -2242,12 +2268,13 @@ construct {
   ?title                                                rdf:type html:H2;
                                                         rdf:_1 ?dfn.
   ?dfn                                                  rdf:type html:Dfn;
+                                                        respec:data-dfn-for "Named Individuals";    
                                                         rdf:_1 ?title_text.
   ?title_text                                           rdf:type html:Text;
                                                         html:fragment ?entityManchesterLabel.  
 
 # Label                                                        
-  ?label                                                rdf:type html:Div;
+  ?label                                                rdf:type html:P;
                                                         rdf:_1 ?label_strong;
                                                         rdf:_2 ?label_value;
                                                         html:class "container".
@@ -2489,280 +2516,249 @@ rule:ConceptSchemes
   rdfs:comment 'The concept schemes rule creates a document section for concept schemes and their concepts as defined in the ontology.'@en ;
   sh:condition condition:ConceptSchemes;
   sh:construct """
-prefix dct: <http://purl.org/dc/terms/>
-prefix dc:  <http://purl.org/dc/elements/1.1/>
-prefix dom: <http://www.w3.org/DOM/model/def/>
-prefix function: <https://respec.org/ontorespec/model/function/>
-prefix html: <https://www.w3.org/html/model/def/>
+prefix dct:        <http://purl.org/dc/terms/>
+prefix dc:         <http://purl.org/dc/elements/1.1/>
+prefix dom:        <http://www.w3.org/DOM/model/def/>
+prefix function:   <https://respec.org/ontorespec/model/function/>
+prefix html:       <https://www.w3.org/html/model/def/>
 prefix manchester: <https://data.rijksfinancien.nl/manchester/model/def/>
-prefix owl: <http://www.w3.org/2002/07/owl#>
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix respec: <https://respec.org/ontorespec/model/def/>
-prefix schema: <http://schema.org/>
-prefix skos: <http://www.w3.org/2004/02/skos/core#>
-prefix vann: <http://purl.org/vocab/vann/>
+prefix owl:        <http://www.w3.org/2002/07/owl#>
+prefix rdf:        <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs:       <http://www.w3.org/2000/01/rdf-schema#>
+prefix respec:     <https://respec.org/ontorespec/model/def/>
+prefix schema:     <http://schema.org/>
+prefix skos:       <http://www.w3.org/2004/02/skos/core#>
+prefix vann:       <http://purl.org/vocab/vann/>
 
 construct {
 
-  ?elementID              rdf:type html:Div;
-                          html:fragment ?absenceOfConceptSchemeDefinitions;
-                          ?rdf_memberScheme ?chapter_scheme.
-  ?chapter_scheme         rdf:type html:Div;
-                          rdf:_1 ?section_scheme;
-                          ?rdf_member ?chapter_concept.
-  ?section_scheme         rdf:type html:Section;
-                          rdf:_1 ?title_scheme;
-                          rdf:_2 ?label_scheme;
-                          rdf:_3 ?IRI_scheme;
-                          rdf:_4 ?linebreak1;
-                          rdf:_5 ?definition_scheme;
-                          rdf:_6 ?linebreak2;
-                          rdf:_7 ?linebreak3;
-                          rdf:_8 ?manchester_syntax_scheme.
-  ?title_scheme           rdf:type html:H2;
-                          rdf:_1 ?dfn_scheme.
-  ?dfn_scheme                  rdf:type html:Dfn;
-                               rdf:_1 ?title_text_scheme.
-  ?title_text_scheme                     rdf:type html:Text;
-                                  html:fragment ?conceptSchemeLabel.
-  ?label_scheme                                   rdf:type html:Div;
-                                                rdf:_1 ?label_strong_scheme;
-                                                rdf:_2 ?label_value_scheme;
-                                                html:class "container".
-  ?label_strong_scheme                            rdf:type html:Strong;
-                                                  rdf:_1 ?label_text_scheme;
-                                                  html:class "label".
-  ?label_text_scheme                              rdf:type html:Text;
-                                                  html:fragment 'Label: '.   
-  ?label_value_scheme                              rdf:type html:Text;
-                                                  html:fragment ?scheme_label_text.
-  ?IRI_scheme                                   rdf:type html:Div;
-                                                rdf:_1 ?IRI_strong_scheme;
-                                                rdf:_2 ?IRI_a_scheme;
-                                                html:class "container".
-  ?IRI_strong_scheme                              rdf:type html:Strong;
-                                                  rdf:_1 ?IRI_text_scheme;
-                                                  html:class "label".
-  ?IRI_text_scheme                                rdf:type html:Text;
-                                                  html:fragment 'IRI: '.
-  ?IRI_a_scheme                                   rdf:type html:A;
-                                                  html:href ?conceptScheme_IRI;
-                                                  rdf:_1 ?IRI_value_text_scheme.
-  ?IRI_value_text_scheme                                         rdf:type html:Text;
-                                                                 html:fragment ?conceptScheme_IRI.
-  ?definition_scheme                     rdf:type html:Text;
-                                         html:fragment ?cleanedSchemeDefinition.
-  ?manchester_syntax_scheme                             rdf:type html:Aside;
-                                                        html:class "note" ;
-                                                        html:title "Manchester Syntax (Extended)";
-                                                        rdf:_1 ?manchester_syntax_code_scheme.
-  ?manchester_syntax_code_scheme                        rdf:type html:Code;
-                                                        rdf:_1 ?manchester_syntax_table_scheme.
-  ?manchester_syntax_table_scheme                              rdf:type html:Table;
-                                                               rdf:_1 ?manchester_syntax_table_body_definition_scheme.
-  ?manchester_syntax_table_body_definition_scheme          rdf:type html:TableBody;
-                                                           rdf:_1 ?manchester_syntax_table_row_definition_scheme.
-  ?manchester_syntax_table_row_definition_scheme                rdf:type html:Row;
-                                                                rdf:_1 ?manchester_syntax_definition_type_scheme;
-                                                                rdf:_2 ?manchester_syntax_definition_value_scheme.
-  ?manchester_syntax_definition_type_scheme           rdf:type html:DataCell;
-                                                      rdf:_1 ?manchester_syntax_definition_type_text_scheme.
-  ?manchester_syntax_definition_type_text_scheme         rdf:type html:Text;
-                                                         html:fragment 'Concept scheme:'.
-  ?manchester_syntax_definition_value_scheme          rdf:type html:DataCell;
-                                                      rdf:_1 ?manchester_syntax_definition_value_text_scheme.
-  ?manchester_syntax_definition_value_text_scheme        rdf:type html:Text;
-                                                         html:fragment ?conceptSchemeLabel.
+  ?elementID              
+     rdf:type html:P;
+     html:fragment ?absenceOfConceptSchemeDefinitions;
+     rdf:_1 ?schemeParagraph.
+  ?schemeParagraph rdf:type html:P;
+     ?rdf_memberScheme ?chapter_scheme.
+  ?chapter_scheme         
+     rdf:type html:P;
+     rdf:_1 ?section_scheme.
+  ?section_scheme
+     rdf:type html:Section;
+     dct:subject ?conceptScheme;
+     skos:prefLabel ?scheme_label_text;
+     rdf:_1 ?title_scheme;
+     rdf:_2 ?label_scheme;
+     rdf:_3 ?IRI_scheme;
+     rdf:_4 ?linebreak1;
+     rdf:_5 ?definition_scheme;
+     rdf:_6 ?linebreak2;
+     rdf:_7 ?linebreak3;
+     rdf:_8 ?manchester_syntax_scheme.
+  ?title_scheme           
+     rdf:type html:H2;
+     rdf:_1 ?dfn_scheme.
+  ?dfn_scheme
+     rdf:type html:Dfn;
+     respec:data-dfn-for "Concepts";       
+     rdf:_1 ?title_text_scheme.
+  ?title_text_scheme
+     rdf:type html:Text;
+     html:fragment ?conceptSchemeLabel.
+  ?label_scheme
+     rdf:type html:P;
+     rdf:_1 ?label_strong_scheme;
+     rdf:_2 ?label_value_scheme;
+     html:class "container".
+  ?label_strong_scheme
+     rdf:type html:Strong;
+     rdf:_1 ?label_text_scheme;
+     html:class "label".
+  ?label_text_scheme
+     rdf:type html:Text;
+     html:fragment 'Label: '.
+  ?label_value_scheme
+     rdf:type html:Text;
+     html:fragment ?scheme_label_text.
+  ?IRI_scheme
+     rdf:type html:Div;
+     rdf:_1 ?IRI_strong_scheme;
+     rdf:_2 ?IRI_a_scheme;
+     html:class "container".
+  ?IRI_strong_scheme
+     rdf:type html:Strong;
+     rdf:_1 ?IRI_text_scheme;
+     html:class "label".
+  ?IRI_text_scheme
+     rdf:type html:Text;
+     html:fragment 'IRI: '.
+  ?IRI_a_scheme
+     rdf:type html:A;
+     html:href ?conceptScheme_IRI;
+     rdf:_1 ?IRI_value_text_scheme.
+  ?IRI_value_text_scheme
+     rdf:type html:Text;
+     html:fragment ?conceptScheme_IRI.
+  ?definition_scheme                     
+     rdf:type html:Text;
+     html:fragment ?cleanedSchemeDefinition.
+  ?manchester_syntax_scheme
+     rdf:type html:Aside;
+     html:class "note" ;
+     html:title "Manchester Syntax (Extended)";
+     rdf:_1 ?manchester_syntax_code_scheme.
+  ?manchester_syntax_code_scheme
+     rdf:type html:Code;
+     rdf:_1 ?manchester_syntax_table_scheme.
+  ?manchester_syntax_table_scheme
+     rdf:type html:Table;
+     rdf:_1 ?manchester_syntax_table_body_definition_scheme.
+  ?manchester_syntax_table_body_definition_scheme          
+     rdf:type html:TableBody;
+     rdf:_1 ?manchester_syntax_table_row_definition_scheme;
+     rdf:_2 ?emptyrow1;
+     rdf:_3 ?manchester_syntax_table_row_concepts.     
+  ?manchester_syntax_table_row_definition_scheme               
+     rdf:type html:Row;
+     rdf:_1 ?manchester_syntax_definition_type_scheme;
+     rdf:_2 ?manchester_syntax_definition_value_scheme.
+  ?manchester_syntax_definition_type_scheme           
+     rdf:type html:DataCell;
+     rdf:_1 ?manchester_syntax_definition_type_text_scheme.
+  ?manchester_syntax_definition_type_text_scheme         
+     rdf:type html:Text;
+     html:fragment 'Concept scheme:'.
+  ?manchester_syntax_definition_value_scheme          
+     rdf:type html:DataCell;
+     rdf:_1 ?manchester_syntax_definition_value_text_scheme.
+  ?manchester_syntax_definition_value_text_scheme        
+     rdf:type html:Text;
+     html:fragment ?conceptSchemeLabel.
+     
+  ?manchester_syntax_table_row_concepts               
+     rdf:type html:Row;
+     rdf:_1 ?manchester_syntax_concepts_type;
+     rdf:_2 ?manchester_syntax_concepts_value.
+  ?manchester_syntax_concepts_type
+     rdf:type html:DataCell;
+     rdf:_1 ?manchester_syntax_concepts_type_text.
+  ?manchester_syntax_concepts_type_text
+     rdf:type html:Text;
+     html:fragment 'Concepts:'.
+  ?manchester_syntax_concepts_value
+     rdf:type html:DataCell;
+     rdf:_1 ?manchester_syntax_concepts_value_text.
+  ?manchester_syntax_concepts_value_text
+     rdf:type html:Text;
+     html:fragment ?conceptsInSchemeLabel.
 
-  ?chapter_concept           rdf:type html:Div;
-                             rdf:_1 ?section.
-  ?section                   rdf:type html:Section;
-                             rdf:_1 ?title;
-                             rdf:_2 ?label;
-                             rdf:_3 ?IRI;
-                             rdf:_4 ?linebreak4;
-                             rdf:_5 ?definition;
-                             rdf:_6 ?linebreak5;
-                             rdf:_7 ?linebreak6;
-                             rdf:_8 ?manchester_syntax.
-  ?title                       rdf:type html:H2;
-                               rdf:_1 ?dfn.
-  ?dfn                            rdf:type html:Dfn;
-                                  rdf:_1 ?title_text.
-  ?title_text                     rdf:type html:Text;
-                                  html:fragment ?conceptLabel.
-  ?label                                   rdf:type html:Div;
-                                         rdf:_1 ?label_strong;
-                                         rdf:_2 ?label_value;
-                                         html:class "container".
-  ?label_strong                              rdf:type html:Strong;
-                                           rdf:_1 ?label_text;
-                                           html:class "label".
-  ?label_text                                rdf:type html:Text;
-                                           html:fragment 'Label: '.
-  ?label_value                                rdf:type html:Text;
-                                           html:fragment ?label_value_text.
-  ?IRI                                   rdf:type html:Div;
-                                         rdf:_1 ?IRI_strong;
-                                         rdf:_2 ?IRI_a;
-                                         html:class "container".
-  ?IRI_strong                              rdf:type html:Strong;
-                                           rdf:_1 ?IRI_text;
-                                           html:class "label".
-  ?IRI_text                                rdf:type html:Text;
-                                           html:fragment 'IRI: '.
-  ?IRI_a                                   rdf:type html:A;
-                                           html:href ?concept_IRI;
-                                           rdf:_1 ?IRI_value_text.
-  ?IRI_value_text                                         rdf:type html:Text;
-                                                          html:fragment ?concept_IRI.
-  ?definition                     rdf:type html:Text;
-                                  html:fragment ?conceptDefinition.
-  ?manchester_syntax                             rdf:type html:Aside;
-                                                 html:class "note" ;
-                                                 html:title "Manchester Syntax (Extended)";
-                                                 rdf:_1 ?manchester_syntax_code.
-  ?manchester_syntax_code                        rdf:type html:Code;
-                                                 rdf:_1 ?manchester_syntax_table.
-  ?manchester_syntax_table                              rdf:type html:Table;
-                                                        rdf:_1 ?manchester_syntax_table_body_definition.
-  ?manchester_syntax_table_body_definition          rdf:type html:TableBody;
-                                                    rdf:_1 ?manchester_syntax_table_row_definition;
-                                                    rdf:_2 ?emptyrow1;
-                                                    rdf:_3 ?manchester_syntax_table_row_inscheme.
-  ?manchester_syntax_table_row_definition                rdf:type html:Row;
-                                                         rdf:_1 ?manchester_syntax_definition_type;
-                                                         rdf:_2 ?manchester_syntax_definition_value.
-  ?manchester_syntax_definition_type           rdf:type html:DataCell;
-                                               rdf:_1 ?manchester_syntax_definition_type_text.
-  ?manchester_syntax_definition_type_text         rdf:type html:Text;
-                                                  html:fragment 'Concept:'.
-  ?manchester_syntax_definition_value          rdf:type html:DataCell;
-                                               rdf:_1 ?manchester_syntax_definition_value_text.
-  ?manchester_syntax_definition_value_text        rdf:type html:Text;
-                                                  html:fragment ?conceptLabel.
-
-  ?emptyrow1      rdf:type html:Row;
-                  rdf:_1 ?emptycell1;
-                  rdf:_2 ?emptycell2.
-  ?emptycell1         rdf:type html:DataCell.
-  ?emptycell2         rdf:type html:DataCell.
-
-  ?manchester_syntax_table_row_inscheme                    rdf:type html:Row;
-                                                           rdf:_1 ?manchester_syntax_definition_inscheme_type;
-                                                           rdf:_2 ?manchester_syntax_definition_inscheme_value.
-  ?manchester_syntax_definition_inscheme_type            rdf:type html:DataCell;
-                                                         rdf:_1 ?manchester_syntax_definition_inscheme_type_text.
-  ?manchester_syntax_definition_inscheme_type_text          rdf:type html:Text;
-                                                            html:fragment 'In scheme:'.
-  ?manchester_syntax_definition_inscheme_value           rdf:type html:DataCell;
-                                                         rdf:_1 ?manchester_syntax_definition_inscheme_value_text.
-  ?manchester_syntax_definition_inscheme_value_text         rdf:type html:Text;
-                                                            html:fragment ?inSchemeLabel.
+  ?emptyrow1      
+    rdf:type html:Row;
+    rdf:_1 ?emptycell1;
+    rdf:_2 ?emptycell2.
+  ?emptycell1 rdf:type html:DataCell.
+  ?emptycell2 rdf:type html:DataCell.
 
   ?linebreak1                          rdf:type html:Br.
   ?linebreak2                          rdf:type html:Br.
   ?linebreak3                          rdf:type html:Br.
-  ?linebreak4                          rdf:type html:Br.
-  ?linebreak5                          rdf:type html:Br.
-  ?linebreak6                          rdf:type html:Br.
 
 }
 
   where  {
     # Get the template
 
-    {?template rdf:type respec:Concept;
-              respec:absenceLabel ?absenceLabel_general.
-    []        rdf:type respec:Definition;
-              respec:absenceLabel ?absenceLabel_entity.    
-    $this     dct:subject ?ontology;
-              respec:documentLanguage ?language;
-              respec:documentNamespace ?namespace.
-    filter (LANG(?absenceLabel_general) = ?language)
-    filter (LANG(?absenceLabel_entity)  = ?language)
-    }
-
-    OPTIONAL
-    # Get the sorted concepts from the ontology including semantics
-
     {
-      select ?conceptScheme ?concept ?conceptLabel_raw ?conceptLabel ?inSchemeLabel ?conceptDefinition_raw ?label_value_text (count(?prevConcept) + 2 as ?member)
-
-      where {
-
-        ?concept manchester:syntax 'CONCEPT';
-                 manchester:label ?conceptLabel_raw ;
-                 skos:inScheme ?conceptScheme;
-                 rdfs:isDefinedBy ?ontology.
-        ?conceptScheme manchester:label ?inSchemeLabel.
-        $this dct:subject ?ontology;
-              respec:documentLanguage ?language2.
-        BIND(function:getLabel(?concept, ?language2) as ?label_value_text)    
-
-        optional{
-          ?concept skos:definition ?conceptDefinition_raw.
-          filter (lang(?conceptDefinition_raw) = ?language2)
-        }
-
-        bind(function:escapeHTML(?conceptLabel_raw) as ?conceptLabel)
-
-        optional {
-          ?prevConcept manchester:syntax 'CONCEPT';
-                       manchester:label ?prevLabel ;
-                       skos:inScheme ?conceptScheme.
-          filter(?prevLabel < ?conceptLabel_raw)
-        }
-      }
-      group by ?conceptScheme ?concept ?conceptLabel_raw ?conceptLabel ?inSchemeLabel ?conceptDefinition_raw ?label_value_text
-      order by ?conceptScheme ?conceptLabel_raw
+      ?template rdf:type respec:Concept;
+                respec:absenceLabel ?absenceLabel_general.
+      []        rdf:type respec:Definition;
+                respec:absenceLabel ?absenceLabel_entity.
+      $this     dct:subject ?ontology;
+                respec:documentLanguage ?language;
+                respec:documentNamespace ?namespace.
+      filter (lang(?absenceLabel_general) = ?language)
+      filter (lang(?absenceLabel_entity)  = ?language)
     }
 
-    # Get the sorted concept schemes from the ontology including semantics
-    {
-      select ?conceptScheme ?conceptSchemeLabel ?schemeDefinition ?scheme_label_text (count(?prevConceptScheme) + 1 as ?memberScheme)
-      where {
-        ?conceptScheme manchester:syntax 'CONCEPTSCHEME';
-                       manchester:label ?conceptSchemeLabel;
-                       rdfs:isDefinedBy ?ontology.
-        $this dct:subject ?ontology;
-              respec:documentLanguage ?language2.
-        BIND(function:getLabel(?conceptScheme, ?language2) as ?scheme_label_text)              
+      # Get the sorted concept schemes from the ontology including semantics
+      {
+        select ?conceptScheme ?conceptSchemeLabel ?schemeDefinition ?scheme_label_text (count(?prevConceptScheme) + 1 as ?memberScheme)
+        where {
+          ?conceptScheme manchester:syntax 'CONCEPTSCHEME';
+                         manchester:label ?conceptSchemeLabel;
+                         rdfs:isDefinedBy ?ontology.
+          $this dct:subject ?ontology;
+                respec:documentLanguage ?language2.
+          bind(function:getLabel(?conceptScheme, ?language2) as ?scheme_label_text)
 
-        optional
-        {
-          ?conceptScheme skos:definition ?schemeDefinition.
-          filter (lang(?schemeDefinition) = ?language2)
-        }
+          optional
+          {
+            ?conceptScheme skos:definition ?schemeDefinition.
+            filter (lang(?schemeDefinition) = ?language2)
+          }
 
-        optional
-        {
-          ?prevConceptScheme manchester:syntax 'CONCEPTSCHEME';
-                             manchester:label ?prevSchemeLabel.
-          filter(?prevSchemeLabel < ?conceptSchemeLabel)
+          optional
+          {
+            ?prevConceptScheme manchester:syntax 'CONCEPTSCHEME';
+                               manchester:label ?prevSchemeLabel.
+            filter(?prevSchemeLabel < ?conceptSchemeLabel)
+          }
         }
+        group by ?conceptSchemeLabel ?conceptScheme ?schemeDefinition ?scheme_label_text
+        order by ?conceptScheme
       }
-      group by ?conceptSchemeLabel ?conceptScheme ?schemeDefinition ?scheme_label_text
-      order by ?conceptScheme
+      
+    # Get the string of concepts for one concept scheme
+      {
+        select ?conceptScheme (group_concat(?conceptLabel; separator=', ') as ?conceptsInSchemeLabel)
+
+        where {
+
+          ?concept manchester:syntax 'CONCEPT';
+                   manchester:label ?conceptLabel_raw ;
+                   skos:inScheme ?conceptScheme;
+                   rdfs:isDefinedBy ?ontology.
+          $this dct:subject ?ontology;
+                respec:documentLanguage ?language2.
+          bind(function:escapeHTML(?conceptLabel_raw) as ?conceptLabel)
+
+  # Get the order of concepts
+  {
+    select distinct ?conceptScheme ?concept
+
+    where {
+
+      ?concept manchester:syntax 'CONCEPT';
+               manchester:label ?conceptLabel_raw ;
+               skos:inScheme ?conceptScheme;
+               rdfs:isDefinedBy ?ontology.
+
+      bind(function:escapeHTML(?conceptLabel_raw) as ?conceptLabel)
+
+      optional {
+        ?prevConcept manchester:label ?prevLabel ;
+                     rdfs:isDefinedBy ?ontology;
+                     skos:inScheme ?conceptScheme.
+        filter(?prevLabel < ?conceptLabel_raw)
+      }
     }
+  }
+        }
+        group by ?conceptScheme
+        order by ?conceptScheme
+      }
 
     bind(if(!bound(?conceptScheme), ?absenceLabel_general, ?unboundDummy) as ?absenceOfConceptSchemeDefinitions)
     bind(if(bound(?schemeDefinition), coalesce(function:escapeHTML(?schemeDefinition)), ?absenceLabel_entity) as ?cleanedSchemeDefinition)
-    bind(if(bound(?conceptDefinition_raw), coalesce(function:escapeHTML(?conceptDefinition_raw)), ?absenceLabel_entity) as ?conceptDefinition)    
     bind(iri(concat(str(rdf:),"_", str(?memberScheme))) as ?rdf_memberScheme)
-    bind(iri(concat(str(rdf:),"_", str(?member))) as ?rdf_member)
 
-    # Establishing the prefixed IRI of the concept and conceptscheme.
+    # Establishing the prefixed IRI of the conceptscheme.
 
-    bind(str(?concept) as ?concept_IRI)
     bind(str(?conceptScheme) as ?conceptScheme_IRI)
 
     # Create identifiers - conceptscheme
 
     bind(function:getElementIRI(?template, ?namespace) as ?elementID)
-    bind(iri(concat(str(?elementID), '-', str(?memberScheme))) as ?chapter_scheme)
-    bind(iri(concat(str(?chapter_scheme),'-', str(?member))) as ?chapter_concept)
+    bind(iri(concat(str(?elementID), '-', 'schemeParagraph')) as ?schemeParagraph)
+    bind(iri(concat(str(?schemeParagraph), '-', str(?memberScheme))) as ?chapter_scheme)
     bind(iri(concat(str(?chapter_scheme), '-1')) as ?section_scheme)
     bind(iri(concat(str(?section_scheme), '-1')) as ?title_scheme)
     bind(iri(concat(str(?section_scheme), '-2')) as ?label_scheme)
@@ -2776,7 +2772,7 @@ construct {
     bind(iri(concat(str(?label_scheme), '-1')) as ?label_strong_scheme)
     bind(iri(concat(str(?label_scheme), '-2')) as ?label_value_scheme)
     bind(iri(concat(str(?label_strong_scheme), '-1')) as ?label_text_scheme)
-    
+
     bind(iri(concat(str(?IRI_scheme), '-1')) as ?IRI_strong_scheme)
     bind(iri(concat(str(?IRI_scheme), '-2')) as ?IRI_a_scheme)
     bind(iri(concat(str(?IRI_strong_scheme), '-1')) as ?IRI_text_scheme)
@@ -2795,54 +2791,15 @@ construct {
     bind(iri(concat(str(?manchester_syntax_table_row_definition_scheme), '-2')) as ?manchester_syntax_definition_value_scheme)
     bind(iri(concat(str(?manchester_syntax_definition_type_scheme), '-1')) as ?manchester_syntax_definition_type_text_scheme)
     bind(iri(concat(str(?manchester_syntax_definition_value_scheme), '-1')) as ?manchester_syntax_definition_value_text_scheme)
-
-    # Create identifiers - concept
-
-    bind(iri(concat(str(?chapter_concept), '-1')) as ?section)
-    bind(iri(concat(str(?section), '-1')) as ?title)
-    bind(iri(concat(str(?section), '-2')) as ?label)
-    bind(iri(concat(str(?section), '-3')) as ?IRI)
-    bind(iri(concat(str(?section), '-4')) as ?linebreak4)
-    bind(iri(concat(str(?section), '-5')) as ?definition)
-    bind(iri(concat(str(?section), '-6')) as ?linebreak5)
-    bind(iri(concat(str(?section), '-7')) as ?linebreak6)
-    bind(iri(concat(str(?section), '-8')) as ?manchester_syntax)
     
-    bind(iri(concat(str(?label), '-1')) as ?label_strong)
-    bind(iri(concat(str(?label), '-2')) as ?label_value)
-    bind(iri(concat(str(?label_strong), '-1')) as ?label_text)
-    
-    bind(iri(concat(str(?IRI), '-1')) as ?IRI_strong)
-    bind(iri(concat(str(?IRI), '-2')) as ?IRI_a)
-    bind(iri(concat(str(?IRI_strong), '-1')) as ?IRI_text)
-    bind(iri(concat(str(?IRI_a), '-1')) as ?IRI_value_text)
-    
-    bind(iri(concat(str(?title), '-1')) as ?dfn)
-    bind(iri(concat(str(?dfn), '-1')) as ?title_text)
-
-    # Create identifiers - Manchester Syntax - concept
-
-    bind(iri(concat(str(?manchester_syntax), '-1')) as ?manchester_syntax_code)
-    bind(iri(concat(str(?manchester_syntax_code), '-1')) as ?manchester_syntax_table)
-    bind(iri(concat(str(?manchester_syntax_table), '-1')) as ?manchester_syntax_table_body_definition)
-
-    bind(iri(concat(str(?manchester_syntax_table_body_definition), '-1')) as ?manchester_syntax_table_row_definition)
-    bind(iri(concat(str(?manchester_syntax_table_body_definition), '-2')) as ?emptyrow1)
-    bind(if(bound(?inSchemeLabel),iri(concat(str(?manchester_syntax_table_body_definition), '-3')), ?unboundDummy) as ?manchester_syntax_table_row_inscheme )
-
-    bind(iri(concat(str(?manchester_syntax_table_row_definition), '-1')) as ?manchester_syntax_definition_type)
-    bind(iri(concat(str(?manchester_syntax_table_row_definition), '-2')) as ?manchester_syntax_definition_value)
-    bind(iri(concat(str(?emptyrow1), '-1')) as ?emptycell1)
-    bind(iri(concat(str(?emptyrow1), '-2')) as ?emptycell2)
-    bind(iri(concat(str(?manchester_syntax_definition_type), '-1')) as ?manchester_syntax_definition_type_text)
-    bind(iri(concat(str(?manchester_syntax_definition_value), '-1')) as ?manchester_syntax_definition_value_text)
-
-    bind(iri(concat(str(?manchester_syntax_table_row_inscheme), '-1')) as ?manchester_syntax_definition_inscheme_type)
-    bind(iri(concat(str(?manchester_syntax_table_row_inscheme), '-2')) as ?manchester_syntax_definition_inscheme_value)
-    bind(iri(concat(str(?manchester_syntax_definition_inscheme_type), '-1')) as ?manchester_syntax_definition_inscheme_type_text)
-    bind(iri(concat(str(?manchester_syntax_definition_inscheme_value), '-1')) as ?manchester_syntax_definition_inscheme_value_text)
+    bind(iri(concat(str(?manchester_syntax_table_body_definition_scheme), '-3')) as ?manchester_syntax_table_row_concepts)
+    bind(iri(concat(str(?manchester_syntax_table_row_concepts), '-1')) as ?manchester_syntax_concepts_type)
+    bind(iri(concat(str(?manchester_syntax_table_row_concepts), '-2')) as ?manchester_syntax_concepts_value)
+    bind(iri(concat(str(?manchester_syntax_concepts_type), '-1')) as ?manchester_syntax_concepts_type_text)
+    bind(iri(concat(str(?manchester_syntax_concepts_value), '-1')) as ?manchester_syntax_concepts_value_text)    
 
   }
+
 """.
 
 condition:Concepts
@@ -2873,93 +2830,128 @@ prefix vann: <http://purl.org/vocab/vann/>
 
 construct {
 
-  ?elementID                 rdf:type html:Div;
-                             html:fragment ?absenceOfDefinitions;
-                             ?rdf_member ?section.
-  ?section                   rdf:type html:Section;
-                             rdf:_1 ?title;
-                             rdf:_2 ?label;
-                             rdf:_3 ?IRI;
-                             rdf:_4 ?linebreak4;
-                             rdf:_5 ?definition;
-                             rdf:_6 ?linebreak5;
-                             rdf:_7 ?linebreak6;
-                             rdf:_8 ?manchester_syntax.
-  ?title                       rdf:type html:H2;
-                               rdf:_1 ?dfn.
-  ?dfn                            rdf:type html:Dfn;
-                                  rdf:_1 ?title_text.
-  ?title_text                     rdf:type html:Text;
-                                  html:fragment ?conceptLabel.
-  ?label                                   rdf:type html:Div;
-                                         rdf:_1 ?label_strong;
-                                         rdf:_2 ?label_value;
-                                         html:class "container".
-  ?label_strong                              rdf:type html:Strong;
-                                           rdf:_1 ?label_text;
-                                           html:class "label".
-  ?label_text                                rdf:type html:Text;
-                                           html:fragment 'Label: '.
-  ?label_value                                rdf:type html:Text;
-                                           html:fragment ?label_value_text.                                  
-  ?IRI                                   rdf:type html:Div;
-                                         rdf:_1 ?IRI_strong;
-                                         rdf:_2 ?IRI_a;
-                                         html:class "container".
-  ?IRI_strong                              rdf:type html:Strong;
-                                           rdf:_1 ?IRI_text;
-                                           html:class "label".
-  ?IRI_text                                rdf:type html:Text;
-                                           html:fragment 'IRI: '.
-  ?IRI_a                                   rdf:type html:A;
-                                           html:href ?concept_IRI;
-                                           rdf:_1 ?IRI_value_text.
-  ?IRI_value_text                                         rdf:type html:Text;
-                                                          html:fragment ?concept_IRI.
-  ?definition                     rdf:type html:Text;
-                                  html:fragment ?conceptDefinition.
-  ?manchester_syntax                             rdf:type html:Aside;
-                                                 html:class "note" ;
-                                                 html:title "Manchester Syntax (Extended)";
-                                                 rdf:_1 ?manchester_syntax_code.
-  ?manchester_syntax_code                        rdf:type html:Code;
-                                                 rdf:_1 ?manchester_syntax_table.
-  ?manchester_syntax_table                              rdf:type html:Table;
-                                                        rdf:_1 ?manchester_syntax_table_body_definition.
-  ?manchester_syntax_table_body_definition          rdf:type html:TableBody;
-                                                    rdf:_1 ?manchester_syntax_table_row_definition;
-                                                    rdf:_2 ?emptyrow1;
-                                                    rdf:_3 ?manchester_syntax_table_row_inscheme.
-  ?manchester_syntax_table_row_definition                rdf:type html:Row;
-                                                         rdf:_1 ?manchester_syntax_definition_type;
-                                                         rdf:_2 ?manchester_syntax_definition_value.
-  ?manchester_syntax_definition_type           rdf:type html:DataCell;
-                                               rdf:_1 ?manchester_syntax_definition_type_text.
-  ?manchester_syntax_definition_type_text         rdf:type html:Text;
-                                                  html:fragment 'Concept:'.
-  ?manchester_syntax_definition_value          rdf:type html:DataCell;
-                                               rdf:_1 ?manchester_syntax_definition_value_text.
-  ?manchester_syntax_definition_value_text        rdf:type html:Text;
-                                                  html:fragment ?conceptLabel.
+  ?elementID              
+    rdf:type html:P;
+    html:fragment ?absenceOfConceptSchemeDefinitions;
+    ?memberConceptParagraph ?conceptParagraph.   
+  ?conceptParagraph          
+    rdf:type html:P;
+    ?rdf_member ?section.
+  ?section                   
+    rdf:type html:Section;
+    dct:subject ?concept;
+    skos:prefLabel ?label_value_text;     
+    rdf:_1 ?title;
+    rdf:_2 ?label;
+    rdf:_3 ?IRI;
+    rdf:_4 ?linebreak4;
+    rdf:_5 ?definition;
+    rdf:_6 ?linebreak5;
+    rdf:_7 ?linebreak6;
+    rdf:_8 ?manchester_syntax.
+  ?title                       
+    rdf:type html:H2;
+    rdf:_1 ?dfn.
+  ?dfn                            
+    rdf:type html:Dfn;
+    respec:data-dfn-for "Concepts";         
+    rdf:_1 ?title_text.
+  ?title_text                     
+    rdf:type html:Text;
+    html:fragment ?conceptLabel.
+  ?label                                   
+    rdf:type html:P;
+    rdf:_1 ?label_strong;
+    rdf:_2 ?label_value;
+    html:class "container".
+  ?label_strong                              
+    rdf:type html:Strong;
+    rdf:_1 ?label_text;
+    html:class "label".
+  ?label_text                                
+    rdf:type html:Text;
+    html:fragment 'Label: '.
+  ?label_value                                
+    rdf:type html:Text;
+    html:fragment ?label_value_text.                                  
+  ?IRI                                   
+    rdf:type html:Div;
+    rdf:_1 ?IRI_strong;
+    rdf:_2 ?IRI_a;
+    html:class "container".
+  ?IRI_strong                              
+    rdf:type html:Strong;
+    rdf:_1 ?IRI_text;
+    html:class "label".
+  ?IRI_text                                
+    rdf:type html:Text;
+    html:fragment 'IRI: '.
+  ?IRI_a                                   
+    rdf:type html:A;
+    html:href ?concept_IRI;
+    rdf:_1 ?IRI_value_text.
+  ?IRI_value_text                                         
+    rdf:type html:Text;
+    html:fragment ?concept_IRI.
+  ?definition                     
+    rdf:type html:Text;
+    html:fragment ?conceptDefinition.
+  ?manchester_syntax                             
+    rdf:type html:Aside;
+    html:class "note" ;
+    html:title "Manchester Syntax (Extended)";
+    rdf:_1 ?manchester_syntax_code.
+  ?manchester_syntax_code                        
+    rdf:type html:Code;
+    rdf:_1 ?manchester_syntax_table.
+  ?manchester_syntax_table                              
+    rdf:type html:Table;
+    rdf:_1 ?manchester_syntax_table_body_definition.
+  ?manchester_syntax_table_body_definition          
+    rdf:type html:TableBody;
+    rdf:_1 ?manchester_syntax_table_row_definition;
+    rdf:_2 ?emptyrow1;
+    rdf:_3 ?manchester_syntax_table_row_inscheme.
+  ?manchester_syntax_table_row_definition                
+    rdf:type html:Row;
+    rdf:_1 ?manchester_syntax_definition_type;
+    rdf:_2 ?manchester_syntax_definition_value.
+  ?manchester_syntax_definition_type           
+    rdf:type html:DataCell;
+    rdf:_1 ?manchester_syntax_definition_type_text.
+  ?manchester_syntax_definition_type_text         
+    rdf:type html:Text;
+    html:fragment 'Concept:'.
+  ?manchester_syntax_definition_value          
+    rdf:type html:DataCell;
+    rdf:_1 ?manchester_syntax_definition_value_text.
+  ?manchester_syntax_definition_value_text        
+    rdf:type html:Text;
+    html:fragment ?conceptLabel.
 
-  ?emptyrow1      rdf:type html:Row;
-                  rdf:_1 ?emptycell1;
-                  rdf:_2 ?emptycell2.
+  ?emptyrow1      
+      rdf:type html:Row;
+      rdf:_1 ?emptycell1;
+      rdf:_2 ?emptycell2.
   ?emptycell1         rdf:type html:DataCell.
   ?emptycell2         rdf:type html:DataCell.
 
-  ?manchester_syntax_table_row_inscheme                    rdf:type html:Row;
-                                                           rdf:_1 ?manchester_syntax_definition_inscheme_type;
-                                                           rdf:_2 ?manchester_syntax_definition_inscheme_value.
-  ?manchester_syntax_definition_inscheme_type            rdf:type html:DataCell;
-                                                         rdf:_1 ?manchester_syntax_definition_inscheme_type_text.
-  ?manchester_syntax_definition_inscheme_type_text          rdf:type html:Text;
-                                                            html:fragment 'In scheme:'.
-  ?manchester_syntax_definition_inscheme_value           rdf:type html:DataCell;
-                                                         rdf:_1 ?manchester_syntax_definition_inscheme_value_text.
-  ?manchester_syntax_definition_inscheme_value_text         rdf:type html:Text;
-                                                            html:fragment ?inSchemeLabel.
-
+  ?manchester_syntax_table_row_inscheme                    
+    rdf:type html:Row;
+    rdf:_1 ?manchester_syntax_definition_inscheme_type;
+    rdf:_2 ?manchester_syntax_definition_inscheme_value.
+  ?manchester_syntax_definition_inscheme_type            
+    rdf:type html:DataCell;
+    rdf:_1 ?manchester_syntax_definition_inscheme_type_text.
+  ?manchester_syntax_definition_inscheme_type_text
+    rdf:type html:Text;
+    html:fragment 'In scheme:'.
+  ?manchester_syntax_definition_inscheme_value
+    rdf:type html:DataCell;
+    rdf:_1 ?manchester_syntax_definition_inscheme_value_text.
+  ?manchester_syntax_definition_inscheme_value_text
+    rdf:type html:Text;
+    html:fragment ?conceptSchemesLabel.
 
   ?linebreak4                          rdf:type html:Br.
   ?linebreak5                          rdf:type html:Br.
@@ -2979,12 +2971,18 @@ construct {
               respec:documentNamespace ?namespace.
     filter (LANG(?absenceLabel_general) = ?language)
     filter (LANG(?absenceLabel_entity)  = ?language)
-    }
-    OPTIONAL
+    } 
+    
+    # Check whether the documentation should contain conceptschemes; if so, then concepts is second sibling in line. If not, concepts is the first sibling.
+    optional
+    {filter exists {$this respec:include "conceptschemes".}
+    bind(true as ?displayScheme)}
+    bind(if(coalesce(?displayScheme, false), "2", "1") as ?indexConceptParagraph)
+    bind(iri(concat(str(rdf:),"_", str(?indexConceptParagraph))) as ?memberConceptParagraph)   
+    
     # Get the sorted concepts from the ontology including semantics
-
     {
-      select ?conceptScheme ?concept ?conceptLabel_raw ?conceptLabel ?inSchemeLabel ?conceptDefinition_raw ?label_value_text (count(?prevConcept) + 2 as ?member)
+      select ?concept ?conceptLabel_raw ?conceptLabel ?conceptDefinition_raw ?label_value_text (count(?prevConcept) + 1 as ?member)
 
       where {
 
@@ -2996,11 +2994,6 @@ construct {
         $this dct:subject ?ontology;
               respec:documentLanguage ?language2.
         BIND(function:getLabel(?concept, ?language2) as ?label_value_text)              
-
-        optional{
-          ?concept skos:inScheme ?conceptScheme.
-          ?conceptScheme manchester:label ?inSchemeLabel.
-        }
           
         optional{
           ?concept skos:definition ?conceptDefinition_raw.
@@ -3011,14 +3004,61 @@ construct {
 
         optional {
           ?prevConcept manchester:syntax 'CONCEPT';
-                       manchester:label ?prevLabel ;
-                       skos:inScheme ?conceptScheme.
+                       manchester:label ?prevLabel.
           filter(?prevLabel < ?conceptLabel_raw)
         }
       }
-      group by ?conceptScheme ?concept ?conceptLabel_raw ?conceptLabel ?inSchemeLabel ?conceptDefinition_raw ?label_value_text
-      order by ?conceptScheme ?conceptLabel_raw
+      group by ?concept ?conceptLabel_raw ?conceptLabel ?conceptDefinition_raw ?label_value_text
+      order by ?conceptLabel_raw
     }
+    
+    # Get the string of conceptschemes for one concept
+      {
+        select ?concept (group_concat(?conceptSchemeLabel; separator=', ') as ?conceptSchemesLabel)
+
+        where {
+
+          ?conceptScheme 
+                   manchester:syntax 'CONCEPTSCHEME';
+                   manchester:label ?conceptSchemeLabel_raw .
+          ?concept  
+                   skos:inScheme ?conceptScheme;
+                   rdfs:isDefinedBy ?ontology.
+          $this 
+                   dct:subject ?ontology;
+                   respec:documentLanguage ?language2.
+          
+          bind(function:escapeHTML(?conceptSchemeLabel_raw) as ?conceptSchemeLabel)
+
+    # Get the order of conceptschemes
+  {
+    select distinct ?concept ?conceptScheme
+
+    where {
+
+      ?conceptScheme
+               manchester:syntax 'CONCEPTSCHEME';
+               manchester:label ?conceptSchemeLabel_raw .
+      ?concept  
+                   skos:inScheme ?conceptScheme;
+                   rdfs:isDefinedBy ?ontology.
+
+      bind(function:escapeHTML(?conceptLabel_raw) as ?conceptLabel)
+
+      optional {
+        ?prevConceptScheme
+                     manchester:label ?prevLabel .
+        ?concept
+                   skos:inScheme ?prevConceptScheme;
+                   rdfs:isDefinedBy ?ontology.        
+        filter(?prevLabel < ?conceptSchemeLabel_raw)
+      }
+    }
+  }
+        }
+        group by ?concept
+        order by ?concept
+      }
 
     bind(if(!bound(?concept), ?absenceLabel_general, ?unboundDummy) as ?absenceOfDefinitions)
     bind(if(bound(?conceptDefinition_raw), coalesce(function:escapeHTML(?conceptDefinition_raw)), ?absenceLabel_entity) as ?conceptDefinition)    
@@ -3032,7 +3072,8 @@ construct {
     # Create identifiers - concept
 
     bind(function:getElementIRI(?template, ?namespace) as ?elementID)
-    bind(iri(concat(str(?elementID), '-', str(?member))) as ?section)
+    bind(iri(concat(str(?elementID), '-', 'conceptParagraph')) as ?conceptParagraph)  
+    bind(iri(concat(str(?conceptParagraph), '-', str(?member))) as ?section)
     bind(iri(concat(str(?section), '-1')) as ?title)
     bind(iri(concat(str(?section), '-2')) as ?label)
     bind(iri(concat(str(?section), '-3')) as ?IRI)
@@ -3062,7 +3103,7 @@ construct {
 
     bind(iri(concat(str(?manchester_syntax_table_body_definition), '-1')) as ?manchester_syntax_table_row_definition)
     bind(iri(concat(str(?manchester_syntax_table_body_definition), '-2')) as ?emptyrow1)
-    bind(if(bound(?inSchemeLabel),iri(concat(str(?manchester_syntax_table_body_definition), '-3')), ?unboundDummy) as ?manchester_syntax_table_row_inscheme )
+    bind(if(bound(?conceptSchemesLabel),iri(concat(str(?manchester_syntax_table_body_definition), '-3')), ?unboundDummy) as ?manchester_syntax_table_row_inscheme )
 
     bind(iri(concat(str(?manchester_syntax_table_row_definition), '-1')) as ?manchester_syntax_definition_type)
     bind(iri(concat(str(?manchester_syntax_table_row_definition), '-2')) as ?manchester_syntax_definition_value)
@@ -3109,10 +3150,12 @@ prefix vann: <http://purl.org/vocab/vann/>
 
 construct {
 
-  ?elementID                 rdf:type html:Div;
+  ?elementID                 rdf:type html:P;
                              ?rdf_member ?section;
                              html:fragment ?absenceOfDefinitions.
   ?section                   rdf:type html:Section;
+                             dct:subject ?entity;
+                             skos:prefLabel ?label_value_text;     
                              rdf:_1 ?title;
                              rdf:_2 ?label;
                              rdf:_3 ?IRI;
@@ -3125,6 +3168,7 @@ construct {
   ?title                       rdf:type html:H2;
                                rdf:_1 ?dfn.
   ?dfn                            rdf:type html:Dfn;
+                                  respec:data-dfn-for "SPARQL Rules";         
                                   rdf:_1 ?title_text.
   ?title_text                     rdf:type html:Text;
                                   html:fragment ?entityManchesterLabel.
@@ -3363,10 +3407,12 @@ prefix vann: <http://purl.org/vocab/vann/>
 
 construct {
 
-  ?elementID                 rdf:type html:Div;
+  ?elementID                 rdf:type html:P;
                              ?rdf_member ?section;
                              html:fragment ?absenceOfDefinitions.
   ?section                   rdf:type html:Section;
+                             dct:subject ?entity;
+                             skos:prefLabel ?label_value_text;  
                              rdf:_1 ?title;
                              rdf:_2 ?label;
                              rdf:_3 ?IRI;
@@ -3379,6 +3425,7 @@ construct {
   ?title                       rdf:type html:H2;
                                rdf:_1 ?dfn.
   ?dfn                            rdf:type html:Dfn;
+                                  respec:data-dfn-for "SPARQL Functions";       
                                   rdf:_1 ?title_text.
   ?title_text                     rdf:type html:Text;
                                   html:fragment ?entityManchesterLabel.
@@ -3657,10 +3704,12 @@ prefix vann: <http://purl.org/vocab/vann/>
 
 construct {
 
-  ?elementID                 rdf:type html:Div;
+  ?elementID                 rdf:type html:P;
                              ?rdf_member ?section;
                              html:fragment ?absenceOfDefinitions.
   ?section                   rdf:type html:Section;
+                             dct:subject ?entity;
+                             skos:prefLabel ?label_value_text;  
                              rdf:_1 ?title;
                              rdf:_2 ?label;
                              rdf:_3 ?IRI;
@@ -3672,6 +3721,7 @@ construct {
   ?title                       rdf:type html:H2;
                                rdf:_1 ?dfn.
   ?dfn                            rdf:type html:Dfn;
+                                  respec:data-dfn-for "SHACL Parameters";         
                                   rdf:_1 ?title_text.
   ?title_text                     rdf:type html:Text;
                                   html:fragment ?entityManchesterLabel.
@@ -3871,10 +3921,12 @@ prefix vann: <http://purl.org/vocab/vann/>
 
 construct {
 
-  ?elementID                 rdf:type html:Div;
+  ?elementID                 rdf:type html:P;
                              ?rdf_member ?section;
                              html:fragment ?absenceOfDefinitions.
   ?section                   rdf:type html:Section;
+                             dct:subject ?entity;
+                             skos:prefLabel ?label_value_text;  
                              rdf:_1 ?title;
                              rdf:_2 ?label;
                              rdf:_3 ?IRI;
@@ -3887,6 +3939,7 @@ construct {
   ?title                       rdf:type html:H2;
                                rdf:_1 ?dfn.
   ?dfn                            rdf:type html:Dfn;
+                                  respec:data-dfn-for "SPARQL Targets";         
                                   rdf:_1 ?title_text.
   ?title_text                     rdf:type html:Text;
                                   html:fragment ?entityManchesterLabel.
@@ -4095,6 +4148,274 @@ construct {
   }
 """.
 
+shp:DescriptionPreparation
+    a sh:NodeShape;
+    sh:rule rule:DescriptionPreparation;
+    sh:target target:DescriptionPreparation;
+    skos:prefLabel 'description preparation shape'@en;
+    rdfs:isDefinedBy respec:.
+
+target:DescriptionPreparation
+    a sh:SPARQLTarget;
+    rdfs:comment 'Select the description to be processed into a ReSpec document.'@en;
+    sh:select '''
+
+prefix html: <https://www.w3.org/html/model/def/> 
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix respec: <https://respec.org/ontorespec/model/def/> 
+
+select $this
+where {
+{$this rdf:type respec:Generation.
+  filter not exists {
+ $this respec:remainder ?remainderIRI.
+ ?remainderIRI ?member ?remainderFragment.
+ ?remainderFragment html:fragment ?remainder. 
+  filter(regex(?remainder,"^.*?```Example(.*?)```.*", 's')=false)
+  }
+}
+UNION   
+ {$this rdf:type respec:Generation.
+ filter not exists {
+   $this respec:remainder [].
+   
+ } 
+}   
+}
+
+''';
+    rdfs:isDefinedBy respec:.
+
+rule:DescriptionPreparation
+  a sh:SPARQLRule;
+  skos:prefLabel 'Description preparation rule'@en;
+  rdfs:comment 'The Description preparation rule prepares the creation of a description for the ontology in the document.'@en ;
+  sh:construct """
+prefix dct:      <http://purl.org/dc/terms/>
+prefix dc:       <http://purl.org/dc/elements/1.1/>
+prefix function: <https://respec.org/ontorespec/model/function/>
+prefix html:     <https://www.w3.org/html/model/def/> 
+prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> 
+prefix respec:   <https://respec.org/ontorespec/model/def/> 
+prefix schema:   <http://schema.org/>
+prefix skos:     <http://www.w3.org/2004/02/skos/core#>
+prefix xsd:      <http://www.w3.org/2001/XMLSchema#>
+
+
+construct {
+
+  $this respec:paragraph ?paragraphIRI.
+  ?paragraphIRI ?memberParagraph ?paragraphFragment.
+  ?paragraphFragment html:fragment ?paragraph.
+  
+  $this respec:example ?exampleIRI.
+  ?exampleIRI ?memberExample ?exampleFragment.
+  ?exampleFragment html:fragment ?example.
+  
+  $this respec:remainder ?remainderIRI.
+  ?remainderIRI ?memberRemainder ?remainderFragment.
+  ?remainderFragment html:fragment ?remainder.
+  
+  $this respec:preparation ?boolean.
+    
+} where {
+  $this respec:documentLanguage ?language;
+        dct:subject ?ontology.
+
+  # identifiers
+  bind(iri(concat(str($this), '-paragraph')) as ?paragraphIRI)
+  bind(iri(concat(str($this), '-example'))   as ?exampleIRI)
+  bind(iri(concat(str($this), '-remainder')) as ?remainderIRI)
+   
+  optional {
+  select (max(?memberIndex) as ?currentIndex)
+   where {
+   $this respec:example ?exampleIRI.
+   ?exampleIRI ?member [].
+   bind(xsd:integer(strafter(str(?member), concat(str(rdf:), '_'))) as ?memberIndex)
+   }
+  }
+  bind(iri(concat(str(rdf:), "_", str(coalesce(?currentIndex,0)+1))) as ?memberParagraph)
+  bind(iri(concat(str(rdf:), "_", str(coalesce(?currentIndex,0)+2))) as ?memberExample) 
+  
+    # identifiers
+  bind(iri(concat(str(?paragraphIRI), '-',str(coalesce(?currentIndex,0)+1))) as ?paragraphFragment)
+  bind(iri(concat(str(?exampleIRI), '-',str(coalesce(?currentIndex,0)+2))) as ?exampleFragment)
+  
+
+  optional {
+  select (max(?memberIndex) as ?currentRemainderIndex)
+   where {
+   $this respec:remainder ?remainderIRI.
+   ?remainderIRI ?member [].
+   bind(xsd:integer(strafter(str(?member), concat(str(rdf:), '_'))) as ?memberIndex)
+   }
+  }  
+  bind(iri(concat(str(rdf:), "_", str(coalesce(?currentRemainderIndex,0)+1))) as ?memberRemainder)    
+  bind(iri(concat(str(?remainderIRI), '-',str(coalesce(?currentRemainderIndex,0)+1))) as ?remainderFragment)
+  
+  optional {
+  bind(iri(concat(str(rdf:), "_", str(?currentRemainderIndex))) as ?currentMemberRemainder)
+  $this respec:remainder ?remainderIRI.
+  ?remainderIRI ?currentMemberRemainder ?currentRemainderFragment.
+  ?currentRemainderFragment html:fragment ?currentRemainder .
+  }
+  
+  OPTIONAL
+  {?ontology dc:description ?ontologyDescription1
+  FILTER (LANG(?ontologyDescription1) = ?language)}
+  
+  OPTIONAL
+  {?ontology dct:description ?ontologyDescription2
+  FILTER (LANG(?ontologyDescription2) = ?language)}
+  
+  OPTIONAL
+  {?ontology rdfs:comment ?ontologyDescription3
+  FILTER (LANG(?ontologyDescription3) = ?language)}
+  
+  OPTIONAL
+  {?ontology schema:description ?ontologyDescription4
+  FILTER (LANG(?ontologyDescription4) = ?language)}
+  
+  OPTIONAL
+  {?ontology skos:note ?ontologyDescription5
+  FILTER (LANG(?ontologyDescription5) = ?language)}
+
+  BIND(COALESCE(?currentRemainder, ?ontologyDescription1, ?ontologyDescription2, ?ontologyDescription3, ?ontologyDescription4, ?ontologyDescription5, ?absenceLabel) as ?ontologyDescription)
+  
+  bind("(^.*?)```Example(.*?)```(.*)" as ?pattern)
+  bind(replace(str(?ontologyDescription),?pattern, "$1", 's') as ?paragraph)
+  bind(replace(str(?ontologyDescription),?pattern, "$2", 's') as ?rawExample)
+  bind(replace(str(?ontologyDescription),?pattern, "$3", 's') as ?remainder)
+  bind(function:escapeHTML(?rawExample) as ?example)
+  
+  bind(if(regex(?remainder,"^.*?```Example(.*?)```.*", 's')=false, true, ?unboundDummy) as ?boolean)
+  
+}
+""";
+    rdfs:isDefinedBy respec:.
+
+shp:DescriptionCreation
+    a sh:NodeShape;
+    sh:rule rule:DescriptionCreation;
+    sh:target target:DescriptionCreation;
+    skos:prefLabel 'description creation shape'@en;
+    rdfs:isDefinedBy respec:.
+
+target:DescriptionCreation
+    a sh:SPARQLTarget;
+    rdfs:comment 'Select the description to be processed into a ReSpec document.'@en;
+    sh:select '''
+
+prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix respec: <https://respec.org/ontorespec/model/def/> 
+
+select $this
+where {
+$this rdf:type respec:Generation;
+      respec:preparation true.
+filter not exists 
+  { $this respec:description true.}
+}
+
+''';
+    rdfs:isDefinedBy respec:.
+
+
+
+rule:DescriptionCreation
+  a sh:SPARQLRule;
+  skos:prefLabel 'Description creation rule'@en;
+  rdfs:comment 'The description creation rule creates the description for the ontology in the document.'@en ;
+  sh:construct """
+prefix dct:      <http://purl.org/dc/terms/>
+prefix dc:       <http://purl.org/dc/elements/1.1/>
+prefix function: <https://respec.org/ontorespec/model/function/>
+prefix html:     <https://www.w3.org/html/model/def/> 
+prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> 
+prefix respec:   <https://respec.org/ontorespec/model/def/> 
+prefix schema:   <http://schema.org/>
+prefix skos:     <http://www.w3.org/2004/02/skos/core#>
+prefix xsd:      <http://www.w3.org/2001/XMLSchema#>
+
+
+construct {
+
+  ?elementID 
+             rdf:type html:Div;
+             ?memberParagraph ?paragraphID;
+             ?memberExample ?divID.
+
+  ?divID 
+             rdf:type html:Div;
+             rdf:_1 ?asideID;
+             rdf:_2 ?linebreakID.
+
+  ?paragraphID
+             rdf:type html:P;
+             html:style 'white-space: pre-wrap;';
+             respec:data-format 'markdown';
+             rdf:_1 ?paragraphText.
+
+  ?paragraphText 
+             rdf:type html:Text;
+             html:fragment ?paragraph.
+ 
+  ?asideID
+             rdf:type html:Aside;
+             html:class 'example';
+             rdf:_1 ?preID.
+
+  ?preID
+             rdf:type html:Pre;
+             rdf:_1 ?preText.
+
+  ?preText 
+             rdf:type html:Text;
+             html:fragment ?example.
+
+  ?linebreakID
+            rdf:type html:Br.
+  
+  $this respec:description true.
+    
+} where {
+
+  {?template a respec:Description;
+              respec:absenceLabel ?absenceLabel.
+   $this respec:documentLanguage ?language;
+         respec:documentNamespace ?namespace;
+         dct:subject ?ontology.
+   FILTER (LANG(?absenceLabel) = ?language)
+  }
+   
+  $this respec:paragraph ?paragraphIRI.
+  ?paragraphIRI ?memberParagraph ?paragraphFragment.
+  ?paragraphFragment html:fragment ?paragraph.
+  bind(xsd:integer(strafter(str(?memberParagraph), concat(str(rdf:), '_'))) as ?memberParagraphIndex)
+
+  optional{
+  $this respec:example ?exampleIRI.
+  ?exampleIRI ?memberExample ?exampleFragment.
+  ?exampleFragment html:fragment ?example.  
+  bind(xsd:integer(strafter(str(?memberExample), concat(str(rdf:), '_'))) as ?memberExampleIndex)
+  bind(iri(concat(?namespace, 'descriptionDiv-'    , str(?memberExampleIndex)))     as ?divID)
+  bind(iri(concat(?namespace, 'descriptionAside-'    , str(?memberExampleIndex)))   as ?asideID)
+  bind(iri(concat(?namespace, 'descriptionPre-'      , str(?memberExampleIndex)))   as ?preID)
+  bind(iri(concat(?namespace, 'descriptionLinebreak-', str(?memberExampleIndex)))   as ?linebreakID)
+  bind(iri(concat(str(?preID),'-text'))   as ?preText)
+  }
+
+  # Create identifiers
+  bind(function:getElementIRI(?template, ?namespace) as ?elementID)
+  bind(iri(concat(?namespace, 'descriptionParagraph-', str(?memberParagraphIndex))) as ?paragraphID)
+  bind(iri(concat(str(?paragraphID),'-text'))   as ?paragraphText)
+}
+""";
+    rdfs:isDefinedBy respec:.
+
 function:escapeHTML
     a sh:SPARQLFunction ;
     rdfs:comment "Escapes HTML characters in the input string." ;
@@ -4267,4 +4588,16 @@ respec:data-format
     skos:definition "Specifies the format of an HTML element within a ReSpec document."@en;
     skos:prefLabel 'the data-format attribute'@en;
     rdfs:isDefinedBy respec:.
+
+respec:data-dfn-for
+    a owl:DatatypeProperty;
+    rdfs:subPropertyOf html:attribute;
+    html:key 'data-dfn-for';
+    rdf:type html:Attribute;
+    rdfs:domain html:Element;
+    rdfs:range xsd:string;
+    skos:definition "Specifies a link of a WebIDL attribute or method to a definition within a ReSpec document."@en;
+    skos:prefLabel 'the data-dfn-for attribute'@en;
+    rdfs:isDefinedBy respec:.
+
 }
