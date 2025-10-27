@@ -45,9 +45,9 @@ This repository comes with two, fairly primitive, Python-based tools to transfor
 
 ![An example of the OntoReSpec playground](/Examples/Playground.JPG)
 
-The tool aims to be a complete environment in which you can generate a ReSpec based specification of your ontology, including textual context, definitions for concepts, classes, object properties, datatype properties, RDF properties, nodeshape and named indivduals, a Mermaid diagram, a link to the serialisation of the ontology, an index of namespaces and more.
+The tool aims to be a complete environment in which you can generate a ReSpec based specification of your ontology, including textual context, definitions for concepts, classes, object properties, datatype properties, RDF properties, nodeshape and named indivduals, a Mermaid diagram, a link to the serialisation of the ontology, an index of namespaces and more. Please note that OntoReSpec Playground is not meant for production use as it is rather slow and unforgiving in the user experience it offers. It is advised to apply the OntoReSpec vocabularies as contained in this repository within a fast enviroment consisting of a performant triple store, sparlq engine and shacl engine for an optimal experience.
 
-A. Install all necessary libraries:
+A. Install all necessary libraries (in this order):
 
     1. pip install os
     2. pip install pyshacl
@@ -58,7 +58,7 @@ A. Install all necessary libraries:
 B. Run the script in the command prompt by typing: 
 
 ```
-python Playground.py
+python playground.py
 ```
 
 C. Go to localhost:5000 in your browser. 
@@ -95,3 +95,13 @@ NOTE: If you want to use the OntoReSpec.py script:
 4. Place the output of the OntoReSpec script into the input folder of the RDF2HTML script (or use the playground application of that repository) and run that script. This will generate the HTML file of your ReSpec-document.
 
 NOTE: This is work in progress. 
+
+
+# Acknowledgements
+
+I would like to thank the people at RDFlib and PyShacl for their support and accomplishments regarding their open source triple store, SPARQL service and SHACL engine:
+
+* Iwan Aucamp
+* Ashley Sommer
+* White Gobo
+* Edmond Chuc
